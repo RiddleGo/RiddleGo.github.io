@@ -1864,14 +1864,14 @@
   </url>
   
   <url>
-    <loc>https://riddlego.github.io/tag/index.html</loc>
+    <loc>https://riddlego.github.io/category/index.html</loc>
     
     <lastmod>2021-05-26</lastmod>
     
   </url>
   
   <url>
-    <loc>https://riddlego.github.io/category/index.html</loc>
+    <loc>https://riddlego.github.io/tag/index.html</loc>
     
     <lastmod>2021-05-26</lastmod>
     
@@ -2104,13 +2104,6 @@
   </url>
   
   <url>
-    <loc>https://riddlego.github.io/tags/golang%E4%BC%98%E5%8C%96/</loc>
-    <lastmod>2021-11-19</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://riddlego.github.io/tags/CLI/</loc>
     <lastmod>2021-11-19</lastmod>
     <changefreq>daily</changefreq>
@@ -2118,7 +2111,7 @@
   </url>
   
   <url>
-    <loc>https://riddlego.github.io/tags/redis/</loc>
+    <loc>https://riddlego.github.io/tags/golang%E4%BC%98%E5%8C%96/</loc>
     <lastmod>2021-11-19</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -2146,7 +2139,7 @@
   </url>
   
   <url>
-    <loc>https://riddlego.github.io/tags/map/</loc>
+    <loc>https://riddlego.github.io/tags/redis/</loc>
     <lastmod>2021-11-19</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -2154,6 +2147,13 @@
   
   <url>
     <loc>https://riddlego.github.io/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/</loc>
+    <lastmod>2021-11-19</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://riddlego.github.io/tags/map/</loc>
     <lastmod>2021-11-19</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -2482,6 +2482,13 @@
   </url>
   
   <url>
+    <loc>https://riddlego.github.io/tags/%E7%AE%80%E5%8E%86/</loc>
+    <lastmod>2021-11-19</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://riddlego.github.io/tags/cookie/</loc>
     <lastmod>2021-11-19</lastmod>
     <changefreq>daily</changefreq>
@@ -2650,6 +2657,13 @@
   </url>
   
   <url>
+    <loc>https://riddlego.github.io/tags/GPM%E8%B0%83%E5%BA%A6%E6%A8%A1%E5%9E%8B/</loc>
+    <lastmod>2021-11-19</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://riddlego.github.io/tags/%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/</loc>
     <lastmod>2021-11-19</lastmod>
     <changefreq>daily</changefreq>
@@ -2665,13 +2679,6 @@
   
   <url>
     <loc>https://riddlego.github.io/tags/%E4%B8%89%E8%89%B2%E6%A0%87%E8%AE%B0%E6%B3%95/</loc>
-    <lastmod>2021-11-19</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://riddlego.github.io/tags/GPM%E8%B0%83%E5%BA%A6%E6%A8%A1%E5%9E%8B/</loc>
     <lastmod>2021-11-19</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -2839,6 +2846,13 @@
   </url>
   
   <url>
+    <loc>https://riddlego.github.io/tags/multiprocessing/</loc>
+    <lastmod>2021-11-19</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://riddlego.github.io/tags/plotly/</loc>
     <lastmod>2021-11-19</lastmod>
     <changefreq>daily</changefreq>
@@ -2854,13 +2868,6 @@
   
   <url>
     <loc>https://riddlego.github.io/tags/self/</loc>
-    <lastmod>2021-11-19</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://riddlego.github.io/tags/multiprocessing/</loc>
     <lastmod>2021-11-19</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -2924,6 +2931,27 @@
   
   <url>
     <loc>https://riddlego.github.io/tags/restful/</loc>
+    <lastmod>2021-11-19</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://riddlego.github.io/tags/wifi/</loc>
+    <lastmod>2021-11-19</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://riddlego.github.io/tags/%E7%89%A9%E8%81%94%E7%BD%91/</loc>
+    <lastmod>2021-11-19</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://riddlego.github.io/tags/ESP8266/</loc>
     <lastmod>2021-11-19</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -3147,6 +3175,13 @@
   </url>
   
   <url>
+    <loc>https://riddlego.github.io/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/</loc>
+    <lastmod>2021-11-19</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://riddlego.github.io/tags/bodyclose/</loc>
     <lastmod>2021-11-19</lastmod>
     <changefreq>daily</changefreq>
@@ -3155,13 +3190,6 @@
   
   <url>
     <loc>https://riddlego.github.io/tags/sqlrows/</loc>
-    <lastmod>2021-11-19</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://riddlego.github.io/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/</loc>
     <lastmod>2021-11-19</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -3217,14 +3245,14 @@
   </url>
   
   <url>
-    <loc>https://riddlego.github.io/tags/fasthttp/</loc>
+    <loc>https://riddlego.github.io/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/</loc>
     <lastmod>2021-11-19</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://riddlego.github.io/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/</loc>
+    <loc>https://riddlego.github.io/tags/fasthttp/</loc>
     <lastmod>2021-11-19</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -3363,34 +3391,6 @@
     <priority>0.6</priority>
   </url>
   
-  <url>
-    <loc>https://riddlego.github.io/tags/wifi/</loc>
-    <lastmod>2021-11-19</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://riddlego.github.io/tags/%E7%89%A9%E8%81%94%E7%BD%91/</loc>
-    <lastmod>2021-11-19</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://riddlego.github.io/tags/ESP8266/</loc>
-    <lastmod>2021-11-19</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://riddlego.github.io/tags/%E7%AE%80%E5%8E%86/</loc>
-    <lastmod>2021-11-19</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
 
   
   <url>
@@ -3429,14 +3429,14 @@
   </url>
   
   <url>
-    <loc>https://riddlego.github.io/categories/golang%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/</loc>
+    <loc>https://riddlego.github.io/categories/golang-more/</loc>
     <lastmod>2021-11-19</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://riddlego.github.io/categories/golang-more/</loc>
+    <loc>https://riddlego.github.io/categories/golang%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/</loc>
     <lastmod>2021-11-19</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -3450,13 +3450,6 @@
   </url>
   
   <url>
-    <loc>https://riddlego.github.io/categories/golang-More/%E4%BC%98%E5%8C%96/</loc>
-    <lastmod>2021-11-19</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://riddlego.github.io/categories/golang%E5%8C%85%E5%8C%85/</loc>
     <lastmod>2021-11-19</lastmod>
     <changefreq>daily</changefreq>
@@ -3464,7 +3457,7 @@
   </url>
   
   <url>
-    <loc>https://riddlego.github.io/categories/golang%E6%95%B0%E6%8D%AE%E5%BA%93/</loc>
+    <loc>https://riddlego.github.io/categories/golang-More/%E4%BC%98%E5%8C%96/</loc>
     <lastmod>2021-11-19</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -3478,6 +3471,13 @@
   </url>
   
   <url>
+    <loc>https://riddlego.github.io/categories/golang%E6%95%B0%E6%8D%AE%E5%BA%93/</loc>
+    <lastmod>2021-11-19</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://riddlego.github.io/categories/golang-More/%E5%B9%B6%E5%8F%91/</loc>
     <lastmod>2021-11-19</lastmod>
     <changefreq>daily</changefreq>
@@ -3485,14 +3485,14 @@
   </url>
   
   <url>
-    <loc>https://riddlego.github.io/categories/golang-More/%E6%B5%8B%E8%AF%95/</loc>
+    <loc>https://riddlego.github.io/categories/golang-more/Go-Modules/</loc>
     <lastmod>2021-11-19</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://riddlego.github.io/categories/golang-more/Go-Modules/</loc>
+    <loc>https://riddlego.github.io/categories/golang-More/%E6%B5%8B%E8%AF%95/</loc>
     <lastmod>2021-11-19</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -3639,6 +3639,13 @@
   </url>
   
   <url>
+    <loc>https://riddlego.github.io/categories/wifi/</loc>
+    <lastmod>2021-11-19</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://riddlego.github.io/categories/golang%E5%BE%AE%E6%9C%8D%E5%8A%A1/RPC%E7%B3%BB%E5%88%97/</loc>
     <lastmod>2021-11-19</lastmod>
     <changefreq>daily</changefreq>
@@ -3689,13 +3696,6 @@
   
   <url>
     <loc>https://riddlego.github.io/categories/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B/</loc>
-    <lastmod>2021-11-19</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://riddlego.github.io/categories/wifi/</loc>
     <lastmod>2021-11-19</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
