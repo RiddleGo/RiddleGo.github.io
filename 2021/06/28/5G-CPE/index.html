@@ -1,37 +1,255 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
-{% block page_class %}page-post-detail{% endblock %}
 
 
-{% block content %}
+  <meta name="description" content="5G-CPE"/>
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
-    </div>
+
+
+  <meta name="keywords" content="5G," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+
+
+
+<link rel="canonical" href="https://riddlego.github.io/2021/06/28/5G-CPE/"/>
+
+
+<meta name="description" content="5G CPE是什么？5G CPE概念详解CPE这个东东，对于我们国内用户来说，算是一个新鲜且少见的玩意。 它的全称叫做Customer Premise Equipment，业内喜欢称之为“客户终端设备”。其实，Premise有“前提、假设”的意思，更准确的翻译应该是“客户前置设备”。 所谓“前置”，是指它总是站在用户设备的“前面”。它的作用，是将移动通信信号（4G、5G等）或有线宽带信号，转换成本">
+<meta property="og:type" content="article">
+<meta property="og:title" content="5G-CPE">
+<meta property="og:url" content="https://riddlego.github.io/2021/06/28/5G-CPE/index.html">
+<meta property="og:site_name" content="RiddleGo">
+<meta property="og:description" content="5G CPE是什么？5G CPE概念详解CPE这个东东，对于我们国内用户来说，算是一个新鲜且少见的玩意。 它的全称叫做Customer Premise Equipment，业内喜欢称之为“客户终端设备”。其实，Premise有“前提、假设”的意思，更准确的翻译应该是“客户前置设备”。 所谓“前置”，是指它总是站在用户设备的“前面”。它的作用，是将移动通信信号（4G、5G等）或有线宽带信号，转换成本">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-06-28T08:17:50.000Z">
+<meta property="article:modified_time" content="2021-07-29T07:17:43.289Z">
+<meta property="article:author" content="Russshare">
+<meta property="article:tag" content="5G">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> 5G-CPE - RiddleGo </title>
+  <meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">RiddleGo</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          5G-CPE
+        
+      </h1>
+
+      <time class="post-time">
+          6月 28 2021
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h3 id="5G-CPE是什么？"><a href="#5G-CPE是什么？" class="headerlink" title="5G CPE是什么？"></a>5G CPE是什么？</h3><h3 id="5G-CPE概念详解"><a href="#5G-CPE概念详解" class="headerlink" title="5G CPE概念详解"></a>5G CPE概念详解</h3><p>CPE这个东东，对于我们国内用户来说，算是一个新鲜且少见的玩意。</p>
+<p>它的全称叫做Customer Premise Equipment，业内喜欢称之为“客户终端设备”。其实，Premise有“前提、假设”的意思，更准确的翻译应该是“客户前置设备”。</p>
+<p>所谓“前置”，是指它总是站在用户设备的“前面”。它的作用，是将移动通信信号（4G、5G等）或有线宽带信号，转换成本地局域网信号，供用户设备使用。</p>
+<p>在国内，CPE一般会在两种情况下出现。</p>
+<p>一种，是政企用户的专线接入宽带业务里面，用户侧一般都有这么一个设备。</p>
+<p>另一种，就是这几年国内逐渐开始流行起来的5G CPE。</p>
+<h3 id="5G-CPE"><a href="#5G-CPE" class="headerlink" title="5G CPE"></a>5G CPE</h3><h4 id="5G-CPE，属于一种5G终端设备。"><a href="#5G-CPE，属于一种5G终端设备。" class="headerlink" title="5G CPE，属于一种5G终端设备。"></a>5G CPE，属于一种5G终端设备。</h4><p>它接收运营商基站发出的5G信号，然后转换成Wi-Fi信号或有线信号，让更多本地设备（手机、平板、电脑）上网。</p>
+<p>大家可以看出，5G CPE和我们家里光纤宽带的“光猫”功能非常类似。</p>
+<p>光纤宽带所使用的光猫</p>
+<p>其实，从本质上来说，“光猫”属于CPE的一种。“光猫”和5G CPE的区别在于，“光猫”向上连接的是运营商光纤接入网设备，而5G CPE连接的是5G基站。</p>
+<p>那么问题来了，既然有了“光猫”，我们还要5G CPE有啥用？5G CPE会取代“光猫”吗？</p>
+<p>我们先说结论：当然是不会。</p>
+<p>目前的5G CPE产品，都使用了和5G手机相同或类似的5G芯片，拥有强大的5G连接能力，支持SA/NSA组网，兼容4G/5G信号。在速率方面，5G CPE和“光猫”不相上下。</p>
+<p>可以说，5G CPE就是一个加强版“光猫”。</p>
+<h4 id="5G-CPE的优势，就是移动性和灵活性。"><a href="#5G-CPE的优势，就是移动性和灵活性。" class="headerlink" title="5G CPE的优势，就是移动性和灵活性。"></a>5G CPE的优势，就是移动性和灵活性。</h4><p>与常规“光猫”只能固定在一处使用不同，5G CPE可以“移动”。凡是有5G信号的地方，都可以使用5G CPE。例如，当我们一家人去郊区别墅度假时，可以使用5G CPE，架设一个Wi-Fi 6高速热点，让家庭成员们都能够上网，分享游玩的视频。再比如，当公司外出举办活动或参加展会时，可以使用5G CPE，方便员工和客户上网。甚至说，你要去摆地摊，也可以带上CPE，相当于带了一根光纤宽带在身边。</p>
+<h4 id="5G-CPE的灵活性，表现在业务开通方面。"><a href="#5G-CPE的灵活性，表现在业务开通方面。" class="headerlink" title="5G CPE的灵活性，表现在业务开通方面。"></a>5G CPE的灵活性，表现在业务开通方面。</h4><p>传统的“光纤宽带”，开通起来还算比较容易，去营业厅办理套餐，就能开通。但取消就麻烦多了。现在的宽带业务，基本上都有协议期，协议期没结束，就不能随意停机。</p>
+<p>万一需要搬家，光纤宽带还要办理移机，也很麻烦。</p>
+<p>而5G CPE不同，只要有一张5G手机卡（现在网上的流量卡很便宜），就能高速上网。</p>
+<p>CPE背后的卡槽</p>
+<p>对于年轻人的租房场景，还有小微企业的办公场景，使用5G CPE就非常合适。设备随带随走，随走随用，完全规避了宽带装机拆机带来的麻烦。</p>
+<p>5G CPE还适合偏远地区或地形复杂地区（例如农村、野外等）。这些地区如果要铺设光纤，难度大、成本高，非常不划算。</p>
+<p>事实上，国外很多地区，因为地广人稀，所以很早就开始使用CPE。他们利用室外CPE接收基站信号，然后转成本地信号，以此来访问互联网。</p>
+<p>固定无线宽带接入（fixed wireless access，FWA）</p>
+<p>如果是毫米波CPE的话，就更来劲了</p>
+<h3 id="室外CPE"><a href="#室外CPE" class="headerlink" title="室外CPE"></a>室外CPE</h3><p>此外，5G CPE体积大，天线增益更强，功率更高，信号收发能力比手机更强，所以还经常被用于各种外场5G场景测试。</p>
+<p>简而言之，5G CPE融合了Wi-Fi的低成本，还有5G的大带宽，将两者的优势结合，形成对传统光纤宽带的有力补充。</p>
+<p>除了上网之外，5G CPE未来还会充当家庭智能网关的作用。</p>
+<p>一直以来，家用路由器市场都是众多厂商的竞争焦点。不是因为路由器赚钱，而是因为它是全家网络流量的出入口，也是家庭数字应用的基础平台。5G CPE，扮演着和路由器同样的角色，它将是未来5G家庭的“智慧网关”，更是全家智能生活的支点。</p>
+<p>用户通过5G CPE，可以控制家中的多种智能设备，在实现万物互联的同时，显著提高了家庭成员的生活体验。</p>
+<p>除了面向家庭的to C场景之外，面向企业的to B市场，5G CPE也有非常广阔的应用前景。</p>
+<p>以智慧工厂为例。未来，工厂的设备和物资都会联网。5G CPE，可以作为某个区域内（车间）所有设备的统一流量出入口，为这些设备提供低成本、高速率的网络连接。</p>
+<p>随着应用场景的增加，5G CPE将支持除了5G之外更多的通信协议（例如蓝牙、UWB等），真正成为所有设备的管理控制中枢。</p>
+<p>除了网络连接功能外，5G CPE还会与边缘计算结合，成为一个下沉的边缘计算节点，为相关设备提供算力支持。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>总而言之，5G CPE对家庭用户和企业用户都有非常重要的意义。</p>
+<p>随着5G网络建设的全面铺开，越来越多的地方开始覆盖5G信号。5G CPE的需求一定会不断增加，围绕5G CPE的应用场景，也会变得越来越多。</p>
+<p>相信5G CPE会逐渐走进更多人的生活！</p>
+<p>责任编辑：PSY</p>
+<p> <a target="_blank" rel="noopener" href="http://www.elecfans.com/d/1365413.html">http://www.elecfans.com/d/1365413.html</a></p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/5G/">5G</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2021/06/28/%E7%8C%9B%E7%94%B7%E7%A2%8E%E7%A2%8E%E5%BF%B5/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">猛男碎碎念</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2021/06/28/golang%E5%9F%BA%E7%A1%80-sort%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/">
+        <span class="next-text nav-default">golang基础-sort使用方法</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+      </footer>
+    
+  </article>
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2021
+    <span class="footer-author">Russshare.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

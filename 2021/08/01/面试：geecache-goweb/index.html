@@ -1,37 +1,288 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
-{% block page_class %}page-post-detail{% endblock %}
 
 
-{% block content %}
+  <meta name="description" content="面试：geecache-goweb"/>
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
-    </div>
+
+
+  <meta name="keywords" content="面试,分布式缓存,cache," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+
+
+
+<link rel="canonical" href="https://riddlego.github.io/2021/08/01/面试：geecache-goweb/"/>
+
+
+<meta name="description" content="问题来自内容来自 part 1 — 几个问题（上面超链接一里面有源码） 类redis分布式缓存原文地址：https:&#x2F;&#x2F;www.cnblogs.com&#x2F;Jun10ng&#x2F;p&#x2F;12628081.html 实现一个分布式缓存，功能有：LRU淘汰策略，http调用，并发缓存，一致性哈希，分布式节点，防止缓存击穿 实现LRU淘汰策略LRU的数据结构大致如下，上层是一个map，key是数据对象的key值，而v">
+<meta property="og:type" content="article">
+<meta property="og:title" content="面试：geecache-goweb">
+<meta property="og:url" content="https://riddlego.github.io/2021/08/01/%E9%9D%A2%E8%AF%95%EF%BC%9Ageecache-goweb/index.html">
+<meta property="og:site_name" content="RiddleGo">
+<meta property="og:description" content="问题来自内容来自 part 1 — 几个问题（上面超链接一里面有源码） 类redis分布式缓存原文地址：https:&#x2F;&#x2F;www.cnblogs.com&#x2F;Jun10ng&#x2F;p&#x2F;12628081.html 实现一个分布式缓存，功能有：LRU淘汰策略，http调用，并发缓存，一致性哈希，分布式节点，防止缓存击穿 实现LRU淘汰策略LRU的数据结构大致如下，上层是一个map，key是数据对象的key值，而v">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/geecache01.png">
+<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/geecache02.png">
+<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/geecache03.png">
+<meta property="article:published_time" content="2021-08-01T02:22:07.000Z">
+<meta property="article:modified_time" content="2021-08-02T11:26:38.390Z">
+<meta property="article:author" content="Russshare">
+<meta property="article:tag" content="面试">
+<meta property="article:tag" content="分布式缓存">
+<meta property="article:tag" content="cache">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/geecache01.png">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> 面试：geecache-goweb - RiddleGo </title>
+  <meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">RiddleGo</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          面试：geecache-goweb
+        
+      </h1>
+
+      <time class="post-time">
+          8月 01 2021
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/Jun10ng/p/12628081.html">问题来自</a><br><a target="_blank" rel="noopener" href="https://geektutu.com/post/geecache.html">内容来自</a></p>
+<h2 id="part-1-—-几个问题"><a href="#part-1-—-几个问题" class="headerlink" title="part 1 — 几个问题"></a>part 1 — 几个问题</h2><p>（上面超链接一里面有源码）</p>
+<h3 id="类redis分布式缓存"><a href="#类redis分布式缓存" class="headerlink" title="类redis分布式缓存"></a>类redis分布式缓存</h3><p>原文地址：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/Jun10ng/p/12628081.html">https://www.cnblogs.com/Jun10ng/p/12628081.html</a></p>
+<p>实现一个分布式缓存，功能有：LRU淘汰策略，http调用，并发缓存，一致性哈希，分布式节点，防止缓存击穿</p>
+<h3 id="实现LRU淘汰策略"><a href="#实现LRU淘汰策略" class="headerlink" title="实现LRU淘汰策略"></a>实现LRU淘汰策略</h3><p>LRU的数据结构大致如下，上层是一个map，key是数据对象的key值，而value值则是指向 下层双向链表的节点，在双向链表中，每个节点存储的元素是完整的数据对象，包含key值和value。</p>
+<p><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/geecache01.png"></p>
+<ul>
+<li><p>get：存在-&gt;将元素所在节点提到最前面，不存在-&gt;返回失败</p>
+</li>
+<li><p>add：存在-&gt;更新，不存在-&gt;增加;将元素所在节点提到最前面,判断是否大于maxSize</p>
+</li>
+<li><p>removeOldest:删除链表最后方的节点</p>
+</li>
+</ul>
+<p><strong>核心代码</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">type Value interface &#123;</span><br><span class="line"></span><br><span class="line">	&#x2F;&#x2F;返回占用的内存大小</span><br><span class="line">	Len() int</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">type entry struct &#123;</span><br><span class="line">	key string</span><br><span class="line">	value Value</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">type Cache struct &#123;</span><br><span class="line">	&#x2F;&#x2F;允许使用的最大内存</span><br><span class="line">	maxBytes int64</span><br><span class="line"></span><br><span class="line">	&#x2F;&#x2F;当前已使用的内存</span><br><span class="line">	nbytes int64</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	ll *list.List</span><br><span class="line"></span><br><span class="line">	cache map[string] *list.Element</span><br><span class="line"></span><br><span class="line">	&#x2F;&#x2F;某条记录被移除时的回调函数，可以是nil</span><br><span class="line">	OnEvicted func(key string, value Value)</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里说一下OnEvicted成员，这是一个函数对象，他的作用是，<strong>在缓存中没有需要的数据对象时，我们需要去原始数据源获取，(redis中没有，就需要去数据库中获取)，但是数据源不唯一，有时候是数据库，有时候是磁盘，有时候是表格，</strong>他们的获取方式都不相同，所以OnEvicted成员传入的函数，就是自定义的获取方法。</p>
+<h3 id="实现单机并发"><a href="#实现单机并发" class="headerlink" title="实现单机并发"></a>实现单机并发</h3><p>上文实现的LRU数据结构并不支持并发，**需要加锁来实现并发，所以使用sync.Mutex,**在LRU数据结构上封装，使之实现并发功能。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">type cache struct &#123;</span><br><span class="line">	mu sync.Mutex</span><br><span class="line">	lru *lru.Cache</span><br><span class="line">	cacheBytes int64</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>cache并没有new方法，因为采用的是延迟初始化 <strong>在add方法中，判断c.lru是否为nil，如果等于nil再创建 这种方法称为延迟初始化</strong>，<strong>一个对象的延迟初始化意味着该对象的 创建将会延迟至第一次使用该对象时。</strong> 这个方法在redis中很常见，因为能一定程度上提高性能.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">func (c *cache) add(key string, value ByteView)&#123;</span><br><span class="line">	c.mu.Lock()</span><br><span class="line">	defer c.mu.Unlock()</span><br><span class="line">	if c.lru &#x3D;&#x3D; nil&#123;</span><br><span class="line">		c.lru &#x3D; lru.New(c.cacheBytes,nil)</span><br><span class="line">	&#125;</span><br><span class="line">  &#x2F;&#x2F;将新建的加入到缓存</span><br><span class="line">	c.lru.Add(key,value)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="主体结构"><a href="#主体结构" class="headerlink" title="主体结构"></a>主体结构</h3><p>本质上是再进行一次封装</p>
+<p>难道一台机器就只有一个缓存表吗？你打开redis的可视化工具，能看到redis还有16个池呢，所以我们要实现多个缓存表。怎么做？再加一层。试想一下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;groups 实例集合表</span><br><span class="line">groups &#x3D; make(map[string]*Group)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/geecache02.png"></p>
+<p>我们要实现的数据结构大致是这样的，是一个存储并发cache的表，这是本项目的核心结构</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;这里的group是实例</span><br><span class="line">type Group struct &#123;</span><br><span class="line">	name string</span><br><span class="line">	getter Getter</span><br><span class="line">	mainCache cache</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="http服务调用"><a href="#http服务调用" class="headerlink" title="http服务调用"></a>http服务调用</h3><p>当请求URL具有前缀/_Gache/时，则认为该请求为缓存调用。</p>
+<p>约定的请求URL为:<a target="_blank" rel="noopener" href="http://xxx.com/_Gache/">http://XXX.com/_Gache/</a><groupname>/<key></p>
+<p>groupname字段为主体结构中groups中的某个元素的name值，由此调用。key字段为元素中的元素的key值，所以最后逻辑为</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">groups[groupname][key]</span><br></pre></td></tr></table></figure>
+
+<h3 id="一致性哈希"><a href="#一致性哈希" class="headerlink" title="一致性哈希"></a>一致性哈希</h3><p>一致性哈希抽象的解释就是一个很大的环，但是在实现的时候，我们总不可能声明一个有个成千链表节点的环吧，何况其中大多节点还是闲置节点，没有实际的作用，所以我们需要在逻辑上去声明哈希环。</p>
+<h3 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h3><p><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/geecache03.png"></p>
+<p>（真实节点就是指机器，虚拟节点相反）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">type Map struct &#123;</span><br><span class="line">	hash Hash</span><br><span class="line">	virMpl int</span><br><span class="line">	keys []int</span><br><span class="line">	hashMap map[int]string</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>hash是函数变量</p>
+<p>virMpl是虚拟节点的倍数</p>
+<p>keys是存放节点哈希值的有序数组</p>
+<p>hashMap中存放的是虚拟节点和真实节点的对映，之所以是[int]string类型，是因为key是虚拟节点的哈希值，value是真实节点</p>
+<h3 id="添加真实节点"><a href="#添加真实节点" class="headerlink" title="添加真实节点"></a>添加真实节点</h3><p>缺点是，当有一个真实节点添加进来的时候，所有值都要重新计算一遍。这在并发情况下，会造成一定拥塞。因为在重新计算期间，不能进行正确的访问操作。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">func (m* Map) Add(keys ...string)&#123;</span><br><span class="line">	for _,realNodeKey:&#x3D;range keys&#123;</span><br><span class="line">		for i:&#x3D;0;i&lt;m.virMpl;i++&#123;</span><br><span class="line">			&#x2F;*</span><br><span class="line">				keys中的每个真实节点都对映着virMpl个虚拟节点</span><br><span class="line">				每个虚拟节点的key（即virNodeKey）为 i+realNodekey</span><br><span class="line">				（即一个“不定数”，这里用i值，加上真实节点key</span><br><span class="line">			*&#x2F;</span><br><span class="line">			virNodeKey :&#x3D; []byte(strconv.Itoa(i)+realNodeKey)</span><br><span class="line">			&#x2F;*</span><br><span class="line">				对虚拟节点做哈希</span><br><span class="line">			*&#x2F;</span><br><span class="line">			virNodeHash:&#x3D; int(m.hash(virNodeKey))</span><br><span class="line">			&#x2F;*</span><br><span class="line">				添加进哈希环，所以虚拟节点也存在于哈希环中</span><br><span class="line">			*&#x2F;</span><br><span class="line">			m.keys &#x3D; append(m.keys,virNodeHash)</span><br><span class="line">			&#x2F;*</span><br><span class="line">				虚拟节点的hash对映某个真实节点的key</span><br><span class="line">			*&#x2F;</span><br><span class="line">			m.hashMap[virNodeHash] &#x3D; realNodeKey</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	sort.Ints(m.keys)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="访问真实节点"><a href="#访问真实节点" class="headerlink" title="访问真实节点"></a>访问真实节点</h3><p><strong>也就是get函数</strong></p>
+<p>分为三个步骤</p>
+<ul>
+<li><p>计算出虚拟节点的哈希值virNodeHash</p>
+</li>
+<li><p>在keys数组中找到大于等于virNodeHash的值，返回其下标index，则对应的节点为keys[index]</p>
+</li>
+<li><p>通过下标在hashMap中找到keys[index]的真实节点</p>
+</li>
+</ul>
+<p>自己试着写下get函数，会对整个逻辑更清晰。</p>
+<h3 id="分布式节点设计"><a href="#分布式节点设计" class="headerlink" title="分布式节点设计"></a>分布式节点设计</h3><p> 实现功能</p>
+<p>使用一致性哈希选择节点时，判断是否为远程节点，再使用http客户端去访问远程节点，如果不是远程节点就是本地节点。</p>
+<h2 id="part-2-—-再来详细看看整个过程"><a href="#part-2-—-再来详细看看整个过程" class="headerlink" title="part 2 — 再来详细看看整个过程"></a>part 2 — 再来详细看看整个过程</h2><p>这个部分 我根据最近的经理简单的梳理一下这个大概的流程。  说的肯定有不对的，大佬们随意批评，能温柔点当然更好。（害羞ing）</p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/%E9%9D%A2%E8%AF%95/">面试</a>
+		  
+			<a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98/">分布式缓存</a>
+		  
+			<a href="/tags/cache/">cache</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2021/08/03/%E5%89%91%E6%8C%87offer04/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">剑指offer04</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2021/08/01/%E9%9D%A2%E8%AF%95%EF%BC%9Awebgee-goweb/">
+        <span class="next-text nav-default">面试：webgee-goweb</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+      </footer>
+    
+  </article>
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2021
+    <span class="footer-author">Russshare.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

@@ -1,37 +1,240 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
-{% block page_class %}page-post-detail{% endblock %}
 
 
-{% block content %}
+  <meta name="description" content="golang实现堆栈"/>
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
-    </div>
+
+
+  <meta name="keywords" content="数据结构,堆,栈," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+
+
+
+<link rel="canonical" href="https://riddlego.github.io/2021/06/29/golang实现堆栈/"/>
+
+
+<meta name="description" content="前言：最近有点懈怠了1. 栈（stack）栈（stack）在计算机科学中是限定仅在表尾进行插入或删除操作的线性表。栈是一种数据结构，它按照后进先出的原则存储数据，先进入的数据被压入栈底，最后的数据在栈顶，需要读数据的时候从栈顶开始弹出数据。栈是只能在某一端插入和删除的特殊线性表。用桶堆积物品，先堆进来的压在底下，随后一件一件往上堆。取走时，只能从上面一件一件取。读和取都在顶部进行，底部一般是不动的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="golang实现堆栈">
+<meta property="og:url" content="https://riddlego.github.io/2021/06/29/golang%E5%AE%9E%E7%8E%B0%E5%A0%86%E6%A0%88/index.html">
+<meta property="og:site_name" content="RiddleGo">
+<meta property="og:description" content="前言：最近有点懈怠了1. 栈（stack）栈（stack）在计算机科学中是限定仅在表尾进行插入或删除操作的线性表。栈是一种数据结构，它按照后进先出的原则存储数据，先进入的数据被压入栈底，最后的数据在栈顶，需要读数据的时候从栈顶开始弹出数据。栈是只能在某一端插入和删除的特殊线性表。用桶堆积物品，先堆进来的压在底下，随后一件一件往上堆。取走时，只能从上面一件一件取。读和取都在顶部进行，底部一般是不动的">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-06-29T11:01:51.000Z">
+<meta property="article:modified_time" content="2021-06-29T11:29:07.554Z">
+<meta property="article:author" content="Russshare">
+<meta property="article:tag" content="数据结构">
+<meta property="article:tag" content="堆">
+<meta property="article:tag" content="栈">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> golang实现堆栈 - RiddleGo </title>
+  <meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">RiddleGo</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          golang实现堆栈
+        
+      </h1>
+
+      <time class="post-time">
+          6月 29 2021
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h2 id="前言：最近有点懈怠了"><a href="#前言：最近有点懈怠了" class="headerlink" title="前言：最近有点懈怠了"></a>前言：最近有点懈怠了</h2><h4 id="1-栈（stack）"><a href="#1-栈（stack）" class="headerlink" title="1. 栈（stack）"></a>1. 栈（stack）</h4><p>栈（stack）在计算机科学中是限定<strong>仅在表尾进行插入或删除操作的线性表。</strong><br>栈是一种数据结构，它<strong>按照后进先出的原则存储数据</strong>，先进入的数据被压入栈底，最后的数据在栈顶，需要读数据的时候从栈顶开始弹出数据。<br>栈是只能在某一端插入和删除的特殊线性表。用桶堆积物品，先堆进来的压在底下，随后一件一件往上堆。取走时，只能从上面一件一件取。读和取都在顶部进行，底部一般是不动的。栈就是一种类似桶堆积物品的数据结构，进行删除和插入的一端称栈顶，另一端称栈底。插入一般称为进栈，删除则称为退栈。 栈也称为后进先出表。</p>
+<h4 id="2-Golang-实现"><a href="#2-Golang-实现" class="headerlink" title="2. Golang 实现"></a>2. Golang 实现</h4><h5 id="2-1-相关结构体"><a href="#2-1-相关结构体" class="headerlink" title="2.1. 相关结构体"></a>2.1. 相关结构体</h5><p>在这里，我把栈拆分为两个部分，容器和链表，<strong>容器用结构体实现，链表用单链表，</strong> 当然大家也可以用其他链表结构，甚至数组来实现。</p>
+<p><strong>这里的例子，也是使用单链表实现的。</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 栈信息</span><br><span class="line">type Stack struct &#123;</span><br><span class="line">    list *SingleList</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="2-2-栈初始化"><a href="#2-2-栈初始化" class="headerlink" title="2.2. 栈初始化"></a>2.2. 栈初始化</h5><p>对stack 进行简单的初始化，也即是对于单链表的初始化</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; Init 初始化栈</span><br><span class="line">func (s *Stack) Init()  &#123;</span><br><span class="line">    s.list &#x3D; new(SingleList)</span><br><span class="line">    s.list.Init()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="2-3-压入栈（push"><a href="#2-3-压入栈（push" class="headerlink" title="2.3. 压入栈（push)"></a>2.3. 压入栈（push)</h5><p>往栈内插入数据，称为push，在这里对于栈的压入压出都是对链表的表头处理，当然也可以对表尾处理，道理都是一样的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; Push 压入栈</span><br><span class="line">func (s *Stack)Push(data interface&#123;&#125;) bool &#123;</span><br><span class="line">    node :&#x3D; &amp;SingleNode&#123;</span><br><span class="line">        Data: data,</span><br><span class="line">    &#125;</span><br><span class="line">    return s.list.Insert(0, node)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="2-4-压出栈-pop"><a href="#2-4-压出栈-pop" class="headerlink" title="2.4. 压出栈(pop)"></a>2.4. 压出栈(pop)</h5><p>取出栈顶数据，称为pop。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; Pop 压出栈</span><br><span class="line">func (s *Stack)Pop() interface&#123;&#125;&#123;</span><br><span class="line">    node :&#x3D; s.list.Get(0)</span><br><span class="line">    if node !&#x3D; nil &#123;</span><br><span class="line">        s.list.Delete(0)</span><br><span class="line">        return node.Data</span><br><span class="line">    &#125;</span><br><span class="line">    return nil</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="2-5-查看栈顶数据-peek"><a href="#2-5-查看栈顶数据-peek" class="headerlink" title="2.5. 查看栈顶数据(peek)"></a>2.5. 查看栈顶数据(peek)</h5><p>只查看栈顶元素，并不取出</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; Peek 查看栈顶元素</span><br><span class="line">func (s *Stack)Peek() interface&#123;&#125;&#123;</span><br><span class="line">    node :&#x3D; s.list.Get(0)</span><br><span class="line">    if node !&#x3D; nil &#123;</span><br><span class="line">        return node.Data</span><br><span class="line">    &#125;</span><br><span class="line">    return nil</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="2-6-栈长度-size"><a href="#2-6-栈长度-size" class="headerlink" title="2.6. 栈长度(size)"></a>2.6. 栈长度(size)</h5><p>查询栈当前元素数量</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; Size 获取栈的长度</span><br><span class="line">func (s *Stack)Size()uint&#123;</span><br><span class="line">    return s.list.Size</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="1-单元测试"><a href="#1-单元测试" class="headerlink" title="1. 单元测试"></a>1. 单元测试</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line">package dstr</span><br><span class="line"></span><br><span class="line">import(</span><br><span class="line">    &quot;testing&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func TestStack_Init(t *testing.T)  &#123;</span><br><span class="line">    stack :&#x3D; new(Stack)</span><br><span class="line">    stack.Init()</span><br><span class="line">    t.Log(&quot;stack init success&quot;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func TestStack_Push(t *testing.T)&#123;</span><br><span class="line">    stack :&#x3D; new(Stack)</span><br><span class="line">    stack.Init()</span><br><span class="line">    b :&#x3D; stack.Push(1)</span><br><span class="line">    if !b &#123;</span><br><span class="line">        t.Error(&quot;stack push failed&quot;)</span><br><span class="line">        return</span><br><span class="line">    &#125;</span><br><span class="line">    t.Log(&quot;stack push success&quot;)</span><br><span class="line">    data :&#x3D; stack.Peek()</span><br><span class="line">    var (</span><br><span class="line">        ok bool</span><br><span class="line">        num int</span><br><span class="line">    )</span><br><span class="line">    if num, ok &#x3D; data.(int); ok &amp;&amp; num &#x3D;&#x3D; 1&#123;</span><br><span class="line">        t.Log(&quot;stack push and peek success&quot;)</span><br><span class="line">        return</span><br><span class="line">    &#125;</span><br><span class="line">    t.Error(&quot;stack push success but peek failed&quot;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func TestStack_Pop(t *testing.T)&#123;</span><br><span class="line">    stack :&#x3D; new(Stack)</span><br><span class="line">    stack.Init()</span><br><span class="line">    d1 :&#x3D; stack.Pop()</span><br><span class="line">    if d1 !&#x3D; nil&#123;</span><br><span class="line">        t.Error(&quot;empty stack pop error&quot;)</span><br><span class="line">        return</span><br><span class="line">    &#125;</span><br><span class="line">    t.Log(&quot;empty stack pop success&quot;)</span><br><span class="line"></span><br><span class="line">    stack.Push(1)</span><br><span class="line">    stack.Push(2)</span><br><span class="line">    stack.Push(3)</span><br><span class="line">    d2 :&#x3D; stack.Pop()</span><br><span class="line">    var (</span><br><span class="line">        ok bool</span><br><span class="line">        num int</span><br><span class="line">    )</span><br><span class="line">    if num, ok &#x3D; d2.(int); ok &amp;&amp; num &#x3D;&#x3D; 3 &amp;&amp; stack.Size() &#x3D;&#x3D; 2&#123;</span><br><span class="line">        t.Log(&quot;stack pop success&quot;)</span><br><span class="line">        return</span><br><span class="line">    &#125;</span><br><span class="line">    t.Error(&quot;stack pop failed&quot;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func TestStack_Peek(t *testing.T)&#123;</span><br><span class="line">    stack :&#x3D; new(Stack)</span><br><span class="line">    stack.Init()</span><br><span class="line">    d :&#x3D; stack.Peek()</span><br><span class="line">    if d &#x3D;&#x3D; nil &#123;</span><br><span class="line">        t.Log(&quot;empty stack peek success&quot;)</span><br><span class="line">        return</span><br><span class="line">    &#125;</span><br><span class="line">    t.Error(&quot;empty stack peek fail&quot;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a>
+		  
+			<a href="/tags/%E5%A0%86/">堆</a>
+		  
+			<a href="/tags/%E6%A0%88/">栈</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2021/07/13/%E5%A4%A7%E7%96%86%E9%9D%A2%E8%AF%95/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">大疆面试</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2021/06/29/golang%E4%B8%AD%E7%9A%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E4%BD%BF%E7%94%A8%E5%B0%8F%E6%84%9F%E6%82%9F/">
+        <span class="next-text nav-default">golang中的数据类型使用小感悟</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+      </footer>
+    
+  </article>
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2021
+    <span class="footer-author">Russshare.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

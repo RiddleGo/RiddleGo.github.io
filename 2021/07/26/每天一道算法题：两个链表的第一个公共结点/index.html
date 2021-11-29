@@ -1,37 +1,228 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
-{% block page_class %}page-post-detail{% endblock %}
 
 
-{% block content %}
+  <meta name="description" content="每天一道算法题：两个链表的第一个公共结点"/>
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
-    </div>
+
+
+  <meta name="keywords" content="面试,算法," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+
+
+
+<link rel="canonical" href="https://riddlego.github.io/2021/07/26/每天一道算法题：两个链表的第一个公共结点/"/>
+
+
+<meta name="description" content="题目描述输入两个链表，找出它们的第一个公共结点。（注意因为传入数据是链表，所以错误测试数据的提示是用其他方式显示的，保证传入数据是正确的） 思路假设两个链表的第一个公共结点为c。链表1可以表示为a+c，链表2可以表示为b+c。可以通过a+c+b+c &#x3D; b+c+a+c来快速求出c的值，若没有公共结点，那c便是null。可以根据下图，简单理解下这个过程。  Java代码实现 123456789101">
+<meta property="og:type" content="article">
+<meta property="og:title" content="每天一道算法题：两个链表的第一个公共结点">
+<meta property="og:url" content="https://riddlego.github.io/2021/07/26/%E6%AF%8F%E5%A4%A9%E4%B8%80%E9%81%93%E7%AE%97%E6%B3%95%E9%A2%98%EF%BC%9A%E4%B8%A4%E4%B8%AA%E9%93%BE%E8%A1%A8%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%85%AC%E5%85%B1%E7%BB%93%E7%82%B9/index.html">
+<meta property="og:site_name" content="RiddleGo">
+<meta property="og:description" content="题目描述输入两个链表，找出它们的第一个公共结点。（注意因为传入数据是链表，所以错误测试数据的提示是用其他方式显示的，保证传入数据是正确的） 思路假设两个链表的第一个公共结点为c。链表1可以表示为a+c，链表2可以表示为b+c。可以通过a+c+b+c &#x3D; b+c+a+c来快速求出c的值，若没有公共结点，那c便是null。可以根据下图，简单理解下这个过程。  Java代码实现 123456789101">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/01listpublic.png">
+<meta property="article:published_time" content="2021-07-26T14:34:01.000Z">
+<meta property="article:modified_time" content="2021-07-26T15:18:44.000Z">
+<meta property="article:author" content="Russshare">
+<meta property="article:tag" content="面试">
+<meta property="article:tag" content="算法">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/01listpublic.png">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> 每天一道算法题：两个链表的第一个公共结点 - RiddleGo </title>
+  <meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">RiddleGo</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          每天一道算法题：两个链表的第一个公共结点
+        
+      </h1>
+
+      <time class="post-time">
+          7月 26 2021
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <p>题目描述<br>输入两个链表，找出它们的第一个公共结点。（注意因为传入数据是链表，所以错误测试数据的提示是用其他方式显示的，保证传入数据是正确的）</p>
+<p>思路<br>假设两个链表的第一个公共结点为c。<br>链表1可以表示为a+c，链表2可以表示为b+c。<br>可以通过a+c+b+c = b+c+a+c来快速求出c的值，若没有公共结点，那c便是null。<br>可以根据下图，简单理解下这个过程。</p>
+<p><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/01listpublic.png"></p>
+<p><strong>Java代码实现</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">public class Solution &#123;</span><br><span class="line">    public ListNode FindFirstCommonNode(ListNode pHead1, ListNode pHead2) &#123;</span><br><span class="line">        ListNode p1 &#x3D; pHead1;</span><br><span class="line">        ListNode p2 &#x3D; pHead2;</span><br><span class="line">        </span><br><span class="line">        while(p1 !&#x3D; p2)&#123;</span><br><span class="line">            p1 &#x3D; (p1&#x3D;&#x3D;null)?pHead2:p1.next;</span><br><span class="line">            p2 &#x3D; (p2&#x3D;&#x3D;null)?pHead1:p2.next;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        return p1;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>Golang代码实现</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">func getIntersectionNode(headA, headB *ListNode) *ListNode &#123;</span><br><span class="line">    pA,pB :&#x3D; headA,headB</span><br><span class="line">    for headA !&#x3D; headB &#123;</span><br><span class="line">        if headA &#x3D;&#x3D; nil&#123;</span><br><span class="line">            headA &#x3D; pB</span><br><span class="line">        &#125;else &#123;</span><br><span class="line">            headA &#x3D; headA.Next</span><br><span class="line">        &#125;</span><br><span class="line">        if headB &#x3D;&#x3D; nil&#123;</span><br><span class="line">            headB &#x3D; pA</span><br><span class="line">        &#125;else &#123;</span><br><span class="line">            headB &#x3D; headB.Next</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return headB</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/%E9%9D%A2%E8%AF%95/">面试</a>
+		  
+			<a href="/tags/%E7%AE%97%E6%B3%95/">算法</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2021/07/26/%E6%AF%8F%E5%A4%A9%E4%B8%80%E9%81%93%E7%AE%97%E6%B3%95%E9%A2%98%EF%BC%9A%E4%B8%A4%E4%B8%AA%E9%93%BE%E8%A1%A8%E7%94%9F%E6%88%90%E7%9B%B8%E5%8A%A0%E9%93%BE%E8%A1%A8/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">每天一道算法题：两个链表生成相加链表</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2021/07/26/%E6%AF%8F%E5%A4%A9%E4%B8%80%E9%81%93%E7%AE%97%E6%B3%95%E9%A2%98%EF%BC%9A%E6%9C%80%E9%95%BF%E5%85%AC%E5%85%B1%E5%AD%90%E4%B8%B2/">
+        <span class="next-text nav-default">每天一道算法题：最长公共子串</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+      </footer>
+    
+  </article>
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2021
+    <span class="footer-author">Russshare.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

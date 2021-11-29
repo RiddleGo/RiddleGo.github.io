@@ -1,37 +1,299 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
-{% block page_class %}page-post-detail{% endblock %}
 
 
-{% block content %}
+  <meta name="description" content="golang基础-sort使用方法"/>
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
-    </div>
+
+
+  <meta name="keywords" content="golang,数据结构,sort排序," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+
+
+
+<link rel="canonical" href="https://riddlego.github.io/2021/06/28/golang基础-sort使用方法/"/>
+
+
+<meta name="description" content="前言：我们前面写了container这个包，它里面有heap、list、ring这一篇我们来学习一下sort这个包 实现了排序算法的包sort包．sort包中实现了３种基本的排序算法：插入排序．快排和堆排序． 和其他语言中一样，这三种方式都是不公开的，他们只在sort包内部使用． 所以用户在使用sort包进行排序时无需考虑使用那种排序方式 sort.Interface定义的三个方法：    +获取">
+<meta property="og:type" content="article">
+<meta property="og:title" content="golang基础-sort使用方法">
+<meta property="og:url" content="https://riddlego.github.io/2021/06/28/golang%E5%9F%BA%E7%A1%80-sort%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/index.html">
+<meta property="og:site_name" content="RiddleGo">
+<meta property="og:description" content="前言：我们前面写了container这个包，它里面有heap、list、ring这一篇我们来学习一下sort这个包 实现了排序算法的包sort包．sort包中实现了３种基本的排序算法：插入排序．快排和堆排序． 和其他语言中一样，这三种方式都是不公开的，他们只在sort包内部使用． 所以用户在使用sort包进行排序时无需考虑使用那种排序方式 sort.Interface定义的三个方法：    +获取">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-06-28T08:08:39.000Z">
+<meta property="article:modified_time" content="2021-06-29T10:59:18.481Z">
+<meta property="article:author" content="Russshare">
+<meta property="article:tag" content="golang">
+<meta property="article:tag" content="数据结构">
+<meta property="article:tag" content="sort排序">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> golang基础-sort使用方法 - RiddleGo </title>
+  <meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">RiddleGo</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          golang基础-sort使用方法
+        
+      </h1>
+
+      <time class="post-time">
+          6月 28 2021
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h3 id="前言："><a href="#前言：" class="headerlink" title="前言："></a>前言：</h3><p>我们前面写了container这个包，它里面有heap、list、ring<br>这一篇我们来学习一下sort这个包</p>
+<h3 id="实现了排序算法的包sort包．"><a href="#实现了排序算法的包sort包．" class="headerlink" title="实现了排序算法的包sort包．"></a>实现了排序算法的包sort包．</h3><p>sort包中实现了３种基本的排序算法：插入排序．快排和堆排序．</p>
+<p>和其他语言中一样，这三种方式都是不公开的，他们只在sort包内部使用．</p>
+<p>所以用户在使用sort包进行排序时无需考虑使用那种排序方式</p>
+<p>sort.Interface定义的三个方法：<br>    +获取数据集合长度的Len()方法</p>
+<pre><code>+比较两个元素大小的Less()方法
+
++交换两个元素位置的Swap()方法
+</code></pre>
+<p>就可以顺利对数据集合进行排序。</p>
+<p><strong>sort包会根据实际数据自动选择高效的排序算法。</strong></p>
+<p>看看源码-sort.Interface：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">type Interface interface &#123;</span><br><span class="line"></span><br><span class="line">    Len() int    &#x2F;&#x2F; Len 为集合内元素的总数</span><br><span class="line">  </span><br><span class="line">    Less(i, j int) bool　&#x2F;&#x2F;如果index为i的元素小于index为j的元素，则返回true，否则返回false</span><br><span class="line"></span><br><span class="line">    Swap(i, j int)  &#x2F;&#x2F; Swap 交换索引为 i 和 j 的元素</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>任何实现了 sort.Interface 的类型（一般为集合），均可使用该包中的方法进行排序。</p>
+<p>这些方法要求集合内列出元素的索引为整数。</p>
+<p>Float64s将类型为float64的slice a以升序方式进行排序</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">func Float64s(a []float64)     </span><br></pre></td></tr></table></figure>
+
+<p>判定是否已经进行排序func Ints(a []int)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">func Float64sAreSorted(a []float64) bool　　</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">func Ints(a []int)                       </span><br><span class="line">&#x2F;&#x2F;Ints 以升序排列 int 切片。</span><br><span class="line"></span><br><span class="line">func IntsAreSorted(a []int) bool　　　  </span><br><span class="line">&#x2F;&#x2F;IntsAreSorted 判断 int 切片是否已经按升序排列。</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">func IsSorted(data Interface) bool    </span><br><span class="line">&#x2F;&#x2F;IsSorted 判断数据是否已经排序。包括各种可sort的数据类型的判断．</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">func Strings(a []string)</span><br><span class="line">&#x2F;&#x2F;Strings 以升序排列 string 切片。</span><br><span class="line"></span><br><span class="line">func StringsAreSorted(a []string) bool</span><br><span class="line">&#x2F;&#x2F;StringsAreSorted 判断 string 切片是否已经按升序排列。</span><br></pre></td></tr></table></figure>
+
+<p>下面整个栗子</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">package main  </span><br><span class="line">  </span><br><span class="line">import (  </span><br><span class="line">    &quot;fmt&quot;  </span><br><span class="line">    &quot;sort&quot;  </span><br><span class="line">)  </span><br><span class="line">  </span><br><span class="line">&#x2F;&#x2F;定义interface&#123;&#125;,并实现sort.Interface接口的三个方法  </span><br><span class="line">type IntSlice []int  </span><br><span class="line">  </span><br><span class="line">func (c IntSlice) Len() int &#123;  </span><br><span class="line">    return len(c)  </span><br><span class="line">&#125;  </span><br><span class="line">func (c IntSlice) Swap(i, j int) &#123;  </span><br><span class="line">    c[i], c[j] &#x3D; c[j], c[i]  </span><br><span class="line">&#125;  </span><br><span class="line">func (c IntSlice) Less(i, j int) bool &#123;  </span><br><span class="line">    return c[i] &lt; c[j]  </span><br><span class="line">&#125;  </span><br><span class="line">  </span><br><span class="line">func main() &#123;  </span><br><span class="line">    a :&#x3D; IntSlice&#123;1, 3, 5, 7, 2&#125;  </span><br><span class="line">    b :&#x3D; []float64&#123;1.1, 2.3, 5.3, 3.4&#125;  </span><br><span class="line">    c :&#x3D; []int&#123;1, 3, 5, 4, 2&#125;  </span><br><span class="line">    fmt.Println(sort.IsSorted(a)) &#x2F;&#x2F;false  </span><br><span class="line">    if !sort.IsSorted(a) &#123;  </span><br><span class="line">        sort.Sort(a)   </span><br><span class="line">    &#125;  </span><br><span class="line">  </span><br><span class="line">    if !sort.Float64sAreSorted(b) &#123;  </span><br><span class="line">        sort.Float64s(b)  </span><br><span class="line">    &#125;  </span><br><span class="line">    if !sort.IntsAreSorted(c) &#123;  </span><br><span class="line">        sort.Ints(c)  </span><br><span class="line">    &#125;  </span><br><span class="line">    fmt.Println(a)&#x2F;&#x2F;[1 2 3 5 7]  </span><br><span class="line">    fmt.Println(b)&#x2F;&#x2F;[1.1 2.3 3.4 5.3]  </span><br><span class="line">    fmt.Println(c)&#x2F;&#x2F; [1 2 3 4 5]  </span><br><span class="line">&#125;  </span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">func Search(n int, f func(int) bool) int   </span><br></pre></td></tr></table></figure>
+
+<p><strong>Search使用二分法进行查找，Search()方法回使用“二分查找”算法来搜索某指定切片[0:n]，并返回能够使f(i)=true的最小的i（0&lt;=i&lt;n）值，</strong></p>
+<p>并且会假定，如果f(i)=true，则f(i+1)=true，即对于切片[0:n]，i之前的切片元素会使f()函数返回false，i及i之后的元素会使f()函数返回true。</p>
+<p>但是，当在切片中无法找到时f(i)=true的i时（此时切片元素都不能使f()函数返回true），Search()方法会返回n（而不是返回-1）。</p>
+<p>Search 常用于在一个已排序的，可索引的数据结构中寻找索引为 i 的值 x，例如数组或切片。</p>
+<p>这种情况下，实参 f，一般是一个闭包，会捕获所要搜索的值，以及索引并排序该数据结构的方式。</p>
+<p>为了查找某个值，而不是某一范围的值时，如果slice以升序排序，则　f func中应该使用＞＝,如果slice以降序排序，则应该使用&lt;=. 例子如下：package main</p>
+<p>整个栗子</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">package main  </span><br><span class="line">  </span><br><span class="line">import (  </span><br><span class="line">    &quot;fmt&quot;  </span><br><span class="line">    &quot;sort&quot;  </span><br><span class="line">)  </span><br><span class="line">  </span><br><span class="line">func main() &#123;  </span><br><span class="line">    a :&#x3D; []int&#123;1, 2, 3, 4, 5&#125;  </span><br><span class="line">    b :&#x3D; sort.Search(len(a), func(i int) bool &#123; return a[i] &gt;&#x3D; 30 &#125;)  </span><br><span class="line">    fmt.Println(b)　　　　　　　</span><br><span class="line">    &#x2F;&#x2F;5，查找不到，返回a slice的长度５，而不是-1  </span><br><span class="line">    </span><br><span class="line">    c :&#x3D; sort.Search(len(a), func(i int) bool &#123; return a[i] &lt;&#x3D; 3 &#125;)  </span><br><span class="line">    fmt.Println(c)                             </span><br><span class="line">    &#x2F;&#x2F;0，利用二分法进行查找，返回符合条件的最左边数值的index，即为０  </span><br><span class="line">    </span><br><span class="line">    d :&#x3D; sort.Search(len(a), func(i int) bool &#123; return a[i] &#x3D;&#x3D; 3 &#125;)  </span><br><span class="line">    </span><br><span class="line">    fmt.Println(d)                          &#x2F;&#x2F;2　　　  </span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
+<p>我真的觉得这个search真的很不错，多功能</p>
+<p>官网上面有趣的例子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">func GuessingGame() &#123;</span><br><span class="line">	var s string</span><br><span class="line">	fmt.Printf(&quot;Pick an integer from 0 to 100.\n&quot;)</span><br><span class="line"></span><br><span class="line">	answer :&#x3D; sort.Search(100, func(i int) bool &#123;</span><br><span class="line">		fmt.Printf(&quot;Is your number &lt;&#x3D; %d? &quot;, i)</span><br><span class="line">		fmt.Scanf(&quot;%s&quot;, &amp;s)</span><br><span class="line">		return s !&#x3D; &quot;&quot; &amp;&amp; s[0] &#x3D;&#x3D; &#39;y&#39;</span><br><span class="line">	&#125;)</span><br><span class="line">	</span><br><span class="line">    fmt.Printf(&quot;Your number is %d.\n&quot;, answer)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">func SearchFloat64s(a []float64, x float64) int　　</span><br><span class="line">&#x2F;&#x2F;SearchFloat64s 在float64s切片中搜索x并返回索引如Search函数所述. 返回可以插入x值的索引位置，如果x不存在，返回数组a的长度切片必须以升序排列</span><br><span class="line"></span><br><span class="line">func SearchInts(a []int, x int) int  </span><br><span class="line">&#x2F;&#x2F;SearchInts 在ints切片中搜索x并返回索引如Search函数所述. 返回可以插入x值的索引位置，如果x不存在，返回数组a的长度切片必须以升序排列</span><br><span class="line"></span><br><span class="line">func SearchStrings(a []string, x string) int</span><br><span class="line">&#x2F;&#x2F;SearchFloat64s 在strings切片中搜索x并返回索引如Search函数所述. 返回可以插入x值的索引位置，如果x不存在，返回数组a的长度切片必须以升序排列</span><br></pre></td></tr></table></figure>
+
+<p><strong>其中需要注意的是，以上三种search查找方法，其对应的slice必须按照升序进行排序，否则会出现奇怪的结果．</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">package main  </span><br><span class="line">  </span><br><span class="line">import (  </span><br><span class="line">    &quot;fmt&quot;  </span><br><span class="line">    &quot;sort&quot;  </span><br><span class="line">)  </span><br><span class="line">  </span><br><span class="line">func main() &#123;  </span><br><span class="line">    a :&#x3D; []string&#123;&quot;a&quot;, &quot;c&quot;&#125;  </span><br><span class="line">    i :&#x3D; sort.SearchStrings(a, &quot;b&quot;)  </span><br><span class="line">    fmt.Println(i) &#x2F;&#x2F;1  </span><br><span class="line">    b :&#x3D; []string&#123;&quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;d&quot;&#125;  </span><br><span class="line">    i &#x3D; sort.SearchStrings(b, &quot;b&quot;)  </span><br><span class="line">    fmt.Println(i) &#x2F;&#x2F;1  </span><br><span class="line">    c :&#x3D; []string&#123;&quot;d&quot;, &quot;c&quot;&#125;  </span><br><span class="line">    i &#x3D; sort.SearchStrings(c, &quot;b&quot;)  </span><br><span class="line">    fmt.Println(i) &#x2F;&#x2F;0  </span><br><span class="line">    d :&#x3D; []string&#123;&quot;c&quot;, &quot;d&quot;, &quot;b&quot;&#125;  </span><br><span class="line">    i &#x3D; sort.SearchStrings(d, &quot;b&quot;)  </span><br><span class="line">    fmt.Println(i) </span><br><span class="line">    </span><br><span class="line">    &#x2F;&#x2F;0，由于d不是以升序方式排列，所以出现奇怪的结果，这可以根据SearchStrings的定义进行解释．见下方．  </span><br><span class="line">&#125;  </span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">func SearchStrings(a []string, x string) int &#123;  </span><br><span class="line">    return Search(len(a), func(i int) bool &#123; return a[i] &gt;&#x3D; x &#125;)  </span><br><span class="line">&#125;  </span><br></pre></td></tr></table></figure>
+
+
+<p>由此可见，为了精确查找，必须对[]string　以升序方式进行排序．</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">func Sort(data Interface)</span><br><span class="line">&#x2F;&#x2F;Sort 对 data 进行排序。</span><br></pre></td></tr></table></figure>
+
+<p>它调用一次 data.Len 来决定排序的长度 n，调用 data.Less 和 data.Swap 的开销为O(n*log(n))。</p>
+<p><strong>此排序为不稳定排序。他根据不同形式决定使用不同的排序方式（插入排序，堆排序，快排）</strong></p>
+<p>func Stable(data Interface)Stable对data进行排序，不过排序过程中，<strong>如果data中存在相等的元素，则他们原来的顺序不会改变，即如果有两个相等元素num,他们的初始index分别为i和j，并且i&lt;j，则利用Stable对data进行排序后，i依然小于ｊ．直接利用sort进行排序则不能够保证这一点．</strong><br>(会不会改变原来的相对位置就是稳定的判定条件)</p>
+<p>golang自身实现的interface有三种</p>
+<p>Float64Slice</p>
+<p>IntSlic</p>
+<p>StringSlice具体如下所示：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">type Float64Slice</span><br><span class="line"></span><br><span class="line">type Float64Slice []float64</span><br><span class="line">Float64Slice 针对 []float6 实现接口的方法，以升序排列。</span><br><span class="line">[html]  view plain  copy</span><br><span class="line">func (p Float64Slice) Len() int　　　　&#x2F;&#x2F;求长度  </span><br><span class="line">func (p Float64Slice) Less(i, j int) bool　&#x2F;&#x2F;比大小  </span><br><span class="line">func (p Float64Slice) Search(x float64) int　&#x2F;&#x2F;查找  </span><br><span class="line">func (p Float64Slice) Sort()　　　　　　&#x2F;&#x2F;排序  </span><br><span class="line">func (p Float64Slice) Swap(i, j int)　　　&#x2F;&#x2F;交换位置  </span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">type IntSlice</span><br><span class="line"></span><br><span class="line">type IntSlice []int</span><br><span class="line">IntSlice 针对 []int 实现接口的方法，以升序排列。</span><br><span class="line"></span><br><span class="line">[html]  view plain  copy</span><br><span class="line">func (p IntSlice) Len() int  </span><br><span class="line">func (p IntSlice) Less(i, j int) bool  </span><br><span class="line">func (p IntSlice) Search(x int) int  </span><br><span class="line">func (p IntSlice) Sort()  </span><br><span class="line">func (p IntSlice) Swap(i, j int)  </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">type StringSlice</span><br><span class="line"></span><br><span class="line">type StringSlice []string</span><br><span class="line">StringSlice 针对 []string 实现接口的方法，以升序排列。</span><br><span class="line"></span><br><span class="line">[html]  view plain  copy</span><br><span class="line">func (p StringSlice) Len() int  </span><br><span class="line">func (p StringSlice) Less(i, j int) bool  </span><br><span class="line">func (p StringSlice) Search(x string) int  </span><br><span class="line">func (p StringSlice) Sort()  </span><br><span class="line">func (p StringSlice) Swap(i, j int)  </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">func Reverse(data Interface) Interface</span><br><span class="line">func Reverse(data Interface) Interface</span><br><span class="line">Reverse实现对data的逆序排列</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">package main  </span><br><span class="line">  </span><br><span class="line">import (  </span><br><span class="line">    &quot;fmt&quot;  </span><br><span class="line">    &quot;sort&quot;  </span><br><span class="line">)  </span><br><span class="line">  </span><br><span class="line">func main() &#123;  </span><br><span class="line">    a :&#x3D; []int&#123;1, 2, 5, 3, 4&#125;  </span><br><span class="line">    fmt.Println(a)        &#x2F;&#x2F; [1 2 5 3 4]  </span><br><span class="line">    sort.Sort(sort.Reverse(sort.IntSlice(a)))  </span><br><span class="line">    fmt.Println(a)        &#x2F;&#x2F; [5 4 3 2 1]  </span><br><span class="line">&#125;  </span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>sort.Sort 并不保证排序的稳定性。如果有需要, 可以使用 sort.Stable。</p>
+<h3 id="总结一下"><a href="#总结一下" class="headerlink" title="总结一下"></a>总结一下</h3><p>sort 包 在内部实现了四种基本的排序算法：插入排序（insertionSort）、归并排序（symMerge）、堆排序（heapSort）和快速排序（quickSort）；sort包会依据实际数据自动选择最优的排序算法。所以我们写代码时只需要考虑实现 sort.Interface 这个类型就可以了。</p>
+<ol>
+<li>对 []int 和 []string字符串进行排序<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">    &quot;fmt&quot;</span><br><span class="line">    &quot;sort&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line">    &#x2F;&#x2F; []int排序</span><br><span class="line">    nums :&#x3D; []int&#123;2, 31, 5, 6, 3&#125;</span><br><span class="line">    &#x2F;&#x2F;顺序</span><br><span class="line">    sort.Ints(nums)</span><br><span class="line">    fmt.Println(&quot;1: &quot;, nums)</span><br><span class="line">    &#x2F;&#x2F;使用 sort.Reverse 进行逆序排序</span><br><span class="line">    sort.Sort(sort.Reverse(sort.IntSlice(nums)))</span><br><span class="line">    fmt.Println(&quot;2: &quot;, nums)</span><br><span class="line"></span><br><span class="line">    &#x2F;&#x2F; []string字符串排序</span><br><span class="line">    names :&#x3D; []string&#123;&quot;abc&quot;, &quot;12&quot;, &quot;kk&quot;, &quot;Jordan&quot;, &quot;Ko&quot;, &quot;DD&quot;&#125;</span><br><span class="line">    &#x2F;&#x2F; 顺序</span><br><span class="line">    sort.Strings(names)</span><br><span class="line">    fmt.Println(&quot;3: &quot;, names)</span><br><span class="line">    &#x2F;&#x2F; 逆序</span><br><span class="line">    sort.Sort(sort.Reverse(sort.StringSlice(names)))</span><br><span class="line">    fmt.Printf(&quot;4: After Reverse: %#v\n&quot;, names)</span><br><span class="line"></span><br><span class="line">    &#x2F;&#x2F;查找</span><br><span class="line">    &#x2F;&#x2F; [0,100)</span><br><span class="line">    &#x2F;&#x2F; 二分查找</span><br><span class="line">    nums &#x3D; []int&#123;1, 3, 5, 7, 9&#125;</span><br><span class="line">    fmt.Println(&quot;5: &quot;, nums[sort.SearchInts(nums, 8)] &#x3D;&#x3D; 8)</span><br><span class="line">    fmt.Println(&quot;6: &quot;, nums[sort.SearchInts(nums, 5)] &#x3D;&#x3D; 5)</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">&#x2F;*</span><br><span class="line">$ go run sort.go</span><br><span class="line">1:  [2 3 5 6 31]</span><br><span class="line">2:  [31 6 5 3 2]</span><br><span class="line">3:  [12 DD Jordan Ko abc kk]</span><br><span class="line">4: After Reverse: []string&#123;&quot;kk&quot;, &quot;abc&quot;, &quot;Ko&quot;, &quot;Jordan&quot;, &quot;DD&quot;, &quot;12&quot;&#125;</span><br><span class="line">5:  false</span><br><span class="line">6:  true</span><br><span class="line"></span><br><span class="line">*&#x2F;</span><br></pre></td></tr></table></figure></li>
+<li>使用 sort.Stable 进行稳定排序。</li>
+</ol>
+<p>**   sort.Sort 并不保证排序的稳定性。如果有需要, 可以使用 sort.Stable。**</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">    &quot;fmt&quot;</span><br><span class="line">    &quot;sort&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">type person struct &#123;</span><br><span class="line">    Name string</span><br><span class="line">    Age  int</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">type personSlice []person</span><br><span class="line"></span><br><span class="line">func (s personSlice) Len() int           &#123; return len(s) &#125;</span><br><span class="line">func (s personSlice) Swap(i, j int)      &#123; s[i], s[j] &#x3D; s[j], s[i] &#125;</span><br><span class="line">func (s personSlice) Less(i, j int) bool &#123; return s[i].Age &lt; s[j].Age &#125;</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line">    a :&#x3D; personSlice&#123;</span><br><span class="line">        &#123;</span><br><span class="line">            Name: &quot;AAA&quot;,</span><br><span class="line">            Age:  55,</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            Name: &quot;BBB&quot;,</span><br><span class="line">            Age:  22,</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            Name: &quot;CCC&quot;,</span><br><span class="line">            Age:  0,</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            Name: &quot;DDD&quot;,</span><br><span class="line">            Age:  22,</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            Name: &quot;EEE&quot;,</span><br><span class="line">            Age:  11,</span><br><span class="line">        &#125;,</span><br><span class="line">    &#125;</span><br><span class="line">    sort.Stable(a)</span><br><span class="line">    fmt.Println(a)</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/golang/">golang</a>
+		  
+			<a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a>
+		  
+			<a href="/tags/sort%E6%8E%92%E5%BA%8F/">sort排序</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2021/06/28/5G-CPE/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">5G-CPE</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2021/06/24/cookie%E5%92%8Csession%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88/">
+        <span class="next-text nav-default">cookie和session到底是什么</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+      </footer>
+    
+  </article>
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2021
+    <span class="footer-author">Russshare.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

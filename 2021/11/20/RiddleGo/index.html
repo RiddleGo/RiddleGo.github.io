@@ -1,37 +1,217 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
-{% block page_class %}page-post-detail{% endblock %}
 
 
-{% block content %}
+  <meta name="description" content="RiddleGo"/>
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
-    </div>
+
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+
+
+
+<link rel="canonical" href="https://riddlego.github.io/2021/11/20/RiddleGo/"/>
+
+
+<meta name="description" content="前言 这算是新的开始欸，其实一直也有在做学习的记录，无论是自己的在线博客还是日记。这个文章的Title的正是我一直Blog的名字，最近在写点其他的东西就将自己的Blog暂时冷落了，今晚在逛论坛的时候看到了一个很棒的主题，但是在尝试去安装的时候怎么样子都安装不好，折腾到十一点，正好放到“稻香”，解决不了的问题不解决不就得了。哈哈，于是把写的文章下载后，把整个myBlog给delete了，啊哈哈，爽啊">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RiddleGo">
+<meta property="og:url" content="https://riddlego.github.io/2021/11/20/RiddleGo/index.html">
+<meta property="og:site_name" content="RiddleGo">
+<meta property="og:description" content="前言 这算是新的开始欸，其实一直也有在做学习的记录，无论是自己的在线博客还是日记。这个文章的Title的正是我一直Blog的名字，最近在写点其他的东西就将自己的Blog暂时冷落了，今晚在逛论坛的时候看到了一个很棒的主题，但是在尝试去安装的时候怎么样子都安装不好，折腾到十一点，正好放到“稻香”，解决不了的问题不解决不就得了。哈哈，于是把写的文章下载后，把整个myBlog给delete了，啊哈哈，爽啊">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-11-20T11:06:39.000Z">
+<meta property="article:modified_time" content="2021-11-29T14:41:57.758Z">
+<meta property="article:author" content="Russshare">
+<meta property="article:tag" content="zh-Hans">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> RiddleGo - RiddleGo </title>
+  <meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">RiddleGo</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          RiddleGo
+        
+      </h1>
+
+      <time class="post-time">
+          11月 20 2021
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><hr>
+<p>这算是新的开始欸，其实一直也有在做学习的记录，无论是自己的在线博客还是日记。这个文章的Title的正是我一直Blog的名字，最近在写点其他的东西就将自己的Blog暂时冷落了，今晚在逛论坛的时候看到了一个很棒的主题，但是在尝试去安装的时候怎么样子都安装不好，折腾到十一点，正好放到“稻香”，解决不了的问题不解决不就得了。哈哈，于是把写的文章下载后，把整个myBlog给delete了，啊哈哈，爽啊。</p>
+<p><strong>当然这是要分情况的</strong>，<strong>我这样的释放也是有契机与理由的呢</strong>，<strong>遇到技术问题我们还是要有一种不解决不放松的劲头</strong>。</p>
+<hr>
+<p>微信公众号其实是在本科就弄起来了，当时的出发点是想给自己写的文章一个发布的平台，那个时候投出去的文章一篇稿费10块钱。但是因为热爱，还是一篇一篇的写，被发表后看着下面的评价，自己的虚荣心得到了极大的满足。不过想自己给自己搭建一个平台去展示自己的文字，就创建了这个公众号，建立起来之后发过一首闷骚的诗，就被搁置了，可能微信后台也看不下去了，不准我再骚了。后来，这个公众号带着我的写文字的爱好一起溜走了。</p>
+<hr>
+<p>Blog的UI界面真的很不错，同时很适合电脑上进行阅读，但是hexo的插件总是版本匹配问题，以及部署在github上的网络问题。自己也买过阿里云的服务器，自己部署过网站，但是因为学生价只能续费三次，后来也就把服务器释放了。不过还是感恩这一路过来的记录，不过在阿里云部署的服务器上有我以前的日记和笔记，也被释放了让我着实难受了一下，因为学习笔记可以再学，但是日记的记录，时间的流逝你永远再也回不去那天了。不过人总得往前看，<strong>还有最重要的要从每件经历的事情中看到了什么</strong>、<strong>学到了什么</strong>。现在养成备份习惯就是经历养成的。</p>
+<hr>
+<p>同时维护多个平台的发布，以及我现在还处于一个技术疯狂生长期，就更加应该把心思放在学习上面。有效的分享是第一步，当第一步做好了以后，分享的方式才是需要考虑的，微信公众号不要考虑环境与网络问题，嗷呜，希望自己能坚持下去啊。</p>
+<hr>
+<p>多读书、知识成体系，blog应该是自己的知识体系的补充。</p>
+<p>多阅读技术文章本身提升专业知识英语</p>
+<p>多google少百度</p>
+<p><strong>因为，但凡通过点滴付出，累积出来的结果，都是平淡无声的。</strong></p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+
+        
+        
+  <nav class="post-nav">
+    
+    
+      <a class="next" href="/2021/10/20/next-zhenxi/">
+        <span class="next-text nav-default">next-zhenxi</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+      </footer>
+    
+  </article>
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2021
+    <span class="footer-author">Russshare.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

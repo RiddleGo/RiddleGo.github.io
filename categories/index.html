@@ -1,70 +1,160 @@
-{% extends '_layout.swig' %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
 
-  {% block title %}{#
-  #}{% set page_title_suffix = ' | ' + config.title %}{#
 
-  #}{% if page.type === "categories" and not page.title %}{#
-    #}{{ __('title.category') + page_title_suffix }}{#
-  #}{% elif page.type === "tags" and not page.title %}{#
-    #}{{ __('title.tag') + page_title_suffix }}{#
-  #}{% else %}{#
-    #}{{ page.title + page_title_suffix }}{#
-  #}{% endif %}{#
-#}{% endblock %}
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
-{% block page_class %}page-post-detail{% endblock %}
 
-{% block content %}
 
-  <div id="posts" class="posts-expand">
-    {##################}
-    {### PAGE BLOCK ###}
-    {##################}
-    <div class="post-block page">
-      {% include '_partials/page-header.swig' %}
-      {#################}
-      {### PAGE BODY ###}
-      {#################}
-      <div class="post-body{% if theme.han %} han-init-context{% endif %}{% if page.direction && page.direction.toLowerCase() === 'rtl' %} rtl{% endif %}">
-        {# tagcloud page support #}
-        {% if page.type === "tags" %}
-          <div class="tag-cloud">
-            <div class="tag-cloud-title">
-                {{ _p('counter.tag_cloud', site.tags.length) }}
-            </div>
-            <div class="tag-cloud-tags">
-              {{ tagcloud({min_font: 12, max_font: 30, amount: 300, color: true, start_color: '#ccc', end_color: '#111'}) }}
-            </div>
-          </div>
-        {% elif page.type === 'categories' %}
-          <div class="category-all-page">
-            <div class="category-all-title">
-                {{ _p('counter.categories', site.categories.length) }}
-            </div>
-            <div class="category-all">
-              {{ list_categories() }}
-            </div>
-          </div>
-        {% else %}
-          {{ page.content }}
-        {% endif %}
-      </div>
-      {#####################}
-      {### END PAGE BODY ###}
-      {#####################}
+  <meta name="description" content="分类"/>
+
+
+
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+
+
+
+<link rel="canonical" href="https://riddlego.github.io/categories/"/>
+
+
+<meta name="description" content="听风说你来自远方">
+<meta property="og:type" content="website">
+<meta property="og:title" content="分类">
+<meta property="og:url" content="https://riddlego.github.io/categories/index.html">
+<meta property="og:site_name" content="RiddleGo">
+<meta property="og:description" content="听风说你来自远方">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-02-14T14:18:16.000Z">
+<meta property="article:modified_time" content="2021-04-25T09:14:24.000Z">
+<meta property="article:author" content="Russshare">
+<meta property="article:tag" content="zh-Hans">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> Categories - RiddleGo </title>
+  <meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">RiddleGo</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+  <div class="categories">
+    <div class="categories-title">
+      44 Categories In Total
     </div>
-    {######################}
-    {### END PAGE BLOCK ###}
-    {######################}
+    <div class="categories-tags">
+      <a class="category-link" href="/categories/C/">C++<span class="category-count">1</span></a> <a class="category-link" href="/categories/Hexo%E5%8D%9A%E5%AE%A2/">Hexo博客<span class="category-count">2</span></a> <a class="category-link" href="/categories/Python/">Python<span class="category-count">2</span></a> <a class="category-link" href="/categories/Tools/">Tools<span class="category-count">3</span></a> <a class="category-link" href="/categories/Web/">Web<span class="category-count">2</span></a> <a class="category-link" href="/categories/Zigbee-ZStack-CC2530/">Zigbee-ZStack-CC2530<span class="category-count">5</span></a> <a class="category-link" href="/categories/golang-More/">golang-More<span class="category-count">40</span></a> <a class="category-link" href="/categories/golang-more/">golang-more<span class="category-count">1</span></a> <a class="category-link" href="/categories/golang-web/">golang-web<span class="category-count">7</span></a> <a class="category-link" href="/categories/golang%E5%8C%85%E5%8C%85/">golang包包<span class="category-count">10</span></a> <a class="category-link" href="/categories/golang%E5%9F%BA%E7%A1%80/">golang基础<span class="category-count">4</span></a> <a class="category-link" href="/categories/golang%E5%BE%AE%E6%9C%8D%E5%8A%A1/">golang微服务<span class="category-count">7</span></a> <a class="category-link" href="/categories/golang%E5%BE%AE%E6%9C%8D%E5%8A%A1%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86%E8%AF%A6%E8%A7%A3/">golang微服务相关知识详解<span class="category-count">1</span></a> <a class="category-link" href="/categories/golang%E6%83%B3%E6%9B%B4%E6%96%B0%E5%B0%B1%E6%9B%B4%E6%96%B0%E7%9A%84%E7%A6%BB%E6%95%A3%E7%9F%A5%E8%AF%86/">golang想更新就更新的离散知识<span class="category-count">1</span></a> <a class="category-link" href="/categories/golang%E6%95%B0%E6%8D%AE%E5%BA%93/">golang数据库<span class="category-count">1</span></a> <a class="category-link" href="/categories/golang%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">golang数据结构<span class="category-count">9</span></a> <a class="category-link" href="/categories/golang%E7%A2%8E%E7%A2%8E%E5%BF%B5/">golang碎碎念<span class="category-count">1</span></a> <a class="category-link" href="/categories/golang%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">golang设计模式<span class="category-count">1</span></a> <a class="category-link" href="/categories/golang%E9%9D%A2%E8%AF%95/">golang面试<span class="category-count">11</span></a> <a class="category-link" href="/categories/golang%E9%A1%B9%E7%9B%AE/">golang项目<span class="category-count">4</span></a> <a class="category-link" href="/categories/linux/">linux<span class="category-count">3</span></a> <a class="category-link" href="/categories/open-your-eyes/">open your eyes<span class="category-count">5</span></a> <a class="category-link" href="/categories/python/">python<span class="category-count">14</span></a> <a class="category-link" href="/categories/wifi/">wifi<span class="category-count">1</span></a> <a class="category-link" href="/categories/%E4%BA%91/">云<span class="category-count">4</span></a> <a class="category-link" href="/categories/%E5%89%91%E6%8C%87offer/">剑指offer<span class="category-count">16</span></a> <a class="category-link" href="/categories/%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95/">加密算法<span class="category-count">1</span></a> <a class="category-link" href="/categories/%E5%8D%95%E7%89%87%E6%9C%BA%E7%BC%96%E7%A8%8B/">单片机编程<span class="category-count">1</span></a> <a class="category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库<span class="category-count">1</span></a> <a class="category-link" href="/categories/%E7%89%9B%E5%AE%A2%E7%83%AD%E9%A2%98132/">牛客热题132<span class="category-count">40</span></a> <a class="category-link" href="/categories/%E7%89%A9%E8%81%94%E7%BD%91APP/">物联网APP<span class="category-count">3</span></a> <a class="category-link" href="/categories/%E7%8C%9B%E7%94%B7%E6%97%A5%E8%AE%B0/">猛男日记<span class="category-count">9</span></a> <a class="category-link" href="/categories/%E8%84%9A%E6%9C%AC%E8%AF%AD%E8%A8%80-shell/">脚本语言-shell<span class="category-count">3</span></a> <a class="category-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络<span class="category-count">16</span></a> <a class="category-link" href="/categories/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B/">软件工程<span class="category-count">1</span></a> <a class="category-link" href="/categories/%E9%9D%A2%E8%AF%95%E5%90%88%E9%9B%86/">面试合集<span class="category-count">25</span></a>
+    </div>
   </div>
 
-{% endblock %}
+      </div>
 
-{% block sidebar %}
-  {{ sidebar_template.render(false) }}
-{% endblock %}
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2021
+    <span class="footer-author">Russshare.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

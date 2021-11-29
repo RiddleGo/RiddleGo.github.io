@@ -1,37 +1,242 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
-{% block page_class %}page-post-detail{% endblock %}
 
 
-{% block content %}
+  <meta name="description" content="每天一道算法题：字符串的排列"/>
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
-    </div>
+
+
+  <meta name="keywords" content="面试,算法," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+
+
+
+<link rel="canonical" href="https://riddlego.github.io/2021/07/29/每天一道算法题：字符串的排列/"/>
+
+
+<meta name="description" content="题目要求输入一个字符串，打印出该字符串中字符的所有排列，例如，输入字符串 “abc”,则输出由字符 ‘a’、’b’、’c’ 所能排列的所有字符串 ：”abc” “acb” “bac” “bca” “cab” “cba” 递归实现在这里需要强调一点的是，当打算使用递归的思想去实现你的代码逻辑的时候一定不要去想代码怎么实现，首先应该想的是一个如何将一个大规模的问题转换成小规模，而转换的过程可以采用同一">
+<meta property="og:type" content="article">
+<meta property="og:title" content="每天一道算法题：字符串的排列">
+<meta property="og:url" content="https://riddlego.github.io/2021/07/29/%E6%AF%8F%E5%A4%A9%E4%B8%80%E9%81%93%E7%AE%97%E6%B3%95%E9%A2%98%EF%BC%9A%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9A%84%E6%8E%92%E5%88%97/index.html">
+<meta property="og:site_name" content="RiddleGo">
+<meta property="og:description" content="题目要求输入一个字符串，打印出该字符串中字符的所有排列，例如，输入字符串 “abc”,则输出由字符 ‘a’、’b’、’c’ 所能排列的所有字符串 ：”abc” “acb” “bac” “bca” “cab” “cba” 递归实现在这里需要强调一点的是，当打算使用递归的思想去实现你的代码逻辑的时候一定不要去想代码怎么实现，首先应该想的是一个如何将一个大规模的问题转换成小规模，而转换的过程可以采用同一">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-07-29T15:17:11.000Z">
+<meta property="article:modified_time" content="2021-07-30T15:38:34.198Z">
+<meta property="article:author" content="Russshare">
+<meta property="article:tag" content="面试">
+<meta property="article:tag" content="算法">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> 每天一道算法题：字符串的排列 - RiddleGo </title>
+  <meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">RiddleGo</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          每天一道算法题：字符串的排列
+        
+      </h1>
+
+      <time class="post-time">
+          7月 29 2021
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <p><strong>题目要求</strong><br>输入一个字符串，打印出该字符串中字符的所有排列，例如，输入字符串 “abc”,则<br>输出由字符 ‘a’、’b’、’c’ 所能排列的所有字符串 ：”abc” “acb” “bac” “bca” “cab” “cba”</p>
+<p><strong>递归实现</strong><br><strong>在这里需要强调一点的是，当打算使用递归的思想去实现你的代码逻辑的时候一定不要去想代码怎么实现，首先应该想的是一个如何将一个大规模的问题转换成小规模，而转换的过程可以采用同一种方法进行计算。</strong></p>
+<p><strong>什么是递归</strong><br>1、一个过程或函数在其定义或说明中有直接或间接调用自身的一种方法，它通常把一个大型复杂的问题层层转化为一个与原问题相似的规模较小的问题来求解（百度百科）<br>2、在数学与计算机科学中，是指在函数的定义中使用函数自身的方法。递归一词还较常用于描述以自相似方法重复事物的过程。例如，当两面镜子相互之间近似平行时，镜中嵌套的图像是以无限递归的形式出现的。也可以理解为自我复制的过程。（维基百科）</p>
+<p>递归算法的特性</p>
+<p><strong>必须有可达到的终止条件</strong>，否则程序陷入死循环</p>
+<p><strong>子问题在规模上比原问题小</strong></p>
+<p><strong>子问题可通过再次递归调用求解</strong></p>
+<p><strong>子问题的解应能组合成整个问题的解</strong></p>
+<p><strong>本题思路</strong></p>
+<p>举例<br>1、a进行全排列，结果是a<br>2、ab进行全排列，结果为ab，ba;我们分别让a与a进行交换，a与b进行交换，<br>3、abc进行全排列，结果是abc,acb,bac,bca,cab,cba；我们画一张图进行表示</p>
+<p>abc全排列<br><strong>解释</strong></p>
+<p>首先对于abc来说，我们我们可以对a进行交换位置得到一个全排列。</p>
+<p>拿得到的第一个全排列abc进行举例，固定我们的a，采用同样的方法，对bc进行全排列得到bc，cb，拿出bc，对b进行固定，采用同样的方法进行全排列，最终结束到c，输出abc</p>
+<p>下面的依次采用同样的方法，进行每一层的递归；</p>
+<p><strong>代码逻辑</strong></p>
+<p><strong>1、每一次的全排列如何得到？</strong></p>
+<p>采用循环我们的字符串，分别将当前的字符与第一个字符进行交换<br><strong>2、什么时候结束</strong></p>
+<p>当准备进行字符串全排列的时候，对我们的当前字符和带交换的字符进行一个位置比较，如果位置相同则结束，输出字符串；<br>代码实现</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">func CalcALLPermutation(str *string, from int, to int) &#123;</span><br><span class="line">    strr :&#x3D; []rune(*str)</span><br><span class="line">    if to &lt;&#x3D; 1 &#123;</span><br><span class="line">        return</span><br><span class="line">    &#125;</span><br><span class="line">    if from &#x3D;&#x3D; to &#123;</span><br><span class="line">        fmt.Println(&quot;最终结果：&quot;, string(strr))</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        for j :&#x3D; from; j &lt;&#x3D; to; j++ &#123;</span><br><span class="line">            strr[j], strr[from] &#x3D; strr[from], strr[j]</span><br><span class="line">            *str &#x3D; string(strr)</span><br><span class="line">            CalcALLPermutation(str, from+1, to)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">————————————————</span><br></pre></td></tr></table></figure>
+<p>详细版本的代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">func permutation(str string) []string &#123;</span><br><span class="line">   var result []string</span><br><span class="line">   if str &#x3D;&#x3D; &quot;&quot; &#123;</span><br><span class="line">      return result</span><br><span class="line">   &#125;</span><br><span class="line">   permutationHandler([]byte(str), 0, &amp;result)</span><br><span class="line">   return result</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func permutationHandler(strByte []byte, i int, result *[]string) &#123;</span><br><span class="line">   length :&#x3D; len(strByte)</span><br><span class="line">   if i !&#x3D; length &#123;</span><br><span class="line">      &#x2F;&#x2F;利用map排除重复字符</span><br><span class="line">      strMap :&#x3D; make(map[string]int)</span><br><span class="line">      &#x2F;&#x2F;固定首字符，递归剩余字符；首字符依次与后面交换，继续递归剩余字符</span><br><span class="line">      for j :&#x3D; i; j &lt; length; j++ &#123;</span><br><span class="line">         _, ok :&#x3D; strMap[string(strByte[j])]</span><br><span class="line">         if !ok &#123;</span><br><span class="line">            strMap[string(strByte[j])] &#x3D; 1</span><br><span class="line">            if j !&#x3D; i &#123;</span><br><span class="line">               strByte[i], strByte[j] &#x3D; strByte[j], strByte[i]</span><br><span class="line">            &#125;</span><br><span class="line">            permutationHandler(strByte, i+1, result)</span><br><span class="line">            if j !&#x3D; i &#123;</span><br><span class="line">               strByte[i], strByte[j] &#x3D; strByte[j], strByte[i]</span><br><span class="line">            &#125;</span><br><span class="line">         &#125;</span><br><span class="line">      &#125;</span><br><span class="line">   &#125; else &#123;</span><br><span class="line">      *result &#x3D; append(*result, string(strByte))</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_40051278/article/details/103471491">原文链接：</a></p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/%E9%9D%A2%E8%AF%95/">面试</a>
+		  
+			<a href="/tags/%E7%AE%97%E6%B3%95/">算法</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2021/07/29/%E6%AF%8F%E5%A4%A9%E4%B8%80%E9%81%93%E7%AE%97%E6%B3%95%E9%A2%98%EF%BC%9A%E6%8E%A5%E9%9B%A8%E6%B0%B4%E9%97%AE%E9%A2%98/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">每天一道算法题：接雨水问题</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2021/07/29/%E6%AF%8F%E5%A4%A9%E4%B8%80%E9%81%93%E7%AE%97%E6%B3%95%E9%A2%98%EF%BC%9A%E5%90%88%E5%B9%B6k%E4%B8%AA%E5%B7%B2%E6%8E%92%E5%BA%8F%E7%9A%84%E9%93%BE%E8%A1%A8/">
+        <span class="next-text nav-default">每天一道算法题：合并k个已排序的链表</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+      </footer>
+    
+  </article>
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2021
+    <span class="footer-author">Russshare.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

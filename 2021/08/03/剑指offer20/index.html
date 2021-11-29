@@ -1,37 +1,251 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
-{% block page_class %}page-post-detail{% endblock %}
 
 
-{% block content %}
+  <meta name="description" content="剑指offer20"/>
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
-    </div>
+
+
+  <meta name="keywords" content="剑指offer," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+
+
+
+<link rel="canonical" href="https://riddlego.github.io/2021/08/03/剑指offer20/"/>
+
+
+<meta name="description" content="剑指 Offer 20. 表示数值的字符串题目描述请实现一个函数用来判断字符串是否表示数值（包括整数和小数）。 数值（按顺序）可以分成以下几个部分：若干空格一个 小数 或者 整数（可选）一个 ‘e’ 或 ‘E’ ，后面跟着一个 整数若干空格 小数（按顺序）可以分成以下几个部分：（可选）一个符号字符（’+’ 或 ‘-‘）下述格式之一：至少一位数字，后面跟着一个点 ‘.’至少一位数字，后面跟着一个点">
+<meta property="og:type" content="article">
+<meta property="og:title" content="剑指offer20">
+<meta property="og:url" content="https://riddlego.github.io/2021/08/03/%E5%89%91%E6%8C%87offer20/index.html">
+<meta property="og:site_name" content="RiddleGo">
+<meta property="og:description" content="剑指 Offer 20. 表示数值的字符串题目描述请实现一个函数用来判断字符串是否表示数值（包括整数和小数）。 数值（按顺序）可以分成以下几个部分：若干空格一个 小数 或者 整数（可选）一个 ‘e’ 或 ‘E’ ，后面跟着一个 整数若干空格 小数（按顺序）可以分成以下几个部分：（可选）一个符号字符（’+’ 或 ‘-‘）下述格式之一：至少一位数字，后面跟着一个点 ‘.’至少一位数字，后面跟着一个点">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-08-02T16:25:28.000Z">
+<meta property="article:modified_time" content="2021-08-05T14:34:11.837Z">
+<meta property="article:author" content="Russshare">
+<meta property="article:tag" content="剑指offer">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> 剑指offer20 - RiddleGo </title>
+  <meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">RiddleGo</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          剑指offer20
+        
+      </h1>
+
+      <time class="post-time">
+          8月 03 2021
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h2 id="剑指-Offer-20-表示数值的字符串"><a href="#剑指-Offer-20-表示数值的字符串" class="headerlink" title="剑指 Offer 20. 表示数值的字符串"></a>剑指 Offer 20. 表示数值的字符串</h2><h3 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h3><p>请实现一个函数用来判断字符串是否表示数值（包括整数和小数）。</p>
+<p>数值（按顺序）可以分成以下几个部分：<br>若干空格<br>一个 小数 或者 整数<br>（可选）一个 ‘e’ 或 ‘E’ ，后面跟着一个 整数<br>若干空格</p>
+<p>小数（按顺序）可以分成以下几个部分：<br>（可选）一个符号字符（’+’ 或 ‘-‘）<br>下述格式之一：<br>至少一位数字，后面跟着一个点 ‘.’<br>至少一位数字，后面跟着一个点 ‘.’ ，后面再跟着至少一位数字<br>一个点 ‘.’ ，后面跟着至少一位数字</p>
+<p>整数（按顺序）可以分成以下几个部分：<br>（可选）一个符号字符（’+’ 或 ‘-‘）<br>至少一位数字<br>部分数值列举如下：</p>
+<p>[“+100”, “5e2”, “-123”, “3.1416”, “-1E-16”, “0123”]<br>部分非数值列举如下：</p>
+<p>[“12e”, “1a3.14”, “1.2.3”, “+-5”, “12e+5.4”]</p>
+<p>示例 1：</p>
+<p>输入：s = “0”<br>输出：true<br>示例 2：</p>
+<p>输入：s = “e”<br>输出：false<br>示例 3：</p>
+<p>输入：s = “.”<br>输出：false<br>示例 4：</p>
+<p>输入：s = “    .1  “<br>输出：true</p>
+<h3 id="结题思路"><a href="#结题思路" class="headerlink" title="结题思路"></a>结题思路</h3><p>我觉得这样的题，就是要好好的把该有的分类弄齐全：</p>
+<p>1、常见的数值</p>
+<p>几个规则  e后面必须接整数嘛<br>          E后面正负整数都可以<br>          除了e不应该有其他的字母<br>          — +不能连续</p>
+<p>忍不住看了大佬的答案：：：<a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/biao-shi-shu-zhi-de-zi-fu-chuan-lcof/solutionjian-zhi-offer-20-biao-shi-shu-zhi-de-zi-060v/">真好</a></p>
+<p><strong>我首先想到的是判断否false而不是判断是true，毕竟有这么多条件满足才能判断true，但是只要有一个条件不满足就可以判断false，最后代码的效率也还可以，那么接下来进入正题吧：</strong></p>
+<p>首先定义了四个flag，对应四种字符</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">是否有数字：hasNum</span><br><span class="line">是否有e：hasE</span><br><span class="line">是否有正负符号：hasSign</span><br><span class="line">是否有点：hasDot</span><br></pre></td></tr></table></figure>
+<p>其余还定义了字符串长度n以及字符串索引index</p>
+<p>先处理一下开头的空格，index相应的后移</p>
+<p>然后进入循环，遍历字符串</p>
+<p>如果当前字符c是数字：<strong>将hasNum置为true，index往后移动一直到非数字或遍历到末尾位置</strong>；如果已遍历到末尾(index == n)，结束循环</p>
+<p><strong>如果当前字符c是’e’或’E’：如果e已经出现或者当前e之前没有出现过数字，返回fasle；</strong><br><strong>否则令hasE = true，并且将其他3个flag全部置为false，因为要开始遍历e后面的新数字了</strong></p>
+<p>如果当前字符c是+或-：如果已经出现过+或-或者已经出现过数字或者已经出现过’.’，返回flase；<br>否则令hasSign = true<br><strong>如果当前字符c是’.’：如果已经出现过’.’或者已经出现过’e’或’E’，返回false；否则令hasDot = true</strong></p>
+<p><strong>如果当前字符c是’ ‘：结束循环，因为可能是末尾的空格了，但也有可能是字符串中间的空格，在循环外继续处理</strong></p>
+<p><strong>如果当前字符c是除了上面5种情况以外的其他字符，直接返回false</strong></p>
+<p>处理空格，index相应的后移</p>
+<p>如果当前索引index与字符串长度相等，说明遍历到了末尾，</p>
+<p>但是还要满足hasNum为true才可以最终返回true，因为如果字符串里全是符号没有数字的话是不行的，</p>
+<p>而且e后面没有数字也是不行的，但是没有符号是可以的，</p>
+<p>所以4个flag里只要判断一下hasNum就行；</p>
+<p>所以最后返回的是hasNum &amp;&amp; index == n</p>
+<p>如果字符串中间有空格，按以上思路是无法遍历到末尾的，index不会与n相等，返回的就是false</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">class Solution:</span><br><span class="line">    def isNumber(self, s: str) -&gt; bool:</span><br><span class="line">        n &#x3D; len(s)</span><br><span class="line">        index &#x3D; 0</span><br><span class="line">        has_num &#x3D; has_e &#x3D; has_sign &#x3D; has_dot &#x3D; False</span><br><span class="line">        #去掉前面的空格</span><br><span class="line">        while index &lt; n and s[index] &#x3D;&#x3D; &#39; &#39;:</span><br><span class="line">            index +&#x3D; 1</span><br><span class="line">        while index &lt; n:</span><br><span class="line">        #有数字</span><br><span class="line">            while index &lt; n and &#39;0&#39; &lt;&#x3D; s[index] &lt;&#x3D; &#39;9&#39;:</span><br><span class="line">                index +&#x3D; 1</span><br><span class="line">                has_num &#x3D; True</span><br><span class="line">        # 遍历到最末尾  说明整个全是数字  ok的</span><br><span class="line">            if index &#x3D;&#x3D; n:</span><br><span class="line">                break</span><br><span class="line">        # 如果有e  但是没有数字 GG了</span><br><span class="line">            if s[index] &#x3D;&#x3D; &#39;e&#39; or s[index] &#x3D;&#x3D; &#39;E&#39;:</span><br><span class="line">                if has_e or not has_num:</span><br><span class="line">                    return False</span><br><span class="line">                has_e &#x3D; True</span><br><span class="line">                #有e了这里，以后的什么都不能有，我不管你前面有什么</span><br><span class="line">                has_num &#x3D; has_sign &#x3D; has_dot &#x3D; False</span><br><span class="line">                ##符号  那么之前一定不能有数字  和符号 和点  </span><br><span class="line">            elif s[index] &#x3D;&#x3D; &#39;+&#39; or s[index] &#x3D;&#x3D; &#39;-&#39;:</span><br><span class="line">                if has_sign or has_num or has_dot:</span><br><span class="line">                    return False</span><br><span class="line">                has_sign &#x3D; True</span><br><span class="line">                #点不能出现e之后 更不能出现两个e了</span><br><span class="line">            elif s[index] &#x3D;&#x3D; &#39;.&#39;:</span><br><span class="line">                if has_dot or has_e:</span><br><span class="line">                    return False</span><br><span class="line">                has_dot &#x3D; True</span><br><span class="line">                #遇到空格 结束</span><br><span class="line">            elif s[index] &#x3D;&#x3D; &#39; &#39;:</span><br><span class="line">                break</span><br><span class="line">                #如果遇到其他的  直接pass  break</span><br><span class="line">            else:</span><br><span class="line">                return False</span><br><span class="line">            index +&#x3D; 1</span><br><span class="line">        while index &lt; n and s[index] &#x3D;&#x3D; &#39; &#39;:</span><br><span class="line">            index +&#x3D; 1</span><br><span class="line">            ##最后返回要保证有数字，同时索引和字符串得相等  说明遍历了整个字符串 都是合理的</span><br><span class="line">        return has_num and index &#x3D;&#x3D; n</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/%E5%89%91%E6%8C%87offer/">剑指offer</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2021/08/04/%E5%89%91%E6%8C%87offer10/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">剑指offer10</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2021/08/03/%E5%89%91%E6%8C%87offer19/">
+        <span class="next-text nav-default">剑指offer19</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+      </footer>
+    
+  </article>
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2021
+    <span class="footer-author">Russshare.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

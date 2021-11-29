@@ -1,37 +1,525 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
-{% block page_class %}page-post-detail{% endblock %}
 
 
-{% block content %}
+  <meta name="description" content="安卓面试美团"/>
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
-    </div>
+
+
+  <meta name="keywords" content="面试,android," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+
+
+
+<link rel="canonical" href="https://riddlego.github.io/2021/07/19/安卓面试美团/"/>
+
+
+<meta name="description" content="1、GC面试题StackOverFlowError和OutOfMemoryError，谈谈你的理解 1、StackOverFlowError先来分析一下StackOverFlowError异常，这个异常相对比较简单出现的概率比较低：  1、原因  1.1、发生的地方：虚拟机栈和本地方法栈  1.2、线程调用生成的栈桢深度超过了虚拟机允许的深度（比如一个方法A内调用了方法B，然后B又调用C…这样调用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="安卓面试美团">
+<meta property="og:url" content="https://riddlego.github.io/2021/07/19/%E5%AE%89%E5%8D%93%E9%9D%A2%E8%AF%95%E7%BE%8E%E5%9B%A2/index.html">
+<meta property="og:site_name" content="RiddleGo">
+<meta property="og:description" content="1、GC面试题StackOverFlowError和OutOfMemoryError，谈谈你的理解 1、StackOverFlowError先来分析一下StackOverFlowError异常，这个异常相对比较简单出现的概率比较低：  1、原因  1.1、发生的地方：虚拟机栈和本地方法栈  1.2、线程调用生成的栈桢深度超过了虚拟机允许的深度（比如一个方法A内调用了方法B，然后B又调用C…这样调用">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-07-19T15:27:44.000Z">
+<meta property="article:modified_time" content="2021-07-19T15:40:17.312Z">
+<meta property="article:author" content="Russshare">
+<meta property="article:tag" content="面试">
+<meta property="article:tag" content="android">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> 安卓面试美团 - RiddleGo </title>
+  <meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">RiddleGo</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          安卓面试美团
+        
+      </h1>
+
+      <time class="post-time">
+          7月 19 2021
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h3 id="1、GC面试题"><a href="#1、GC面试题" class="headerlink" title="1、GC面试题"></a>1、GC面试题</h3><p>StackOverFlowError和OutOfMemoryError，谈谈你的理解</p>
+<h4 id="1、StackOverFlowError"><a href="#1、StackOverFlowError" class="headerlink" title="1、StackOverFlowError"></a>1、<strong>StackOverFlowError</strong></h4><p>先来分析一下StackOverFlowError异常，这个异常相对比较简单出现的概率比较低：</p>
+<ul>
+<li><p>1、原因</p>
+<ul>
+<li><p>1.1、发生的地方：虚拟机栈和本地方法栈</p>
+</li>
+<li><p>1.2、线程调用生成的栈桢深度超过了虚拟机允许的深度（比如一个方法A内调用了方法B，然后B又调用C…这样调用了1万层，就像你要去地狱十八层，但是虚拟机只提供了到九层的梯子），不过现在大多数虚拟机栈的调动深度都是可以动态扩展的，所以这个问题出现的概率非常的低。</p>
+</li>
+</ul>
+</li>
+<li><p>2、解决办法</p>
+</li>
+</ul>
+<p>  引发 StackOverFlowError 的常见原因有以下几种：</p>
+<pre><code>- 无限递归循环调用（最常见）。
+
+- 执行了大量方法，导致线程栈空间耗尽。
+
+- 方法内声明了海量的局部变量。
+
+- native 代码有栈上分配的逻辑，并且要求的内存还不小，比如 java.net.SocketInputStream.read0 会在栈上要求分配一个 64KB 的缓存（64位 Linux）。
+</code></pre>
+<p>  <strong>针对解决方法</strong></p>
+<ul>
+<li><p>修复引发无限递归调用的异常代码， 通过程序抛出的异常堆栈，找出不断重复的代码行，按图索骥，修复无限递归 Bug。</p>
+</li>
+<li><p>排查是否存在类之间的循环依赖。</p>
+</li>
+<li><p>排查是否存在在一个类中对当前类进行实例化，并作为该类的实例变量。</p>
+</li>
+<li><p>通过 JVM 启动参数 -Xss 增加线程栈内存空间， 某些正常使用场景需要执行大量方法或包含大量局部变量，这时可以适当地提高线程栈空间限制，例如通过配置 -Xss2m 将线程栈空间调整为 2 mb。</p>
+</li>
+</ul>
+<h4 id="2、OutOfMemeryError"><a href="#2、OutOfMemeryError" class="headerlink" title="2、OutOfMemeryError"></a>2、OutOfMemeryError</h4><p>1、发生的地方:</p>
+<pre><code>1.1、基本上虚拟机的运行时数据区域（堆，栈，方法区）都会发生
+</code></pre>
+<p>2、发生的原因</p>
+<pre><code>2.1、内存不够，发生了内存溢出
+</code></pre>
+<p>3、办法</p>
+<pre><code>3.1、申请更多内存，调整虚拟机的启动参数
+
+-Xms1500m -Xmx1500m -XX:PermSize=125M -XX:MaxPermSize=256M
+</code></pre>
+<h4 id="3、一般什么时候会发生GC？如何处理？"><a href="#3、一般什么时候会发生GC？如何处理？" class="headerlink" title="3、一般什么时候会发生GC？如何处理？"></a>3、一般什么时候会发生GC？如何处理？</h4><p>答：Java中的GC回有两种回收：年轻带的MinorGC，老年代的FullGC；新对象创建时如果伊甸园空间不足会触发MinorGC，如果此时老年代的内存空间不足会触发FullGC，如果空间都不足抛出OutOfMemoryError。</p>
+<h4 id="4、GC回收策略，谈谈你的理解"><a href="#4、GC回收策略，谈谈你的理解" class="headerlink" title="4、GC回收策略，谈谈你的理解"></a>4、GC回收策略，谈谈你的理解</h4><p>答：年轻代（伊甸园区+两个幸存区），GC回收策略为“复制”；老年区的保存空间一般比较大，GC回收策略为“整理压缩”。</p>
+<h4 id="5、GC是什么"><a href="#5、GC是什么" class="headerlink" title="5、GC是什么"></a>5、GC是什么</h4><p>频繁收集Young区，较少收集Old区，基本不动Perm区</p>
+<h4 id="6、JVM内存模型以及分区，需要详细到每个区放什么"><a href="#6、JVM内存模型以及分区，需要详细到每个区放什么" class="headerlink" title="6、JVM内存模型以及分区，需要详细到每个区放什么"></a>6、JVM内存模型以及分区，需要详细到每个区放什么</h4><p>堆里面的分区：Eden,suirival from to,老年代</p>
+<h4 id="7、GC的三种收集方法："><a href="#7、GC的三种收集方法：" class="headerlink" title="7、GC的三种收集方法："></a>7、GC的三种收集方法：</h4><p>标记清除、标记整理、复制算法的原理特点</p>
+<h4 id="8、MinorGC和Full-GC分别在什么时候发生"><a href="#8、MinorGC和Full-GC分别在什么时候发生" class="headerlink" title="8、MinorGC和Full GC分别在什么时候发生"></a>8、MinorGC和Full GC分别在什么时候发生</h4><p>Minor GC是新生代GC，指的是发生在新生代的垃圾收集动作。由于java对象大都是朝生夕死的，所以Minor GC非常频繁，一般回收速度也比较快。</p>
+<p>Major GC/Full GC 是老年代GC，指的是发生在老年代的GC，出现Major GC一般经常会伴有Minor GC，Major GC的速度比Minor GC慢的多。</p>
+<p>Major GC:清理永久代，但是由于很多MojorGC 是由MinorGC 触发的，所以有时候很难将MajorGC 和MinorGC区分开。</p>
+<p>FullGC：是清理整个堆空间—包括年轻代和永久代。FullGC 一般消耗的时间比较长，远远大于MinorGC，因此，有时候我们必须降低FullGC 发生的频率。</p>
+<h4 id="9、收集算法是内存回收的理论，而垃圾回收器是内存回收的实践。"><a href="#9、收集算法是内存回收的理论，而垃圾回收器是内存回收的实践。" class="headerlink" title="9、收集算法是内存回收的理论，而垃圾回收器是内存回收的实践。"></a>9、收集算法是内存回收的理论，而垃圾回收器是内存回收的实践。</h4><p><strong>判断哪些对象需要被回收有以下两种方法：</strong></p>
+<h5 id="引用计数法"><a href="#引用计数法" class="headerlink" title="引用计数法"></a>引用计数法</h5><p>给对象添加一引用计数器，被引用一次计数器值就加 1；当引用失效时，计数器值就减 1；计数器为 0 时，对象就是不可能再被使用的，简单高效，<strong>缺点是无法解决对象之间相互循环引用的问题。</strong></p>
+<h5 id="可达性分析算法"><a href="#可达性分析算法" class="headerlink" title="可达性分析算法"></a>可达性分析算法</h5><p>通过一系列的称为 “GC Roots” 的对象作为起始点，从这些节点开始向下搜索，搜索所走过的路径称为引用链（Reference Chain），<strong>当一个对象到 GC Roots 没有任何引用链相连时</strong>，则证明此对象是不可用的。此算法解决了上述循环引用的问题。</p>
+<p>在Java语言中，<strong>可作为 GC Roots 的对象包括下面几种：</strong></p>
+<p>a. 虚拟机栈（栈帧中的本地变量表）中引用的对象。</p>
+<p>b. 方法区中类静态属性引用的对象。</p>
+<p>c. 方法区中常量引用的对象。</p>
+<p>d. 本地方法栈中 JNI（Native方法）引用的对象</p>
+<h5 id="强、软、弱、虚引用"><a href="#强、软、弱、虚引用" class="headerlink" title="强、软、弱、虚引用"></a>强、软、弱、虚引用</h5><p><strong>强引用</strong>：就是指在程序代码之中普遍存在的，类似”Object obj=new Object()”这类的引用，垃圾收集器永远不会回收存活的强引用对象。</p>
+<p><strong>软引用</strong>：还有用但并非必需的对象。在系统将要发生内存溢出异常之前 ，将会把这些对象列进回收范围之中进行第二次回收。</p>
+<p><strong>弱引用</strong>：也是用来描述非必需对象的，被弱引用关联的对象 只能生存到下一次垃圾收集发生之前 。当垃圾收集器工作时，无论内存是否足够，都会回收掉只被弱引用关联的对象。</p>
+<p><strong>虚引用</strong>：是最弱的一种引用关系。 无法通过虚引用来取得一个对象实例 。为一个对象设置虚引用关联的唯一目的就是能在这个对象被收集器回收时收到一个系统通知。</p>
+<h5 id="怎么回收垃圾"><a href="#怎么回收垃圾" class="headerlink" title="怎么回收垃圾"></a>怎么回收垃圾</h5><p><strong>一共有 4 种</strong>：</p>
+<h6 id="标记-清除算法"><a href="#标记-清除算法" class="headerlink" title="标记-清除算法"></a><strong>标记-清除算法</strong></h6><p>最基础的收集算法是“标记-清除”（Mark-Sweep）算法，分为“标记”和“清除”两个阶段：首先标记出所有需要回收的对象，在标记完成后统一回收所有被标记的对象。</p>
+<p>它的主要不足有两个：</p>
+<p>效率问题，标记和清除两个过程的效率都不高；<br>空间问题，标记清除之后会产生大量不连续的内存碎片，空间碎片太多可能会导致以后在程序运行过程中需要分配较大对象时，无法找到足够的连续内存而不得不提前触发另一次垃圾收集动作。</p>
+<h6 id="复制算法"><a href="#复制算法" class="headerlink" title="复制算法"></a>复制算法</h6><p>为了解决效率问题，一种称为“复制”（Copying）的收集算法出现了，它将可用内存按容量划分为大小相等的两块，每次只使用其中的一块。当这一块的内存用完了，就将还存活着的对象复制到另外一块上面，然后再把已使用过的内存空间一次清理掉。</p>
+<p>这样使得每次都是对整个半区进行内存回收，内存分配时也就不用考虑内存碎片等复杂情况，只要移动堆顶指针，按顺序分配内存即可，实现简单，运行高效。只是这种算法的代价是将内存缩小为了原来的一半。</p>
+<p><strong>现在的商业虚拟机都采用这种算法来回收新生代，IBM 研究指出新生代中的对象 98% 是“朝生夕死”的，所以并不需要按照 1:1 的比例来划分内存空间，而是将内存分为一块较大的 Eden 空间和两块较小的 Survivor 空间，每次使用 Eden 和其中一块 Survivor 。</strong></p>
+<h6 id="标记整理算法"><a href="#标记整理算法" class="headerlink" title="标记整理算法"></a>标记整理算法</h6><p><strong>复制算法在对象存活率较高时就要进行较多的复制操作，效率将会变低。</strong></p>
+<p>更关键的是，如果不想浪费 50% 的空间，就需要有额外的空间进行分配担保，以应对被使用的内存中所有对象都 100% 存活的极端情况，<strong>所以在老年代一般不能直接选用这种算法。</strong></p>
+<h6 id="分代收集算法"><a href="#分代收集算法" class="headerlink" title="分代收集算法"></a>分代收集算法</h6><p><strong>当前商业虚拟机的垃圾收集都采用“分代收集”（Generational Collection）算法，根据对象存活周期的不同将内存划分为几块并采用不用的垃圾收集算法。</strong></p>
+<p><strong>在新生代中，每次垃圾收集时都发现有大批对象死去，只有少量存活，那就选用复制算法，只需要付出少量存活对象的复制成本就可以完成收集。而老年代中因为对象存活率高、没有额外空间对它进行分配担保，就必须使用“标记—清理”或者“标记—整理”算法来进行回收。</strong></p>
+<p>前辈写的太好了—–<a target="_blank" rel="noopener" href="https://www.cnblogs.com/czwbig/p/11127159.html">Java垃圾回收</a></p>
+<h4 id="10、JVM中的分代"><a href="#10、JVM中的分代" class="headerlink" title="10、JVM中的分代"></a>10、JVM中的分代</h4><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/jisuanjiguoba/article/details/80156781">文章</a></p>
+<p>1）年轻代(Young Gen)：</p>
+<p>年轻代主要存放新创建的对象，内存大小相对会比较小，垃圾回收会比较频繁。年轻代分成1个Eden Space和2个Suvivor Space（命名为A和B）。</p>
+<p>当对象在堆创建时，将进入年轻代的Eden Space。垃圾回收器进行垃圾回收时，扫描Eden Space和A Suvivor Space，如果对象仍然存活，则复制到B Suvivor Space，如果B Suvivor Space已经满，则复制到Old Gen。</p>
+<p>同时，在扫描Suvivor Space时，如果对象已经经过了几次的扫描仍然存活，JVM认为其为一个持久化对象，则将其移到Old Gen。扫描完毕后，JVM将Eden Space和A Suvivor Space清空，然后交换A和B的角色（即下次垃圾回收时会扫描Eden Space和B Suvivor Space。这么做主要是为了减少内存碎片的产生。  </p>
+<p>我们可以看到：Young Gen垃圾回收时，采用将存活对象复制到到空的Suvivor Space的方式来确保尽量不存在内存碎片，采用空间换时间的方式来加速内存中不再被持有的对象尽快能够得到回收。</p>
+<p>2）年老代(Tenured Gen)：年老代主要存放JVM认为生命周期比较长的对象（经过几次的Young Gen的垃圾回收后仍然存在），内存大小相对会比较大，垃圾回收也相对没有那么频繁（譬如可能几个小时一次）。<br>年老代主要采用压缩的方式来避免内存碎片（将存活对象移动到内存片的一边，也就是内存整理）。当然，有些垃圾回收器（譬如CMS垃圾回收器）出于效率的原因，可能会不进行压缩。</p>
+<p>3）持久代(Perm Gen)：持久代主要存放类定义、字节码和常量等很少会变更的信息。</p>
+<h3 id="2、java基础篇"><a href="#2、java基础篇" class="headerlink" title="2、java基础篇"></a>2、java基础篇</h3><h4 id="1、操作系统网络中里的五种IO模型包括："><a href="#1、操作系统网络中里的五种IO模型包括：" class="headerlink" title="1、操作系统网络中里的五种IO模型包括："></a>1、操作系统网络中里的五种IO模型包括：</h4><p>阻塞IO、非阻塞IO、信号驱动IO、IO多路转接、异步IO</p>
+<h4 id="2、类加过程"><a href="#2、类加过程" class="headerlink" title="2、类加过程"></a>2、类加过程</h4><p>加载 ，验证，准备，解析，初始化，具体内容</p>
+<h4 id="3、Java如何创建线程，创建线程的方式"><a href="#3、Java如何创建线程，创建线程的方式" class="headerlink" title="3、Java如何创建线程，创建线程的方式"></a>3、Java如何创建线程，创建线程的方式</h4><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_37840000/article/details/79756932">文章</a></p>
+<p>1）继承Thread类创建线程</p>
+<p>2）实现Runnable接口创建线程</p>
+<p>3）使用Callable和Future创建线程</p>
+<p>4）使用线程池例如用Executor框架</p>
+<h4 id="24、ArrayList-与-LinkedList-的区别"><a href="#24、ArrayList-与-LinkedList-的区别" class="headerlink" title="24、ArrayList 与 LinkedList 的区别"></a>24、ArrayList 与 LinkedList 的区别</h4><p>ArrayList和LinkedList都是实现了List接口的容器类，用于存储一系列的对象引用。</p>
+<p>他们都可以对元素的增删改查进行操作，那么他们区别、优缺点应用场景都有哪些呢？</p>
+<p>我们通过源码和数据结构来说明一下ArrayList和LinkedList的大致区别如下:</p>
+<p><strong>ArrayList是实现了基于动态数组的数据结构，</strong></p>
+<p><strong>LinkedList是基于链表结构。</strong></p>
+<p><strong>对于随机访问的get和set方法</strong>，ArrayList<strong>要优于</strong>LinkedList，因为LinkedList要移动指针。</p>
+<p>对于<strong>新增和删除</strong>操作add和remove，LinkedList比较占优势，因为ArrayList要移动数据。</p>
+<p><strong>ArrayList和LinkedList的缺点如下:</strong></p>
+<p>对ArrayList和LinkedList而言，在列表末尾增加一个元素所花的开销都是固定的。</p>
+<p>对ArrayList而言，主要是在内部数组中增加一项，指向所添加的元素，偶尔可能会导致对数组重新进行分配；</p>
+<p>而对LinkedList而言，这个开销是 统一的，分配一个内部Entry对象。</p>
+<p>在ArrayList集合中添加或者删除一个元素时，当前的列表移动元素后面所有的元素都会被移动。</p>
+<p>而LinkedList集合中添加或者删除一个元素的开销是固定的。</p>
+<p>LinkedList集合不支持 高效的随机随机访问（RandomAccess），因为可能产生二次项的行为。</p>
+<p>ArrayList的空间浪费主要体现在在list列表的结尾预留一定的容量空间，</p>
+<p>而LinkedList的空间花费则体现在它的每一个元素都需要消耗相当的空间</p>
+<p>ArrayList和LinkedList的应用场景如下:</p>
+<p><strong>ArrayList使用在查询比较多，但是插入和删除比较少的情况，</strong></p>
+<p><strong>而LinkedList用在查询比较少而插入删除比较多的情况</strong></p>
+<h4 id="1、Android的数据存储"><a href="#1、Android的数据存储" class="headerlink" title="1、Android的数据存储"></a>1、Android的数据存储</h4><ol>
+<li><p>使用SharedPreferences存储数据<br>它是Android提供的用来存储一些简单配置信息的一种机制，采用了XML格式将数据存储到设备中。只能在同一个包内使用，不能在不同的包之间使用。</p>
+<p> 1、sharedPerferences是一种轻量级的存储方式。</p>
+<p> 2、只支持JAVA基本数据类型，不支持自定义的数据类型。</p>
+<p> 3、应用内数据可以共享。</p>
+<p> 4、使用简单，方便。</p>
+</li>
+</ol>
+<p><strong>获取sharedPerferences的3种方式</strong></p>
+<pre><code>1、Context对象的getSharedPreferences(String name, int mode)方法获取。
+
+2、Activity对象的getPreferences(int mode)方法获取。
+
+3、PreferenceManager对象的getDefaultSharedPreferences(Context context)方法获取。
+</code></pre>
+<ol>
+<li>文件存储数据文件存储方式是一种较常用的方法，在Android中读取/写入文件的方法，与Java中实现I/O的程序是完全一样的，提供了openFileInput()和openFileOutput()方法来读取设备上的文件。</li>
+<li>SQLite数据库存储数据SQLite是Android所带的一个标准的数据库，它支持SQL语句，它是一个轻量级的嵌入式数据库。</li>
+<li>使用ContentProvider存储数据主要用于应用程序之间进行数据交换，从而能够让其他的应用保存或读取此Content Provider的各种数据类型。</li>
+<li>网络存储数据通过网络上提供给我们的存储空间来上传(存储)和下载(获取)我们存储在网络空间中的数据信息。</li>
+</ol>
+<h4 id="2-内存溢出和内存泄漏有什么区别？何时会产生内存泄漏？"><a href="#2-内存溢出和内存泄漏有什么区别？何时会产生内存泄漏？" class="headerlink" title="2. 内存溢出和内存泄漏有什么区别？何时会产生内存泄漏？"></a>2. 内存溢出和内存泄漏有什么区别？何时会产生内存泄漏？</h4><p><strong>内存溢出</strong>：<br>当程序运行时所需的内存大于程序允许的最高内存，这时会出现内存溢出；</p>
+<p><strong>内存泄漏</strong>：<br>在一些比较消耗资源的操作中，如果操作中内存一直未被释放，就会出现内存泄漏。比如未关闭io,cursor。</p>
+<h4 id="3-如何保存activity的状态？"><a href="#3-如何保存activity的状态？" class="headerlink" title="3. 如何保存activity的状态？"></a>3. 如何保存activity的状态？</h4><p>默认情况下activity的状态系统会自动保存，有些时候需要我们手动调用保存。</p>
+<p>当activity处于onPause，onStop之后，activity处于未活动状态，但是activity对象却仍然存在。</p>
+<p>当内存不足，onPause，onStop之后的activity可能会被系统摧毁。当通过返回退出activity时，activity状态并不会保存。</p>
+<p>保存activity状态需要重写onSavedInstanceState()方法，在执行onPause,onStop之前调用onSavedInstanceState方法，</p>
+<p>onSavedInstanceState需要一个Bundle类型的参数，我们可以将数据保存到bundle中，通过实参传递给onSavedInstanceState方法。</p>
+<p>Activity被销毁后，重新启动时，在onCreate方法中，接受保存的bundle参数，并将之前的数据取出。</p>
+<h4 id="4-Android中activity，context，application有什么不同。"><a href="#4-Android中activity，context，application有什么不同。" class="headerlink" title="4. Android中activity，context，application有什么不同。"></a>4. Android中activity，context，application有什么不同。</h4><p>Context：表示当前上下文对象，保存的是上下文中的参数和变量，它可以让更加方便访问到一些资源。Context通常与activity的生命周期是一样的，application表示整个应用程序的对象。</p>
+<p>对于一些生命周期较长的，不要使用context，可以使用application。</p>
+<p>在activity中，尽量使用静态内部类，不要使用内部类。内部里作为外部类的成员存在，不是独立于activity，如果内存中还有内存继续引用到context，activity如果被销毁，context还不会结束。</p>
+<h4 id="5、Service-是否在-main-thread-中执行-service-里面是否能执行耗时的操作"><a href="#5、Service-是否在-main-thread-中执行-service-里面是否能执行耗时的操作" class="headerlink" title="5、Service 是否在 main thread 中执行, service 里面是否能执行耗时的操作?"></a>5、Service 是否在 main thread 中执行, service 里面是否能执行耗时的操作?</h4><p>默认情况service在main thread中执行，当service在主线程中运行，那在service中不能进行一些比较耗时的操作，比如说网络连接，文件拷贝等。</p>
+<h4 id="6、Service-和-Activity-在同一个线程吗"><a href="#6、Service-和-Activity-在同一个线程吗" class="headerlink" title="6、Service 和 Activity 在同一个线程吗"></a>6、Service 和 Activity 在同一个线程吗</h4><p>默认情况下service与activity在同一个线程，都在main Thread，或者ui线程中。</p>
+<p>如果在清单文件中指定service的process属性，那么service就在另一个进程中运行。（可以在清单文件配置 service 执行所在的进程 ,让service在另外的进程中执行<br>）</p>
+<h4 id="7、当时为什么选择volley这个http库？"><a href="#7、当时为什么选择volley这个http库？" class="headerlink" title="7、当时为什么选择volley这个http库？"></a>7、当时为什么选择volley这个http库？</h4><p>开源的<br>通过Volley.newRequestQueue(context)—获取到一个RequestQueue对象</p>
+<p><strong>Volley</strong><br>非常适合进行数据量不大，但通信频繁的网络操作。<br>内部分装了异步线程。<br>支持get，post网络请求。<br>图片下载。<br>可直接在主线程调用服务端并处理返回结果。<br>可以取消请求，容易扩展，面向接口编程。</p>
+<p><strong>okhttp</strong></p>
+<p>支持http请求，https请求。</p>
+<p>支持文件下载。</p>
+<p>使用的是HttpURLConnection,不要担心android版本的变换。（至少目前是都支持的）。</p>
+<p>支持get，post请求。</p>
+<p>基于Http的文件上传。</p>
+<p>加载图片。</p>
+<p><strong>HttpClient</strong></p>
+<p><strong>HttpURLConnection</strong> </p>
+<h4 id="8、concurrentHashMap的结构和hashMap的结构"><a href="#8、concurrentHashMap的结构和hashMap的结构" class="headerlink" title="8、concurrentHashMap的结构和hashMap的结构"></a>8、concurrentHashMap的结构和hashMap的结构</h4><p>应为面试中数据结构方面问的最多的就是hashMap，所以今天对hashMap做了一个总结。</p>
+<p>给定的默认容量为 16，负载因子为 0.75。Map 在使用过程中不断的往里面存放数据，当数量达到了 16 * 0.75 = 12 就需要将当前 16 的容量进行扩容，而<strong>扩容这个过程涉及到 rehash、复制数据等操作，所以非常消耗性能。</strong></p>
+<p>因此通常建议能提前预估 HashMap 的大小最好，尽量的减少扩容带来的性能损耗。</p>
+<p><strong>ConcurrentHashMap</strong><br>和 HashMap 非常类似，唯一的区别就是其中的核心数据如 value ，以及链表都是 volatile 修饰的，保证了获取时的可见性。</p>
+<p>虽然 HashEntry 中的 value 是用 volatile 关键词修饰的，但是并不能保证并发的原子性，所以 put 操作时仍然需要加锁处理。</p>
+<p>首先第一步的时候会尝试获取锁，如果获取失败肯定就有其他线程存在竞争，则利用 scanAndLockForPut() 自旋获取锁。</p>
+<p>1.尝试自旋获取锁。<br>2.如果重试的次数达到了 MAX_SCAN_RETRIES 则改为阻塞锁获取，保证能获取成功</p>
+<h4 id="9、消息分发机制"><a href="#9、消息分发机制" class="headerlink" title="9、消息分发机制"></a>9、消息分发机制</h4><p>在Android开发的过程中，我们常常会将耗时的一些操作放在子线程（work thread）中去执行，然后将执行的结果告诉UI线程（main thread），熟悉Android的朋友都知道，UI的更新只能通过Main thread来进行。</p>
+<p>那么这里就涉及到了如何将<br>子线程的数据传递给main thread呢？</p>
+<p> Android已经为我们提供了一个消息传递的机制——Handler，来帮助我们将子线程的数据传递给主线程，其实，当熟悉了Handler的原理之后我们知道，Handler不仅仅能将子线程的数据传递给主线程，它能实现任意两个线程的数据传递。</p>
+<p>**在使用handler的时候，在handler所创建的线程需要维护一个唯一的Looper对象， 每个线程对应一个Looper，每个线程的Looper通过ThreadLocal来保证，</p>
+<p>Looper对象的内部又维护有唯一的一个MessageQueue，所以一个线程可以有多个handler，<br>但是只能有一个Looper和一个MessageQueue。</p>
+<p>Message在MessageQueue不是通过一个列表来存储的，而是将传入的Message存入到了上一个Message的next中，在取出的时候通过顶部的Message就能按放入的顺序依次取出Message。</p>
+<p>Looper对象通过loop()方法开启了一个死循环，不断地从looper内的MessageQueue中取出Message，然后通过handler将消息分发传回handler所在的线程。<br>**</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/wsq_tomato/article/details/80301851?utm_medium=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromMachineLearnPai2~default-4.control&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromMachineLearnPai2~default-4.control">handler好文必须读</a></p>
+<p>Handler补充：</p>
+<ol>
+<li>Handler在使用过程中，需要注意的问题之一便是内存泄漏问题。<br>为什么会出现内存泄漏问题呢？<br>首先Handler使用是用来进行线程间通信的，所以新开启的线程是会持有Handler引用的，<br>如果在Activity等中创建Handler，并且是非静态内部类的形式，就有可能造成内存泄漏。</li>
+</ol>
+<p><strong>解决的办法</strong>：</p>
+<p>(1). 使用静态内部类+弱引用的方式:</p>
+<p>(2). 在外部类对象被销毁时，将MessageQueue中的消息清空。例如，在Activity的onDestroy时将消息清空。</p>
+<h4 id="10、读写锁"><a href="#10、读写锁" class="headerlink" title="10、读写锁"></a>10、读写锁</h4><p>ReadWriteLock管理一组锁，一个是只读的锁，一个是写锁。读锁可以在没有写锁的时候被多个线程同时持有，写锁是独占的。</p>
+<p>所有读写锁的实现必须确保写操作对读操作的内存影响。</p>
+<p>换句话说，一个获得了读锁的线程必须能看到前一个释放的写锁所更新的内容。</p>
+<p>读写锁比互斥锁允许对于共享数据更大程度的并发。</p>
+<p>每次只能有一个写线程，但是同时可以有多个线程并发地读数据。ReadWriteLock适用于读多写少的并发情况。</p>
+<h4 id="11、fragement和activity交互方式"><a href="#11、fragement和activity交互方式" class="headerlink" title="11、fragement和activity交互方式"></a>11、fragement和activity交互方式</h4><p>（1）通过Bundle传参，从而实现Fragment之间的数据交互</p>
+<p>（2）通过在Fragment内部定义一个回调接口，并需要宿主Activity实现它。当Activity通过接口接收到回调时，可以在必要时与布局中的其它Fagment共享信息。</p>
+<h4 id="12、android四大组件说下"><a href="#12、android四大组件说下" class="headerlink" title="12、android四大组件说下"></a>12、android四大组件说下</h4><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/bravestarrhu/archive/2012/05/02/2479461.html">好文必须读</a><br><strong>Activity</strong>，</p>
+<p>应用程序中，一个Activity通常就是一个单独的屏幕，它上面可以显示一些控件也可以监听并处理用户的事件做出响应。</p>
+<p>Activity之间通过Intent进行通信。在Intent 的描述结构中，有两个最重要的部分：动作和动作对应的数据。</p>
+<p><strong>Service服务</strong>,</p>
+<p>一个Service 是一段长生命周期的，没有用户界面的程序，可以用来开发如监控类程序。</p>
+<p>比较好的一个例子就是一个正在从播放列表中播放歌曲的媒体播放器。在一个媒体播放器的应用中，应该会有多个activity，让使用者可以选择歌曲并播放歌曲。然而，音乐重放这个功能并没有对应的activity，因为使用者当然会认为在导航到其它屏幕时音乐应该还在播放的。在这个例子中，媒体播放器这个activity 会使用Context.startService()来启动一个service，从而可以在后台保持音乐的播放。同时，系统也将保持这个service 一直执行，直到这个service 运行结束。另外，我们还可以通过使用Context.bindService()方法，连接到一个service 上（如果这个service 还没有运行将启动它）。当连接到一个service 之后，我们还可以service 提供的接口与它进行通讯。拿媒体播放器这个例子来说，我们还可以进行暂停、重播等操作。</p>
+<p><strong>Content Provider内容提供者，</strong><br>android平台提供了Content Provider使一个应用程序的指定数据集提供给其他应用程序。这些数据可以存储在文件系统中、在一个SQLite数据库、或以任何其他合理的方式,</p>
+<p>其他应用可以通过ContentResolver类(见ContentProviderAccessApp例子)从该内容提供者中获取或存入数据.(相当于在应用外包了一层壳),</p>
+<p>只有需要在多个应用程序间共享数据是才需要内容提供者。例如，通讯录数据被多个应用程序使用，且必须存储在一个内容提供者中</p>
+<p>它的好处:统一数据访问方式。</p>
+<p><strong>BroadcastReceiver广播接收器</strong></p>
+<p>你的应用可以使用它对外部事件进行过滤只对感兴趣的外部事件(如当电话呼入时，或者数据网络可用时)进行接收并做出响应。广播接收器没有用户界面。</p>
+<p>然而，它们可以启动一个activity或serice 来响应它们收到的信息，或者用NotificationManager 来通知用户。</p>
+<p>通知可以用很多种方式来吸引用户的注意力──闪动背灯、震动、播放声音等。一般来说是在状态栏上放一个持久的图标，用户可以打开它并获取消息。</p>
+<h4 id="13、android布局说下"><a href="#13、android布局说下" class="headerlink" title="13、android布局说下"></a>13、android布局说下</h4><p>线性布局LinearLayout</p>
+<p>表格布局TableLayout</p>
+<p>相对布局RelativeLayout</p>
+<p>层布局FrameLayout</p>
+<p>绝对布局AbsoluteLayout</p>
+<p>网格布局GridLayout。</p>
+<p>约束布局</p>
+<h4 id="Java—重写与重载的区别"><a href="#Java—重写与重载的区别" class="headerlink" title="Java—重写与重载的区别"></a>Java—重写与重载的区别</h4><p>1.重写(Override)<br>从字面上看，重写就是 重新写一遍的意思。其实就是在子类中把父类本身有的方法重新写一遍。子类继承了父类原有的方法，但有时子类并不想原封不动的继承父类中的某个方法，所以在方法名，参数列表，返回类型(除过子类中方法的返回值是父类中方法返回值的子类时)都相同的情况下， 对方法体进行修改或重写，这就是重写。但要注意子类函数的访问修饰权限不能少于父类的。</p>
+<p>2.重载(Overload)<br>在一个类中，同名的方法如果有不同的参数列表（参数类型不同、参数个数不同甚至是参数顺序不同）则视为重载。同时，重载对返回类型没有要求，可以相同也可以不同，但不能通过返回类型是否相同来判断重载。</p>
+<p><strong>答：方法的重载和重写都是实现多态的方式，区别在于前者实现的是编译时的多态性，而后者实现的是运行时的多态性。重载发生在一个类中，同名的方法如果有不同的参数列表（参数类型不同、参数个数不同或者二者都不同）则视为重载；重写发生在子类与父类之间，重写要求子类被重写方法与父类被重写方法有相同的参数列表，有兼容的返回类型，比父类被重写方法更好访问，不能比父类被重写方法声明更多的异常（里氏代换原则）。重载对返回类型没有特殊的要求，不能根据返回类型进行区分。</strong></p>
+<h4 id="三大特性是：封装-继承-多态"><a href="#三大特性是：封装-继承-多态" class="headerlink" title="三大特性是：封装,继承,多态"></a>三大特性是：封装,继承,多态</h4><p><strong>所谓封装</strong>：<br>也就是把客观事物封装成抽象的类，并且类可以把自己的数据和方法只让可信的类或者对象操作，对不可信的进行信息隐藏。封装是面向对象的特征之一，是对象和类概念的主要特性。 简单的说，一个类就是一个封装了数据以及操作这些数据的代码的逻辑实体。在一个对象内部，某些代码或某些数据可以是私有的，不能被外界访问。通过这种方式，对象对内部数据提供了不同级别的保护，以防止程序中无关的部分意外的改变或错误的使用了对象的私有部分。</p>
+<p><strong>所谓继承</strong>：<br>是指可以让某个类型的对象获得另一个类型的对象的属性的方法。它支持按级分类的概念。继承是指这样一种能力：它可以使用现有类的所有功能，并在无需重新编写原来的类的情况下对这些功能进行扩展。 通过继承创建的新类称为“子类”或“派生类”，被继承的类称为“基类”、“父类”或“超类”。继承的过程，就是从一般到特殊的过程。要实现继承，可以通过“继承”（Inheritance）和“组合”（Composition）来实现。继承概念的实现方式有二类：实现继承与接口继承。实现继承是指直接使用基类的属性和方法而无需额外编码的能力；接口继承是指仅使用属性和方法的名称、但是子类必须提供实现的能力；</p>
+<p><strong>所谓多态</strong>：<br>就是指一个类实例的相同方法在不同情形有不同表现形式。多态机制使具有不同内部结构的对象可以共享相同的外部接口。这意味着，虽然针对不同对象的具体操作不同，但通过一个公共的类，它们（那些操作）可以通过相同的方式予以调用。</p>
+<h4 id="面向对象"><a href="#面向对象" class="headerlink" title="面向对象"></a>面向对象</h4><p><strong>面向过程</strong>（Procedure Oriented 简称PO ：如C语言）：</p>
+<p>从名字可以看出它是注重过程的。当解决一个问题的时候，面向过程会把事情拆分成： 一个个函数和数据（用于方法的参数） 。然后按照一定的顺序，执行完这些方法（每个方法看作一个过程），等方法执行完了，事情就搞定了。</p>
+<p><strong>面向对象</strong>（Object Oriented简称OO ：如C++，JAVA等语言）：</p>
+<p>看名字它是注重对象的。当解决一个问题的时候，面向对象会把事物抽象成对象的概念，就是说这个问题里面有哪些对象，然后给对象赋一些属性和方法，然后让每个对象去执行自己的方法，问题得到解决。</p>
+<p><strong>面向过程的解决方法</strong>：</p>
+<p>1、执行加洗衣粉方法；</p>
+<p>2、执行加水方法；</p>
+<p>3、执行洗衣服方法；</p>
+<p>4、执行清洗方法；</p>
+<p>5、 执行烘干方法；</p>
+<p>以上就是将解决这个问题的过程拆成一个个方法（是没有对象去调用的），通过一个个方法的执行来解决问题。</p>
+<p><strong>面向对象的解决方法</strong>：</p>
+<p>1、我先弄出两个对象：“洗衣机”对象和“人”对象</p>
+<p>2、针对对象“洗衣机”加入一些属性和方法：“洗衣服方法”“清洗方法”、“烘干方法”</p>
+<p>3、针对对象“人”加入属性和方法：“加洗衣粉方法”、“加水方法”</p>
+<p>4、然后执行</p>
+<p>人.加洗衣粉</p>
+<p>人.加水</p>
+<p>洗衣机.洗衣服</p>
+<p>洗衣机.清洗</p>
+<p>洗衣机.烘干</p>
+<p>解决同一个问题 ，面向对象编程就是先抽象出对象，然后用对象执行方法的方式解决问题。</p>
+<p><strong>面向过程</strong></p>
+<p>优点：性能比面向对象高，因为类调用时需要实例化，开销比较大，比较消耗资源;比如单片机、嵌入式开发、 Linux/Unix等一般采用面向过程开发，性能是最重要的因素。</p>
+<p>缺点：没有面向对象易维护、易复用、易扩展</p>
+<p><strong>面向对象</strong></p>
+<p>优点：易维护、易复用、易扩展，由于面向对象有封装、继承、多态性的特性，可以设计出低耦合的系统，使系统 更加灵活、更加易于维护</p>
+<p>缺点：性能比面向过程低</p>
+<h3 id="16、综合问题"><a href="#16、综合问题" class="headerlink" title="16、综合问题"></a>16、综合问题</h3><p>1、会对代码进行review吗？何时review？怎么review？</p>
+<p>2、项目中遇到的让你棘手的问题？多久解决，怎么解决？</p>
+<p>3、平常如何学习?何时学习？怎么学习？学习渠道?</p>
+<h4 id="4、反转算法"><a href="#4、反转算法" class="headerlink" title="4、反转算法"></a>4、反转算法</h4><h4 id="5、倒序遍历数组的意义"><a href="#5、倒序遍历数组的意义" class="headerlink" title="5、倒序遍历数组的意义"></a>5、倒序遍历数组的意义</h4><h4 id="6、Java读写锁，AQS原理"><a href="#6、Java读写锁，AQS原理" class="headerlink" title="6、Java读写锁，AQS原理"></a>6、Java读写锁，AQS原理</h4><h4 id="7、进程间的通信"><a href="#7、进程间的通信" class="headerlink" title="7、进程间的通信"></a>7、进程间的通信</h4><h4 id="8、进程的状态及转换"><a href="#8、进程的状态及转换" class="headerlink" title="8、进程的状态及转换"></a>8、进程的状态及转换</h4><h4 id="9、算法-栈实现队列"><a href="#9、算法-栈实现队列" class="headerlink" title="9、算法:栈实现队列"></a>9、算法:栈实现队列</h4><h4 id="10、算法-队列实现栈"><a href="#10、算法-队列实现栈" class="headerlink" title="10、算法:队列实现栈"></a>10、算法:队列实现栈</h4><h4 id="11、String-s1-“abc”-与-String-s2-new-String-“abc”-中-s1-s2-为什么？"><a href="#11、String-s1-“abc”-与-String-s2-new-String-“abc”-中-s1-s2-为什么？" class="headerlink" title="11、String s1 = “abc” 与 String s2 =new String(“abc”)中,s1 == s2?为什么？"></a>11、String s1 = “abc” 与 String s2 =new String(“abc”)中,s1 == s2?为什么？</h4><h4 id="12、JMM中哪些区域可以多线程访问"><a href="#12、JMM中哪些区域可以多线程访问" class="headerlink" title="12、JMM中哪些区域可以多线程访问."></a>12、JMM中哪些区域可以多线程访问.</h4><h4 id="13、锁的类型你了解吗，比如对象锁，类锁，重入锁"><a href="#13、锁的类型你了解吗，比如对象锁，类锁，重入锁" class="headerlink" title="13、锁的类型你了解吗，比如对象锁，类锁，重入锁."></a>13、锁的类型你了解吗，比如对象锁，类锁，重入锁.</h4><h4 id="14、View点击事件是怎么传递的？"><a href="#14、View点击事件是怎么传递的？" class="headerlink" title="14、View点击事件是怎么传递的？"></a>14、View点击事件是怎么传递的？</h4><h4 id="15、如果事件传递到子View，子View返回false，这个时候的事件怎么处理"><a href="#15、如果事件传递到子View，子View返回false，这个时候的事件怎么处理" class="headerlink" title="15、如果事件传递到子View，子View返回false，这个时候的事件怎么处理."></a>15、如果事件传递到子View，子View返回false，这个时候的事件怎么处理.</h4><h4 id="16、handler底层是怎么工作的？"><a href="#16、handler底层是怎么工作的？" class="headerlink" title="16、handler底层是怎么工作的？"></a>16、handler底层是怎么工作的？</h4><h4 id="17、你知不知道ThreadLocal？"><a href="#17、你知不知道ThreadLocal？" class="headerlink" title="17、你知不知道ThreadLocal？"></a>17、你知不知道ThreadLocal？</h4><h4 id="18、浏览器缓存你了解吗"><a href="#18、浏览器缓存你了解吗" class="headerlink" title="18、浏览器缓存你了解吗."></a>18、浏览器缓存你了解吗.</h4><h4 id="19、wait-和-sleep的区别"><a href="#19、wait-和-sleep的区别" class="headerlink" title="19、wait 和 sleep的区别"></a>19、wait 和 sleep的区别</h4><h4 id="20、String、StringBuffer-、StringBuilder的区别"><a href="#20、String、StringBuffer-、StringBuilder的区别" class="headerlink" title="20、String、StringBuffer 、StringBuilder的区别"></a>20、String、StringBuffer 、StringBuilder的区别</h4><h4 id="21、事件处理-分发，拦截，处理。"><a href="#21、事件处理-分发，拦截，处理。" class="headerlink" title="21、事件处理 分发，拦截，处理。"></a>21、事件处理 分发，拦截，处理。</h4><h4 id="22、原理屏幕适配相关问题"><a href="#22、原理屏幕适配相关问题" class="headerlink" title="22、原理屏幕适配相关问题"></a>22、原理屏幕适配相关问题</h4><h4 id="23、序在运行时操作系统除了分配内存空间还有什么"><a href="#23、序在运行时操作系统除了分配内存空间还有什么" class="headerlink" title="23、序在运行时操作系统除了分配内存空间还有什么"></a>23、序在运行时操作系统除了分配内存空间还有什么</h4><h4 id="24、ArrayList-与-LinkedList-的区别-1"><a href="#24、ArrayList-与-LinkedList-的区别-1" class="headerlink" title="24、ArrayList 与 LinkedList 的区别"></a>24、ArrayList 与 LinkedList 的区别</h4><p>ArrayList和LinkedList都是实现了List接口的容器类，用于存储一系列的对象引用。</p>
+<p>他们都可以对元素的增删改查进行操作，那么他们区别、优缺点应用场景都有哪些呢？</p>
+<p>我们通过源码和数据结构来说明一下ArrayList和LinkedList的大致区别如下:</p>
+<p><strong>ArrayList是实现了基于动态数组的数据结构，</strong></p>
+<p><strong>LinkedList是基于链表结构。</strong></p>
+<p><strong>对于随机访问的get和set方法</strong>，ArrayList<strong>要优于</strong>LinkedList，因为LinkedList要移动指针。</p>
+<p>对于<strong>新增和删除</strong>操作add和remove，LinkedList比较占优势，因为ArrayList要移动数据。</p>
+<p><strong>ArrayList和LinkedList的缺点如下:</strong></p>
+<p>对ArrayList和LinkedList而言，在列表末尾增加一个元素所花的开销都是固定的。</p>
+<p>对ArrayList而言，主要是在内部数组中增加一项，指向所添加的元素，偶尔可能会导致对数组重新进行分配；</p>
+<p>而对LinkedList而言，这个开销是 统一的，分配一个内部Entry对象。</p>
+<p>在ArrayList集合中添加或者删除一个元素时，当前的列表移动元素后面所有的元素都会被移动。</p>
+<p>而LinkedList集合中添加或者删除一个元素的开销是固定的。</p>
+<p>LinkedList集合不支持 高效的随机随机访问（RandomAccess），因为可能产生二次项的行为。</p>
+<p>ArrayList的空间浪费主要体现在在list列表的结尾预留一定的容量空间，</p>
+<p>而LinkedList的空间花费则体现在它的每一个元素都需要消耗相当的空间</p>
+<p>ArrayList和LinkedList的应用场景如下:</p>
+<p><strong>ArrayList使用在查询比较多，但是插入和删除比较少的情况，</strong></p>
+<p><strong>而LinkedList用在查询比较少而插入删除比较多的情况</strong></p>
+<h4 id="25、"><a href="#25、" class="headerlink" title="25、"></a>25、</h4><h3 id="3、算法、"><a href="#3、算法、" class="headerlink" title="3、算法、"></a>3、算法、</h3><h4 id="1、找出数组中重复的数字"><a href="#1、找出数组中重复的数字" class="headerlink" title="1、找出数组中重复的数字"></a>1、找出数组中重复的数字</h4><h4 id="2、存一个通讯录，包括增删改查，用什么数据结构？"><a href="#2、存一个通讯录，包括增删改查，用什么数据结构？" class="headerlink" title="2、存一个通讯录，包括增删改查，用什么数据结构？"></a>2、存一个通讯录，包括增删改查，用什么数据结构？</h4><h4 id="3、二叉树的中序遍历，非递归"><a href="#3、二叉树的中序遍历，非递归" class="headerlink" title="3、二叉树的中序遍历，非递归"></a>3、二叉树的中序遍历，非递归</h4><h4 id="4、TCP攻击知道吗？如何进行攻击？"><a href="#4、TCP攻击知道吗？如何进行攻击？" class="headerlink" title="4、TCP攻击知道吗？如何进行攻击？"></a>4、TCP攻击知道吗？如何进行攻击？</h4><h4 id="5、二叉树输出第-k-层节点元素"><a href="#5、二叉树输出第-k-层节点元素" class="headerlink" title="5、二叉树输出第 k 层节点元素"></a>5、二叉树输出第 k 层节点元素</h4><h4 id="6、两个有序的链表的合并"><a href="#6、两个有序的链表的合并" class="headerlink" title="6、两个有序的链表的合并"></a>6、两个有序的链表的合并</h4><h4 id="7、输入一个字符串-不含和-、正则-字母、和-任意组合-，判断字符串是否合法"><a href="#7、输入一个字符串-不含和-、正则-字母、和-任意组合-，判断字符串是否合法" class="headerlink" title="7、输入一个字符串(不含和.)、正则(字母、和.任意组合)，判断字符串是否合法"></a>7、输入一个字符串(不含和.)、正则(字母、和.任意组合)，判断字符串是否合法</h4><h4 id="8、手写快排"><a href="#8、手写快排" class="headerlink" title="8、手写快排"></a>8、手写快排</h4><h4 id="9、最大子序列"><a href="#9、最大子序列" class="headerlink" title="9、最大子序列"></a>9、最大子序列</h4><p>作者：小帅<br>链接：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/384792551">https://zhuanlan.zhihu.com/p/384792551</a><br>来源：知乎<br>著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</p>
+<p>Activity的四个启动方法</p>
+<p>Activity的生命周期</p>
+<p>Fragment的生命周期</p>
+<p>Fragment相比Activity有什么优劣</p>
+<p>Fragment和Activity的交互</p>
+<p>Fragment的使用场景</p>
+<p>本地广播的用法</p>
+<p>本地广播的原理</p>
+<p>如何让广播只发送给特定的App</p>
+<p>Intent如何传递大文件</p>
+<p>Intent传递超出范围的文件的后果</p>
+<p>如何传递大文件</p>
+<p>如何避免大图片OOM</p>
+<p>图片压缩的原理</p>
+<p>Glide源码图片的三级缓存</p>
+<p>Lru算法</p>
+<p>EventBus原理</p>
+<p>RemoteView使用场景及其方法</p>
+<p>RemoteView能使用的View的范围</p>
+<p>Notification能否使用自定义View以及原因</p>
+<p>RemoteView原理简述</p>
+<p>事件分发机制</p>
+<p>事件分发中的方法名、方法参数以及不同的返回值的意义</p>
+<p>ListView中如何使不同的Item加载不同的样式</p>
+<p>ListView中convertview的作用以及意义</p>
+<p>RecyclerView与ListView的区别</p>
+<p>如何解决ListView异步加载图片的问题</p>
+<p>ContentProvider的用法,详细到方法跨进程通信的方式</p>
+<p>AIDL原理</p>
+<p>Binder原理,详细到方法启动一个Server和绑定Server的区别</p>
+<p>举例Server和绑定Server的不同使用场景</p>
+<p>IntentServer与普通Server的区别</p>
+<p>IntentServer的使用场景</p>
+<p>IntentServer原理</p>
+<p>如何保证Server不被杀死</p>
+<p>实现多线程的几种方法</p>
+<p>几种动画如何自己去实现一个动画,具体到方法属性动画的原理</p>
+<h3 id="4"><a href="#4" class="headerlink" title="4."></a>4.</h3><p>1、会对代码进行review吗？何时review？怎么review？</p>
+<p>2、项目中遇到的让你棘手的问题？多久解决，怎么解决？</p>
+<p>3、平常如何学习?何时学习？怎么学习？学习渠道?</p>
+<h4 id="5、"><a href="#5、" class="headerlink" title="5、"></a>5、</h4><h5 id="1、Activity四种启动模式"><a href="#1、Activity四种启动模式" class="headerlink" title="1、Activity四种启动模式"></a>1、Activity四种启动模式</h5><h5 id="2、服务的分类"><a href="#2、服务的分类" class="headerlink" title="2、服务的分类"></a>2、服务的分类</h5><h5 id="3、如何与服务交互"><a href="#3、如何与服务交互" class="headerlink" title="3、如何与服务交互"></a>3、如何与服务交互</h5><h5 id="4、如何终止线程"><a href="#4、如何终止线程" class="headerlink" title="4、如何终止线程"></a>4、如何终止线程</h5><h5 id="5、服务所在的线程"><a href="#5、服务所在的线程" class="headerlink" title="5、服务所在的线程"></a>5、服务所在的线程</h5><h5 id="6、IntentService的原理以及好处"><a href="#6、IntentService的原理以及好处" class="headerlink" title="6、IntentService的原理以及好处"></a>6、IntentService的原理以及好处</h5><h5 id="7、vollery"><a href="#7、vollery" class="headerlink" title="7、vollery"></a>7、vollery</h5>
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/%E9%9D%A2%E8%AF%95/">面试</a>
+		  
+			<a href="/tags/android/">android</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2021/07/20/%E6%AF%8F%E5%A4%A9%E4%B8%80%E9%81%93%E7%AE%97%E6%B3%95%E9%A2%98%EF%BC%9A%E7%A7%BB%E5%8A%A8%E6%95%B0%E7%BB%84/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">每天一道算法题：移动数组</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2021/07/19/volatile%E5%85%B3%E9%94%AE%E5%AD%97%E7%9A%84%E4%BD%9C%E7%94%A8/">
+        <span class="next-text nav-default">volatile关键字的作用</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+      </footer>
+    
+  </article>
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2021
+    <span class="footer-author">Russshare.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

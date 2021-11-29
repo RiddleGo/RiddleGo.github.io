@@ -1,37 +1,224 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
-{% block page_class %}page-post-detail{% endblock %}
 
 
-{% block content %}
+  <meta name="description" content="请勿滥用goroutine"/>
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
-    </div>
+
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+
+
+
+<link rel="canonical" href="https://riddlego.github.io/2021/09/01/请勿滥用goroutine/"/>
+
+
+<meta name="description" content="原文阅读点击这里排版更好感谢前辈 现状在Go语言中，goroutine的创建成本很低，调度效率高，Go语言在设计时就是按以数万个goroutine为规范进行设计的，数十万个并不意外，但是goroutine在内存占用方面确实具有有限的成本，你不能创造无限数量的它们，比如这个例子： 1234ch :&#x3D; generate() go func() &amp;#123;         for range">
+<meta property="og:type" content="article">
+<meta property="og:title" content="请勿滥用goroutine">
+<meta property="og:url" content="https://riddlego.github.io/2021/09/01/%E8%AF%B7%E5%8B%BF%E6%BB%A5%E7%94%A8goroutine/index.html">
+<meta property="og:site_name" content="RiddleGo">
+<meta property="og:description" content="原文阅读点击这里排版更好感谢前辈 现状在Go语言中，goroutine的创建成本很低，调度效率高，Go语言在设计时就是按以数万个goroutine为规范进行设计的，数十万个并不意外，但是goroutine在内存占用方面确实具有有限的成本，你不能创造无限数量的它们，比如这个例子： 1234ch :&#x3D; generate() go func() &amp;#123;         for range">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-09-01T12:32:40.000Z">
+<meta property="article:modified_time" content="2021-09-01T13:00:01.863Z">
+<meta property="article:author" content="Russshare">
+<meta property="article:tag" content="zh-Hans">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> 请勿滥用goroutine - RiddleGo </title>
+  <meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">RiddleGo</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          请勿滥用goroutine
+        
+      </h1>
+
+      <time class="post-time">
+          9月 01 2021
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/JC14dWffHub0nfPlPipsHQ">原文阅读点击这里排版更好感谢前辈</a></p>
+<h2 id="现状"><a href="#现状" class="headerlink" title="现状"></a>现状</h2><p>在Go语言中，goroutine的创建成本很低，调度效率高，Go语言在设计时就是按以数万个goroutine为规范进行设计的，数十万个并不意外，但是goroutine在内存占用方面确实具有有限的成本，你不能创造无限数量的它们，比如这个例子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ch :&#x3D; generate() </span><br><span class="line">go func() &#123; </span><br><span class="line">        for range ch &#123; &#125; </span><br><span class="line">&#125;()</span><br></pre></td></tr></table></figure>
+
+<p>这段代码通过generate()方法获得一个channel，然后启动一个goroutine一直去处理这个channel的数据，这个goroutine什么时候会退出？答案是不确定，ch是由函数generate()来决定的，所以有可能这个goroutine永远都不会退出，这就有可能会引发内存泄漏。</p>
+<p>goroutine就是G-P-M调度模型中的G，我们可以把goroutine看成是一种协程，创建goroutine也是有开销的，但是开销很小，初始只需要2-4k的栈空间，当goroutine数量越来越大时，同时存在的goroutine也越来越多时，程序就隐藏内存泄漏的问题。看一个例子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">func main()  &#123;</span><br><span class="line"> for i :&#x3D; 0; i &lt; math.MaxInt64; i++ &#123;</span><br><span class="line">  go func(i int) &#123;</span><br><span class="line">   time.Sleep(5 * time.Second)</span><br><span class="line">  &#125;(i)</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>大家可以在自己的电脑上运行一下这个程序，观察一下CPU和内存占用情况，我说下我运行后的现象：</p>
+<p>CPU使用率疯狂上涨<br>内存占用率也不断上涨<br>运行一段时间后主进程崩溃了。。。</p>
+<p>因此每次在编写GO程序时，都应该仔细考虑一个问题：</p>
+<p><strong>您将要启动的goroutine将如何以及在什么条件下结束？</strong></p>
+<p>接下来我们就来介绍几种方式可以控制goroutine和goroutine的数量。</p>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/JC14dWffHub0nfPlPipsHQ">原文阅读点击这里排版更好感谢前辈</a></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>本文主要目的是介绍控制goroutine的几种方式、控制goroutine数量的几种方式，goroutine的创建成本低、效率高带来了很大优势，同时也会有一些弊端，这就需要我们在实际开发中根据具体场景选择正确的方式使用goroutine，本文介绍的技术方案也可能是片面的，如果你有更好的方式可以在评论区中分享出来，我们大家一起学习学习～。</p>
+<p>文中代码已经上传github，欢迎star：<a target="_blank" rel="noopener" href="https://github.com/asong2020/Golang_Dream/tree/master/code_demo/goroutine_demo">https://github.com/asong2020/Golang_Dream/tree/master/code_demo/goroutine_demo</a></p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2021/09/01/%E5%87%A0%E8%A1%8C%E4%BB%A3%E7%A0%81%E4%B8%BA%E8%80%81%E6%9D%BF%E7%9C%81%E7%99%BE%E4%B8%87-%E6%9F%90%E9%AB%98%E5%B9%B6%E5%8F%91%E6%9C%8D%E5%8A%A1Go-GC%E5%8F%8AUDP-Pool%E4%BC%98%E5%8C%96/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">几行代码为老板省百万-某高并发服务Go-GC及UDP-Pool优化</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2021/09/01/%E4%B8%87%E5%AD%97%E6%80%BB%E7%BB%93Redis%E7%9F%A5%E8%AF%86%E7%82%B9/">
+        <span class="next-text nav-default">万字总结Redis知识点</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+      </footer>
+    
+  </article>
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2021
+    <span class="footer-author">Russshare.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

@@ -1,37 +1,285 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
-{% block page_class %}page-post-detail{% endblock %}
 
 
-{% block content %}
+  <meta name="description" content="面试：Docker"/>
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
-    </div>
+
+
+  <meta name="keywords" content="云计算,docker," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+
+
+
+<link rel="canonical" href="https://riddlego.github.io/2021/08/06/面试：Docker/"/>
+
+
+<meta name="description" content="1、docker常见面试题如下 每一点可根据回答进行适当深入 1.1 什么是dockerDocker是一个可以把开发的应用程序自动部署到容器的开源引擎。 1.2 docker和传统linux的差异？docker是一个应用层的抽象，容器之间通过网络命名空间进行隔离，多个容器共享同一个操作系统内核。VM是对物理硬件层的抽象，每个VM都包含独立的操作系统，重且启动缓慢。VM主要为了提供系统环境，容器主要">
+<meta property="og:type" content="article">
+<meta property="og:title" content="面试：Docker">
+<meta property="og:url" content="https://riddlego.github.io/2021/08/06/%E9%9D%A2%E8%AF%95%EF%BC%9ADocker/index.html">
+<meta property="og:site_name" content="RiddleGo">
+<meta property="og:description" content="1、docker常见面试题如下 每一点可根据回答进行适当深入 1.1 什么是dockerDocker是一个可以把开发的应用程序自动部署到容器的开源引擎。 1.2 docker和传统linux的差异？docker是一个应用层的抽象，容器之间通过网络命名空间进行隔离，多个容器共享同一个操作系统内核。VM是对物理硬件层的抽象，每个VM都包含独立的操作系统，重且启动缓慢。VM主要为了提供系统环境，容器主要">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-08-06T08:26:07.000Z">
+<meta property="article:modified_time" content="2021-08-08T11:39:06.642Z">
+<meta property="article:author" content="Russshare">
+<meta property="article:tag" content="云计算">
+<meta property="article:tag" content="docker">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> 面试：Docker - RiddleGo </title>
+  <meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">RiddleGo</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          面试：Docker
+        
+      </h1>
+
+      <time class="post-time">
+          8月 06 2021
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h3 id="1、docker"><a href="#1、docker" class="headerlink" title="1、docker"></a>1、docker</h3><p>常见面试题如下 每一点可根据回答进行适当深入</p>
+<h4 id="1-1-什么是docker"><a href="#1-1-什么是docker" class="headerlink" title="1.1 什么是docker"></a>1.1 什么是docker</h4><p>Docker是一个可以把开发的应用程序自动部署到容器的开源引擎。</p>
+<h4 id="1-2-docker和传统linux的差异？"><a href="#1-2-docker和传统linux的差异？" class="headerlink" title="1.2 docker和传统linux的差异？"></a>1.2 docker和传统linux的差异？</h4><p>docker是一个应用层的抽象，容器之间通过网络命名空间进行隔离，多个容器共享同一个操作系统内核。VM是对物理硬件层的抽象，每个VM都包含独立的操作系统，重且启动缓慢。VM主要为了提供系统环境，容器主要是为了提供应用环境。</p>
+<h4 id="1-3-容器和镜像的区别？"><a href="#1-3-容器和镜像的区别？" class="headerlink" title="1.3 容器和镜像的区别？"></a>1.3 容器和镜像的区别？</h4><p>见docker镜像的文章</p>
+<p>镜像是一个只读模板，包括运行容器所需的数据，其内容在构建之后就不会被改变，可以用来创建新的容器。 镜像由多个只读层组成，容器在只读层的基础上多了一个读写层。</p>
+<h4 id="1-4-如何理解docker的缓存机制？"><a href="#1-4-如何理解docker的缓存机制？" class="headerlink" title="1.4 如何理解docker的缓存机制？"></a>1.4 如何理解docker的缓存机制？</h4><p>在构建映像的过程中，Docker将按照指定的顺序逐步执行您的Dockerfile中的指令。随着每条指令的检查，Docker将在其缓存中查找可重用的现有映像，而不是创建一个新的（重复）映像。</p>
+<h4 id="1-5-docker的架构"><a href="#1-5-docker的架构" class="headerlink" title="1.5 docker的架构"></a>1.5 docker的架构</h4><p>Docker 使用客户端-服务器 (C/S) 架构模式，使用远程API来管理和创建Docker容器。</p>
+<h3 id="1-2-docker-网络模型"><a href="#1-2-docker-网络模型" class="headerlink" title="1.2 docker 网络模型"></a>1.2 docker 网络模型</h3><h4 id="1-2-1-docker的网络基础是什么？"><a href="#1-2-1-docker的网络基础是什么？" class="headerlink" title="1.2.1 docker的网络基础是什么？"></a>1.2.1 docker的网络基础是什么？</h4><p><strong>Docker 使用到的与Linux网络有关的主要技术包括：网络命名空间(network namespace)、Veth设备对、网桥(bridge)、iptables和路由。</strong></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/meltsnow/article/details/94490994?utm_medium=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromMachineLearnPai2~default-1.base&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromMachineLearnPai2~default-1.base">Docker网络详解——原理篇</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/kkbill/p/12885029.html">Docker网络基础</a></p>
+<h4 id="1-2-2-docker的网络模型是？有什么局限？"><a href="#1-2-2-docker的网络模型是？有什么局限？" class="headerlink" title="1.2.2 docker的网络模型是？有什么局限？"></a>1.2.2 docker的网络模型是？有什么局限？</h4><p>我们在使用docker run创建Docker容器时，可以用–net选项指定容器的网络模式，Docker有以下4种网络模式：</p>
+<p>· host模式，使用–net=host指定。</p>
+<p>· container模式，使用–net=container:NAME_or_ID指定。</p>
+<p>· none模式，使用–net=none指定。</p>
+<p>· bridge模式，使用–net=bridge指定，默认设置。<br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/yyxianren/p/10727736.html">docker的4种网络模型</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/zjysource/article/details/52055820?utm_medium=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~default-5.base&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~default-5.base">Docker的网络模型</a></p>
+<h4 id="1-2-3-docker如何实现容器间通信的？"><a href="#1-2-3-docker如何实现容器间通信的？" class="headerlink" title="1.2.3 docker如何实现容器间通信的？"></a>1.2.3 docker如何实现容器间通信的？</h4><p>建议<strong>使用自定义的网桥来控制哪些容器可以相互通信</strong>，还<strong>可以自动DNS解析容器名称到IP地址</strong>。<strong>Docker提供了创建这些网络的默认网络驱动程序，你可以创建一个新的Bridge网络</strong>，<strong>Overlay或Macvlan网络</strong>。<strong>你还可以创建一个网络插件或远程网络进行完整的自定义和控制。</strong></p>
+<p>你<strong>可以根据需要创建任意数量的网络，并且可以在任何给定时间将容器连接到这些网络中的零个或多个网络。</strong>此外，您可以连接并断开网络中的运行容器，而无需重新启动容器。当容器连接到多个网络时，其外部连接通过第一个非内部网络以词法顺序提供。</p>
+<p>bridge模式是docker默认的，也是开发者最常使用的网络模式。在这种模式下，<strong>docker为容器创建独立的网络栈，保证容器内的进程使用独立的网络环境</strong>，实<strong>现容器之间、容器与宿主机之间的网络栈隔离</strong>。同时，<strong>通过宿主机上的docker0网桥，容器可以与宿主机乃至外界进行网络通信。</strong></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/meltsnow/article/details/94548066?utm_medium=distribute.pc_relevant.none-task-blog-2~default~baidujs_title~default-0.base&spm=1001.2101.3001.4242">Docker网络——实现容器间通信、容器与外网通信以及容器的跨主机访问</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/even160941/article/details/98523034">Docker网络——实现容器间通信、容器与外网通信以及容器的跨主机访问—实例</a></p>
+<h3 id="1-3-docker-基础命令"><a href="#1-3-docker-基础命令" class="headerlink" title="1.3 docker 基础命令"></a>1.3 docker 基础命令</h3><p>docker info </p>
+<p>docker run</p>
+<p>docker logs</p>
+<p>docker help </p>
+<p>docker stop</p>
+<p>docker restart </p>
+<p>docker commit</p>
+<p>docker images </p>
+<p>docker search </p>
+<p>docker history</p>
+<p>docker push</p>
+<h4 id="1-3-1-cmd和entryPoint差异？"><a href="#1-3-1-cmd和entryPoint差异？" class="headerlink" title="1.3.1 cmd和entryPoint差异？"></a>1.3.1 cmd和entryPoint差异？</h4><p>CMD &amp; ENTRYPONIT</p>
+<p>都是容器操作指令：<br>CMD 用于指定容器启动时候默认执行的命令。可以被docker run指定的启动命令覆盖。ENTRYPONIT 指令可让容器以应用程序或者服务的形式运行。一般不会被docker run指定的启动命令覆盖。dockerfile中的多个CMD &amp; ENTRYPONIT只有最后一个会生效。</p>
+<p>注意区别docker run 和RUN 一个是容器启动命令，一个是镜像构建时候所用。</p>
+<p>我们可以看到有两个共同点：</p>
+<p>都可以指定shell或exec函数调用的方式执行命令；<br>当存在多个CMD指令或ENTRYPOINT指令时，只有最后一个生效；</p>
+<p>而它们有如下差异：</p>
+<p>差异1：<strong>CMD指令指定的容器启动时命令可以被docker run指定的命令覆盖，而ENTRYPOINT指令指定的命令不能被覆盖，而是将docker run指定的参数当做ENTRYPOINT指定命令的参数。</strong></p>
+<p>差异2：<strong>CMD指令可以为ENTRYPOINT指令设置默认参数，而且可以被docker run指定的参数覆盖；</strong></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/liukuan73/article/details/60880137">Dockerfile文件中的CMD和ENTRYPOINT指令差异对比</a></p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/30555962">ENTRYPOINT还是CMD?</a><br><a target="_blank" rel="noopener" href="https://www.ctl.io/developers/blog/post/dockerfile-add-vs-copy/">Dockerfile: ADD vs COPY</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/fclbky/p/11338738.html">docker CMD 和 ENTRYPOINT 区别</a></p>
+<h4 id="1-3-2-copy和add的差异？"><a href="#1-3-2-copy和add的差异？" class="headerlink" title="1.3.2 copy和add的差异？"></a>1.3.2 copy和add的差异？</h4><p>1、COPY命令</p>
+<p>COPY命令用于将于Dockerfile所在目录中的文件在镜像构建阶段从宿主机拷贝到镜像中，对于文件而言可以直接将文件复制到镜像中.</p>
+<p>2、ADD命令</p>
+<p>ADD命令相对于COPY命令，<strong>可以解压缩文件并把它们添加到镜像中的功能，</strong>如果我们有一个压缩文件包，并且需要把这个压缩包中的文件添加到镜像中。需不需要先解开压缩包然后执行 COPY 命令呢？当然不需要！</p>
+<p>同时ADD还可以从 url 拷贝文件到镜像中，但官方不推荐这样使用，官方建议我们当需要从远程复制文件时，最好使用 curl 或 wget 命令来代替 ADD 命令。原因是，当使用 ADD 命令时，会创建更多的镜像层，当然镜像的 size 也会更大，</p>
+<p>copy &amp; add</p>
+<p>ADD &amp; COPY 选取目标文件复制到镜像当中。是针对镜像的指令，唯一差别在于add源文件可以支持url且可以对压缩文件进行解压操作。而copy针对的是当前构建环境。</p>
+<p><a target="_blank" rel="noopener" href="https://vegetable-chicken.blog.csdn.net/article/details/107200482">Dockerfile 中的 COPY 与 ADD 区别</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/taiyangdao/article/details/73222601">Dockerfile中的COPY和ADD指令详解与比较</a></p>
+<h4 id="1-3-3-简单讲下swam-compose？"><a href="#1-3-3-简单讲下swam-compose？" class="headerlink" title="1.3.3 简单讲下swam/compose？"></a>1.3.3 简单讲下swam/compose？</h4><p>使用Docker compose可以用YAML文件来定义一组需要启动的容器，以及容器运行时的属性。docker-compose用来对这一组容器进行操作。<br>docker swarm 原生的Docker集群管理工具，依赖docker本身，很多重要功能依赖团队二次开发。且社区不够活跃，一般公司生产环境会选择k8s，个人项目或者容器数量较少可选swarm,只需要docker即可完成，相对较轻。</p>
+<p>Docker 可以看做集装箱把杂乱的货物一个个整理归类， </p>
+<p>Compose 则是用于编排这些集装箱，最后 Swarm 就是多提供几条船，挂掉一两条还能继续走，提高稳定性。</p>
+<p>Docker 可以极为方便地部署单个服务，但这时候我们需要一个工具来整合 Docker 的功能，<strong>使之能够更便捷地去管理整个微服务集群的部署和迁移，Docker Compose 正是应此而生。</strong>他是由 Python 编写的程序，能够根据指令结合配置文件转换成对应的 Docker API 的操作，并直接体现到 Docker Daemon 中，这就代替我们完成了重复输入复杂指令的过程，主要功能可分为以下两点:</p>
+<p><strong>Service：代表的是运行同种应用程序的一个或多个相同容器的抽象定义，也是我们在Docker Compose 中配置的主要对象。在</strong>每个 Docker Compose 的配置文件中，我们可以定义多个服务，并定义服务的配置，以及服务于服务之间的以来关系。</p>
+<p>Project：代表的是由多个服务所组成的一个相对完整的业务单元。</p>
+<p><strong>Docker Compose</strong>：是用来组装多容器应用的工具，可以在 warm集群中部署分布式应用。</p>
+<p><strong>Docker Machine</strong>：是支持多平台安装Docker的工具，可以很方便地在笔记本、云平台及数据中心里安装Docker。</p>
+<p><strong>Docker Swarm</strong>：是Docker社区原生提供的容器集群管理工具。</p>
+<p><a target="_blank" rel="noopener" href="https://www.pianshen.com/article/17091298675/">Docker官方三剑客：Compose、Machine和Swarm</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_43286578/article/details/105160725">Docker面试题库</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/xiaoyangjia/p/11388806.html">docker面试题和解答(一)</a></p>
+<p><a target="_blank" rel="noopener" href="http://www.bjpowernode.com/hot/608.html">Docker面试题总结附答案</a></p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">云计算</a>
+		  
+			<a href="/tags/docker/">docker</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2021/08/06/%E9%9D%A2%E8%AF%95%EF%BC%9AK8s/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">面试：K8s</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2021/08/06/python-%E7%B1%BB%E4%B8%AD%E6%8F%8F%E8%BF%B0%E7%AC%A6/">
+        <span class="next-text nav-default">python:类中描述符</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+      </footer>
+    
+  </article>
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2021
+    <span class="footer-author">Russshare.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

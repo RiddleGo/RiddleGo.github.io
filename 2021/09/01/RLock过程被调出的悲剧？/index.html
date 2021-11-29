@@ -1,37 +1,216 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
-{% block page_class %}page-post-detail{% endblock %}
 
 
-{% block content %}
+  <meta name="description" content="RLock过程被调出的悲剧？"/>
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
-    </div>
+
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+
+
+
+<link rel="canonical" href="https://riddlego.github.io/2021/09/01/RLock过程被调出的悲剧？/"/>
+
+
+<meta name="description" content="在给某个项目做长时间极限压测的时候，经常会出现压几小时不出问题，突然就崩了(延迟大幅上升)的情况。 查看监控发现崩的时候 goroutine 突然涨起来了，那么可以用我之前开发的问题诊断工具了，配置下面的策略：若 goroutine 突然开始暴涨，则将 goroutine 文本 dump 下来。对这个诊断工具不了解的，可以看看我之前写的 无人值守的自动 dump-2[1] 和 无人值守的自动 du">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RLock过程被调出的悲剧？">
+<meta property="og:url" content="https://riddlego.github.io/2021/09/01/RLock%E8%BF%87%E7%A8%8B%E8%A2%AB%E8%B0%83%E5%87%BA%E7%9A%84%E6%82%B2%E5%89%A7%EF%BC%9F/index.html">
+<meta property="og:site_name" content="RiddleGo">
+<meta property="og:description" content="在给某个项目做长时间极限压测的时候，经常会出现压几小时不出问题，突然就崩了(延迟大幅上升)的情况。 查看监控发现崩的时候 goroutine 突然涨起来了，那么可以用我之前开发的问题诊断工具了，配置下面的策略：若 goroutine 突然开始暴涨，则将 goroutine 文本 dump 下来。对这个诊断工具不了解的，可以看看我之前写的 无人值守的自动 dump-2[1] 和 无人值守的自动 du">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-09-01T12:21:26.000Z">
+<meta property="article:modified_time" content="2021-09-01T12:30:51.910Z">
+<meta property="article:author" content="Russshare">
+<meta property="article:tag" content="zh-Hans">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> RLock过程被调出的悲剧？ - RiddleGo </title>
+  <meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">RiddleGo</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          RLock过程被调出的悲剧？
+        
+      </h1>
+
+      <time class="post-time">
+          9月 01 2021
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <p>在给某个项目做长时间极限压测的时候，经常会出现压几小时不出问题，突然就崩了(延迟大幅上升)的情况。</p>
+<p>查看监控发现崩的时候 goroutine 突然涨起来了，那么可以用我之前开发的问题诊断工具了，配置下面的策略：若 goroutine 突然开始暴涨，则将 goroutine 文本 dump 下来。对这个诊断工具不了解的，可以看看我之前写的 无人值守的自动 dump-2[1] 和 无人值守的自动 dump[2]。</p>
+<p>代码集成好之后再压，发现崩溃时，总是有很多卡在锁上的 goroutine：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">10760 @ 0x42f81f 0x4401d9 0x4401af 0x43ff4d 0x474df9 0x95709a 0x952d0d 0x17466fc 0x17462c4 0x174c8a8 0x174c88a 0x174e308 0x1755b78 0x1749432 0x17588e8 0xf90a54 0xc9670d 0x45d061</span><br><span class="line"># 0x43ff4c sync.runtime_SemacquireMutex+0x3c    &#x2F;Users&#x2F;xargin&#x2F;sdk&#x2F;go1.12.17&#x2F;src&#x2F;runtime&#x2F;sema.go:71</span><br><span class="line"># 0x474df8 sync.(*Mutex).Lock+0x108     &#x2F;Users&#x2F;xargin&#x2F;sdk&#x2F;go1.12.17&#x2F;src&#x2F;sync&#x2F;mutex.go:134</span><br><span class="line"># 0x957099 github.com&#x2F;rcrowley&#x2F;go-metrics.(*UniformSample).Update+0x39 &#x2F;Users&#x2F;xargin&#x2F;mosn&#x2F;vendor&#x2F;github.com&#x2F;rcrowley&#x2F;go-metrics&#x2F;sample.go:508</span><br><span class="line"># 0x952d0c github.com&#x2F;rcrowley&#x2F;go-metrics.(*StandardHistogram).Update+0x3c &#x2F;Users&#x2F;xargin&#x2F;mosn&#x2F;vendor&#x2F;github.com&#x2F;rcrowley&#x2F;go-metrics&#x2F;histogram.go:199</span><br><span class="line">.....这下面就是一堆业务代码了......</span><br><span class="line"></span><br><span class="line">1 @ 0x42f81f 0x4401d9 0x4401af 0x43ff4d 0x474df9 0x504a3d 0x5040ba 0x5040ac 0x957187 0x957172 0x952d0d 0x17465d0 0x17462c4 0x174c8a8 0x174c88a 0x174e308 0x1755b78 0x1749432 0x17588e8 0xf90a54 0xc9670d 0x45d061</span><br><span class="line"># 0x43ff4c sync.runtime_SemacquireMutex+0x3c    &#x2F;Users&#x2F;xargin&#x2F;sdk&#x2F;go1.12.17&#x2F;src&#x2F;runtime&#x2F;sema.go:71</span><br><span class="line"># 0x474df8 sync.(*Mutex).Lock+0x108     &#x2F;Users&#x2F;xargin&#x2F;sdk&#x2F;go1.12.17&#x2F;src&#x2F;sync&#x2F;mutex.go:134</span><br><span class="line"># 0x504a3c math&#x2F;rand.(*lockedSource).Int63+0x2c    &#x2F;Users&#x2F;xargin&#x2F;sdk&#x2F;go1.12.17&#x2F;src&#x2F;math&#x2F;rand&#x2F;rand.go:380</span><br><span class="line"># 0x5040b9 math&#x2F;rand.(*Rand).Int63+0x69     &#x2F;Users&#x2F;xargin&#x2F;sdk&#x2F;go1.12.17&#x2F;src&#x2F;math&#x2F;rand&#x2F;rand.go:85</span><br><span class="line"># 0x5040ab math&#x2F;rand.(*Rand).Int63n+0x5b     &#x2F;Users&#x2F;xargin&#x2F;sdk&#x2F;go1.12.17&#x2F;src&#x2F;math&#x2F;rand&#x2F;rand.go:117</span><br><span class="line"># 0x957186 math&#x2F;rand.Int63n+0x126      &#x2F;Users&#x2F;xargin&#x2F;sdk&#x2F;go1.12.17&#x2F;src&#x2F;math&#x2F;rand&#x2F;rand.go:319</span><br><span class="line"># 0x957171 github.com&#x2F;rcrowley&#x2F;go-metrics.(*UniformSample).Update+0x111 &#x2F;Users&#x2F;xargin&#x2F;mosn&#x2F;vendor&#x2F;github.com&#x2F;rcrowley&#x2F;go-metrics&#x2F;sample.go:514</span><br><span class="line"># 0x952d0c github.com&#x2F;rcrowley&#x2F;go-metrics.(*StandardHistogram).Update+0x3c &#x2F;Users&#x2F;xargin&#x2F;mosn&#x2F;vendor&#x2F;github.com&#x2F;rcrowley&#x2F;go-metrics&#x2F;histogram.go:199</span><br><span class="line">....这下面是一堆业务代码了.....</span><br></pre></td></tr></table></figure>
+
+
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/AGJpvfbB1GoMZ0IRQdFRUQ">更多点击这里进入原文阅读，老实说这是一篇读了其实也没读的文章哈哈，因为自己的菜。</a></p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2021/09/01/%E4%B8%87%E5%AD%97%E6%80%BB%E7%BB%93Redis%E7%9F%A5%E8%AF%86%E7%82%B9/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">万字总结Redis知识点</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2021/09/01/%E6%95%B0%E7%BB%84int%E8%83%BD%E8%BD%AC%E6%8D%A2%E4%B8%BA%E6%95%B0%E7%BB%84interface%E5%90%97%EF%BC%9F/">
+        <span class="next-text nav-default">数组int能转换为数组interface吗？</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+      </footer>
+    
+  </article>
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2021
+    <span class="footer-author">Russshare.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

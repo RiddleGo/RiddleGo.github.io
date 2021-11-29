@@ -1,37 +1,279 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
-{% block page_class %}page-post-detail{% endblock %}
 
 
-{% block content %}
+  <meta name="description" content="AD7747_CC2530"/>
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
-    </div>
+
+
+  <meta name="keywords" content="AD7747,CC2530,测电容," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+
+
+
+<link rel="canonical" href="https://riddlego.github.io/2021/05/12/AD7747-CC2530/"/>
+
+
+<meta name="description" content="AD7747+CC2530前言：最近实验室需要做一个关于测电容的电路方案，同时结合无线传感器网络。选择的通信协议为Zigbee，ZigBee 最大的特点就是低功耗、可组网，特别是带有路由的可组网功能，理论上可以使 ZigBee 覆盖的通讯面积无限扩展。相对蓝牙，红外的点对点通信，和 WLAN 的星状通信，ZigBee 的协议会更加复杂些。但是它仍然具有很大的优势。  这次我选用了TI的CC2530">
+<meta property="og:type" content="article">
+<meta property="og:title" content="AD7747_CC2530">
+<meta property="og:url" content="https://riddlego.github.io/2021/05/12/AD7747-CC2530/index.html">
+<meta property="og:site_name" content="RiddleGo">
+<meta property="og:description" content="AD7747+CC2530前言：最近实验室需要做一个关于测电容的电路方案，同时结合无线传感器网络。选择的通信协议为Zigbee，ZigBee 最大的特点就是低功耗、可组网，特别是带有路由的可组网功能，理论上可以使 ZigBee 覆盖的通讯面积无限扩展。相对蓝牙，红外的点对点通信，和 WLAN 的星状通信，ZigBee 的协议会更加复杂些。但是它仍然具有很大的优势。  这次我选用了TI的CC2530">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/OneNet_APP/AD7747%E5%8E%9F%E7%90%86%E5%9B%BE.png">
+<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/OneNet_APP/AD7747pcb.png">
+<meta property="article:published_time" content="2021-05-12T06:57:05.000Z">
+<meta property="article:modified_time" content="2021-07-18T09:54:10.752Z">
+<meta property="article:author" content="Russshare">
+<meta property="article:tag" content="AD7747">
+<meta property="article:tag" content="CC2530">
+<meta property="article:tag" content="测电容">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/OneNet_APP/AD7747%E5%8E%9F%E7%90%86%E5%9B%BE.png">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> AD7747_CC2530 - RiddleGo </title>
+  <meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">RiddleGo</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          AD7747_CC2530
+        
+      </h1>
+
+      <time class="post-time">
+          5月 12 2021
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h1 id="AD7747-CC2530"><a href="#AD7747-CC2530" class="headerlink" title="AD7747+CC2530"></a>AD7747+CC2530</h1><h3 id="前言：最近实验室需要做一个关于测电容的电路方案，同时结合无线传感器网络。"><a href="#前言：最近实验室需要做一个关于测电容的电路方案，同时结合无线传感器网络。" class="headerlink" title="前言：最近实验室需要做一个关于测电容的电路方案，同时结合无线传感器网络。"></a>前言：<strong>最近实验室需要做一个关于测电容的电路方案，同时结合无线传感器网络。</strong></h3><p>选择的通信协议为Zigbee，ZigBee 最大的特点就是低功耗、可组网，特别是带有路由的可组网功能，理论上可以使 ZigBee 覆盖的通讯面积无限扩展。<br>相对蓝牙，红外的点对点通信，和 WLAN 的星状通信，ZigBee 的协议会更加复杂些。但是它仍然具有很大的优势。</p>
+<ol>
+<li><p>这次我选用了TI的CC2530，其实现在已经有CC2538，CC2538内核Cotex-M3的，对应的外设、内部资源相比CC2530（51内核）有了很大的增强。</p>
+</li>
+<li><p>超过 300 个点同时组网，显然选 CC2530 就不合适，因为 RAM 实在少的可怜，以至于最多也就一百出头的样子，再多网络基本就瘫痪无法使用。</p>
+</li>
+<li><p>可以考虑 CC2538 作为网络节点芯片，如果节点又不多，诸如智能家居，无非就是什么窗帘、灯以及其他，满打满算不过几十个，那低成本的 CC2530 非常适合。</p>
+</li>
+<li><p>而我的实验背景几个测量微小电容信号的环境，因此CC2530对我来说最大的好处就是 <strong>便宜</strong></p>
+</li>
+</ol>
+<h3 id="1-对于电容的测量方案："><a href="#1-对于电容的测量方案：" class="headerlink" title="1. 对于电容的测量方案："></a>1. <strong>对于电容的测量方案：</strong></h3><p>电容的测量就是利用两个特性，一是充放电，二是频率。<br>网上很少有对这些的宏观的分析，不同的使用条件与要求，就会使用不同的方案。对于测电容的方案有很多的前辈已经进行了研究。<br>简单不全面的归纳有以下几个方案。</p>
+<ol>
+<li><p>FM 调频电路、</p>
+</li>
+<li><p>开关电容电路法。在器件向微型化发展的形式下，开关电容在小电容信号处理方面有着非常大的优势，因为开关电容电路可以比较方便地实现传感器与测量电路的融合集成。在开关电容电路中，一定频率的时钟信号可以控制开关的通断，使电容不断地充、放电，这样电容就可以转化成电压、数字或频率等输出信号。这种电路不需要信号解调器，但是需要很小的放大器的漏电流和很低的直流失调电压。</p>
+</li>
+<li><p>集成的电容测量芯片</p>
+</li>
+<li><p>脉宽调制</p>
+</li>
+<li><p>运放</p>
+</li>
+<li><p>电桥</p>
+</li>
+<li><p>sigma-delta   </p>
+</li>
+</ol>
+<p>测量电容又分为大电容、小电容、微小电容。<br>测量的范围大的和小的，分辨率的要求也不尽相同，因此在做一个测量方案时，要很好的考量这些，其实很难说我直接采用什么方案就彻底满足我的需求，大多是情况是你在测量电路搭建完成以后，你还得进行一些隔离、减噪、校正的设计。这个过程和选用方案是一样重要，但是这一步你已经有了一定的方向了。</p>
+<h3 id="2-为什么选用AD7747？"><a href="#2-为什么选用AD7747？" class="headerlink" title="2. 为什么选用AD7747？"></a>2. 为什么选用AD7747？</h3><p>传统的电容测量电路，或者方法简单，达不到高的精度要求，或者电路复杂，需要的器件数量多。而且如果需要数字输出必须再用一个高精度 ADC 把该电压转换成数字信号，这样电路设计复杂、仿真评估冗长、系统测试困难。</p>
+<p>专用集成电容检测芯片相对于传统的分立元件的优势在于整体系统结构简单，抗干扰能力强，精度高而逐渐取代传统检测电路。</p>
+<p>AD7747是电容/数字转换器（CDC），包含一个24位Σ-Δ调制器、多路复用器、激励源发生器、精密电压源、时钟发生器、数字滤波器、I2C串行通信接口、片内校正控制寄存器、温度传感器等。</p>
+<p>AD7747利用开关电容技术构建电荷平衡电路来测量电容。被测电容Cx连接在EXCA/EXCB（CDC方波激励输出）和CIN+（Σ-Δ调制器输入）之间，在一个转换周期内，当一个方波激励信号加于被测电容Cx上，24位Σ-Δ调制器连续采样经过Cx的电荷，后经数字滤波器处理和校正，最后通过I2C接口将数据读出。</p>
+<p><em><strong>详细的芯片的资料与参数大家可以自行查阅，网上的资料还是蛮多的</strong></em><br><strong><a href="%5Bwww%5D(https://github.com/RiddleGo/AD7747_CC2530)">或者点击这里查阅AD7747的中英文datasheet</a></strong></p>
+<p>这里面的关键技术就是Sigma-Delta技术，这技术的用途十分的广泛和伟大（有时候真的感叹这些研究出这些技术的先驱是何等的强啊），等后面我会专门写一篇来说说。</p>
+<p>到这里大概你也就知道我<strong>为什么选用AD7747</strong>——&gt;精度高、功耗低、集成芯片抗干扰。</p>
+<h3 id="3-为什么选用CC2530？"><a href="#3-为什么选用CC2530？" class="headerlink" title="3. 为什么选用CC2530？"></a>3. 为什么选用CC2530？</h3><p>开头的简单的文字已经给出了答案<br>接下来我简述一下我在选用一个产品时候的考虑，希望能一起分享，共同进步。</p>
+<h4 id="1-性能"><a href="#1-性能" class="headerlink" title="1. 性能"></a>1. <strong>性能</strong></h4><p>我们在选择一个芯片的时候，我们首先考虑到<strong>性能</strong>是否满足我们的要求，如果性能都不满足，那么说的再多都是空话，但是性能满足要求的不要只找到一个就停止了，应该多寻找与设计几个方案。好再以后方便项目的进行。</p>
+<h4 id="2-生态圈"><a href="#2-生态圈" class="headerlink" title="2. 生态圈"></a>2. <strong>生态圈</strong></h4><p>其次我们得留意是否这些能要注意到这个<strong>产品的生态圈</strong><br>其实如果是商业的以及创新的，全盘的创新是需要很大的成本的，如果你能承担起这个成本或者相应的实力，那么我是非常支持你不考虑这一步的。除此之外的，咱们就需要考虑到生态圈，我不知道这个用词是否正确，如果这个生态圈成熟以及活跃，那么你遇到问题你就可以迅速的在社区提问，与朋友们一起探索交流，或者一些曾经前辈踩过的问题你能及时避免，这些都会对你有着很大的帮助。无论是时间成本还是经济成本。</p>
+<h4 id="3-成本"><a href="#3-成本" class="headerlink" title="3. 成本"></a>3. <strong>成本</strong></h4><p>最后就是成本指的是时间与金钱两个方面<br>时间：这个需要你及时的产出，设计完成一个项目，在商业中第二就是灭亡。当然超前也是不好的。（这是最近看历史新形成的观点，有待商榷。）<br>金钱：这玩意就不多说了，贵了成本高了带来的收益就不大了。总不能亏本吧。</p>
+<h3 id="4-结合使用"><a href="#4-结合使用" class="headerlink" title="4. 结合使用"></a>4. 结合使用</h3><p>程序很简单，实现了测电容与温度的功能，AD7747与CC2530通过IIC进行通信，寄存器的配置我本来写了一个<em><strong>超级超级详细的使用文档</strong>，因为我也是第一次做，想着能帮后面的小伙伴，有需要的话还能有个参考。ε=(´ο｀</em>)))唉，阔是电脑崩了，啥都没了，肝了我一个五一啊，生气。</p>
+<p>将步骤分为以下几个部分</p>
+<h4 id="1-CC2530IIC"><a href="#1-CC2530IIC" class="headerlink" title="1. CC2530IIC"></a>1. CC2530IIC</h4><p>cc2530是不支持硬件IIC的，所以你得自己使用软件模拟一个。IIC的通信协议你得清楚，然后用代码去实现。这个部分过你是新手，出问题难免，一个一个解决就ok的。我这里也提供一份，这个是我在网上某位大佬看见的，然后我复制过来修改了一下（又好像没有修改哈哈）能使用的。当时顾着下文件去了，忘记留链接了，向大佬表示感激。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br></pre></td><td class="code"><pre><span class="line">#include &quot;myiic.h&quot;</span><br><span class="line">#include &quot;delay.h&quot;</span><br><span class="line">#include &quot;uart.h&quot;</span><br><span class="line">#include &lt;ioCC2530.h&gt;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;初始化IIC</span><br><span class="line">void IIC_Init(void)</span><br><span class="line">&#123;			</span><br><span class="line">  P0SEL &amp;&#x3D; ~0xc0; &#x2F;&#x2F;作为普通 IO 口  P0-6  0-7</span><br><span class="line">  P1INP &amp;&#x3D; ~0Xc0; &#x2F;&#x2F;打开上拉</span><br><span class="line">  SDA_OUT();</span><br><span class="line">  SCL_OUT();</span><br><span class="line">  IIC_SCL&#x3D;1;</span><br><span class="line">  IIC_SDA&#x3D;1;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">&#x2F;&#x2F;产生IIC起始信号</span><br><span class="line">void IIC_Start(void)</span><br><span class="line">&#123;</span><br><span class="line">	SDA_OUT();     &#x2F;&#x2F;sda线输出</span><br><span class="line">	IIC_SDA&#x3D;1;	  	  </span><br><span class="line">	IIC_SCL&#x3D;1;</span><br><span class="line">	delay_us(3);</span><br><span class="line"> 	IIC_SDA&#x3D;0;&#x2F;&#x2F;START:when CLK is high,DATA change form high to low </span><br><span class="line">	delay_us(3);</span><br><span class="line">	IIC_SCL&#x3D;0;&#x2F;&#x2F;钳住I2C总线，准备发送或接收数据 </span><br><span class="line">&#125;	  </span><br><span class="line">&#x2F;&#x2F;产生IIC停止信号</span><br><span class="line">void IIC_Stop(void)</span><br><span class="line">&#123;</span><br><span class="line">	SDA_OUT();&#x2F;&#x2F;sda线输出</span><br><span class="line">	IIC_SCL&#x3D;0;</span><br><span class="line">	IIC_SDA&#x3D;0;&#x2F;&#x2F;STOP:when CLK is high DATA change form low to high</span><br><span class="line"> 	delay_us(3);</span><br><span class="line">	IIC_SCL&#x3D;1; </span><br><span class="line">	IIC_SDA&#x3D;1;&#x2F;&#x2F;发送I2C总线结束信号</span><br><span class="line">	delay_us(3);							   	</span><br><span class="line">&#125;</span><br><span class="line">&#x2F;&#x2F;等待应答信号到来</span><br><span class="line">&#x2F;&#x2F;返回值：1，接收应答失败</span><br><span class="line">&#x2F;&#x2F;        0，接收应答成功</span><br><span class="line">u8 IIC_Wait_Ack(void)</span><br><span class="line">&#123;</span><br><span class="line">	u8 ucErrTime&#x3D;0;</span><br><span class="line">	SDA_IN();      &#x2F;&#x2F;SDA设置为输入  </span><br><span class="line">	IIC_SDA&#x3D;1;delay_us(1);	   </span><br><span class="line">	IIC_SCL&#x3D;1;delay_us(1);	 </span><br><span class="line">	while(READ_SDA)</span><br><span class="line">	&#123;</span><br><span class="line">		ucErrTime++;</span><br><span class="line">		if(ucErrTime&gt;250)</span><br><span class="line">		&#123;</span><br><span class="line">			IIC_Stop();</span><br><span class="line">			return 1;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	IIC_SCL&#x3D;0;&#x2F;&#x2F;时钟输出0 	   </span><br><span class="line">	return 0;  </span><br><span class="line">&#125; </span><br><span class="line">&#x2F;&#x2F;产生ACK应答</span><br><span class="line">void IIC_Ack(void)</span><br><span class="line">&#123;</span><br><span class="line">	IIC_SCL&#x3D;0;</span><br><span class="line">	SDA_OUT();</span><br><span class="line">	IIC_SDA&#x3D;0;</span><br><span class="line">	delay_us(3);</span><br><span class="line">	IIC_SCL&#x3D;1;</span><br><span class="line">	delay_us(3);</span><br><span class="line">	IIC_SCL&#x3D;0;</span><br><span class="line">&#125;</span><br><span class="line">&#x2F;&#x2F;不产生ACK应答		    </span><br><span class="line">void IIC_NAck(void)</span><br><span class="line">&#123;</span><br><span class="line">	IIC_SCL&#x3D;0;</span><br><span class="line">	SDA_OUT();</span><br><span class="line">	IIC_SDA&#x3D;1;</span><br><span class="line">	delay_us(3);</span><br><span class="line">	IIC_SCL&#x3D;1;</span><br><span class="line">	delay_us(3);</span><br><span class="line">	IIC_SCL&#x3D;0;</span><br><span class="line">&#125;					 				     </span><br><span class="line">&#x2F;&#x2F;IIC发送一个字节</span><br><span class="line">&#x2F;&#x2F;返回从机有无应答</span><br><span class="line">&#x2F;&#x2F;1，有应答</span><br><span class="line">&#x2F;&#x2F;0，无应答			  </span><br><span class="line">void IIC_Send_Byte(u8 txd)</span><br><span class="line">&#123;                        </span><br><span class="line">    u8 t;   </span><br><span class="line">	SDA_OUT(); 	    </span><br><span class="line">    IIC_SCL&#x3D;0;&#x2F;&#x2F;拉低时钟开始数据传输</span><br><span class="line">    for(t&#x3D;0;t&lt;8;t++)</span><br><span class="line">    &#123;              </span><br><span class="line">        IIC_SDA&#x3D;(txd&amp;0x80)&gt;&gt;7;</span><br><span class="line">        txd&lt;&lt;&#x3D;1; 	  </span><br><span class="line">		delay_us(3);   </span><br><span class="line">		IIC_SCL&#x3D;1;</span><br><span class="line">		delay_us(3); </span><br><span class="line">		IIC_SCL&#x3D;0;	</span><br><span class="line">		delay_us(3);</span><br><span class="line">    &#125;  </span><br><span class="line">&#125; 	    </span><br><span class="line">&#x2F;&#x2F;读1个字节，ack&#x3D;1时，发送ACK，ack&#x3D;0，发送nACK   </span><br><span class="line">u8 IIC_Read_Byte(unsigned char ack)</span><br><span class="line">&#123;</span><br><span class="line">	unsigned char i,receive&#x3D;0;</span><br><span class="line">	SDA_IN();&#x2F;&#x2F;SDA设置为输入</span><br><span class="line">    for(i&#x3D;0;i&lt;8;i++ )</span><br><span class="line">	&#123;</span><br><span class="line">        IIC_SCL&#x3D;0; </span><br><span class="line">        delay_us(3);</span><br><span class="line">		IIC_SCL&#x3D;1;</span><br><span class="line">        receive&lt;&lt;&#x3D;1;</span><br><span class="line">        if(READ_SDA)receive++;   </span><br><span class="line">		delay_us(3); </span><br><span class="line">    &#125;					 </span><br><span class="line">    if (!ack)</span><br><span class="line">        IIC_NAck();&#x2F;&#x2F;发送nACK</span><br><span class="line">    else</span><br><span class="line">        IIC_Ack(); &#x2F;&#x2F;发送ACK   </span><br><span class="line">    return receive;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="2-AD7747的寄存器"><a href="#2-AD7747的寄存器" class="headerlink" title="2. AD7747的寄存器"></a>2. AD7747的寄存器</h4><p>通过datasheet设置好AD777的寄存器的宏定义，这部分你耐下心来，踏实按照手册配就好了，我这里提供一份，如果你是测量静态电容以及像改变频率就改变对应的寄存器宏定义的值就好。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></td><td class="code"><pre><span class="line">#define AD7746_ADDRESS                  0x48</span><br><span class="line"></span><br><span class="line">&#x2F;* AD7746 Slave Address *&#x2F;</span><br><span class="line">#define AD7746_RESET_CMD                0xBF</span><br><span class="line"></span><br><span class="line">&#x2F;* AD7746 Register Definition *&#x2F;</span><br><span class="line">#define AD7746_REG_STATUS				0</span><br><span class="line">#define AD7746_REG_CAP_DATA_HIGH		1</span><br><span class="line">#define AD7746_REG_CAP_DATA_MID			2</span><br><span class="line">#define AD7746_REG_CAP_DATA_LOW			3</span><br><span class="line">#define AD7746_REG_VT_DATA_HIGH			4</span><br><span class="line">#define AD7746_REG_VT_DATA_MID			5</span><br><span class="line">#define AD7746_REG_VT_DATA_LOW			6</span><br><span class="line">#define AD7746_REG_CAP_SETUP			7</span><br><span class="line">#define AD7746_REG_VT_SETUP				8</span><br><span class="line">#define AD7746_REG_EXC_SETUP			9</span><br><span class="line">#define AD7746_REG_CFG					10</span><br><span class="line">#define AD7746_REG_CAPDACA				11</span><br><span class="line">#define AD7746_REG_CAPDACB				12</span><br><span class="line">#define AD7746_REG_CAP_OFFH				13</span><br><span class="line">#define AD7746_REG_CAP_OFFL				14</span><br><span class="line">#define AD7746_REG_CAP_GAINH			15</span><br><span class="line">#define AD7746_REG_CAP_GAINL			16</span><br><span class="line">#define AD7746_REG_VOLT_GAINH			17</span><br><span class="line">#define AD7746_REG_VOLT_GAINL			18</span><br><span class="line"></span><br><span class="line">&#x2F;* AD7746_REG_STATUS bits *&#x2F;</span><br><span class="line">#define AD7746_STATUS_EXCERR			(1 &lt;&lt; 3)</span><br><span class="line">#define AD7746_STATUS_RDY				(1 &lt;&lt; 2)</span><br><span class="line">#define AD7746_STATUS_RDYVT				(1 &lt;&lt; 1)</span><br><span class="line">#define AD7746_STATUS_RDYCAP			(1 &lt;&lt; 0)</span><br><span class="line"></span><br><span class="line">&#x2F;* AD7746_REG_CAP_SETUP bits *&#x2F;</span><br><span class="line">#define AD7746_CAPSETUP_CAPEN			(1 &lt;&lt; 7)</span><br><span class="line">#define AD7746_CAPSETUP_CIN2			(1 &lt;&lt; 6)</span><br><span class="line">#define AD7746_CAPSETUP_CAPDIFF			(1 &lt;&lt; 5)</span><br><span class="line">#define AD7746_CAPSETUP_CACHOP			(1 &lt;&lt; 0)</span><br><span class="line"></span><br><span class="line">&#x2F;* AD7746_REG_VT_SETUP bits *&#x2F;</span><br><span class="line">#define AD7746_VTSETUP_VTEN				(1 &lt;&lt; 7)</span><br><span class="line">#define AD7746_VTSETUP_VTMD_INT_TEMP	(0 &lt;&lt; 5)</span><br><span class="line">#define AD7746_VTSETUP_VTMD_EXT_TEMP	(1 &lt;&lt; 5)</span><br><span class="line">#define AD7746_VTSETUP_VTMD_VDD_MON		(2 &lt;&lt; 5)</span><br><span class="line">#define AD7746_VTSETUP_VTMD_EXT_VIN		(3 &lt;&lt; 5)</span><br><span class="line">#define AD7746_VTSETUP_EXTREF			(1 &lt;&lt; 4)</span><br><span class="line">#define AD7746_VTSETUP_VTSHORT			(1 &lt;&lt; 1)</span><br><span class="line">#define AD7746_VTSETUP_VTCHOP			(1 &lt;&lt; 0)</span><br><span class="line"></span><br><span class="line">&#x2F;* AD7746_REG_EXC_SETUP bits *&#x2F;</span><br><span class="line">#define AD7746_EXCSETUP_CLKCTRL			(1 &lt;&lt; 7)</span><br><span class="line">#define AD7746_EXCSETUP_EXCON			(1 &lt;&lt; 6)</span><br><span class="line">#define AD7746_EXCSETUP_EXCB			(1 &lt;&lt; 5)</span><br><span class="line">#define AD7746_EXCSETUP_NEXCB			(1 &lt;&lt; 4)</span><br><span class="line">#define AD7746_EXCSETUP_EXCA			(1 &lt;&lt; 3)</span><br><span class="line">#define AD7746_EXCSETUP_NEXCA			(1 &lt;&lt; 2)</span><br><span class="line">#define AD7746_EXCSETUP_EXCLVL(x)		(((x) &amp; 0x3) &lt;&lt; 0)</span><br><span class="line">&#x2F;* AD7746_REG_EXC_SETUP bits *&#x2F;</span><br><span class="line">#define AD7746_EXCSETUP_EXCDAC			(1 &lt;&lt; 3)</span><br><span class="line">#define AD7746_EXCSETUP_EXCEN 			(1 &lt;&lt; 2)</span><br><span class="line">#define AD7746_EXCSETUP_EXCLVL_VDD_8		(0 &lt;&lt; 0)</span><br><span class="line">#define AD7746_EXCSETUP_EXCLVL_VDD_4		(1 &lt;&lt; 0)</span><br><span class="line">#define AD7746_EXCSETUP_EXCLVL_VDD_3_8		(2 &lt;&lt; 0)</span><br><span class="line">#define AD7746_EXCSETUP_EXCLVL_VDD_2		(3 &lt;&lt; 0)</span><br><span class="line"></span><br><span class="line">&#x2F;* AD7746_REG_CFG bits *&#x2F;</span><br><span class="line">#define AD7746_CONF_VTFS(x)				(((x) &amp; 0x3) &lt;&lt; 6)</span><br><span class="line">#define AD7746_CONF_CAPFS(x)			(((x) &amp; 0x7) &lt;&lt; 3)</span><br><span class="line">#define AD7746_CONF_MODE_IDLE			(0 &lt;&lt; 0)</span><br><span class="line">#define AD7746_CONF_MODE_CONT_CONV		(1 &lt;&lt; 0)</span><br><span class="line">#define AD7746_CONF_MODE_SINGLE_CONV	(2 &lt;&lt; 0)</span><br><span class="line">#define AD7746_CONF_MODE_PWRDN			(3 &lt;&lt; 0)</span><br><span class="line">#define AD7746_CONF_MODE_OFFS_CAL		(5 &lt;&lt; 0)</span><br><span class="line">#define AD7746_CONF_MODE_GAIN_CAL		(6 &lt;&lt; 0)</span><br><span class="line"></span><br><span class="line">&#x2F;* AD7746_REG_CAPDACx bits *&#x2F;</span><br><span class="line">#define AD7746_CAPDAC_DACEN				(1 &lt;&lt; 7)</span><br><span class="line">#define AD7746_CAPDAC_DACP(x)			((x) &amp; 0x7F)</span><br></pre></td></tr></table></figure>
+<p>最后两者连通以后肯定还需要进行数值的校正，这里采用拟合校正，最后吐槽一下pf级别的电容真的太小了，pcb板间的电容就到pf了，稍微一碰就满量程了，计划后面再设计一个隔离电路。</p>
+<h3 id="5-电路"><a href="#5-电路" class="headerlink" title="5. 电路"></a>5. 电路</h3><p>差点忘记放置电路了，我就是设计了一个小的AD7747的模块然后接到CC2530的开发板进行使用的，因为这样便宜。<br>电路图如下</p>
+<p>原理图<br><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/OneNet_APP/AD7747%E5%8E%9F%E7%90%86%E5%9B%BE.png"></p>
+<p>PCB</p>
+<p><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/OneNet_APP/AD7747pcb.png"></p>
+<p><em><strong>这就是本次的全部内容了，希望对你有所帮助。</strong></em><br><em><strong>欢迎star</strong></em></p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/AD7747/">AD7747</a>
+		  
+			<a href="/tags/CC2530/">CC2530</a>
+		  
+			<a href="/tags/%E6%B5%8B%E7%94%B5%E5%AE%B9/">测电容</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2021/05/12/Android%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">Android单元测试</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2021/05/10/FallTwiceNever/">
+        <span class="next-text nav-default">FallTwiceNever</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+      </footer>
+    
+  </article>
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2021
+    <span class="footer-author">Russshare.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

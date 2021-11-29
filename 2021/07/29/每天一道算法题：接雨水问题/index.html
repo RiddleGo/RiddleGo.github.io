@@ -1,37 +1,227 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
-{% block page_class %}page-post-detail{% endblock %}
 
 
-{% block content %}
+  <meta name="description" content="每天一道算法题：接雨水问题"/>
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
-    </div>
+
+
+  <meta name="keywords" content="面试,算法," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+
+
+
+<link rel="canonical" href="https://riddlego.github.io/2021/07/29/每天一道算法题：接雨水问题/"/>
+
+
+<meta name="description" content="题目描述给定 n 个非负整数表示每个宽度为 1 的柱子的高度图，计算按此排列的柱子，下雨之后能接多少雨水。 示例 1： 输入：height &#x3D; [0,1,0,2,1,0,1,3,2,1,2,1]输出：6解释：上面是由数组 [0,1,0,2,1,0,1,3,2,1,2,1] 表示的高度图，在这种情况下，可以接 6 个单位的雨水（蓝色部分表示雨水）。示例 2： 输入：height &#x3D; [4,2,0,3">
+<meta property="og:type" content="article">
+<meta property="og:title" content="每天一道算法题：接雨水问题">
+<meta property="og:url" content="https://riddlego.github.io/2021/07/29/%E6%AF%8F%E5%A4%A9%E4%B8%80%E9%81%93%E7%AE%97%E6%B3%95%E9%A2%98%EF%BC%9A%E6%8E%A5%E9%9B%A8%E6%B0%B4%E9%97%AE%E9%A2%98/index.html">
+<meta property="og:site_name" content="RiddleGo">
+<meta property="og:description" content="题目描述给定 n 个非负整数表示每个宽度为 1 的柱子的高度图，计算按此排列的柱子，下雨之后能接多少雨水。 示例 1： 输入：height &#x3D; [0,1,0,2,1,0,1,3,2,1,2,1]输出：6解释：上面是由数组 [0,1,0,2,1,0,1,3,2,1,2,1] 表示的高度图，在这种情况下，可以接 6 个单位的雨水（蓝色部分表示雨水）。示例 2： 输入：height &#x3D; [4,2,0,3">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-07-29T15:17:56.000Z">
+<meta property="article:modified_time" content="2021-07-30T15:43:45.753Z">
+<meta property="article:author" content="Russshare">
+<meta property="article:tag" content="面试">
+<meta property="article:tag" content="算法">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> 每天一道算法题：接雨水问题 - RiddleGo </title>
+  <meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">RiddleGo</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          每天一道算法题：接雨水问题
+        
+      </h1>
+
+      <time class="post-time">
+          7月 29 2021
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <p><strong>题目描述</strong><br>给定 n 个非负整数表示每个宽度为 1 的柱子的高度图，计算按此排列的柱子，下雨之后能接多少雨水。</p>
+<p>示例 1：</p>
+<p>输入：height = [0,1,0,2,1,0,1,3,2,1,2,1]<br>输出：6<br>解释：上面是由数组 [0,1,0,2,1,0,1,3,2,1,2,1] 表示的高度图，在这种情况下，可以接 6 个单位的雨水（蓝色部分表示雨水）。<br>示例 2：</p>
+<p>输入：height = [4,2,0,3,2,5]<br>输出：9</p>
+<p><strong>解题思路</strong><br>首先要明确，每个位置能存的水，取决与其两边的最大高度值。在此基础上，可以简单写出暴力法或两个数组存高度的“空间换时间”方法。<br>而双指针法则需要明确，每一个位置在知道其中一边（例如左边）的最大值时，如果左边的最大值已经比右边的临时最大值（因为没有遍历过所有位置，只能知道临时最大值）还要小的话，左边的最大值就是短板，这是靠左的位置就能得到它能存放的雨水量。<br>右侧同理。</p>
+<p>而得到了左边或右边位置的存雨量后，应该移动哪边呢？ 不难想到，如果得到左边存雨量（即左边是短板），去移动右边，那么右置的存雨量就丢失了。因此每次移动的都是求出存雨量，或者叫短板的一边。同时需要更新该侧的最大值。</p>
+<p><strong>代码实现</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">func trap(height []int) int &#123;</span><br><span class="line">    n :&#x3D; len(height)</span><br><span class="line">    if n &lt; 3 &#123;return 0&#125; &#x2F;&#x2F; 小于3格则不能存水</span><br><span class="line">    leftMax,rightMax :&#x3D; height[0],height[n-1]</span><br><span class="line">    ans :&#x3D; 0</span><br><span class="line">    </span><br><span class="line">    for l,r:&#x3D;1,n-2;l&lt;&#x3D;r;&#123;</span><br><span class="line">        &#x2F;&#x2F; 短板一端决定了能装多少水</span><br><span class="line">        if leftMax &lt; rightMax &#123; &#x2F;&#x2F; 左边是短板，就要移动左边</span><br><span class="line">            ans +&#x3D; max(0,leftMax - height[l]) &#x2F;&#x2F; 把有效雨水量加入结果</span><br><span class="line">            leftMax &#x3D; max(leftMax,height[l]) &#x2F;&#x2F; 每次更新左边最大值</span><br><span class="line">            l++</span><br><span class="line">        &#125;else&#123; &#x2F;&#x2F; 右边是短板，移动右边，同理</span><br><span class="line">            ans +&#x3D; max(0,rightMax- height[r])</span><br><span class="line">            rightMax &#x3D; max(rightMax,height[r])</span><br><span class="line">            r--</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return ans</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func max(a,b int) int&#123;</span><br><span class="line">    if a&gt; b &#123;return a&#125;</span><br><span class="line">    return b</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/%E9%9D%A2%E8%AF%95/">面试</a>
+		  
+			<a href="/tags/%E7%AE%97%E6%B3%95/">算法</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2021/07/29/%E6%AF%8F%E5%A4%A9%E4%B8%80%E9%81%93%E7%AE%97%E6%B3%95%E9%A2%98%EF%BC%9A%E8%BE%93%E5%87%BA%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E5%8F%B3%E8%A7%86%E5%9B%BE/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">每天一道算法题：输出二叉树的右视图</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2021/07/29/%E6%AF%8F%E5%A4%A9%E4%B8%80%E9%81%93%E7%AE%97%E6%B3%95%E9%A2%98%EF%BC%9A%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9A%84%E6%8E%92%E5%88%97/">
+        <span class="next-text nav-default">每天一道算法题：字符串的排列</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+      </footer>
+    
+  </article>
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2021
+    <span class="footer-author">Russshare.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

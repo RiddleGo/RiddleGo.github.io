@@ -1,37 +1,239 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
-{% block page_class %}page-post-detail{% endblock %}
 
 
-{% block content %}
+  <meta name="description" content="IP协议相关技术"/>
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
-    </div>
+
+
+  <meta name="keywords" content="IP,DNS," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+
+
+
+<link rel="canonical" href="https://riddlego.github.io/2021/07/18/IP协议相关技术/"/>
+
+
+<meta name="description" content="IP 协议相关技术IP 旨在让最终目标主机收到数据包，但是在这一过程中仅仅有 IP 是无法实现通信的。必须还有能够解析主机名称和 MAC 地址的功能，以及数据包在发送过程中异常情况处理的功能。 5.1 DNS我们平常在访问某个网站时不适用 IP 地址，而是用一串由罗马字和点 原文链接：号组成的字符串。而一般用户在使用 TCP&#x2F;IP 进行通信时也不使用 IP 地址。能够这样做是因为有了 DNS （D">
+<meta property="og:type" content="article">
+<meta property="og:title" content="IP协议相关技术">
+<meta property="og:url" content="https://riddlego.github.io/2021/07/18/IP%E5%8D%8F%E8%AE%AE%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/index.html">
+<meta property="og:site_name" content="RiddleGo">
+<meta property="og:description" content="IP 协议相关技术IP 旨在让最终目标主机收到数据包，但是在这一过程中仅仅有 IP 是无法实现通信的。必须还有能够解析主机名称和 MAC 地址的功能，以及数据包在发送过程中异常情况处理的功能。 5.1 DNS我们平常在访问某个网站时不适用 IP 地址，而是用一串由罗马字和点 原文链接：号组成的字符串。而一般用户在使用 TCP&#x2F;IP 进行通信时也不使用 IP 地址。能够这样做是因为有了 DNS （D">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/tcpip09.png">
+<meta property="article:published_time" content="2021-07-18T09:41:03.000Z">
+<meta property="article:modified_time" content="2021-07-18T09:44:04.885Z">
+<meta property="article:author" content="Russshare">
+<meta property="article:tag" content="IP">
+<meta property="article:tag" content="DNS">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/tcpip09.png">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> IP协议相关技术 - RiddleGo </title>
+  <meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">RiddleGo</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          IP协议相关技术
+        
+      </h1>
+
+      <time class="post-time">
+          7月 18 2021
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h3 id="IP-协议相关技术"><a href="#IP-协议相关技术" class="headerlink" title="IP 协议相关技术"></a>IP 协议相关技术</h3><p>IP 旨在让最终目标主机收到数据包，但是在这一过程中仅仅有 IP 是无法实现通信的。必须还有能够解析主机名称和 MAC 地址的功能，以及数据包在发送过程中异常情况处理的功能。</p>
+<h4 id="5-1-DNS"><a href="#5-1-DNS" class="headerlink" title="5.1 DNS"></a>5.1 DNS</h4><p>我们平常在访问某个网站时不适用 IP 地址，而是用一串由罗马字和点</p>
+<p>原文链接：号组成的字符串。而一般用户在使用 TCP/IP 进行通信时也不使用 IP 地址。能够这样做是因为有了 DNS （Domain Name System）功能的支持。DNS 可以将那串字符串自动转换为具体的 IP 地址。<br>这种 DNS 不仅适用于 IPv4，还适用于 IPv6。</p>
+<h3 id="5-2-ARP"><a href="#5-2-ARP" class="headerlink" title="5.2 ARP"></a>5.2 ARP</h3><p>只要确定了 IP 地址，就可以向这个目标地址发送 IP 数据报。然而，在底层数据链路层，进行实际通信时却有必要了解每个 IP 地址所对应的 MAC 地址。</p>
+<p>ARP 是一种解决地址问题的协议。以目标 IP 地址为线索，用来定位下一个应该接收数据分包的网络设备对应的 MAC 地址。不过 ARP 只适用于 IPv4，不能用于 IPv6。IPv6 中可以用 ICMPv6 替代 ARP 发送邻居探索消息。<br>RARP 是将 ARP 反过来，从 MAC 地址定位 IP 地址的一种协议。</p>
+<h3 id="5-3-ICMP"><a href="#5-3-ICMP" class="headerlink" title="5.3 ICMP"></a>5.3 ICMP</h3><p>ICMP 的主要功能包括，确认 IP 包是否成功送达目标地址，<strong>通知在发送过程当中 IP 包被废弃的具体原因，改善网络设置等。</strong><br>IPv4 中 ICMP 仅作为一个辅助作用支持 IPv4。也就是说，在 IPv4 时期，即使没有 ICMP，仍然可以实现 IP 通信。然而，<strong>在 IPv6 中，ICMP 的作用被扩大，如果没有 ICMPv6，IPv6 就无法进行正常通信。</strong></p>
+<h3 id="5-4-DHCP"><a href="#5-4-DHCP" class="headerlink" title="5.4 DHCP"></a>5.4 DHCP</h3><p>如果逐一为每一台主机设置 IP 地址会是非常繁琐的事情。特别是在移动使用笔记本电脑、只能终端以及平板电脑等设备时，每移动到一个新的地方，都要重新设置 IP 地址。<br>于是，为了实现自动设置 IP 地址、统一管理 IP 地址分配，就产生了 DHCP（Dynamic Host Configuration Protocol）协议。有了 DHCP，计算机只要连接到网络，就可以进行 TCP/IP 通信。也就是说，DHCP 让即插即用变得可能。<br>DHCP 不仅在 IPv4 中，在 IPv6 中也可以使用。</p>
+<h3 id="5-5-NAT"><a href="#5-5-NAT" class="headerlink" title="5.5 NAT"></a>5.5 NAT</h3><p>NAT（Network Address Translator）是用于<strong>在本地网络中使用私有地址，在连接互联网时转而使用全局 IP 地址的技术。</strong></p>
+<p>除转换 IP 地址外，还出现了可以转换 TCP、UDP 端口号的 NAPT（Network Address Ports Translator）技术，由此可以实现用一个全局 IP 地址与多个主机的通信。</p>
+<p>NAT（NAPT）实际上是为正在面临地址枯竭的 IPv4 而开发的技术。不过，在 IPv6 中为了提高网络安全也在使用 NAT，在 IPv4 和 IPv6 之间的相互通信当中常常使用 NAT-PT。</p>
+<h3 id="5-6-IP-隧道"><a href="#5-6-IP-隧道" class="headerlink" title="5.6 IP 隧道"></a>5.6 IP 隧道</h3><p><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/tcpip09.png"></p>
+<p>夹着 IPv4 网络的两个 IPv6 网络</p>
+<p>如上图的网络环境中，网络 A 与网络 B 之间无法直接进行通信，为了让它们之间正常通信，这时必须得采用 IP 隧道的功能。</p>
+<p><strong>IP 隧道可以将那些从网络 A 发过来的 IPv6 的包统合为一个数据，再为之追加一个 IPv4 的首部以后转发给网络 C。</strong></p>
+<p>一般情况下，紧接着 IP 首部的是 TCP 或 UDP 的首部。然而，现在的应用当中“ IP 首部的后面还是 IP 首部”或者“ IP 首部的后面是 IPv6 的首部”等情况与日俱增。</p>
+<p>这种在网络层的首部后面追加网络层首部的通信方法就叫做“ IP 隧道”。</p>
+<p>原文链接：<a target="_blank" rel="noopener" href="https://blog.csdn.net/wuzhiwei549/article/details/105965493">https://blog.csdn.net/wuzhiwei549/article/details/105965493</a></p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/IP/">IP</a>
+		  
+			<a href="/tags/DNS/">DNS</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2021/07/18/TCP-IP%E6%8A%A5%E6%96%87%E6%A0%BC%E5%BC%8F/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">TCP.IP报文格式</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2021/07/18/%E5%85%B3%E4%BA%8ETCP%E3%80%81IP%EF%BC%8C%E5%BF%85%E7%9F%A5%E5%BF%85%E4%BC%9A%E7%9A%84%E5%8D%81%E4%B8%AA%E9%97%AE%E9%A2%98/">
+        <span class="next-text nav-default">关于TCP、IP，必知必会的十个问题</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+      </footer>
+    
+  </article>
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2021
+    <span class="footer-author">Russshare.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

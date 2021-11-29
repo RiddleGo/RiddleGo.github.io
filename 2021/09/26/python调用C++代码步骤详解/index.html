@@ -1,37 +1,245 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
-{% block page_class %}page-post-detail{% endblock %}
 
 
-{% block content %}
+  <meta name="description" content="python调用C++代码步骤详解"/>
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
-    </div>
+
+
+  <meta name="keywords" content="动态库,静态库," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+
+
+
+<link rel="canonical" href="https://riddlego.github.io/2021/09/26/python调用C++代码步骤详解/"/>
+
+
+<meta name="description" content="前言这本来是前面一段时间做了的一个东西，但是啊当时偷懒没有做记录，现在好了，又需要用的时候忘记了步骤是怎么开始的了，古人说的还是有道理，无论是温故而知新，还是好记性不如烂笔头。于是今天边边学习边记录一下。 python毫无疑问是数据处理的最佳利器，但是不得不说涉及到速度这个方面还是存在可以优化的空间，当然我做这个的出发点是为了复用以前C++编写的函数，这样可以避免重复去实现逻辑，意义不是很大。 当">
+<meta property="og:type" content="article">
+<meta property="og:title" content="python调用C++代码步骤详解">
+<meta property="og:url" content="https://riddlego.github.io/2021/09/26/python%E8%B0%83%E7%94%A8C++%E4%BB%A3%E7%A0%81%E6%AD%A5%E9%AA%A4%E8%AF%A6%E8%A7%A3/index.html">
+<meta property="og:site_name" content="RiddleGo">
+<meta property="og:description" content="前言这本来是前面一段时间做了的一个东西，但是啊当时偷懒没有做记录，现在好了，又需要用的时候忘记了步骤是怎么开始的了，古人说的还是有道理，无论是温故而知新，还是好记性不如烂笔头。于是今天边边学习边记录一下。 python毫无疑问是数据处理的最佳利器，但是不得不说涉及到速度这个方面还是存在可以优化的空间，当然我做这个的出发点是为了复用以前C++编写的函数，这样可以避免重复去实现逻辑，意义不是很大。 当">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-09-26T06:39:25.000Z">
+<meta property="article:modified_time" content="2021-09-27T04:34:46.990Z">
+<meta property="article:author" content="Russshare">
+<meta property="article:tag" content="动态库">
+<meta property="article:tag" content="静态库">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> python调用C++代码步骤详解 - RiddleGo </title>
+  <meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">RiddleGo</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          python调用C++代码步骤详解
+        
+      </h1>
+
+      <time class="post-time">
+          9月 26 2021
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>这本来是前面一段时间做了的一个东西，但是啊当时偷懒没有做记录，现在好了，又需要用的时候忘记了步骤是怎么开始的了，古人说的还是有道理，无论是温故而知新，还是好记性不如烂笔头。于是今天边边学习边记录一下。</p>
+<p>python毫无疑问是数据处理的最佳利器，但是不得不说涉及到速度这个方面还是存在可以优化的空间，当然我做这个的出发点是为了复用以前C++编写的函数，这样可以避免重复去实现逻辑，意义不是很大。</p>
+<p>当你想实现一个功能的时候，如果你不熟悉，那么我觉得不用着急去到具体实现好技术层面，我建议可以先想一想，查一查，舔一舔，要完成这样一件事情需要那些步骤，步骤之间的逻辑关系，然后再按照顺序每个模块去学习，当然这是我的愚见。</p>
+<p>本文整个流程  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">1、将c++编译成动态链接dll文件</span><br><span class="line">2、python调用</span><br></pre></td></tr></table></figure>
+
+<h2 id="C-动态库-静态库"><a href="#C-动态库-静态库" class="headerlink" title="C++ 动态库  静态库"></a>C++ 动态库  静态库</h2><h3 id="1、什么是动态库、静态库"><a href="#1、什么是动态库、静态库" class="headerlink" title="1、什么是动态库、静态库"></a>1、什么是动态库、静态库</h3><p>1、静态库的扩展名一般为“.a”或“.lib”；动态库的扩展名一般为“.so”或“.dll”。（so-linux, dll-windos）</p>
+<p>2、静态库在编译时会直接整合到目标程序中，编译成功的可执行文件可独立运行；动态库在编译时不会放到连接的目标程序中，即可执行文件无法单独运行。</p>
+<p>3、使用静态库的时候，多个不同的可执行程序会需要独自相同的库，但是动态库的话可以被多个程序公用一个</p>
+<p>4、静态库和动态库最本质的区别就是：该库是否被编译进目标（程序）内部。</p>
+<p><strong>5</strong>、<strong>静态库这类库在编译的时候会直接整合到目标程序中</strong>，所以利用静态函数库编译成的文件会比较大，这类函数库最大的优点就是编译成功的可执行文件可以独立运行，而不再需要向外部要求读取函数库的内容；但是从升级难易度来看明显没有优势，如果函数库更新，需要重新编译。</p>
+<p><strong>6</strong>、<strong>与静态函数库被整个捕捉到程序中不同</strong>，动态函数库在编译的时候，在程序里只有一个“指向”的位置而已，也就是说当可执行文件需要使用到函数库的机制时，程序才会去读取函数库来使用；也就是说可执行文件无法单独运行。这样从产品功能升级角度方便升级，只要替换对应动态库即可，不必重新编译整个可执行文件。</p>
+<p>7、还有一个重要的就是动态库可以被第三方加载，这一点是很重要的。</p>
+<h3 id="2、怎么生成动态库、静态库"><a href="#2、怎么生成动态库、静态库" class="headerlink" title="2、怎么生成动态库、静态库"></a>2、怎么生成动态库、静态库</h3><p>我在实习的时候，那个VS还是2005，看的我一脸懵逼，回来整了个vs2019。倒不是说有什么特别大的差异，当然差异还是肯定有的，但是不至于这么大，主要是界面感觉没有现在的这么平滑亲切，让人心生好感。<br>这里就是在解决方案 新建项目的时候选择新建静态库或者动态库就行，不过—动态库还有一一些是需要声明的宏定义，这部分是蛮重要的。</p>
+<p>具体参照一下前辈的这个视频<br><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1ch411C7Lb?spm_id_from=333.999.0.0">Visual Studio 2019-编写C++静态库</a><br><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1k541177AS?spm_id_from=333.999.0.0">Visual Studio 2019-编写C++动态链接库</a></p>
+<h3 id="3、动态库的隐式调用与显式调用"><a href="#3、动态库的隐式调用与显式调用" class="headerlink" title="3、动态库的隐式调用与显式调用"></a>3、动态库的隐式调用与显式调用</h3><p>搞清楚只有动态库才能给别人用，静态库直接调用的时候就整合到自己的身体了，所以不存在其他的调用这个说法，调用只能说是调用动态库。</p>
+<p>动态库调用呢分为隐式调用和显示调用，</p>
+<p>视频链接<br><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1k541177AS?spm_id_from=333.999.0.0">Visual Studio 2019-编写C++动态链接库  后面一部分就是静态调用</a><br><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV16y4y1n7S6?spm_id_from=333.999.0.0">显式调用</a></p>
+<p>blog链接<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/ezhchai/article/details/78784572?utm_medium=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~default-7.searchformbaiduhighlight&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~default-7.searchformbaiduhighlight">DLL调用（1）：C++静态调用DLL</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/ezhchai/article/details/78784815?utm_medium=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~default-8.searchformbaiduhighlight&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~default-8.searchformbaiduhighlight">DLL调用（2）：C++动态调用DLL</a></p>
+<h2 id="python-调用dll文件"><a href="#python-调用dll文件" class="headerlink" title="python 调用dll文件"></a>python 调用dll文件</h2><p>大概分为两个步骤</p>
+<h3 id="1、提前准备"><a href="#1、提前准备" class="headerlink" title="1、提前准备"></a>1、提前准备</h3><p>导入包—ctypes，这个包就相当于一个中间的briage进行转换、适配。<br>因为python是动态的语言，而C++是动态的，当函数进行调用时候肯定这个对应的参数数据类型就需要进行转换。</p>
+<h3 id="2、函数实现"><a href="#2、函数实现" class="headerlink" title="2、函数实现"></a>2、函数实现</h3><p>函数输入参数与返回参数</p>
+<p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1mX4y1577J?spm_id_from=333.999.0.0">详细内容看这个前辈的视频哦-第三方应用程序调用DLL-Python调用C++动态库</a></p>
+<p>知道你想偷懒，小懒猪，代码贴在这里了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">import ctypes, ctypes.util</span><br><span class="line"></span><br><span class="line">def find_dll(dll_name):</span><br><span class="line">    return ctypes.util.find_library(dll_name) #查找dll</span><br><span class="line"></span><br><span class="line">def load_dll(dll_path):</span><br><span class="line">    try:</span><br><span class="line">        vc_dll &#x3D; ctypes.CDLL(dll_path) #加载动态库，若失败则抛出异常</span><br><span class="line">        print(&quot;第一步，加载动态库成功&quot;)</span><br><span class="line"></span><br><span class="line">        #</span><br><span class="line">        vc_func &#x3D; vc_dll.convert_array #获取动态库函数</span><br><span class="line">        #C++ &lt;--&gt; ctypes &lt;--&gt;python 数据类型的适配</span><br><span class="line">        #输入参数  int convert_array(int* data, int len)</span><br><span class="line">        vc_func.argtypes &#x3D; [ctypes.POINTER(ctypes.c_int),ctypes.c_int]</span><br><span class="line"></span><br><span class="line">        #返回函数  return nTotal;</span><br><span class="line">        vc_func.restype &#x3D; ctypes.c_int #函数返回值类型适配</span><br><span class="line"></span><br><span class="line">        my_list &#x3D; [3,1,6,8,5]</span><br><span class="line">        array_len &#x3D; len(my_list)</span><br><span class="line"></span><br><span class="line">        ##把列表转换成C++动态库函数所需要的参数数组，my_arrat 不是数组，但是可以当做数组去理解</span><br><span class="line">        my_array &#x3D; (ctypes.c_int * array_len)(*my_list)</span><br><span class="line"></span><br><span class="line">        ##此时的函数的输入参数已经在上面进行了转换规则设置了</span><br><span class="line">        ret &#x3D; vc_func(my_array,array_len)</span><br><span class="line">        print(&quot;函数返回值: &quot;,ret)</span><br><span class="line"></span><br><span class="line">        ## 确认修改了数组的本身</span><br><span class="line">        my_array_list &#x3D; []</span><br><span class="line">    </span><br><span class="line">        for i in range(my_array._length_):</span><br><span class="line">            my_array_list.append(my_array[i])</span><br><span class="line"></span><br><span class="line">        print(&#39;数组新值：&#39;, my_array_list) #输出到屏幕</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    except OSError as e:</span><br><span class="line">        print(e,&quot;加载dll失败&quot;)</span><br><span class="line"></span><br><span class="line">###要注意dll生成的计算机是多少位  属性  配置管理器</span><br><span class="line">if __name__ &#x3D;&#x3D; &#39;__main__&#39;:</span><br><span class="line">    dll_path &#x3D; find_dll(&quot;.&#x2F;DemoDll.dll&quot;)</span><br><span class="line">    if dll_path:</span><br><span class="line">        load_dll(dll_path)</span><br></pre></td></tr></table></figure>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/%E5%8A%A8%E6%80%81%E5%BA%93/">动态库</a>
+		  
+			<a href="/tags/%E9%9D%99%E6%80%81%E5%BA%93/">静态库</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2021/09/27/Go%E5%8D%95%E6%B5%8B%E4%BB%8E%E9%9B%B6%E5%88%B0%E6%BA%9C%E7%B3%BB%E5%88%97/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">Go单测从零到溜系列</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2021/09/11/Go%EF%BC%9A%E8%AF%B4%E8%AF%B4fanIn%E5%92%8CfanOut%E6%A8%A1%E5%BC%8F/">
+        <span class="next-text nav-default">Go：说说fanIn和fanOut模式</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+      </footer>
+    
+  </article>
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2021
+    <span class="footer-author">Russshare.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

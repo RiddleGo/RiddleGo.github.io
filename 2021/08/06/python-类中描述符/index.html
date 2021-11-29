@@ -1,37 +1,231 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
-{% block page_class %}page-post-detail{% endblock %}
 
 
-{% block content %}
+  <meta name="description" content="python:类中描述符"/>
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
-    </div>
+
+
+  <meta name="keywords" content="描述符类," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+
+
+
+<link rel="canonical" href="https://riddlego.github.io/2021/08/06/python-类中描述符/"/>
+
+
+<meta name="description" content="原文来自这里哦 描述符（Descriptor）就是以特殊方法get(), set(), delete()的形式实现了三个核心的属性访问操作（set，get，delete）的类。 这些方法接受类实例作为输入来工作。之后，底层的实例字典会根据需要适当的进行调整。 要使用一个描述符，首先要创建一个描述符类，然后把描述符的实例放在类的定义中作为类变量来使用。事例如下： 123456789101112131">
+<meta property="og:type" content="article">
+<meta property="og:title" content="python:类中描述符">
+<meta property="og:url" content="https://riddlego.github.io/2021/08/06/python-%E7%B1%BB%E4%B8%AD%E6%8F%8F%E8%BF%B0%E7%AC%A6/index.html">
+<meta property="og:site_name" content="RiddleGo">
+<meta property="og:description" content="原文来自这里哦 描述符（Descriptor）就是以特殊方法get(), set(), delete()的形式实现了三个核心的属性访问操作（set，get，delete）的类。 这些方法接受类实例作为输入来工作。之后，底层的实例字典会根据需要适当的进行调整。 要使用一个描述符，首先要创建一个描述符类，然后把描述符的实例放在类的定义中作为类变量来使用。事例如下： 123456789101112131">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-08-06T06:43:44.000Z">
+<meta property="article:modified_time" content="2021-08-06T06:47:38.347Z">
+<meta property="article:author" content="Russshare">
+<meta property="article:tag" content="描述符类">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> python:类中描述符 - RiddleGo </title>
+  <meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">RiddleGo</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          python:类中描述符
+        
+      </h1>
+
+      <time class="post-time">
+          8月 06 2021
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <p><a target="_blank" rel="noopener" href="https://blog.csdn.net/jinxiaonian11/article/details/53728197?utm_medium=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~default-15.control&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~default-15.control">原文来自这里哦</a></p>
+<p>描述符（Descriptor）就是以特殊方法get(), set(), delete()的形式实现了三个核心的属性访问操作（set，get，delete）的类。</p>
+<p><strong>这些方法接受类实例作为输入来工作。之后，底层的实例字典会根据需要适当的进行调整。</strong></p>
+<p><strong>要使用一个描述符，首先要创建一个描述符类，然后把描述符的实例放在类的定义中作为类变量来使用。事例如下：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">#Descriptor attribute for an integer TYPE-checked attribute</span><br><span class="line">class Integer:</span><br><span class="line">    def __init__(self,name):</span><br><span class="line">        self.name &#x3D; name</span><br><span class="line"></span><br><span class="line">    def __get__(self,instance,cls):</span><br><span class="line">        if instance is None:</span><br><span class="line">            return self</span><br><span class="line">        else:</span><br><span class="line">            return instance.__dict__[self.name]</span><br><span class="line"></span><br><span class="line">    def __set__(self,instance,value):</span><br><span class="line">        if not isinstance(value,int):</span><br><span class="line">            raise TypeError(&#39;Expected an int&#39;)</span><br><span class="line">        instance.__dict__[self.name] &#x3D; value</span><br><span class="line"></span><br><span class="line">    def __delete__(self,instance):</span><br><span class="line">        del instance.__dict__[self.name]</span><br><span class="line"></span><br><span class="line">class Point:</span><br><span class="line">    x &#x3D; Integer(&#39;x&#39;)  #must be a class variable</span><br><span class="line">    y &#x3D; Integer(&#39;y&#39;)</span><br><span class="line">    def __init__(self,x,y):</span><br><span class="line">        self.x &#x3D; x</span><br><span class="line">        self.y &#x3D; y</span><br><span class="line"></span><br><span class="line">p &#x3D; Point(2,3)  </span><br><span class="line">print(p.x)</span><br><span class="line">print(p.y)</span><br><span class="line"></span><br><span class="line">p.x &#x3D; 5</span><br><span class="line">print(p.x)</span><br><span class="line">p.x &#x3D; &#39;r&#39;</span><br><span class="line">print(p.x)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">打印输出：</span><br><span class="line"> File &quot;D:&#x2F;home&#x2F;WX&#x2F;test_descriptor.py&quot;, line 33, in &lt;module&gt;</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">5</span><br><span class="line">Traceback (most recent call last):</span><br><span class="line">    p.x &#x3D; &#39;r&#39;</span><br><span class="line">  File &quot;D:&#x2F;home&#x2F;WX&#x2F;test_descriptor.py&quot;, line 14, in __set__</span><br><span class="line">    raise TypeError(&#39;Expected an int&#39;)</span><br><span class="line">TypeError: Expected an int</span><br></pre></td></tr></table></figure>
+<p>每一个描述符方法都会接受被操作的实例作为输入。要执行所请求的操作，底层的实例字典（即dict属性）会根据需要进行适当的调整。描述符的self.name属性会保存字典的键值，通过这些键可以找到储存在实例字典中的实例数据。（这就是python描述符运行机制，不好理解，但一定要多读去记住，很快就会理解）</p>
+<p>对于大多数python类的特性，描述符都提供了底层的魔法，包括@classmethod、<br>@staticmethod、@property 甚至是slot()。</p>
+<p>通过定义一个描述符，我们可以在很底层的情况下捕获关键的实例操作（get，set，delete），并且可以完全自定义这些操作行为。灵活运用操作符，会让程序变得更加简洁易懂。<br>关于操作符，我们必须有正确的理解，它们必须在类的层次上定义，不能根据实例来产生（很重要）。下面的代码无法工作：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">class Point:</span><br><span class="line">    def __init__(self,x,y):</span><br><span class="line">        self.x &#x3D; Integer(&#39;x&#39;)</span><br><span class="line">        self.y &#x3D; Integer(&#39;y&#39;)</span><br></pre></td></tr></table></figure>
+
+<p>另外，在我们的例子中看到，get()方法实现也复杂一些，因为实例变量和类变量是有区别的。如果以类变量的形式访问描述符，参数instance应该设为None。<br>这种情况下，标准的做法就是简单的返回描述符实例本身。<br>描述符常常作为一个组件出现在大型的编程框架中，其中还会涉及装饰器或者元类。正因为如此，对于描述符的使用可能隐藏很深，几乎看不到痕迹。例如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">#descriptor for a type_checked attribute</span><br><span class="line">class Typed:</span><br><span class="line">    def __init__(self,name,expected_type):</span><br><span class="line">        self.name &#x3D; name</span><br><span class="line">        self.expected_type &#x3D; expected_type</span><br><span class="line"></span><br><span class="line">    def __get__(self, instance, cls):</span><br><span class="line">        if instance is None:</span><br><span class="line">            return self</span><br><span class="line">        else:</span><br><span class="line">            return instance.__dict__[self.name]</span><br><span class="line"></span><br><span class="line">    def __set__(self,instance,value):</span><br><span class="line">        if not isinstance(value,self.expected_type):</span><br><span class="line">            raise TypeError(&#39;Expected&#39; + str(self.expected_type))</span><br><span class="line">        instance.__dict__[self.name] &#x3D; value</span><br><span class="line"></span><br><span class="line">    def __delete__(self, instance):</span><br><span class="line">        del instance.__dict__[self.name]</span><br><span class="line"></span><br><span class="line">#Class decorator that applies it to selected attribute</span><br><span class="line">def typeassert(**kwargs):</span><br><span class="line">    def decorate(cls):</span><br><span class="line">        for name,expected_type in kwargs.items():</span><br><span class="line">            #Attach a typed descripor to the class</span><br><span class="line">            setattr(cls,name,Typed(name,expected_type))</span><br><span class="line">        return cls</span><br><span class="line">    return decorate</span><br><span class="line">#Example use</span><br><span class="line">@typeassert(name&#x3D;str, shares&#x3D;int, price&#x3D;float)</span><br><span class="line">class Stock:</span><br><span class="line">    def __init__(self,name,shares,price):</span><br><span class="line">        self.name &#x3D; name</span><br><span class="line">        self.shares &#x3D; shares</span><br><span class="line">        self.price &#x3D; price</span><br><span class="line"></span><br><span class="line">a &#x3D; Stock(&#39;libai&#39;,5,5.4)</span><br><span class="line">a.name &#x3D; 3</span><br><span class="line"></span><br><span class="line">打印输出：</span><br><span class="line">Traceback (most recent call last):</span><br><span class="line">  File &quot;D:&#x2F;home&#x2F;WX&#x2F;test_descriptor.py&quot;, line 61, in &lt;module&gt;</span><br><span class="line">    a.name &#x3D; 3</span><br><span class="line">  File &quot;D:&#x2F;home&#x2F;WX&#x2F;test_descriptor.py&quot;, line 38, in __set__</span><br><span class="line">    raise TypeError(&#39;Expected&#39; + str(self.expected_type))</span><br><span class="line">TypeError: Expected&lt;class &#39;str&#39;&gt;</span><br></pre></td></tr></table></figure>
+
+<p><strong>最后，应该强调的是：如果只想访问某个特定的类中的一种属性，并且做一些自定义处理，那么最好不要编写描述符来实现。对于这样的任务，使用@property函数更加简单。针对于大量重用的代码的情况下，使用描述符更加有用（例如，我们需要在自己的代码中大量使用描述符提供的功能，或者将其作为库来使用）</strong></p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/%E6%8F%8F%E8%BF%B0%E7%AC%A6%E7%B1%BB/">描述符类</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2021/08/06/%E9%9D%A2%E8%AF%95%EF%BC%9ADocker/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">面试：Docker</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2021/08/06/python-offline-plot-Scatter-py-fig/">
+        <span class="next-text nav-default">python:offline.plot-Scatter-py_fig</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+      </footer>
+    
+  </article>
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2021
+    <span class="footer-author">Russshare.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

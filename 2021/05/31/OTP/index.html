@@ -1,37 +1,251 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
-{% block page_class %}page-post-detail{% endblock %}
 
 
-{% block content %}
+  <meta name="description" content="OTP"/>
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
-    </div>
+
+
+  <meta name="keywords" content="单片机,OTP,Pcap01," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+
+
+
+<link rel="canonical" href="https://riddlego.github.io/2021/05/31/OTP/"/>
+
+
+<meta name="description" content="前言：最近因为项目需求用到了一块测电容的集成芯片，但是这个芯片的中有个OTP，这玩意第一次见，不打算深入学习，但是既然集成了，那肯定是很有重要作用的，既然这样我们得知道它是干嘛的，以防以后有用，小菜鸟我表示这个算不算培养自己对技术的好奇心，积累自己的技术，这样才能在以后在合适的场景挑选合适的技术。（菜鸟不好意思多叨叨了开干） 文章来自两篇前辈写的现成的，我稍微集合一下。 1、OTP是什么OTP（O">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OTP">
+<meta property="og:url" content="https://riddlego.github.io/2021/05/31/OTP/index.html">
+<meta property="og:site_name" content="RiddleGo">
+<meta property="og:description" content="前言：最近因为项目需求用到了一块测电容的集成芯片，但是这个芯片的中有个OTP，这玩意第一次见，不打算深入学习，但是既然集成了，那肯定是很有重要作用的，既然这样我们得知道它是干嘛的，以防以后有用，小菜鸟我表示这个算不算培养自己对技术的好奇心，积累自己的技术，这样才能在以后在合适的场景挑选合适的技术。（菜鸟不好意思多叨叨了开干） 文章来自两篇前辈写的现成的，我稍微集合一下。 1、OTP是什么OTP（O">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-05-31T13:15:25.000Z">
+<meta property="article:modified_time" content="2021-05-31T13:16:28.000Z">
+<meta property="article:author" content="Russshare">
+<meta property="article:tag" content="单片机">
+<meta property="article:tag" content="OTP">
+<meta property="article:tag" content="Pcap01">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> OTP - RiddleGo </title>
+  <meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">RiddleGo</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          OTP
+        
+      </h1>
+
+      <time class="post-time">
+          5月 31 2021
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h3 id="前言："><a href="#前言：" class="headerlink" title="前言："></a>前言：</h3><p>最近因为项目需求用到了一块测电容的集成芯片，但是这个芯片的中有个OTP，这玩意第一次见，不打算深入学习，但是既然集成了，那肯定是很有重要作用的，既然这样我们得知道它是干嘛的，以防以后有用，小菜鸟我表示这个算不算培养自己对技术的好奇心，积累自己的技术，这样才能在以后在合适的场景挑选合适的技术。（菜鸟不好意思多叨叨了开干）</p>
+<p>文章来自两篇前辈写的现成的，我稍微集合一下。</p>
+<h3 id="1、OTP是什么"><a href="#1、OTP是什么" class="headerlink" title="1、OTP是什么"></a>1、OTP是什么</h3><p>OTP（One Time Programmable）是单片机的一种存储器类型,意思是一次性可编程：<strong>程序烧入单片机后，将不可再次更改和清除。</strong></p>
+<p>随着嵌入式应用的越来越广泛，产品的安全也显得越来越重要。一方面是为了保护硬件设计，另外一方面也是为了产品本身的安全，<strong>防止被HACKED.</strong></p>
+<p>根据存储器的不同可以把单片机分为OTP(一次性编程),FLSH和MASKE掩膜三种形式。</p>
+<h3 id="2、OTP加密模式原理"><a href="#2、OTP加密模式原理" class="headerlink" title="2、OTP加密模式原理"></a>2、OTP加密模式原理</h3><p>51类单片机在完成三级加密之后采用烧坏加密锁定位（把芯片内的硅片击穿），不破坏其它部分，不占用单片机任何资源。加密锁定位被烧坏后不再具有擦除特性。</p>
+<p><strong>一旦用OTP模式加密后，单片机片内的加密位和程序存储器内的数据就不能被再次擦除。</strong>（如上面所提到的）</p>
+<p>经过OTP加密之后通过编程器读取测试的时候会提示 部分引脚接触不良—–断脚。</p>
+<p>例如：烧断89c51的31脚 EA脚，烧断89C51、89C2051的数据线以及烧断PIC系列芯片的数据时钟线等。</p>
+<p><strong>这种加密方式会对一些通过数据位单片机解密的方式，造成一定的困难。</strong></p>
+<h3 id="3、为什么需要OTP？"><a href="#3、为什么需要OTP？" class="headerlink" title="3、为什么需要OTP？"></a>3、为什么需要OTP？</h3><p>在嵌入式系统当中，所有的代码和系统数据都是被存储在FLASH芯片内部的。<br><strong>FLASH芯片的特点是可多次擦写，而且掉电数据不会丢失。</strong></p>
+<p><strong>为了保护FLASH中的数据，越来越多的FLASH厂商在FLASH内部提供了一种特殊的寄存器：OTP寄存器。</strong></p>
+<p>OTP=One TimeProgrammable，意思是这个寄存器是只可以编程一次的，编程后就再也不可以修改了。</p>
+<h3 id="4、OTP操作的大概样子"><a href="#4、OTP操作的大概样子" class="headerlink" title="4、OTP操作的大概样子"></a>4、OTP操作的大概样子</h3><p>OTP寄存器和FLASH数据区域很类似，1能被改写为0，但0永远也不能写成1.如果有一个32位的OTP寄存器，出产的值是0xFFFFFFFF,如果用户通过编程，将OTP寄存器的值写为0xFFFFFFFE后，那OTP寄存器再也不能在改写为0xFFFFFFFF了；当然，这个OTP寄存器的值还可以改写为0xFFFFFFFC或其它。</p>
+<p><strong>（不知道这里是否难理解，我再啰嗦一下，这里就是只修改了最后一个位，其他的都还是保持原始的状态还没有修改，那我当然还可以再修改一次。）</strong></p>
+<p>为了给OTP寄存器提供保护，一般这类FLASH芯片还会提供一个LOCK寄存器。LOCK寄存器（同属OTP）也只能烧写一次。LOCK寄存器的每一位对应于一个OTP寄存器。<br><strong>（套娃，就是告诉你这如果部分flash的数据很重要，所以我要保护好它，我用了OTP。然后我还得保护好操作OTP的寄存器，那我就把操作它的的也保护好，所以LOCK就是拿来保护好OTP寄存器的）</strong></p>
+<p>如果与OTP寄存器对应LOCK寄存器的位（BIT）从1写为0，就意味着这个被锁住的OTP寄存器再也不能进行写操作了。即使OTP的当前值为0XFFFFFFFF，它的值也永远不可以被改写了。</p>
+<p><strong>通过OTP寄存器与LOCK寄存器，用户可以在OTP里保存一些特定的信息，例如软件版本号，硬件版本号，秘钥等信息。</strong><br>（这不就实例化了它的作用，你还能想到什么?）</p>
+<p>同时，这类FLASH芯片内部还会有另外一个OTP寄存器，这个寄存器在出产的时候就被厂家编程过了，写入特定的序列号，并LOCK住。</p>
+<p>如果有需要，FLASH厂商也可以根据客户的需要写入特定的序列号。这样，每个芯片都会有一个不一样的ID号，避免被复制。</p>
+<p>除了FLASH芯片，很多CPU厂商，也在CPU内部提供类似的OTP寄存器，供用户使用，利于开发更安全的应用。</p>
+<p>象一些比较大的厂商，例如TI，FREESCALE等，他们往往是不公开某些芯片的数据手册的。如果要获得他们的数据手册，一是要有大量的订货，同时也需要签署一定的保密协议。</p>
+<p>OTP本身并不能提供绝对安全的应用。但OTP的提供，有利于开发商开发和部署更安全的应用，保护自己和客户的利益。</p>
+<p>象很多大的厂商，例如NOKIA,MOTOROAL，SAMSUNG和SONYERRICSON等，都需要根据客户（运营商）的要求，开发一些只能在自己的网络里使用的手机。其中很多软件和硬件的保护都是基于OTP来实现的。</p>
+<h3 id="OTP的解密"><a href="#OTP的解密" class="headerlink" title="OTP的解密"></a>OTP的解密</h3><p>对于OTP芯片根据其存储器的特点，简单的方法就是想办法把密码去掉，因为OTP形式存储不能用电擦除，但是可以用紫外光来擦除，那么只要能控制好了只把密码部分擦除掉，而保留了程序段，那么这样的芯片就是不加密的了。<br>　　如果这样还没有办法，那么如果把芯片经过去层处理，把存储器进行拍照，因为代码是以电荷的码点形式存在的，然后把照片经过染色处理，把1和0区分读出整理，这样就得到了存储器里的代码。解密的方法和手段很多，以上只是简单的提了一下思路。</p>
+<p>文章主要内容来自：<br><a target="_blank" rel="noopener" href="http://www.pcb-sz.com/jswd/otpdanpianjijiamiyuanlijiotpdanpianjijiemijishu/">http://www.pcb-sz.com/jswd/otpdanpianjijiamiyuanlijiotpdanpianjijiemijishu/</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/yuanqiangfei/p/11915635.html">https://www.cnblogs.com/yuanqiangfei/p/11915635.html</a></p>
+<p><em><strong>以上就是本次的全部内容，希望对你有所帮助！！！</strong></em></p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/%E5%8D%95%E7%89%87%E6%9C%BA/">单片机</a>
+		  
+			<a href="/tags/OTP/">OTP</a>
+		  
+			<a href="/tags/Pcap01/">Pcap01</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2021/05/31/go%E5%AE%9E%E7%8E%B0%E5%B0%8F%E9%A1%B6%E5%A0%86%E5%A4%A7%E9%A1%B6%E5%A0%86/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">go实现小顶堆大顶堆</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2021/05/28/git%E5%85%A5%E9%97%A8/">
+        <span class="next-text nav-default">git入门</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+      </footer>
+    
+  </article>
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2021
+    <span class="footer-author">Russshare.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

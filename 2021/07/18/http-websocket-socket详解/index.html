@@ -1,37 +1,286 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
-{% block page_class %}page-post-detail{% endblock %}
 
 
-{% block content %}
+  <meta name="description" content="http-websocket-socket详解"/>
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
-    </div>
+
+
+  <meta name="keywords" content="http,websocket,socket," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+
+
+
+<link rel="canonical" href="https://riddlego.github.io/2021/07/18/http-websocket-socket详解/"/>
+
+
+<meta name="description" content="一,HTTP1,概念:http是目前应用最广泛的一个网络传输协议,是属于网络应用层的面向对象的协议. 1.1,HTTP1.1解决TCP3次握手4次挥手耗性能问题:如果有大量的连接,每次在连接,关闭时都要经历3次握手,4次挥手,这很显然会造成性能低下.因此,HTTP1.1开始,默认采用持久连接,使用了一种叫做keepalive connections 的机制,它可以在传输数据后仍然保持连接,当客户端">
+<meta property="og:type" content="article">
+<meta property="og:title" content="http-websocket-socket详解">
+<meta property="og:url" content="https://riddlego.github.io/2021/07/18/http-websocket-socket%E8%AF%A6%E8%A7%A3/index.html">
+<meta property="og:site_name" content="RiddleGo">
+<meta property="og:description" content="一,HTTP1,概念:http是目前应用最广泛的一个网络传输协议,是属于网络应用层的面向对象的协议. 1.1,HTTP1.1解决TCP3次握手4次挥手耗性能问题:如果有大量的连接,每次在连接,关闭时都要经历3次握手,4次挥手,这很显然会造成性能低下.因此,HTTP1.1开始,默认采用持久连接,使用了一种叫做keepalive connections 的机制,它可以在传输数据后仍然保持连接,当客户端">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/http13.png">
+<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/http14.png">
+<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/http15.png">
+<meta property="article:published_time" content="2021-07-18T09:31:27.000Z">
+<meta property="article:modified_time" content="2021-07-18T09:38:34.822Z">
+<meta property="article:author" content="Russshare">
+<meta property="article:tag" content="http">
+<meta property="article:tag" content="websocket">
+<meta property="article:tag" content="socket">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/http13.png">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> http-websocket-socket详解 - RiddleGo </title>
+  <meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">RiddleGo</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          http-websocket-socket详解
+        
+      </h1>
+
+      <time class="post-time">
+          7月 18 2021
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h3 id="一-HTTP"><a href="#一-HTTP" class="headerlink" title="一,HTTP"></a>一,HTTP</h3><h4 id="1-概念"><a href="#1-概念" class="headerlink" title="1,概念:"></a>1,概念:</h4><p>http是目前应用最广泛的一个网络传输协议,是属于网络应用层的面向对象的协议.</p>
+<h5 id="1-1-HTTP1-1解决TCP3次握手4次挥手耗性能问题"><a href="#1-1-HTTP1-1解决TCP3次握手4次挥手耗性能问题" class="headerlink" title="1.1,HTTP1.1解决TCP3次握手4次挥手耗性能问题:"></a>1.1,HTTP1.1解决TCP3次握手4次挥手耗性能问题:</h5><p>如果有大量的连接,每次在连接,关闭时都要经历3次握手,4次挥手,这很显然会造成性能低下.因此,HTTP1.1开始,默认采用持久连接,使用了一种叫做keepalive connections 的机制,它可以在传输数据后仍然保持连接,当客户端再次获取数据时,直接使用刚刚空闲下来的连接,而无需再次握手.低线路负载，提高传输速度.</p>
+<p>Keep-Alive不会永久保持连接，它有一个保持时间，可以在不同的服务器软件（如Apache）中设定这个时间。实现长连接需要客户端和服务端都支持长连接。</p>
+<h5 id="1-2-HTTP协议的长连接和短连接，实质上是TCP协议的长连接和短连接。"><a href="#1-2-HTTP协议的长连接和短连接，实质上是TCP协议的长连接和短连接。" class="headerlink" title="1.2,HTTP协议的长连接和短连接，实质上是TCP协议的长连接和短连接。"></a>1.2,HTTP协议的长连接和短连接，实质上是TCP协议的长连接和短连接。</h5><h5 id="1-3-TCP长连接："><a href="#1-3-TCP长连接：" class="headerlink" title="1.3,TCP长连接："></a>1.3,TCP长连接：</h5><p>client向server发起连接，server接受client连接，双方建立连接，client与server完成一次请求后，它们之间的连接并不会主动关闭，后续的读写操作会继续使用这个连接。</p>
+<h4 id="2-请求方式"><a href="#2-请求方式" class="headerlink" title="2,请求方式:"></a>2,请求方式:</h4><p>一共有8种请求方式,常用的请求方法有OPTIONS、GET、HEAD、POST、PUT、DELETE、TRACE</p>
+<h4 id="3-返回码"><a href="#3-返回码" class="headerlink" title="3,返回码:"></a>3,返回码:</h4><p>每次请求,都会有状态码返回,常见的状态码有:</p>
+<p>200,请求成功</p>
+<p>206,请求内容局部成功</p>
+<p>403，拒绝或者禁止访问</p>
+<p>404,客户端请求语法错误,一般是连接地址不对.</p>
+<p>500,服务器出现异常.宕机.</p>
+<h4 id="4-Http是客服端发起请求-服务端才响应"><a href="#4-Http是客服端发起请求-服务端才响应" class="headerlink" title="4,Http是客服端发起请求,服务端才响应"></a>4,Http是客服端发起请求,服务端才响应</h4><p>发一次,响应一下,ajax的轮询，也是让浏览器隔个几秒就发送一次请求，询问服务器是否有新信息。这样就很被动,服务端不能主动联系客户端，只能由客户端发起。得不停的发起.</p>
+<h3 id="二-websocket"><a href="#二-websocket" class="headerlink" title="二,websocket"></a>二,websocket</h3><h4 id="1-WebSocket就很好的解决被动性问题"><a href="#1-WebSocket就很好的解决被动性问题" class="headerlink" title="1,WebSocket就很好的解决被动性问题,"></a>1,WebSocket就很好的解决被动性问题,</h4><p>WebSocket就很好的解决被动性问题,只需要完成一次握手，两者之间就直接可以创建持久性的连接，并进行双向数据传输。<strong>不用再次发起网络请求</strong>,服务端有消息就会自己发过来.<strong>它允许服务端主动向客户端推送数据</strong>。比如在app上websocket获取并展示客户的时时消费情况.</p>
+<h4 id="2-WebSocket同HTTP一样也是应用层的协议"><a href="#2-WebSocket同HTTP一样也是应用层的协议" class="headerlink" title="2,WebSocket同HTTP一样也是应用层的协议."></a>2,WebSocket同HTTP一样也是应用层的协议.</h4><p>都是基于TCP的，可靠性的传输协议。但是它是一种双向通信协议，<strong>是建立在TCP之上的</strong>,<strong>并且Websocket是一个持久化的协议</strong>，<strong>而HTTP是非持久化的协议</strong>。<strong>WebSocket</strong> <strong>protocol</strong> <strong>是HTML5一种新的协议</strong>,<strong>但Websocket是基于HTTP协议的</strong>，或者说借用了HTTP的协议来完成一部分握手。<strong>一开始的握手需要借助HTTP请求完成</strong>。 </p>
+<h4 id="3-WebSocket在建立握手时，"><a href="#3-WebSocket在建立握手时，" class="headerlink" title="3,WebSocket在建立握手时，"></a>3,WebSocket在建立握手时，</h4><p>WebSocket在建立握手时。通过 HTTP/1.1 协议的101状态码进行握手。但是建立之后，在真正传输时候是不需要HTTP协议的,而是使用TCP协议.</p>
+<h4 id="4-Websocket使用ws或wss的统一资源标志符，类似于HTTPS，其中wss表示在TLS之上的Websocket"><a href="#4-Websocket使用ws或wss的统一资源标志符，类似于HTTPS，其中wss表示在TLS之上的Websocket" class="headerlink" title="4,Websocket使用ws或wss的统一资源标志符，类似于HTTPS，其中wss表示在TLS之上的Websocket"></a>4,Websocket使用ws或wss的统一资源标志符，类似于HTTPS，其中wss表示在TLS之上的Websocket</h4><h4 id="5-Websocket使用和-HTTP-相同的-TCP-端口，可以绕过大多数防火墙的限制。默认情况下，Websocket协议使用80端口；运行在TLS之上时，默认使用443端口。"><a href="#5-Websocket使用和-HTTP-相同的-TCP-端口，可以绕过大多数防火墙的限制。默认情况下，Websocket协议使用80端口；运行在TLS之上时，默认使用443端口。" class="headerlink" title="5,Websocket使用和 HTTP 相同的 TCP 端口，可以绕过大多数防火墙的限制。默认情况下，Websocket协议使用80端口；运行在TLS之上时，默认使用443端口。"></a>5,Websocket使用和 HTTP 相同的 TCP 端口，可以绕过大多数防火墙的限制。默认情况下，Websocket协议使用80端口；运行在TLS之上时，默认使用443端口。</h4><h4 id="6-优点"><a href="#6-优点" class="headerlink" title="6,优点:"></a>6,优点:</h4><p>实时性更强,很好的控制开销(协议的头部较小),保持连接.</p>
+<h3 id="三-socket"><a href="#三-socket" class="headerlink" title="三,socket"></a>三,socket</h3><h4 id="1-概念-1"><a href="#1-概念-1" class="headerlink" title="1,概念:"></a>1,概念:</h4><p>Socket其实并不是一个协议，而是为了方便使用TCP或UDP而抽象出来的一层，是位于应用层和传输控制层之间的一组接口.</p>
+<h5 id="1-1"><a href="#1-1" class="headerlink" title="1.1"></a>1.1</h5><p>在程序内部提供了与外界通信的端口,也就是端口通信.它通过建立socket连接,可以为通信双方的数据传输提供一个通道</p>
+<h5 id="1-2"><a href="#1-2" class="headerlink" title="1.2"></a>1.2</h5><p>它是应用层与TCP/IP协议族通信的中间软件抽象层，是一组接口。在设计模式中，Socket其实就是一个门面模式，它把复杂的TCP/IP协议族隐藏在Socket接口后面，对用户来说，一组简单的接口就是全部，让Socket去组织数据，以符合指定的协议。</p>
+<h4 id="2"><a href="#2" class="headerlink" title="2,"></a>2,</h4><p>当两台主机通信时，必须通过Socket连接，Socket则利用TCP/IP协议建立TCP连接。TCP连接则更依靠于底层的IP协议，IP协议的连接则依赖于链路层等更低层次。</p>
+<h4 id="3"><a href="#3" class="headerlink" title="3"></a>3</h4><p>和机顶盒通信可以采用socket(自己决定采用udp的scoket还是tcp的socket,一般采用的是tcp的socket)</p>
+<h4 id="4-Socket的分类"><a href="#4-Socket的分类" class="headerlink" title="4, Socket的分类"></a>4, Socket的分类</h4><h5 id="4-1-根据不同的的底层协议，Socket的实现是多样化的-这里只介绍TCP-IP协议族的内容"><a href="#4-1-根据不同的的底层协议，Socket的实现是多样化的-这里只介绍TCP-IP协议族的内容" class="headerlink" title="4.1, 根据不同的的底层协议，Socket的实现是多样化的.这里只介绍TCP/IP协议族的内容."></a>4.1, 根据不同的的底层协议，Socket的实现是多样化的.这里只介绍TCP/IP协议族的内容.</h5><h5 id="4-2-在这个协议族当中主要的Socket类型为流套接字（streamsocket）和数据报套接字-datagramsocket-。"><a href="#4-2-在这个协议族当中主要的Socket类型为流套接字（streamsocket）和数据报套接字-datagramsocket-。" class="headerlink" title="4.2,在这个协议族当中主要的Socket类型为流套接字（streamsocket）和数据报套接字(datagramsocket)。"></a>4.2,在这个协议族当中主要的Socket类型为流套接字（streamsocket）和数据报套接字(datagramsocket)。</h5><h5 id="4-3-流套接字将TCP作为其端对端协议，提供了一个可信赖的字节流服务。"><a href="#4-3-流套接字将TCP作为其端对端协议，提供了一个可信赖的字节流服务。" class="headerlink" title="4.3,流套接字将TCP作为其端对端协议，提供了一个可信赖的字节流服务。"></a>4.3,流套接字将TCP作为其端对端协议，提供了一个可信赖的字节流服务。</h5><h5 id="4-4-数据报套接字使用UDP协议，提供数据打包发送服务。-下面，"><a href="#4-4-数据报套接字使用UDP协议，提供数据打包发送服务。-下面，" class="headerlink" title="4.4,数据报套接字使用UDP协议，提供数据打包发送服务。 下面，"></a>4.4,数据报套接字使用UDP协议，提供数据打包发送服务。 下面，</h5><h4 id="5-tcp的scoket和udp的socket的区别"><a href="#5-tcp的scoket和udp的socket的区别" class="headerlink" title="5,tcp的scoket和udp的socket的区别"></a>5,tcp的scoket和udp的socket的区别</h4><p>使用UDP方式android端和服务器端接收可以看出，其实android端和服务器端的发送和接收大庭相径，只要端口号正确了，相互通信就没有问题，</p>
+<p>TCP使用的是流的方式发送，UDP是以包的形式发送。</p>
+<p> <img src="https://gitee.com/psycho1900/miss-reddle/raw/master/http13.png"><br> <img src="https://gitee.com/psycho1900/miss-reddle/raw/master/http14.png"><br> <img src="https://gitee.com/psycho1900/miss-reddle/raw/master/http15.png">         </p>
+<h3 id="四-总计"><a href="#四-总计" class="headerlink" title="四,总计:"></a>四,总计:</h3><p>1,传输层的TCP是基于网络层的IP协议的，<br>2,而应用层的HTTP协议又是基于传输层的TCP协议的，<br>3,而Socket本身不算是协议，就像上面所说，它只是提供了一个针对TCP或者UDP编程的接口.</p>
+<h4 id="二-websocket-和socket区别"><a href="#二-websocket-和socket区别" class="headerlink" title="(二)websocket 和socket区别"></a>(二)websocket 和socket区别</h4><pre><code>1,websocket是应用层的协议,而socket是传输控制层的协议.  
+</code></pre>
+<h4 id="三-websocket-和http区别"><a href="#三-websocket-和http区别" class="headerlink" title="(三)websocket 和http区别"></a>(三)websocket 和http区别</h4><p> 相同点:</p>
+<p>   1,都是应用层的协议</p>
+<p>   2,都是基于tcp,并且都是可靠的协议</p>
+<p>不同点:</p>
+<pre><code>1,websocket是持久连接的协议,而http是非持久连接的协议.
+
+2,websocket是双向通信协议,模拟socket协议,可以双向发送消息,而http是单向的.
+
+3,websocket的服务端可以主动向客服端发送信息,而http的服务端只有在客户端发起请求时才能发送数据,无法主动向客户端发送信息.
+</code></pre>
+<h4 id="四-HTTPS和HTTP的区别主要为以下四点："><a href="#四-HTTPS和HTTP的区别主要为以下四点：" class="headerlink" title="(四)HTTPS和HTTP的区别主要为以下四点："></a>(四)HTTPS和HTTP的区别主要为以下四点：</h4><p>1、https协议需要到ca申请证书，一般免费证书很少，需要交费。</p>
+<p>2、http是超文本传输协议，信息是明文传输，https 则是具有安全性的ssl加密传输协议。</p>
+<p>3、http和https使用的是完全不同的连接方式，用的端口也不一样，前者是80，后者是443。</p>
+<p>4、http的连接很简单，是无状态的；HTTPS协议是由SSL+HTTP协议构建的可进行加密传输、身份认证的网络协议，比http协议安全。</p>
+<h3 id="五-长连接和短连接"><a href="#五-长连接和短连接" class="headerlink" title="五,长连接和短连接"></a>五,长连接和短连接</h3><pre><code>   1,短连接：在HTTP1.0中，客户端发送请求，服务器接收请求，双方建立连接，服务器响应资源，请求结束。
+
+   2,长连接：在HTTP 1.1，客户端发出请求，服务端接收请求，双方建立连接，在服务端没有返回之前保持连接，当客户端再发送请求时，它会使用同一个连接。这一直继续到客户端或服务器端认为会话已经结束，其中一方中断连接。
+
+   优势：减少了连接请求，降低TCP阻塞，减少了延迟，实时性较好。
+
+   劣势：可能会影响性能，因为它在文件被请求之后还保持了不必要的连接很长时间。
+</code></pre>
+<p>借鉴:</p>
+<p>WebSocket介绍，与Socket的区别</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/wwd0501/article/details/54582912">https://blog.csdn.net/wwd0501/article/details/54582912</a></p>
+<p>看完让你彻底搞懂Websocket原理</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/frank_good/article/details/50856585">https://blog.csdn.net/frank_good/article/details/50856585</a></p>
+<p>WebSocket介绍，与Socket的区别</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/wwd0501/article/details/54582912">https://blog.csdn.net/wwd0501/article/details/54582912</a></p>
+<p>长连接、短连接、长轮询和WebSocket</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/sweetsuzyhyf/article/details/60572795">https://blog.csdn.net/sweetsuzyhyf/article/details/60572795</a><br>————————————————</p>
+<p>原文链接：<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_38859786/article/details/80523642">https://blog.csdn.net/qq_38859786/article/details/80523642</a></p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/http/">http</a>
+		  
+			<a href="/tags/websocket/">websocket</a>
+		  
+			<a href="/tags/socket/">socket</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2021/07/18/http%E8%AF%B7%E6%B1%82%E5%A4%B4%E4%B8%ADReferer%E7%9A%84%E5%90%AB%E4%B9%89%E5%92%8C%E4%BD%9C%E7%94%A8/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">http请求头中Referer的含义和作用</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2021/07/14/%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95%E4%B8%8E%E5%9F%BA%E5%87%86%E6%B5%8B%E8%AF%95%EF%BC%88%E5%8D%81%E4%BA%8C%EF%BC%89/">
+        <span class="next-text nav-default"></span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+      </footer>
+    
+  </article>
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2021
+    <span class="footer-author">Russshare.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

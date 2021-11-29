@@ -1,23 +1,463 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
 
-{% block title %}{{ config.title }}{% if theme.index_with_subtitle and config.subtitle %} - {{config.subtitle }}{% endif %}{% endblock %}
 
-{% block page_class %}
-  {% if is_home() %}page-home{% endif -%}
-{% endblock %}
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
-{% block content %}
-  <section id="posts" class="posts-expand">
-    {% for post in page.posts %}
-      {{ post_template.render(post, true) }}
-    {% endfor %}
-  </section>
 
-  {% include '_partials/pagination.swig' %}
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(false) }}
-{% endblock %}
+  <meta name="description" content="听风说你来自远方"/>
+
+
+
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+
+
+
+<link rel="canonical" href="https://riddlego.github.io/page/10/"/>
+
+
+<meta name="description" content="听风说你来自远方">
+<meta property="og:type" content="website">
+<meta property="og:title" content="RiddleGo">
+<meta property="og:url" content="https://riddlego.github.io/page/10/index.html">
+<meta property="og:site_name" content="RiddleGo">
+<meta property="og:description" content="听风说你来自远方">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:author" content="Russshare">
+<meta property="article:tag" content="zh-Hans">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> RiddleGo - 听风说你来自远方</title>
+  <meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">RiddleGo</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary" class="home">
+        
+            
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          <a class="post-link" href="/2021/08/06/%E9%9D%A2%E8%AF%95%EF%BC%9ADocker/">面试：Docker</a>
+        
+      </h1>
+
+      <time class="post-time">
+          8月 06 2021
+      </time>
+    </header>
+
+
+
+    
+        <div class="post-excerpt post-content">
+            
+            
+
+            
+          
+
+    
+  </article>
+
+        
+            
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          <a class="post-link" href="/2021/08/06/python-%E7%B1%BB%E4%B8%AD%E6%8F%8F%E8%BF%B0%E7%AC%A6/">python:类中描述符</a>
+        
+      </h1>
+
+      <time class="post-time">
+          8月 06 2021
+      </time>
+    </header>
+
+
+
+    
+        <div class="post-excerpt post-content">
+            
+            
+
+            
+          
+
+    
+  </article>
+
+        
+            
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          <a class="post-link" href="/2021/08/06/python-offline-plot-Scatter-py-fig/">python:offline.plot-Scatter-py_fig</a>
+        
+      </h1>
+
+      <time class="post-time">
+          8月 06 2021
+      </time>
+    </header>
+
+
+
+    
+        <div class="post-excerpt post-content">
+            
+            
+
+            
+          
+
+    
+  </article>
+
+        
+            
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          <a class="post-link" href="/2021/08/06/python-%E5%87%BD%E6%95%B0%E4%B8%AD%E7%9A%84self/">python:函数中的self</a>
+        
+      </h1>
+
+      <time class="post-time">
+          8月 06 2021
+      </time>
+    </header>
+
+
+
+    
+        <div class="post-excerpt post-content">
+            
+            
+
+            
+          
+
+    
+  </article>
+
+        
+            
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          <a class="post-link" href="/2021/08/06/python-if-name-main/">__name__==__main__</a>
+        
+      </h1>
+
+      <time class="post-time">
+          8月 06 2021
+      </time>
+    </header>
+
+
+
+    
+        <div class="post-excerpt post-content">
+            
+            
+
+            
+          
+
+    
+  </article>
+
+        
+            
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          <a class="post-link" href="/2021/08/06/python-init-%E5%87%BD%E6%95%B0%E7%9A%84%E6%84%8F%E4%B9%89/">python:__init__函数的意义</a>
+        
+      </h1>
+
+      <time class="post-time">
+          8月 06 2021
+      </time>
+    </header>
+
+
+
+    
+        <div class="post-excerpt post-content">
+            
+            
+
+            
+          
+
+    
+  </article>
+
+        
+            
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          <a class="post-link" href="/2021/08/06/python-init-py%E6%96%87%E4%BB%B6%E7%9A%84%E6%84%8F%E4%B9%89/">python:__init__.py文件的意义</a>
+        
+      </h1>
+
+      <time class="post-time">
+          8月 06 2021
+      </time>
+    </header>
+
+
+
+    
+        <div class="post-excerpt post-content">
+            
+            
+
+            
+          
+
+    
+  </article>
+
+        
+            
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          <a class="post-link" href="/2021/08/06/python-%E5%87%BD%E6%95%B0/">python:函数</a>
+        
+      </h1>
+
+      <time class="post-time">
+          8月 06 2021
+      </time>
+    </header>
+
+
+
+    
+        <div class="post-excerpt post-content">
+            
+            
+
+            
+          
+
+    
+  </article>
+
+        
+            
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          <a class="post-link" href="/2021/08/06/python-%E5%9F%BA%E7%A1%80%E7%9A%84%E5%8F%98%E9%87%8F-%E5%8F%98%E9%87%8F%E5%AF%B9%E5%BA%94%E7%9A%84%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0/">python:基础的变量+变量对应的常用函数</a>
+        
+      </h1>
+
+      <time class="post-time">
+          8月 06 2021
+      </time>
+    </header>
+
+
+
+    
+        <div class="post-excerpt post-content">
+            
+            
+
+            
+          
+
+    
+  </article>
+
+        
+            
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          <a class="post-link" href="/2021/08/06/python-multiprocessing/">python:multiprocessing</a>
+        
+      </h1>
+
+      <time class="post-time">
+          8月 06 2021
+      </time>
+    </header>
+
+
+
+    
+        <div class="post-excerpt post-content">
+            
+            
+
+            
+          
+
+    
+  </article>
+
+        
+        
+  <nav class="pagination">
+    
+      <a class="prev" href="/page/9/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/page/11/">
+        <span class="next-text">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+    </div>
+    <div id="secondary">
+    
+
+    
+
+    
+    <section id="tags" class="widget-area widget_tags">
+        <h3 class="widget-title">Tags</h3>
+        <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%88%92%E7%83%9F/" rel="tag">戒烟</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/5G/" rel="tag">5G</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AD7747/" rel="tag">AD7747</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CC2530/" rel="tag">CC2530</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B5%8B%E7%94%B5%E5%AE%B9/" rel="tag">测电容</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android-Studio/" rel="tag">Android Studio</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bug/" rel="tag">Bug</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/APP/" rel="tag">APP</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/BLE/" rel="tag">BLE</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a><span class="tag-list-count">1</span></li></ul>
+    </section>
+
+
+</div>
+
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2021
+    <span class="footer-author">Russshare.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

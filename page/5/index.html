@@ -1,23 +1,463 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
 
-{% block title %}{{ config.title }}{% if theme.index_with_subtitle and config.subtitle %} - {{config.subtitle }}{% endif %}{% endblock %}
 
-{% block page_class %}
-  {% if is_home() %}page-home{% endif -%}
-{% endblock %}
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
-{% block content %}
-  <section id="posts" class="posts-expand">
-    {% for post in page.posts %}
-      {{ post_template.render(post, true) }}
-    {% endfor %}
-  </section>
 
-  {% include '_partials/pagination.swig' %}
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(false) }}
-{% endblock %}
+  <meta name="description" content="听风说你来自远方"/>
+
+
+
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+
+
+
+<link rel="canonical" href="https://riddlego.github.io/page/5/"/>
+
+
+<meta name="description" content="听风说你来自远方">
+<meta property="og:type" content="website">
+<meta property="og:title" content="RiddleGo">
+<meta property="og:url" content="https://riddlego.github.io/page/5/index.html">
+<meta property="og:site_name" content="RiddleGo">
+<meta property="og:description" content="听风说你来自远方">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:author" content="Russshare">
+<meta property="article:tag" content="zh-Hans">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> RiddleGo - 听风说你来自远方</title>
+  <meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">RiddleGo</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary" class="home">
+        
+            
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          <a class="post-link" href="/2021/09/01/%E8%AF%B7%E5%8B%BF%E6%BB%A5%E7%94%A8goroutine/">请勿滥用goroutine</a>
+        
+      </h1>
+
+      <time class="post-time">
+          9月 01 2021
+      </time>
+    </header>
+
+
+
+    
+        <div class="post-excerpt post-content">
+            
+            
+
+            
+          
+
+    
+  </article>
+
+        
+            
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          <a class="post-link" href="/2021/09/01/%E4%B8%87%E5%AD%97%E6%80%BB%E7%BB%93Redis%E7%9F%A5%E8%AF%86%E7%82%B9/">万字总结Redis知识点</a>
+        
+      </h1>
+
+      <time class="post-time">
+          9月 01 2021
+      </time>
+    </header>
+
+
+
+    
+        <div class="post-excerpt post-content">
+            
+            
+
+            
+          
+
+    
+  </article>
+
+        
+            
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          <a class="post-link" href="/2021/09/01/RLock%E8%BF%87%E7%A8%8B%E8%A2%AB%E8%B0%83%E5%87%BA%E7%9A%84%E6%82%B2%E5%89%A7%EF%BC%9F/">RLock过程被调出的悲剧？</a>
+        
+      </h1>
+
+      <time class="post-time">
+          9月 01 2021
+      </time>
+    </header>
+
+
+
+    
+        <div class="post-excerpt post-content">
+            
+            
+
+            
+          
+
+    
+  </article>
+
+        
+            
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          <a class="post-link" href="/2021/09/01/%E6%95%B0%E7%BB%84int%E8%83%BD%E8%BD%AC%E6%8D%A2%E4%B8%BA%E6%95%B0%E7%BB%84interface%E5%90%97%EF%BC%9F/">数组int能转换为数组interface吗？</a>
+        
+      </h1>
+
+      <time class="post-time">
+          9月 01 2021
+      </time>
+    </header>
+
+
+
+    
+        <div class="post-excerpt post-content">
+            
+            
+
+            
+          
+
+    
+  </article>
+
+        
+            
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          <a class="post-link" href="/2021/09/01/%E6%8E%A8%E8%8D%90%E4%B8%89%E4%B8%AAGo%E5%AE%9E%E6%88%98%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/">推荐三个Go实战开源项目</a>
+        
+      </h1>
+
+      <time class="post-time">
+          9月 01 2021
+      </time>
+    </header>
+
+
+
+    
+        <div class="post-excerpt post-content">
+            
+            
+
+            
+          
+
+    
+  </article>
+
+        
+            
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          <a class="post-link" href="/2021/09/01/Go%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98%EF%BC%9A%E4%BB%8E%E9%9B%B6%E6%9E%84%E5%BB%BA%E4%B8%80%E4%B8%AA%E5%B9%B6%E5%8F%91%E6%96%87%E4%BB%B6%E4%B8%8B%E8%BD%BD%E5%99%A8/">Go项目实战：从零构建一个并发文件下载器</a>
+        
+      </h1>
+
+      <time class="post-time">
+          9月 01 2021
+      </time>
+    </header>
+
+
+
+    
+        <div class="post-excerpt post-content">
+            
+            
+
+            
+          
+
+    
+  </article>
+
+        
+            
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          <a class="post-link" href="/2021/09/01/Go%E4%B8%AD%E7%9A%84%E5%B9%B6%E5%8F%91-bug-%E5%9C%A8%E7%9C%9F%E5%AE%9E%E5%9C%BA%E6%99%AF%E7%9A%84%E6%83%85%E5%86%B5%E5%88%86%E6%9E%90/">Go中的并发-bug-在真实场景的情况分析</a>
+        
+      </h1>
+
+      <time class="post-time">
+          9月 01 2021
+      </time>
+    </header>
+
+
+
+    
+        <div class="post-excerpt post-content">
+            
+            
+
+            
+          
+
+    
+  </article>
+
+        
+            
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          <a class="post-link" href="/2021/09/01/Go%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE%E6%8E%A8%E8%8D%90%EF%BC%9AHTTP%E8%AF%B7%E6%B1%82%E6%97%B6%E9%97%B4%E8%8A%B1%E5%9C%A8%E5%93%AA/">Go开源项目推荐：HTTP请求时间花在哪</a>
+        
+      </h1>
+
+      <time class="post-time">
+          9月 01 2021
+      </time>
+    </header>
+
+
+
+    
+        <div class="post-excerpt post-content">
+            
+            
+
+            
+          
+
+    
+  </article>
+
+        
+            
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          <a class="post-link" href="/2021/09/01/%E9%80%9A%E8%BF%87%E5%AE%9E%E4%BE%8B%E7%90%86%E8%A7%A3Go%E9%80%83%E9%80%B8%E5%88%86%E6%9E%90/">通过实例理解Go逃逸分析</a>
+        
+      </h1>
+
+      <time class="post-time">
+          9月 01 2021
+      </time>
+    </header>
+
+
+
+    
+        <div class="post-excerpt post-content">
+            
+            
+
+            
+          
+
+    
+  </article>
+
+        
+            
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          <a class="post-link" href="/2021/08/31/%E7%BC%96%E5%86%99%E4%B8%8E%E4%BC%98%E5%8C%96Go%E4%BB%A3%E7%A0%81-I/">编写与优化Go代码---I</a>
+        
+      </h1>
+
+      <time class="post-time">
+          8月 31 2021
+      </time>
+    </header>
+
+
+
+    
+        <div class="post-excerpt post-content">
+            
+            
+
+            
+          
+
+    
+  </article>
+
+        
+        
+  <nav class="pagination">
+    
+      <a class="prev" href="/page/4/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/page/6/">
+        <span class="next-text">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+    </div>
+    <div id="secondary">
+    
+
+    
+
+    
+    <section id="tags" class="widget-area widget_tags">
+        <h3 class="widget-title">Tags</h3>
+        <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%88%92%E7%83%9F/" rel="tag">戒烟</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/5G/" rel="tag">5G</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AD7747/" rel="tag">AD7747</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CC2530/" rel="tag">CC2530</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B5%8B%E7%94%B5%E5%AE%B9/" rel="tag">测电容</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android-Studio/" rel="tag">Android Studio</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bug/" rel="tag">Bug</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/APP/" rel="tag">APP</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/BLE/" rel="tag">BLE</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a><span class="tag-list-count">1</span></li></ul>
+    </section>
+
+
+</div>
+
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2021
+    <span class="footer-author">Russshare.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

@@ -1,37 +1,224 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
-{% block page_class %}page-post-detail{% endblock %}
 
 
-{% block content %}
+  <meta name="description" content="手写中间件"/>
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
-    </div>
+
+
+  <meta name="keywords" content="golang,gin,中间件," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+
+
+
+<link rel="canonical" href="https://riddlego.github.io/2021/06/21/手写中间件/"/>
+
+
+<meta name="description" content="前言前段时间看golang面试题，在看gin框架的时候 看到了这个，于是写了个小代码，体验一下思想。 12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576777879">
+<meta property="og:type" content="article">
+<meta property="og:title" content="手写中间件">
+<meta property="og:url" content="https://riddlego.github.io/2021/06/21/%E6%89%8B%E5%86%99%E4%B8%AD%E9%97%B4%E4%BB%B6/index.html">
+<meta property="og:site_name" content="RiddleGo">
+<meta property="og:description" content="前言前段时间看golang面试题，在看gin框架的时候 看到了这个，于是写了个小代码，体验一下思想。 12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576777879">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-06-21T10:37:17.000Z">
+<meta property="article:modified_time" content="2021-08-26T10:10:08.297Z">
+<meta property="article:author" content="Russshare">
+<meta property="article:tag" content="golang">
+<meta property="article:tag" content="gin">
+<meta property="article:tag" content="中间件">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> 手写中间件 - RiddleGo </title>
+  <meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">RiddleGo</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          手写中间件
+        
+      </h1>
+
+      <time class="post-time">
+          6月 21 2021
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <p><strong>前言</strong><br>前段时间看golang面试题，在看gin框架的时候 看到了这个，于是写了个小代码，体验一下思想。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">	&quot;fmt&quot;</span><br><span class="line">	&quot;math&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">const aboartIndex int8 &#x3D; math.MaxInt8 &#x2F; 2</span><br><span class="line"></span><br><span class="line">type Context struct &#123;</span><br><span class="line">	handlers []func(c *Context)</span><br><span class="line">	index    int8</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func (this *Context) Use(f func(c *Context)) &#123;</span><br><span class="line">	this.handlers &#x3D; append(this.handlers, f)</span><br><span class="line">&#125;</span><br><span class="line">func (this *Context) GET(path string, f func(c *Context)) &#123;</span><br><span class="line">	this.handlers &#x3D; append(this.handlers, f)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func (this *Context) Abort() &#123;</span><br><span class="line">	this.index &#x3D; aboartIndex</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func (this *Context) Next() &#123;</span><br><span class="line"></span><br><span class="line">	if this.index &lt; int8(len(this.handlers)) &#123;</span><br><span class="line">		this.index++</span><br><span class="line">		this.handlers[this.index](this) &#x2F;&#x2F;剥下一层洋葱</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func (this *Context) Run() &#123; &#x2F;&#x2F;剥洋葱，第一层洋葱</span><br><span class="line">	this.handlers[0](this)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line">	c :&#x3D; &amp;Context&#123;&#125;</span><br><span class="line">	c.Use(Middleware1())</span><br><span class="line">	c.Use(Middleware2())</span><br><span class="line">	c.Use(Middleware3())</span><br><span class="line">	c.GET(&quot;&#x2F;&quot;, func(c *Context) &#123;</span><br><span class="line">		fmt.Println(&quot;GET handler func&quot;)</span><br><span class="line">	&#125;)</span><br><span class="line">	c.Run()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;中间件1</span><br><span class="line">func Middleware1() func(c *Context) &#123;</span><br><span class="line">	return func(c *Context) &#123;</span><br><span class="line">		fmt.Println(&quot;0idd1&quot;)</span><br><span class="line">		c.Abort()</span><br><span class="line">		c.Next() &#x2F;&#x2F;剥洋葱</span><br><span class="line">		fmt.Println(&quot;midd1-- end &quot;)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;中间件1</span><br><span class="line">func Middleware2() func(c *Context) &#123;</span><br><span class="line">	return func(c *Context) &#123;</span><br><span class="line">		fmt.Println(&quot;midd2&quot;)</span><br><span class="line">		c.Next() &#x2F;&#x2F;剥洋葱</span><br><span class="line">		fmt.Println(&quot;midd2-- end &quot;)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func Middleware3() func(c *Context) &#123;</span><br><span class="line">	return func(c *Context) &#123;</span><br><span class="line">		fmt.Println(&quot;midd3&quot;)</span><br><span class="line">		c.Next() &#x2F;&#x2F;剥洋葱</span><br><span class="line">		fmt.Println(&quot;midd3-- end &quot;)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 执行结果</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; midd1</span><br><span class="line">&#x2F;&#x2F; midd2</span><br><span class="line">&#x2F;&#x2F; GET handler func</span><br><span class="line">&#x2F;&#x2F; midd2-- end</span><br><span class="line">&#x2F;&#x2F; midd1-- end</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;修改后 运行结果</span><br><span class="line">&#x2F;&#x2F; midd1 midd2</span><br><span class="line">&#x2F;&#x2F; midd2-- end</span><br><span class="line">&#x2F;&#x2F; midd1-- end</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/golang/">golang</a>
+		  
+			<a href="/tags/gin/">gin</a>
+		  
+			<a href="/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6/">中间件</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2021/06/21/MD5-hash%E7%9A%84%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">MD5_hash的原理与实现</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2021/05/31/go%E8%AF%AD%E8%A8%80%E7%9A%84%E6%A0%87%E5%87%86%E5%BA%93container-1-list/">
+        <span class="next-text nav-default">go语言的标准库container-1-list</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+      </footer>
+    
+  </article>
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2021
+    <span class="footer-author">Russshare.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

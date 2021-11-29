@@ -1,37 +1,470 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
-{% block page_class %}page-post-detail{% endblock %}
 
 
-{% block content %}
+  <meta name="description" content="Go调用Java-方案和性能优化分享"/>
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
-    </div>
+
+
+  <meta name="keywords" content="性能优化," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+
+
+
+<link rel="canonical" href="https://riddlego.github.io/2021/08/29/Go调用Java-方案和性能优化分享/"/>
+
+
+<meta name="description" content="点击原文进入原文链接阅读，本文纯粹自己复制粘贴当做阅读笔记，没有图片 一 背景一个基于 Golang 编写的日志收集和清洗的应用需要支持一些基于 JVM 的算子。 算子依赖了一些库: 123Groovyaviatorscript  该应用有如下特征:  1、处理数据量大  每分钟处理几百万行日志，日志流速几十 MB&#x2F;S；     每行日志可能需要执行多个计算任务，计算任务个数不好估计，几个到几千都">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Go调用Java-方案和性能优化分享">
+<meta property="og:url" content="https://riddlego.github.io/2021/08/29/Go%E8%B0%83%E7%94%A8Java-%E6%96%B9%E6%A1%88%E5%92%8C%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E5%88%86%E4%BA%AB/index.html">
+<meta property="og:site_name" content="RiddleGo">
+<meta property="og:description" content="点击原文进入原文链接阅读，本文纯粹自己复制粘贴当做阅读笔记，没有图片 一 背景一个基于 Golang 编写的日志收集和清洗的应用需要支持一些基于 JVM 的算子。 算子依赖了一些库: 123Groovyaviatorscript  该应用有如下特征:  1、处理数据量大  每分钟处理几百万行日志，日志流速几十 MB&#x2F;S；     每行日志可能需要执行多个计算任务，计算任务个数不好估计，几个到几千都">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/process/jvmgo01.png">
+<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/process/jvmgo02.png">
+<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/process/jvmgo03.png">
+<meta property="article:published_time" content="2021-08-29T08:01:29.000Z">
+<meta property="article:modified_time" content="2021-08-31T13:49:32.673Z">
+<meta property="article:author" content="Russshare">
+<meta property="article:tag" content="性能优化">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/process/jvmgo01.png">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> Go调用Java-方案和性能优化分享 - RiddleGo </title>
+  <meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">RiddleGo</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          Go调用Java-方案和性能优化分享
+        
+      </h1>
+
+      <time class="post-time">
+          8月 29 2021
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/RieBK5TDAQ-fnwGakAGY-w">点击原文进入原文链接阅读，本文纯粹自己复制粘贴当做阅读笔记，没有图片</a></p>
+<h2 id="一-背景"><a href="#一-背景" class="headerlink" title="一 背景"></a>一 背景</h2><p>一个基于 Golang 编写的日志收集和清洗的应用需要支持一些基于 JVM 的算子。</p>
+<p>算子依赖了一些库:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Groovy</span><br><span class="line"></span><br><span class="line">aviatorscript</span><br></pre></td></tr></table></figure>
+
+<p>该应用有如下特征:</p>
+<ul>
+<li><p>1、处理数据量大</p>
+<ul>
+<li>每分钟处理几百万行日志，日志流速几十 MB/S；</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>每行日志可能需要执行多个计算任务，计算任务个数不好估计，几个到几千都有；</li>
+</ul>
+<ul>
+<li>每个计算任务需要对一行日志进行切分/过滤，一般条件&lt;10个；</li>
+</ul>
+<ul>
+<li><p>2、有一定实时性要求，某些数据必须在特定时间内算完；</p>
+</li>
+<li><p>3、4C8G 规格(后来扩展为 8C16G )，内存比较紧张，随着业务扩展，需要缓存较多数据；</p>
+</li>
+</ul>
+<p>简言之，对性能要求很高。</p>
+<p>有两种方案：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Go call Java</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">使用 Java 重写这个应用</span><br></pre></td></tr></table></figure>
+<p>出于时间紧张和代码复用的考虑选择了 “Go call Java”。</p>
+<p>下文介绍了这个方案和一些优化经验。</p>
+<h2 id="二-Go-call-Java"><a href="#二-Go-call-Java" class="headerlink" title="二 Go call Java"></a>二 Go call Java</h2><p>根据 Java 进程与 Go 进程的关系可以再分为两种：</p>
+<p>方案1：JVM inside: 使用 JNI 在当前进程创建出一个 JVM，Go 和 JVM 运行在同一个进程里，使用 CGO + JNI 通信。<br><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/process/jvmgo01.png"></p>
+<p>方案2：JVM sidecar: 额外启动一个进程，使用进程间通信机制进行通信。</p>
+<p><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/process/jvmgo02.png"></p>
+<p>方案1，简单测试下性能，调用 noop 方法 180万 OPS， 其实也不是很快，不过相比方案2好很多。</p>
+<p>这是目前CGO固有的调用代价。</p>
+<p>由于是noop方法， 因此几乎不考虑传递参数的代价。</p>
+<p>方案2，比较简单进程间通信方式是 UDS(Unix Domain Socket) based gRPC 但实际测了一下性能不好， 调用 noop 方法极限5万的OPS，并且随着传输数据变复杂伴随大量临时对象加剧 GC 压力。</p>
+<p>不选择方案2还有一些考虑:</p>
+<p>高性能的性能通信方式可以选择共享内存，但共享内存也不能频繁申请和释放，而是要长期复用;</p>
+<p>一旦要长期使用就意味着要在一块内存空间上实现一个多进程的 malloc&amp;free 算法;<br>使用共享内存也无法避免需要将对象复制进出共享内存的开销;</p>
+<p>上述性能是在我的Mac机器上测出的，但放到其他机器结果应该也差不多。</p>
+<p>出于性能考虑选择了 JVM inside 方案。</p>
+<h3 id="1-JVM-inside-原理"><a href="#1-JVM-inside-原理" class="headerlink" title="1 JVM inside 原理"></a>1 JVM inside 原理</h3><p>JVM inside = CGO + JNI. C 起到一个 Bridge 的作用</p>
+<h3 id="2-CGO-简介"><a href="#2-CGO-简介" class="headerlink" title="2 CGO 简介"></a>2 CGO 简介</h3><p>是 Go 内置的调用 C 的一种手段。详情见官方文档。</p>
+<p>GO 调用 C 的另一个手段是通过 SWIG，它为多种高级语言调用C/C++提供了较为统一的接口，但就其在Go语言上的实现也是通过CGO，因此就 Go call C 而言使用 SWIG 不会获得更好的性能。详情见官网。</p>
+<p>以下是一个简单的例子，Go 调用 C 的 printf(“hello %s\n”， “world”)。</p>
+<p>运行结果输出：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hello world</span><br></pre></td></tr></table></figure>
+<p>在出入参不复杂的情况下，CGO 是很简单的，但要注意内存释放</p>
+<h3 id="3-JNI-简介"><a href="#3-JNI-简介" class="headerlink" title="3 JNI 简介"></a>3 JNI 简介</h3><p>JNI 可以用于 Java 与 C 之间的互相调用，<strong>在大量涉及硬件和高性能的场景经常被用到</strong>。JNI 包含的 Java Invocation API 可以在当前进程创建一个 JVM。</p>
+<p>以下只是简介JNI在本文中的使用，JNI本身的介绍略过。</p>
+<p>下面是一个 C 启动并调用 Java 的String.format(“hello %s %s %d”， “world”， “haha”， 2)并获取结果的例子。</p>
+<p>依赖的头文件和动态链接库可以在JDK目录找到，比如在我的Mac上是<br>/Library/Java/JavaVirtualMachines/jdk1.8.0_171.jdk/Contents/Home/include/jni.h<br>/Library/Java/JavaVirtualMachines/jdk1.8.0_171.jdk/Contents/Home/jre/lib/server/libjvm.dylib</p>
+<p>运行结果</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">java result&#x3D;hello world haha 2</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+<p>所有 env 关联的 ref，会在 Detach 之后自动工释放，但我们的最终方案里没有频繁 Attach&amp;Detach，所以上述的代码保留手动 DeleteLocalRef 的调用。否则会引起内存泄漏(上面的代码相当于是持有强引用然后置为 null)。</p>
+<p>实际中，为了性能考虑，还需要将各种 class/methodId 缓存住(转成 globalRef)，避免每次都 Find。</p>
+<p>可以看到，仅仅是一个简单的传参+方法调用就如此繁杂，更别说遇到复杂的嵌套结构了。这意味着我们使用 C 来做 Bridge，这一层不宜太复杂。</p>
+<p>实际实现的时候，我们在 Java 侧处理了所有异常，将异常信息包装成正常的 Response，C 里不用检查 Java 异常，简化了 C 的代码。</p>
+<h4 id="关于Java描述符"><a href="#关于Java描述符" class="headerlink" title="关于Java描述符"></a>关于Java描述符</h4><p>使用 JNI 时，各种类名/方法签名，字段签名等用的都是描述符名称，在 Java 字节码文件中，类/方法/字段的签名也都是使用这种格式。</p>
+<p>除了通过 JDK 自带的 javap 命令可以获取完整签名外，推荐一个 Jetbrain Intelli IDEA的插件 jclasslib Bytecode Viewer ，可以方便的在IDE里查看类对应的字节码信息。</p>
+<h3 id="4-实现"><a href="#4-实现" class="headerlink" title="4 实现"></a>4 实现</h3><p>我们目前只需要单向的 Go call Java，并不需要 Java call Go。</p>
+<p>代码比较繁杂，这里就不放了，就是上述2个简介的示例代码的结合体。</p>
+<p>考虑 Go 发起的一次 Java 调用，要经历4步骤。</p>
+<p>1.Go 通过 CGO 进入 C 环境</p>
+<p>2.C 通过 JNI 调用 Java</p>
+<p>3.Java 处理并返回数据给 C</p>
+<p>4.C 返回数据给 Go</p>
+<p><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/process/jvmgo03.png"></p>
+<h2 id="三-性能优化"><a href="#三-性能优化" class="headerlink" title="三 性能优化"></a>三 性能优化</h2><p>上述介绍了 Go call Java 的原理实现，至此可以实现一个性能很差的版本。针对我们的使用场景分析性能差有几个原因:</p>
+<ul>
+<li><p>1.单次调用有固定的性能损失，调用次数越多损耗越大；</p>
+</li>
+<li><p>2.除了基本数据模型外的数据(主要是日志和计算规则)需要经历多次深复制才能抵达 Java，数据量越大/调用次数越多损耗越大；</p>
+</li>
+<li><p>3.缺少合理的线程模型，导致每次 Java 调用都需要 Attach&amp;Detach，具有一定开销；</p>
+</li>
+</ul>
+<p>以下是我们做的一些优化，一些优化是针对我们场景的，并不一定通用。</p>
+<p>由于间隔时间有点久了， 一些优化的量化指标已经丢失。</p>
+<h3 id="1-预处理"><a href="#1-预处理" class="headerlink" title="1 预处理"></a>1 预处理</h3><ul>
+<li><p>1.将计算规则提前注册到 Java 并返回一个 id, 后续使用该 id 引用该计算规则, 减少传输的数据量。</p>
+</li>
+<li><p>2.Java 可以对规则进行预处理, 可以提高性能:</p>
+<ul>
+<li>Groovy 等脚本语言的静态化和预编译；</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>正则表达式预编译；</li>
+</ul>
+<ul>
+<li>使用字符串池减少重复的字符串实例；</li>
+</ul>
+<ul>
+<li>提前解析数据为特定数据结构；</li>
+</ul>
+<h3 id="2-批量化"><a href="#2-批量化" class="headerlink" title="2 批量化"></a>2 批量化</h3><p>减少 20%~30% CPU使用率。</p>
+<p>初期，我们想通过接口加多实现的方式将代码里的 Splitter/Filter 等新增一个 Java 实现，然后保持整体流程不变。</p>
+<p>比如我们有一个 Filter</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">type Filter interface &#123;</span><br><span class="line">    Filter(string) bool</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>除了 Go 的实现外，我们额外提供一个 Java 的实现，它实现了调用 Java 的逻辑</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">type JavaFilter struct &#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func (f *JavaFilter) Filter(content string) bool &#123;</span><br><span class="line">  &#x2F;&#x2F; call java</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>但是这个粒度太细了，流量高的应用每秒要处理80MB数据，日志切分/字段过滤等需要调用非常多次类似 Filter 接口的方法。及时我们使用了 JVM inside 方案，也无法减少单次调用 CGO 带来的开销。</p>
+<p>另外，在我们的场景下，Go call Java 时要进行大量参数转换也会带来非常大的性能损失。</p>
+<p>就该场景而言， 如果使用 safe 编程，每次调用必须对 content 字符串做若干次深拷贝才能传递到 Java。</p>
+<p><strong>优化点</strong>:</p>
+<p>将调用粒度做粗， 避免多次调用 Java: 将整个清洗动作在 Java 里重新实现一遍， 并且实现批量能力，这样只需要调用一次 Java 就可以完成一组日志的多次清洗任务。</p>
+<h3 id="3-线程模型"><a href="#3-线程模型" class="headerlink" title="3 线程模型"></a>3 线程模型</h3><p>考虑几个背景:</p>
+<p>1.CGO 调用涉及 goroutine 栈扩容，如果传递了一个栈上对象的指针(在我们的场景没有)可能会改变，导致野指针；</p>
+<p>2.当 Go 陷入 CGO 调用超过一段时间没有返回时，Go 就会创建一个新线程，应该是为了防止饿死其他 gouroutine 吧。</p>
+<p>这个可以很简单的通过 C 里调用 sleep 来验证；</p>
+<p>1.C 调用 Java 之前，当前线程必须已经调用过 AttachCurrentThread，并且在适当的时候DetachCurrentThread。然后才能安全访问 JVM。频繁调用 Attach&amp;Detach 会有性能开销；</p>
+<p>2.在 Java 里做的主要是一些 CPU 密集型的操作。</p>
+<p>结合上述背景，对 Go 调用 Java 做出了如下封装:实现一个 worker pool，有n个worker(n=CPU核数*2)。里面每个 worker 单独跑一个 goroutine，使用 runtime.LockOSThread() 独占一个线程，每个 worker 初始化后， 立即调用 JNI 的 AttachCurrentThread 绑定当前线程到一个 Java 线程上，这样后续就不用再调用了。至此，我们将一个 goroutine 关联到了一个 Java 线程上。此后，Go 需要调用 Java 时将请求扔到 worker pool 去竞争执行，通过 chan 接收结果。</p>
+<p>由于线程只有固定的几个，Java 端可以使用大量 ThreadLocal 技巧来优化性能。</p>
+<p>注意到有一个特殊的 Control Worker，是用于发送一些控制命令的，实践中发现当 Worker Queue 和 n 个 workers 都繁忙的时候，控制命令无法尽快得到调用， 导致”根本停不下来”。</p>
+<p>控制命令主要是提前将计算规则注册(和注销)到 Java 环境，从而避免每次调用 Java 时都传递一些额外参数。</p>
+<p><strong>关于 worker 数量</strong></p>
+<p>按理我们是一个 CPU 密集型动作，应该 worker 数量与 CPU 相当即可，但实际运行过程中会因为排队，导致某些配置的等待时间比较长。我们更希望平均情况下每个配置的处理耗时增高，但别出现某些配置耗时超高(毛刺)。于是故意将 worker 数量增加。</p>
+<h3 id="4-Java-使用-ThreadLocal-优化"><a href="#4-Java-使用-ThreadLocal-优化" class="headerlink" title="4 Java 使用 ThreadLocal 优化"></a>4 Java 使用 ThreadLocal 优化</h3><p>1.复用 Decoder/CharBuffer 用于字符串解码；</p>
+<p>2.复用计算过程中一些可复用的结构体，避免 ArrayList 频繁扩容；</p>
+<p>3.每个 Worker 预先在 C 里申请一块堆外内存用于存放每次调用的结果，避免多次malloc&amp;free。</p>
+<p>当 ThreadLocal.get() + obj.reset() &lt; new Obj() + expand + GC 时，就能利用 ThreadLocal来加速。</p>
+<p>1.obj.reset() 是重置对象的代价</p>
+<p>2.expand 是类似ArrayList等数据结构扩容的代价</p>
+<p>3.GC 是由于对象分配而引入的GC代价</p>
+<p>大家可以使用JMH做一些测试，在我的Mac机器上:</p>
+<p>1.ThreadLocal.get() 5.847 ± 0.439 ns/op</p>
+<p>2.new java.lang.Object() 4.136 ± 0.084 ns/op</p>
+<p>一般情况下，我们的 Obj 是一些复杂对象，创建的代价肯定远超过 new java.lang.Object() ，像 ArrayList 如果从零开始构建那么容易发生扩容不利于性能，另外热点路径上创建大量对象也会增加 GC 压力。最终将这些代价均摊一下会发现合理使用 ThreadLocal 来复用对象性能会超过每次都创建新对象。</p>
+<p>Log4j2的”0 GC”就用到了这些技巧。</p>
+<p>由于这些Java线程是由JNI在Attach时创建的，不受我们控制，因此无法定制Thread的实现类，否则可以使用类似Netty的FastThreadLocal再优化一把。</p>
+<h3 id="5-unsafe编程"><a href="#5-unsafe编程" class="headerlink" title="5 unsafe编程"></a>5 unsafe编程</h3><p>减少 10%+ CPU使用率。</p>
+<p>如果严格按照 safe 编程方式，每一步骤都会遇到一些揪心的性能问题:</p>
+<p>1.Go 调用 C: 请求体主要由字符串数组组成，要拷贝大量字符串，性能损失很大</p>
+<p>大量 Go 风格的字符串要转成 C 风格的字符串，此处有 malloc，调用完之后记得 free 掉。</p>
+<p>Go 风格字符串如果包含 ‘\0’，会导致 C 风格字符串提前结束。</p>
+<p>2.C 调用 Java: C 风格的字符串无法直接传递给 Java，需要经历一次解码，或者作为 byte[] (需要一次拷贝)传递给 Java 去解码(这样控制力高一些，我们需要考虑 UTF8 GBK 场景)。</p>
+<p>3.Java 处理并返回数据给 C: 结构体比较复杂，C 很难表达，比如二维数组/多层嵌套结构体/Map 结构，转换代码繁杂易错。</p>
+<p>4.C 返回数据给 Go: 此处相当于是上述步骤的逆操作，太浪费了。</p>
+<p>多次实践时候，针对上述4个步骤分别做了优化:</p>
+<p>1.Go调用C: Go 通过 unsafe 拿到字符串底层指针地址和长度传递给 C，全程只传递指针(转成 int64)，避免大量数据拷贝。</p>
+<p>我们需要保证字符串在堆上分配而非栈上分配才行，Go 里一个简单的技巧是保证数据直接或间接跨goroutine引用就能保证分配到堆上。还可以参考 reflect.ValueOf() 里调用的 escape 方法。</p>
+<p>Go的GC是非移动式GC，因此即使GC了对象地址也不会变化</p>
+<p>2.C调用Java: 这块没有优化，因为结构体已经很简单了，老老实实写；</p>
+<p>3.Java处理并返回数据给C:</p>
+<p>Java 解码字符串:Java 收到指针之后将指针转成 DirectByteBuffer ，然后利用 CharsetDecoder 解码出 String。</p>
+<p>Java返回数据给C:</p>
+<p>考虑到返回的结构体比较复杂，将其 Protobuf 序列化成 byte[] 然后传递回去， 这样 C 只需要负责搬运几个数值。</p>
+<p>此处我们注意到有很多临时的 malloc，结合我们的线程模型，每个线程使用了一块 ThreadLocal 的堆外内存存放 Protobuf 序列化结果，使用 writeTo(CodedOutputStream.newInstance(ByteBuffer))可以直接将序列化结果写入堆外， 而不用再将 byte[] 拷贝一次。</p>
+<p>经过统计一般这块 Response 不会太大，现在大小是 10MB，超过这个大小就老老实实用 malloc&amp;free了。</p>
+<p>4.C返回数据给Go:Go 收到 C 返回的指针之后，通过 unsafe 构造出 []byte，然后调用 Protobuf 代码反序列化。之后，如果该 []byte 不是基于 ThreadLocal 内存，那么需要主动 free 掉它。</p>
+<p>Golang中[]byte和string</p>
+<p>代码中的 []byte(xxxStr) 和 string(xxxBytes) 其实都是深复制。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">type SliceHeader struct &#123;</span><br><span class="line">    &#x2F;&#x2F; 底层字节数组的地址</span><br><span class="line">  Data uintptr</span><br><span class="line">    &#x2F;&#x2F; 长度</span><br><span class="line">  Len  int</span><br><span class="line">    &#x2F;&#x2F; 容量</span><br><span class="line">  Cap  int</span><br><span class="line">&#125;</span><br><span class="line">type StringHeader struct &#123;</span><br><span class="line">    &#x2F;&#x2F; 底层字节数组的地址</span><br><span class="line">  Data uintptr</span><br><span class="line">    &#x2F;&#x2F; 长度</span><br><span class="line">  Len  int</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>Go 中的 []byte 和 string 其实是上述结构体的值，利用这个事实可以做在2个类型之间以极低的代价做类型转换而不用做深复制。</strong>这个技巧在 Go 内部也经常被用到，比如 string.Builder#String() 。</p>
+<p>这个技巧最好只在方法的局部使用，需要对用到的 []byte 和 string的生命周期有明确的了解。需要确保不会意外修改 []byte 的内容而导致对应的字符串发生变化。</p>
+<p>另外，将字面值字符串通过这种方式转成 []byte，然后修改 []byte 会触发一个 panic。</p>
+<p>在 Go 向 Java 传递参数的时候，我们利用了这个技巧，将 Data(也就是底层的 void*指针地址)转成 int64 传递到Java。</p>
+<p><strong>Java解码字符串</strong></p>
+<p>Go 传递过来指针和长度，本质对应了一个 []byte，Java 需要将其解码成字符串。</p>
+<p>通过如下 utils 可以将 (address， length) 转成 DirectByteBuffer，然后利用 CharsetDecoder 可以解码到 CharBuffer 最后在转成 String 。</p>
+<p>通过这个方法，完全避免了 Go string 到 Java String 的多次深拷贝。</p>
+<p>这里的 decode 动作肯定是省不了的，因为 Go string 本质是 utf8 编码的 []byte，而 Java String 本质是 char[].</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="6-左起右至优化"><a href="#6-左起右至优化" class="headerlink" title="6 左起右至优化"></a>6 左起右至优化</h3><p>先介绍 “左起右至切分”: 使用3个参数 (String leftDelim， int leftIndex， String rightDelim) 定位一个子字符，表示从给定的字符串左侧数找到第 leftIndex 个 leftDelim 后，位置记录为start，继续往右寻找 rightDelim，位置记录为end.则子字符串 [start+leftDelim.length()， end) 即为所求。</p>
+<p>其中leftIndex从0开始计数。</p>
+<p>例子:</p>
+<p>字符串=”a，b，c，d”<br>规则=(“，” ， 1， “，”)<br>结果=”c”</p>
+<p>第1个”，”右至”，”之间的内容，计数值是从0开始的。</p>
+<p>字符串=”a=1 b=2 c=3”<br>规则=(“b=”， 0， “ “)<br>结果=”2”</p>
+<p>第0个”b=”右至” “之间的内容，计数值是从0开始的。</p>
+<p>在一个计算规则里会有很多 (leftDelim， leftIndex， rightDelim)，但很多情况下 leftDelim 的值是相同的，可以复用。</p>
+<p>优化算法:</p>
+<p>1.按 (leftDelim， leftIndex， rightDelim) 排序，假设排序结果存在 rules 数组里；</p>
+<p>2.按该顺序获取子字符串；</p>
+<p>3.处理 rules[i] 时，如果 rules[i].leftDelim == rules[i-1].leftDelim，那么 rules[i] 可以复用 rules[i-1] 缓存的start，根据排序规则知 rules[i].leftIndex&gt;=rules[i-1].leftIndex，因此 rules[i] 可以少掉若干次 indexOf 。</p>
+<h3 id="7-动态GC优化"><a href="#7-动态GC优化" class="headerlink" title="7 动态GC优化"></a>7 动态GC优化</h3><p>基于 Go 版本 1.11.9</p>
+<p>上线之后发现容易 OOM.进行了一些排查，有如下结论。</p>
+<p>Go GC 的3个时机：</p>
+<p>已用的堆内存达到 NextGC 时；</p>
+<p>连续 2min 没有发生任何 GC；</p>
+<p>用户手动调用 runtime.GC() 或 debug.FreeOSMemory()；</p>
+<p>Go 有个参数叫 GOGC，默认是100。当每次GO GC完之后，会设置 NextGC = liveSize * (1 + GOGC/100)</p>
+<p>liveSize 是 GC 完之后的堆使用大小，一般由需要常驻内存的对象组成。</p>
+<p>一般常驻内存是区域稳定的，默认值 GOGC 会使得已用内存达到 2 倍常驻内存时才发生 GC。</p>
+<p>但是 Go 的 GC 有如下问题:</p>
+<p>根据公式，NextGC 可能会超过物理内存；</p>
+<p>Go 并没有在内存不足时进行 GC 的机制(而 Java 就可以)；</p>
+<p>于是，Go 在堆内存不足(假设此时还没达到 NextGC，因此不触发GC)时唯一能做的就是向操作系统申请内存，于是很有可能触发 OOM。</p>
+<p>可以很容易构造出一个程序，维持默认 GOGC = 100，我们保证常驻内存&gt;50%的物理内存 (此时 NextGC 已经超过物理机内存了)，然后以极快的速度不停堆上分配(比如一个for的无限循环)，则这个 Go 程序必定触发 OOM (而 Java 则不会)。哪怕任何一刻时刻，其实我们强引用的对象占据的内存始终没有超过物理内存。</p>
+<p>另外，我们现在的内存由 Go runtime 和 Java runtime (其实还有一些临时的C空间的内存)瓜分，而 Go runtime 显然是无法感知 Java runtime 占用的内存，每个 runtime 都认为自己能独占整个物理内存。实际在一台 8G 的容器里，分1.5G给Java，Go 其实可用的 &lt; 6G。</p>
+<p>实现</p>
+<p>定义：</p>
+<p>低水位 = 0.6 * 总内存</p>
+<p>高水位 = 0.8 * 总内存</p>
+<p>抖动区间 = [低水位， 高水位] 尽量让 常驻活跃内存 * GOGC / 100 的值维持在这个区间内， 该区间大小要根据经验调整，才能尽量使得 GOGC 大但不至于 OOM。</p>
+<p>活跃内存=刚 GC 完后的 heapInUse</p>
+<p>最小GOGC = 50，无论任何调整 GOGC 不能低于这个值</p>
+<p>最大GOGC = 500 无论任何调整 GOGC 不能高于这个值</p>
+<p>1.当 NextGC &lt; 低水位时，调高 GOGC 幅度10；</p>
+<p>2.当 NextGC &gt; 高水位时，立即触发一次 GC(由于是手动触发的，根据文档会有一些STW)，然后公式返回计算出一个合理的 GOGC；</p>
+<p>3.其他情况，维持 GOGC 不变；</p>
+<p>这样，如果常驻活跃内存很小，那么 GOGC 会慢慢变大直到收敛某个值附近。如果常驻活跃内存较大，那么 GOGC 会变小，尽快 GC，此时 GC 代价会提升，但总比 OOM 好吧！</p>
+<p>这样实现之后，机器占用的物理内存水位会变高，这是符合预期的，只要不会 OOM， 我们就没必要过早释放内存给OS(就像Java一样)。</p>
+<p>图片</p>
+<p>这台机器在 09:44:39 附近发现 NextGC 过高，于是赶紧进行一次 GC，并且调低 GOGC，否则如果该进程短期内消耗大量内存，很可能就会 OOM。</p>
+<h3 id="8-使用紧凑的数据结构"><a href="#8-使用紧凑的数据结构" class="headerlink" title="8 使用紧凑的数据结构"></a>8 使用紧凑的数据结构</h3><p>由于业务变化，我们需要在内存里缓存大量对象，约有1千万个对象。</p>
+<p>内部结构可以简单理解为使用 map 结构来存储1千万个 row 对象的指针。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">type Row struct &#123;</span><br><span class="line">    Timestamp    int64</span><br><span class="line">  StringArray  []string</span><br><span class="line">    DataArray    []Data</span><br><span class="line">    &#x2F;&#x2F; 此处省略一些其他无用字段, 均已经设为nil</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">type Data interface &#123;</span><br><span class="line">    &#x2F;&#x2F; 省略一些方法</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">type Float64Data struct &#123;</span><br><span class="line">    Value float64</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>先不考虑map结构的开销，有如下估计:</p>
+<p>1.Row数量 = 1千万</p>
+<p>2.字符串数组平均长度 = 10</p>
+<p>3.字符串平均大小 = 12</p>
+<p>4.Data 数组平均长度 = 4</p>
+<p>估算占用内存 = Row 数量(int64 大小 + 字符串数组内存 + Data 数组内存) = 1千万 (8+1012+48) = 1525MB。</p>
+<p>再算上一些临时对象，期望常驻内存应该比这个值多一些些，但实际上发现刚 GC 完常驻内存还有4~6G，很容易OOM。</p>
+<p>OOM的原因见上文的 “动态GC优化”</p>
+<p>进行了一些猜测和排查，最终验证了原因是我们的算法没有考虑语言本身的内存代价以及大量无效字段浪费了较多内存。</p>
+<p>算一笔账：</p>
+<p>1.指针大小 = 8；</p>
+<p>2.字符串占内存 = sizeof(StringHeader) + 字符串长度；</p>
+<p>3.数组占内存 = sizeof(SliceHeader) + 数组cap * 数组元素占的内存；</p>
+<p>4.另外 Row 上有大量无用字段(均设置为 nil 或0)也要占内存；</p>
+<p>5.我们有1千万的对象， 每个对象浪费8字节就浪费76MB。</p>
+<p>这里忽略字段对齐等带来的浪费。</p>
+<p>浪费的点在:</p>
+<p>1.数组 ca p可能比数组 len 长；</p>
+<p>2.Row 上有大量无用字段， 即使赋值为 nil 也会占内存(指针8字节)；</p>
+<p>3.较多指针占了不少内存；</p>
+<p>最后，我们做了如下优化:</p>
+<p>1.确保相关 slice 的 len 和 cap 都是刚刚好；</p>
+<p>2.使用新的 Row 结构，去掉所有无用字段；</p>
+<p>3.DataArray 数组的值使用结构体而非指针；</p>
+<p>图片</p>
+<h3 id="9-字符串复用"><a href="#9-字符串复用" class="headerlink" title="9 字符串复用"></a>9 字符串复用</h3><p>根据业务特性，很可能产生大量值相同的字符串，但却是不同实例。对此在局部利用字段 map[string]string 进行字符串复用，读写 map 会带来性能损失，但可以有效减少内存里重复的字符串实例，降低内存/GC压力。</p>
+<p>为什么是局部? 因为如果是一个全局的 sync.Map 内部有锁， 损耗的代价会很大。</p>
+<p>通过一个局部的map，已经能显著降低一个量级的string重复了，再继续提升效果不明显。</p>
+<h2 id="四-后续"><a href="#四-后续" class="headerlink" title="四 后续"></a>四 后续</h2><p>这个 JVM inside 方案也被用于tair的数据采集方案，中心化 Agent 也是 Golang 写的，但 tair 只提供了 Java SDK，因此也需要 Go call Java 方案。</p>
+<p>1.SDK 里会发起阻塞型的 IO 请求，因此 worker 数量必须增加才能提高并发度。</p>
+<p>2.此时 worker 不调用 runtime.LockOSThread() 独占一个线程， 会由于陷入 CGO 调用时间太长导致Go 产生新线程， 轻则会导致性能下降， 重则导致 OOM。</p>
+<h2 id="五-总结"><a href="#五-总结" class="headerlink" title="五 总结"></a>五 总结</h2><p>本文介绍了 Go 调用 Java 的一种实现方案，以及结合具体业务场景做的一系列性能优化。</p>
+<p>在实践过程中，根据Go的特性设计合理的线程模型，根据线程模型使用ThreadLocal进行对象复用，还避免了各种锁冲突。除了各种常规优化之外，还用了一些unsafe编程进行优化，unsafe其实本身并不可怕，只要充分了解其背后的原理，将unsafe在局部发挥最大功效就能带来极大的性能优化。</p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/">性能优化</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2021/08/29/%E5%9C%A8Go%E4%B8%AD%E4%BD%BF%E7%94%A8%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84%E7%9A%84%E5%A5%BD%E5%A4%84/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">在Go中使用微服务架构的好处</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2021/08/29/%E6%8F%90%E5%8D%87%E4%BB%A3%E7%A0%81%E8%B4%A8%E9%87%8F%E7%9A%84%E6%96%B9%E6%B3%95%EF%BC%9A%E9%A2%86%E5%9F%9F%E6%A8%A1%E5%9E%8B%E3%80%81%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99%E3%80%81%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">
+        <span class="next-text nav-default">提升代码质量的方法：领域模型、设计原则、设计模式</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+      </footer>
+    
+  </article>
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2021
+    <span class="footer-author">Russshare.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

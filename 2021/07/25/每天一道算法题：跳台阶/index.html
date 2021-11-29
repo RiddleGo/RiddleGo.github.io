@@ -1,37 +1,226 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
-{% block page_class %}page-post-detail{% endblock %}
 
 
-{% block content %}
+  <meta name="description" content="每天一道算法题：跳台阶"/>
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
-    </div>
+
+
+  <meta name="keywords" content="面试,算法," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+
+
+
+<link rel="canonical" href="https://riddlego.github.io/2021/07/25/每天一道算法题：跳台阶/"/>
+
+
+<meta name="description" content="12345678910一只青蛙一次可以跳上1级台阶，也可以跳上2级。求该青蛙跳上一个n级的台阶总共有多少种跳法（先后次序不同算不同的结果）。1阶：共1种跳法；2阶：共2种跳法；3阶：共3种跳法；n阶：先跳1级，还剩n-1级，跳法是f(n-1)；先跳2级，还剩n-2级，跳法是f(n-2)，共f(n-1)+f(n-2)种跳法；得出一个斐波那契函数。  方法一：递归 1234567891011func">
+<meta property="og:type" content="article">
+<meta property="og:title" content="每天一道算法题：跳台阶">
+<meta property="og:url" content="https://riddlego.github.io/2021/07/25/%E6%AF%8F%E5%A4%A9%E4%B8%80%E9%81%93%E7%AE%97%E6%B3%95%E9%A2%98%EF%BC%9A%E8%B7%B3%E5%8F%B0%E9%98%B6/index.html">
+<meta property="og:site_name" content="RiddleGo">
+<meta property="og:description" content="12345678910一只青蛙一次可以跳上1级台阶，也可以跳上2级。求该青蛙跳上一个n级的台阶总共有多少种跳法（先后次序不同算不同的结果）。1阶：共1种跳法；2阶：共2种跳法；3阶：共3种跳法；n阶：先跳1级，还剩n-1级，跳法是f(n-1)；先跳2级，还剩n-2级，跳法是f(n-2)，共f(n-1)+f(n-2)种跳法；得出一个斐波那契函数。  方法一：递归 1234567891011func">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-07-24T16:13:02.000Z">
+<meta property="article:modified_time" content="2021-07-24T16:22:03.611Z">
+<meta property="article:author" content="Russshare">
+<meta property="article:tag" content="面试">
+<meta property="article:tag" content="算法">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> 每天一道算法题：跳台阶 - RiddleGo </title>
+  <meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">RiddleGo</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          每天一道算法题：跳台阶
+        
+      </h1>
+
+      <time class="post-time">
+          7月 25 2021
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">一只青蛙一次可以跳上1级台阶，也可以跳上2级。求该青蛙跳上一个n级的台阶总共有多少种跳法（先后次序不同算不同的结果）。</span><br><span class="line"></span><br><span class="line">1阶：共1种跳法；</span><br><span class="line"></span><br><span class="line">2阶：共2种跳法；</span><br><span class="line"></span><br><span class="line">3阶：共3种跳法；</span><br><span class="line"></span><br><span class="line">n阶：先跳1级，还剩n-1级，跳法是f(n-1)；先跳2级，还剩n-2级，跳法是f(n-2)，共f(n-1)+f(n-2)种跳法；</span><br><span class="line">得出一个斐波那契函数。</span><br></pre></td></tr></table></figure>
+
+<p>方法一：递归</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">func jumpFloor(N int) int&#123;</span><br><span class="line">  if N &lt;&#x3D; 0&#123;</span><br><span class="line">    return 0</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  if N&#x3D;&#x3D;1 || N&#x3D;&#x3D;2&#123;</span><br><span class="line">    return N</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  return jumpFloor(N-1) + jumpFloor(N-2)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>方法二：迭代  推荐</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">func jumpFloor(N int) int&#123;</span><br><span class="line">  if N &lt;&#x3D; 0&#123;</span><br><span class="line">    return 0</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  if N&#x3D;&#x3D;1 || N&#x3D;&#x3D;2&#123;</span><br><span class="line">    return N</span><br><span class="line">  &#125;</span><br><span class="line">  a,b :&#x3D; 1,2</span><br><span class="line">  for i:&#x3D;3;i&lt;&#x3D;N;i++&#123;</span><br><span class="line">    a,b &#x3D; b, a+b</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  return b</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/%E9%9D%A2%E8%AF%95/">面试</a>
+		  
+			<a href="/tags/%E7%AE%97%E6%B3%95/">算法</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2021/07/25/%E6%AF%8F%E5%A4%A9%E4%B8%80%E9%81%93%E7%AE%97%E6%B3%95%E9%A2%98%EF%BC%9A%E9%93%BE%E8%A1%A8%E4%B8%AD%E7%9A%84%E8%8A%82%E7%82%B9%E6%AF%8Fk%E4%B8%AA%E4%B8%80%E7%BB%84%E7%BF%BB%E8%BD%AC/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">每天一道算法题：链表中的节点每k个一组翻转</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2021/07/24/%E6%AF%8F%E5%A4%A9%E4%B8%80%E9%81%93%E7%AE%97%E6%B3%95%E9%A2%98%EF%BC%9A%E7%94%A8%E4%B8%A4%E4%B8%AA%E6%A0%88%E5%AE%9E%E7%8E%B0%E9%98%9F%E5%88%97/">
+        <span class="next-text nav-default">每天一道算法题：用两个栈实现队列</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+      </footer>
+    
+  </article>
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2021
+    <span class="footer-author">Russshare.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

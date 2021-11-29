@@ -1,37 +1,258 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
-{% block page_class %}page-post-detail{% endblock %}
 
 
-{% block content %}
+  <meta name="description" content="面试：K8s"/>
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
-    </div>
+
+
+  <meta name="keywords" content="云计算,k8s," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+
+
+
+<link rel="canonical" href="https://riddlego.github.io/2021/08/06/面试：K8s/"/>
+
+
+<meta name="description" content="2.1 什么是k8s?1 什么是k8s 为什么用k8s：一个开源的容器集群管理平台【容器编排工具】，可提供容器集群的自动部署，扩缩容，维护等功能。 分为管理节点Master和工作节点Node。在我们的项目中主要解决了环境一致性的问题，通过(CI&#x2F;CD)(持续集成和持续部署)使得运维部署变得简单起来，以及自动部署，故障监控，自动扩缩容。可以提升开发效率。 2 k8s有那些组件：etcd保存了整个集群">
+<meta property="og:type" content="article">
+<meta property="og:title" content="面试：K8s">
+<meta property="og:url" content="https://riddlego.github.io/2021/08/06/%E9%9D%A2%E8%AF%95%EF%BC%9AK8s/index.html">
+<meta property="og:site_name" content="RiddleGo">
+<meta property="og:description" content="2.1 什么是k8s?1 什么是k8s 为什么用k8s：一个开源的容器集群管理平台【容器编排工具】，可提供容器集群的自动部署，扩缩容，维护等功能。 分为管理节点Master和工作节点Node。在我们的项目中主要解决了环境一致性的问题，通过(CI&#x2F;CD)(持续集成和持续部署)使得运维部署变得简单起来，以及自动部署，故障监控，自动扩缩容。可以提升开发效率。 2 k8s有那些组件：etcd保存了整个集群">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-08-06T08:26:16.000Z">
+<meta property="article:modified_time" content="2021-08-08T11:40:07.349Z">
+<meta property="article:author" content="Russshare">
+<meta property="article:tag" content="云计算">
+<meta property="article:tag" content="k8s">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> 面试：K8s - RiddleGo </title>
+  <meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">RiddleGo</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          面试：K8s
+        
+      </h1>
+
+      <time class="post-time">
+          8月 06 2021
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h3 id="2-1-什么是k8s"><a href="#2-1-什么是k8s" class="headerlink" title="2.1 什么是k8s?"></a>2.1 什么是k8s?</h3><h4 id="1-什么是k8s-为什么用k8s："><a href="#1-什么是k8s-为什么用k8s：" class="headerlink" title="1 什么是k8s 为什么用k8s："></a>1 什么是k8s 为什么用k8s：</h4><p>一个开源的容器集群管理平台【容器编排工具】，<strong>可提供容器集群的自动部署，扩缩容，维护等功能。</strong></p>
+<p>分为管理节点Master和工作节点Node。在我们的项目中主要解决了环境一致性的问题，通过(CI/CD)(持续集成和持续部署)使得运维部署变得简单起来，以及自动部署，故障监控，自动扩缩容。可以提升开发效率。</p>
+<h4 id="2-k8s有那些组件："><a href="#2-k8s有那些组件：" class="headerlink" title="2 k8s有那些组件："></a>2 k8s有那些组件：</h4><p>etcd保存了整个集群的状态；</p>
+<p>apiserver提供了资源操作的唯一入口，并提供认证、授权、访问控制、API注册和发现等机制；</p>
+<p>controller manager负责维护集群的状态，比如故障检测、自动扩展、滚动更新等；</p>
+<p>scheduler负责资源的调度，按照预定的调度策略将Pod调度到相应的机器上；</p>
+<p>kubelet负责维护容器的生命周期，同时也负责Volume（CVI）和网络（CNI）的管理；</p>
+<p>Container runtime负责镜像管理以及Pod和容器的真正运行（CRI）；</p>
+<p>kube-proxy负责为Service提供cluster内部的服务发现和负载均衡；</p>
+<h4 id="3-Node-amp-Pod-amp-container之间的关系："><a href="#3-Node-amp-Pod-amp-container之间的关系：" class="headerlink" title="3 Node&amp;Pod&amp;container之间的关系："></a>3 Node&amp;Pod&amp;container之间的关系：</h4><p>Node一般指工作节点包含多个Pod<br>Pod中包含多个Container,</p>
+<p>Pod中的container共享同一个网络命名空间。</p>
+<h4 id="4-什么是SVC"><a href="#4-什么是SVC" class="headerlink" title="4 什么是SVC:"></a>4 什么是SVC:</h4><p>SVC是对一组功能相似的Pod资源的抽象，相当于一组服务的负载均衡。</p>
+<h4 id="5-k8s的网络模型："><a href="#5-k8s的网络模型：" class="headerlink" title="5 k8s的网络模型："></a>5 k8s的网络模型：</h4><p>IP-Per-Pod 每个Pod有独立的Ip地址，无论是否处于同一个Node节点，Pod可以通过IP相互访问，且Pod和容器的地址和外部看到的地址是同一个地址。</p>
+<h4 id="6-Pod-SVC-Node-Container-之间如何相互访问："><a href="#6-Pod-SVC-Node-Container-之间如何相互访问：" class="headerlink" title="6 Pod SVC Node Container 之间如何相互访问："></a>6 Pod SVC Node Container 之间如何相互访问：</h4><p>同Pod内的容器：同一个Pod的容器共享同一个网络命名空间可以直接进行通讯</p>
+<p>同Node内不同Pod的容器：多个Pod都关联在同一个Docker0网桥上，通过docker0网桥完成相互通讯。</p>
+<p>不同Node内Pod的容器：不同Node上的docker0可能会相同，PodIP和docker0是同网段的，所以需要将PodIP和NodeIP进行关联且保障唯一，不同Pod之间的数据通过物理机的端口进行转发即可完成通讯。</p>
+<h4 id="7：k8s-和docker-swarm如何选择："><a href="#7：k8s-和docker-swarm如何选择：" class="headerlink" title="7：k8s 和docker swarm如何选择："></a>7：k8s 和docker swarm如何选择：</h4><p>公司的服务器体量大，建议选择k8s（这也是趋势）。<br>k8s 的大局与支持更好，选择性多，扩展性强。从各大云厂商的产品就可以看出来。</p>
+<p>如果我是个开发人员，公司的服务器体量小,我会选择 Compose+Swarm,它简单易用。<br>而你们有需要快速做到容器化部署，那你就选择 swarm.。<br>swarm就是docker的原生态管理软件，学习成本低，而且容器启动也快，但是功能比较少。如果你们公司服务器体量不大可以一直用swarm</p>
+<p><a target="_blank" rel="noopener" href="http://www.manongjc.com/article/90787.html">docker swarm和kubernetes对比简介</a></p>
+<h4 id="3-2、-对SVC的考察"><a href="#3-2、-对SVC的考察" class="headerlink" title="3.2、 对SVC的考察"></a>3.2、 对SVC的考察</h4><p>SVC是k8s中的核心概念 这里涉及知识点众多 常见的面试考点如下</p>
+<h5 id="什么是SVC-如何创建SVC"><a href="#什么是SVC-如何创建SVC" class="headerlink" title="什么是SVC? 如何创建SVC?"></a>什么是SVC? 如何创建SVC?</h5><p>SVC:是对一组功能相似的Pod资源的抽象，相当于一组服务的负载均衡。可以使用配置文件的方式创建也可以使用命令创建kubectl expose</p>
+<h5 id="使用SVC创建多个副本和使用RC创建多个副本有什么差异？"><a href="#使用SVC创建多个副本和使用RC创建多个副本有什么差异？" class="headerlink" title="使用SVC创建多个副本和使用RC创建多个副本有什么差异？"></a>使用SVC创建多个副本和使用RC创建多个副本有什么差异？</h5><p>SVC和RC提供服务的差距： RC创建的服务PodIP可能会变。SVC提供的clusterIP不会。通过Iptables的NAT转换重定向到本地端口，在均衡到后端Pod。</p>
+<h5 id="SVC有哪几种类型？"><a href="#SVC有哪几种类型？" class="headerlink" title="SVC有哪几种类型？"></a>SVC有哪几种类型？</h5><p>svc的几种类型： ClusterIp/NodePort/LoadBalancer/ExternalName</p>
+<p>ClusterIp 默认类型 分配的一个虚拟地址，内部可以相互访问，外部不行</p>
+<p>NodePort 将SVC端口号映射到物理机</p>
+<p>LoadBalancer 基于NodePort，云服务商在外部创建了一个负载均衡到Pod</p>
+<p>ExternalName 将外部地址经过集群内部的再一次封装(实际上就是集群DNS服务器将CNAME解析到了外部地址上)，实现了集群内部访问即可。</p>
+<h5 id="SVC-负载分发策略有那些？"><a href="#SVC-负载分发策略有那些？" class="headerlink" title="SVC 负载分发策略有那些？"></a>SVC 负载分发策略有那些？</h5><p>RoundRobin/SessionAffinity/自定义实现【基于标签选择器】</p>
+<h5 id="集群外如何访问SVC"><a href="#集群外如何访问SVC" class="headerlink" title="集群外如何访问SVC?"></a>集群外如何访问SVC?</h5><p>集群外部访问： 端口映射到物理机即可</p>
+<h4 id="5-2-Pod考察"><a href="#5-2-Pod考察" class="headerlink" title="5.2 Pod考察"></a>5.2 Pod考察</h4><p>Pod和静态Pod的区别<br>生命周期和重启策略 【这里可扩展 不同控制器对Pod的重启策略要求】<br>Pod如何健康检查？<br>Pod的调度方式？【扩展调度算法】<br>Pod如何扩缩容？【扩展 RC和RS的差异】<br>答案</p>
+<p>待补充 –<a target="_blank" rel="noopener" href="https://www.cnblogs.com/threecha/p/13649320.html">详见《k8s权威指南》读书笔记</a></p>
+<h4 id="5-3-基础原理类考察"><a href="#5-3-基础原理类考察" class="headerlink" title="5.3 基础原理类考察"></a>5.3 基础原理类考察</h4><p>主要考察对基本组件的理解 和原理分析</p>
+<p>API Server<br>Controller Manager【Replication Controller/Node Controller/ResourceQuota Controller/Namespace Controller/SVC Controller&amp; Endpoint Controller】<br>Scheduler<br>Kubelet 【Pod健康检查 资源监控】<br>Kube-Proxy<br>k8s-DNS &amp; Iptables差异<br>k8s中Ingress是什么<br>简述k8s中的如下属性及其作用resources tolerations affinity<br>k8s中pod、rs、deployment、hpa的基本概念，以及他们之间的关系<br>答案</p>
+<p>待补充 –<a target="_blank" rel="noopener" href="https://www.cnblogs.com/threecha/p/13649320.html">详见《k8s权威指南》读书笔记</a></p>
+<h4 id="5-4-网络原理类考察"><a href="#5-4-网络原理类考察" class="headerlink" title="5.4 网络原理类考察"></a>5.4 网络原理类考察</h4><p>主要考察对基本组件的理解 和原理分析</p>
+<p>k8s的网络模型是什么？<br>Docker的网络基础是什么？<br>Docker的网络模型和局限？<br>k8s的网络组件之间是如何通讯的？<br>外部如何访问k8s集群？<br>有那些开源组件支持k8s网络模型？</p>
+<p>待补充 –<a target="_blank" rel="noopener" href="https://www.cnblogs.com/threecha/p/13649320.html">详见《k8s权威指南》读书笔记</a></p>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzUzNjAxODg4MQ==&mid=2247483841&idx=1&sn=c236d6829a2cce8ad56236bf75085bbf&scene=21#wechat_redirect">K8s基础知识</a></p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">云计算</a>
+		  
+			<a href="/tags/k8s/">k8s</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2021/08/06/%E9%9D%A2%E8%AF%95%EF%BC%9A%E4%BA%91%E8%AE%A1%E7%AE%97%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">面试：云计算相关技术</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2021/08/06/%E9%9D%A2%E8%AF%95%EF%BC%9ADocker/">
+        <span class="next-text nav-default">面试：Docker</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+      </footer>
+    
+  </article>
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2021
+    <span class="footer-author">Russshare.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

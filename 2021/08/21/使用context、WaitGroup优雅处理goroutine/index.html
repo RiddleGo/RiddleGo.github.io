@@ -1,37 +1,290 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
-{% block page_class %}page-post-detail{% endblock %}
 
 
-{% block content %}
+  <meta name="description" content="使用context、WaitGroup优雅处理goroutine"/>
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
-    </div>
+
+
+  <meta name="keywords" content="WaitGroup,context," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+
+
+
+<link rel="canonical" href="https://riddlego.github.io/2021/08/21/使用context、WaitGroup优雅处理goroutine/"/>
+
+
+<meta name="description" content="via: https:&#x2F;&#x2F;justbartek.ca&#x2F;p&#x2F;golang-context-wg-go-routines&#x2F;作者：Bartek 点击进入原文看公众号更多文章 今天给大家分享一篇 如何使用 context、waitGroup 实现程序快速且优雅退出 的文章！ 原文如下：最近，我正在编写一个“滴答器”的应用程序，每次“滴答”时可能会产生数千的 goroutine。我想确保当应用终止时，即使有">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用context、WaitGroup优雅处理goroutine">
+<meta property="og:url" content="https://riddlego.github.io/2021/08/21/%E4%BD%BF%E7%94%A8context%E3%80%81WaitGroup%E4%BC%98%E9%9B%85%E5%A4%84%E7%90%86goroutine/index.html">
+<meta property="og:site_name" content="RiddleGo">
+<meta property="og:description" content="via: https:&#x2F;&#x2F;justbartek.ca&#x2F;p&#x2F;golang-context-wg-go-routines&#x2F;作者：Bartek 点击进入原文看公众号更多文章 今天给大家分享一篇 如何使用 context、waitGroup 实现程序快速且优雅退出 的文章！ 原文如下：最近，我正在编写一个“滴答器”的应用程序，每次“滴答”时可能会产生数千的 goroutine。我想确保当应用终止时，即使有">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-08-21T15:46:58.000Z">
+<meta property="article:modified_time" content="2021-08-22T08:09:02.702Z">
+<meta property="article:author" content="Russshare">
+<meta property="article:tag" content="WaitGroup">
+<meta property="article:tag" content="context">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> 使用context、WaitGroup优雅处理goroutine - RiddleGo </title>
+  <meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">RiddleGo</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          使用context、WaitGroup优雅处理goroutine
+        
+      </h1>
+
+      <time class="post-time">
+          8月 21 2021
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <p>via:</p>
+<p><a target="_blank" rel="noopener" href="https://justbartek.ca/p/golang-context-wg-go-routines/">https://justbartek.ca/p/golang-context-wg-go-routines/</a><br>作者：Bartek</p>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/jDRHKRZa3NcezBbF4xk8ww">点击进入原文看公众号更多文章</a></p>
+<p>今天给大家分享一篇 如何使用 context、waitGroup 实现程序快速且优雅退出 的文章！</p>
+<h2 id="原文如下："><a href="#原文如下：" class="headerlink" title="原文如下："></a>原文如下：</h2><p>最近，我正在编写一个“滴答器”的应用程序，每次“滴答”时可能会产生数千的 goroutine。我想确保当应用终止时，即使有一些特定的 goroutine 处理比较缓慢，它也能快速而优雅地退出。</p>
+<p>刚开始的时候，围绕如何输出日志，我使用 sync.WaitGroup 实现流程控制，但我很快意识到如果我创建了很多 goroutine，即使其中很小一部分没有立即返回，我的程序会在终止时 hang 住。</p>
+<p><strong>这让我重新考虑 context.WithCancel，并理解该如何重新调整我的程序，使其能快速且优雅地退出！</strong></p>
+<p>我们可以通过构建示例程序一步步来验证下，最初的示例程序并不会使用前面提到的技术点。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line"> &quot;fmt&quot;</span><br><span class="line"> &quot;log&quot;</span><br><span class="line"> &quot;math&#x2F;rand&quot;</span><br><span class="line"> &quot;os&quot;</span><br><span class="line"> &quot;os&#x2F;signal&quot;</span><br><span class="line"> &quot;syscall&quot;</span><br><span class="line"> &quot;time&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func doSomething(ch chan int) &#123;</span><br><span class="line"> fmt.Printf(&quot;Received job %d\n&quot;, &lt;-ch)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func init() &#123;</span><br><span class="line"> rand.Seed(time.Now().Unix())</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line"> var (</span><br><span class="line">  closing   &#x3D; make(chan struct&#123;&#125;)</span><br><span class="line">  ticker    &#x3D; time.NewTicker(1 * time.Second)</span><br><span class="line">  logger    &#x3D; log.New(os.Stderr, &quot;&quot;, log.LstdFlags)</span><br><span class="line">  batchSize &#x3D; 6</span><br><span class="line">  jobs      &#x3D; make(chan int, batchSize)</span><br><span class="line"> )</span><br><span class="line"></span><br><span class="line"> go func() &#123;</span><br><span class="line">  signals :&#x3D; make(chan os.Signal, 1)</span><br><span class="line">  signal.Notify(signals, syscall.SIGTERM, os.Interrupt)</span><br><span class="line">  &lt;-signals</span><br><span class="line">  close(closing)</span><br><span class="line"> &#125;()</span><br><span class="line">loop:</span><br><span class="line"> for &#123;</span><br><span class="line">  select &#123;</span><br><span class="line">  case &lt;-closing:</span><br><span class="line">   break loop</span><br><span class="line">  case &lt;-ticker.C:</span><br><span class="line">   for n :&#x3D; 0; n &lt; batchSize; n++ &#123;</span><br><span class="line">    jobs &lt;- n</span><br><span class="line">    go doSomething(jobs)</span><br><span class="line">   &#125;</span><br><span class="line">   logger.Printf(&quot;Completed doing %d things.&quot;, batchSize)</span><br><span class="line">  &#125;</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>执行程序，我们会发现 Received job … 和 Completed doing … 会交替输出，输出可能类似下面这样：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Received job 0</span><br><span class="line">Received job 1</span><br><span class="line">Received job 2</span><br><span class="line">2021&#x2F;02&#x2F;08 21:30:59 Completed doing 6 things.</span><br><span class="line">Received job 3</span><br><span class="line">Received job 4</span><br><span class="line">Received job 5</span><br><span class="line">2021&#x2F;02&#x2F;08 21:31:00 Completed doing 6 things.</span><br></pre></td></tr></table></figure>
+
+<p>多次打印的结果并不一致！这是合理的，我们都知道 goroutines 并不会阻塞，所以除非我们对它做些什么，否则协程里的代码会立即执行。</p>
+<p>我们添加 WaitGroup 来完善下流程，先在 var 代码块中定义变量：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">var (</span><br><span class="line">    ..</span><br><span class="line">    wg sync.WaitGroup</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>调整下 loop 循环：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">for n :&#x3D; 0; n &lt; batchSize; n++ &#123;</span><br><span class="line">    wg.Add(1)</span><br><span class="line">    jobs &lt;- n</span><br><span class="line">    go doSomething(&amp;wg, jobs)</span><br><span class="line">&#125;</span><br><span class="line">wg.Wait()</span><br><span class="line">logger.Printf(&quot;Completed doing %d things.&quot;, batchSize)</span><br></pre></td></tr></table></figure>
+
+<p>WaitGroups 会等待一组 goroutines 执行完成，仔细阅读代码我们发现：</p>
+<p>  1—每次循环时 WaitGroup 的计数器会加 1，加 1 原因是因为在 goroutine 里每次调用 wg.Done() 计数器会减一，这样 goroutine 执行完成返回之后计数器能维持平衡；</p>
+<p>  2—在调用 logger 之前，我们添加了 wg.Wait()，这样当程序执行到这里的时候便会阻塞直到 WaitGroups 的计数器减为 0。当所有 goroutines 调用 wg.Done() 之后，计数器便会恢复成 0。</p>
+<p>很简单，是不是？我们再次执行程序，可以看到结果比之前的更一致：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">2021&#x2F;02&#x2F;08 21:46:47 Completed doing 6 things.</span><br><span class="line">Received job 0</span><br><span class="line">Received job 1</span><br><span class="line">Received job 2</span><br><span class="line">Received job 4</span><br><span class="line">Received job 5</span><br><span class="line">Received job 3</span><br><span class="line">2021&#x2F;02&#x2F;08 21:46:48 Completed doing 6 things.</span><br><span class="line">Received job 0</span><br><span class="line">Received job 2</span><br><span class="line">Received job 3</span><br><span class="line">Received job 4</span><br><span class="line">Received job 5</span><br><span class="line">Received job 1</span><br></pre></td></tr></table></figure>
+<p>顺便说一句，与预期的一样，jobs 并不会按顺序执行，因为我们并没有采取任何措施来确保这一点。</p>
+<p>在我们继续之前，按照目前的状态执行程序并尝试使用 Control+D 来终止程序，程序退出不会出现任何问题。</p>
+<p>为了证明程序需要进一步完善，让我们添加一些代码模拟真实业务场景。<strong>我们新建一个函数，函数里面调用外部 API 并等待请求响应。请求过程中，我们将会调用 context.WithCancel 取消请求。</strong></p>
+<p>首先，创建一个未使用 context 的函数。下面的代码更复杂，有必要的话请看注释：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">func doAPICall(wg *sync.WaitGroup) error &#123;</span><br><span class="line"> defer wg.Done()</span><br><span class="line"></span><br><span class="line"> req, err :&#x3D; http.NewRequest(&quot;GET&quot;, &quot;https:&#x2F;&#x2F;httpstat.us&#x2F;200&quot;, nil)</span><br><span class="line"> if err !&#x3D; nil &#123;</span><br><span class="line">  return err</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"> &#x2F;&#x2F; The httpstat.us API accepts a sleep parameter which sleeps the request for the</span><br><span class="line"> &#x2F;&#x2F; passed time in ms</span><br><span class="line"> q :&#x3D; req.URL.Query()</span><br><span class="line"> sleepMin :&#x3D; 1000</span><br><span class="line"> sleepMax :&#x3D; 4000</span><br><span class="line"> q.Set(&quot;sleep&quot;, fmt.Sprintf(&quot;%d&quot;, rand.Intn(sleepMax-sleepMin)+sleepMin))</span><br><span class="line"> req.URL.RawQuery &#x3D; q.Encode()</span><br><span class="line"></span><br><span class="line"> &#x2F;&#x2F; Make the request to the API in an anonymous function, using a channel to</span><br><span class="line"> &#x2F;&#x2F; communicate the results</span><br><span class="line"> c :&#x3D; make(chan error, 1)</span><br><span class="line"> go func() &#123;</span><br><span class="line">  &#x2F;&#x2F; For the purposes of this example, we&#39;re not doing anything with the response.</span><br><span class="line">  _, err :&#x3D; http.DefaultClient.Do(req)</span><br><span class="line">  c &lt;- err</span><br><span class="line"> &#125;()</span><br><span class="line"></span><br><span class="line"> &#x2F;&#x2F; Block until the channel is populated</span><br><span class="line"> return &lt;-c</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>修改定时器“滴答”，删除调用 doSomething() 的代码、删除 jobs channel（不会再使用到它）并且调用 doAPICall()。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">for n :&#x3D; 0; n &lt; batchSize; n++ &#123;</span><br><span class="line">    wg.Add(1)</span><br><span class="line">    go doAPICall(&amp;wg)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>执行程序并再次尝试退出程序：</p>
+<ul>
+<li><p>WaitGroup 会等待所有的 goroutines 完成；</p>
+</li>
+<li><p>doAPICall() 调用会发生阻塞直到 httpstat.us() 接口返回，调用耗时大概 1000ms ~ 4000ms；</p>
+</li>
+<li><p>取决于你终止程序的时间，退出会变得很困难(耗时比较长)，试一次可能发现不了问题，在不同的时刻多尝试几次；</p>
+</li>
+</ul>
+<p>现在来演示 context.WithCancel 如何进一步控制程序取消。当 context.WithCancel 初始化之后，会返回一个 context 和取消函数 CancelFunc()。这个取消函数会取消 context，第一次听到这个会困惑。阅读 Go 官方博客的文章 Go Concurrency Patterns: Context[1] 对于进一步理解 context.WithCancel 会有所帮助，推荐阅读完本篇文章之后再看！</p>
+<p>ok，我们回到正文。为了实现取消流程控制，需要修改下代码。首先，使用 context 创建一个取消函数：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">var (</span><br><span class="line">    ctx, cancel &#x3D; context.WithCancel(context.Background())</span><br><span class="line">    ...</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>接着，在匿名函数里监听程序终止的信号，signals 被通知之后调用 CancelFunc，这意味着上下文将被视为已取消：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">go func() &#123;</span><br><span class="line">    signals :&#x3D; make(chan os.Signal, 1)</span><br><span class="line">    signal.Notify(signals, syscall.SIGTERM, os.Interrupt)</span><br><span class="line">    &lt;-signals</span><br><span class="line">    logger.Println(&quot;Initiating shutdown of producer.&quot;)</span><br><span class="line">    cancel()</span><br></pre></td></tr></table></figure>
+
+<p>接着，调整 doAPICall() 函数，多接收一个 context 参数；使用 select-case 修改函数返回，等待 ctx.Done 或等待请求响应。为了简介，只展示了函数部分代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">func doAPICall(ctx context.Context, ....) &#123;</span><br><span class="line">    &#x2F;&#x2F; Cancel the request if ctx.Done is closed or await the response</span><br><span class="line">    select &#123;</span><br><span class="line">    case &lt;-ctx.Done():</span><br><span class="line">           return ctx.Err()</span><br><span class="line">    case err :&#x3D; &lt;-c:</span><br><span class="line">        return err</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>最后，确保调用 doAPICall() 函数时传递了 context 参数。现在，运行程序并多次在不同的时间点终止程序。</p>
+<p>现在会发生什么？程序会立即退出。<strong>select-case 代码会监听 ctx.Done 是否关闭或者接口请求是否响应，哪个 case 的 channel 信号先到就先执行谁。</strong> </p>
+<p>当应用程序终止时，ctx.Done() 优先执行并且函数提前返回，不再关心请求是否响应。WaitGroup 的作用没变 - 等待一组 goroutines 完成。现在，程序的终止流程得到很大改善。</p>
+<p>Go 的基本哲学之一就是：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Don&#39;t communicate by sharing memory; share memory by communicating.</span><br></pre></td></tr></table></figure>
+
+<p>这里，我们使用 channel 在 goroutines 之间传递引用，这使得我们能够改进应用程序的流程。</p>
+<p>有很多种办法可以用来改善流程，例如，我们不跨 goroutine 接收 API 的响应或者错误。</p>
+<p>值得庆幸的是，Go 很容易就可以实现这点，因此可以将它视为一个起点，如果你还想完善，可以尝试下这些想法。</p>
+<p>下面是完整的示例，仅供参考：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line"> &quot;context&quot;</span><br><span class="line"> &quot;fmt&quot;</span><br><span class="line"> &quot;log&quot;</span><br><span class="line"> &quot;math&#x2F;rand&quot;</span><br><span class="line"> &quot;net&#x2F;http&quot;</span><br><span class="line"> &quot;os&quot;</span><br><span class="line"> &quot;os&#x2F;signal&quot;</span><br><span class="line"> &quot;sync&quot;</span><br><span class="line"> &quot;syscall&quot;</span><br><span class="line"> &quot;time&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func doAPICall(ctx context.Context, wg *sync.WaitGroup) error &#123;</span><br><span class="line"> defer wg.Done()</span><br><span class="line"></span><br><span class="line"> req, err :&#x3D; http.NewRequest(&quot;GET&quot;, &quot;https:&#x2F;&#x2F;httpstat.us&#x2F;200&quot;, nil)</span><br><span class="line"> if err !&#x3D; nil &#123;</span><br><span class="line">  return err</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"> &#x2F;&#x2F; The httpstat.us API accepts a sleep parameter which sleeps the request for the</span><br><span class="line"> &#x2F;&#x2F; passed time in ms</span><br><span class="line"> q :&#x3D; req.URL.Query()</span><br><span class="line"> sleepMin :&#x3D; 1000</span><br><span class="line"> sleepMax :&#x3D; 4000</span><br><span class="line"> q.Set(&quot;sleep&quot;, fmt.Sprintf(&quot;%d&quot;, rand.Intn(sleepMax-sleepMin)+sleepMin))</span><br><span class="line"> req.URL.RawQuery &#x3D; q.Encode()</span><br><span class="line"></span><br><span class="line"> c :&#x3D; make(chan error, 1)</span><br><span class="line"> go func() &#123;</span><br><span class="line">  &#x2F;&#x2F; For the purposes of this example, we&#39;re not doing anything with the response.</span><br><span class="line">  _, err :&#x3D; http.DefaultClient.Do(req)</span><br><span class="line">  c &lt;- err</span><br><span class="line"> &#125;()</span><br><span class="line"></span><br><span class="line"> &#x2F;&#x2F; Block until either channel is populated or closed</span><br><span class="line"> select &#123;</span><br><span class="line"> case &lt;-ctx.Done():</span><br><span class="line">  return ctx.Err()</span><br><span class="line"> case err :&#x3D; &lt;-c:</span><br><span class="line">  return err</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func init() &#123;</span><br><span class="line"> rand.Seed(time.Now().Unix())</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line"> var (</span><br><span class="line">  closing     &#x3D; make(chan struct&#123;&#125;)</span><br><span class="line">  ticker      &#x3D; time.NewTicker(1 * time.Second)</span><br><span class="line">  logger      &#x3D; log.New(os.Stderr, &quot;&quot;, log.LstdFlags)</span><br><span class="line">  batchSize   &#x3D; 6</span><br><span class="line">  wg          sync.WaitGroup</span><br><span class="line">  ctx, cancel &#x3D; context.WithCancel(context.Background())</span><br><span class="line"> )</span><br><span class="line"></span><br><span class="line"> go func() &#123;</span><br><span class="line">  signals :&#x3D; make(chan os.Signal, 1)</span><br><span class="line">  signal.Notify(signals, syscall.SIGTERM, os.Interrupt)</span><br><span class="line">  &lt;-signals</span><br><span class="line">  cancel()</span><br><span class="line">  close(closing)</span><br><span class="line"> &#125;()</span><br><span class="line">loop:</span><br><span class="line"> for &#123;</span><br><span class="line">  select &#123;</span><br><span class="line">  case &lt;-closing:</span><br><span class="line">   break loop</span><br><span class="line">  case &lt;-ticker.C:</span><br><span class="line">   for n :&#x3D; 0; n &lt; batchSize; n++ &#123;</span><br><span class="line">    wg.Add(1)</span><br><span class="line">    go doAPICall(ctx, &amp;wg)</span><br><span class="line">   &#125;</span><br><span class="line">   wg.Wait()</span><br><span class="line">   logger.Printf(&quot;Completed doing %d things.&quot;, batchSize)</span><br><span class="line">  &#125;</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>最后一点，本文部分代码受到博文 Go Concurrency Patterns: Context[2] 的启发，再次推荐这篇文章。这篇文章还介绍了其他控制函数，比如：context.WithTimeout 等。Go 官方博客是每个人都应该阅读的宝库！</p>
+<p><strong>参考资料</strong><br>[1]Go Concurrency Patterns: Context: <a target="_blank" rel="noopener" href="https://blog.golang.org/context">https://blog.golang.org/context</a></p>
+<p>[2]Go Concurrency Patterns: Context: <a target="_blank" rel="noopener" href="https://blog.golang.org/context">https://blog.golang.org/context</a></p>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/8iBQWs7LAXEMCoXc5PpSaQ">也许是 Go Context 最佳实践</a></p>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/Xv88vljtnDIRuLM0J_NSpA">官发博文：进一步阐明关于 context 的最佳实践</a></p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/WaitGroup/">WaitGroup</a>
+		  
+			<a href="/tags/context/">context</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2021/08/22/Golang%E8%AF%AD%E8%A8%80%E4%B8%ADmap%E6%9C%89%E5%93%AA%E4%BA%9B%E9%99%B7%E9%98%B1%EF%BC%9F/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">Golang语言中map有哪些陷阱？</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2021/08/21/Go%E7%A8%8B%E5%BA%8F%E5%91%98%E5%A6%82%E4%BD%95%E9%98%85%E8%AF%BB-%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/">
+        <span class="next-text nav-default">Go程序员如何阅读-深入理解计算机系统</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+      </footer>
+    
+  </article>
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2021
+    <span class="footer-author">Russshare.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

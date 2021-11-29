@@ -1,37 +1,268 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
-{% block page_class %}page-post-detail{% endblock %}
 
 
-{% block content %}
+  <meta name="description" content="剑指offer14"/>
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
-    </div>
+
+
+  <meta name="keywords" content="剑指offer," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+
+
+
+<link rel="canonical" href="https://riddlego.github.io/2021/08/03/剑指offer14/"/>
+
+
+<meta name="description" content="剑指 Offer 14- I. 剪绳子剑指 Offer 14- II. 剪绳子题目描述给你一根长度为 n 的绳子，请把绳子剪成整数长度的 m 段（m、n都是整数，n&gt;1并且m&gt;1），每段绳子的长度记为 k[0],k[1]…k[m-1] 。请问 k[0]k[1]…*k[m-1] 可能的最大乘积是多少？例如，当绳子的长度是8时，我们把它剪成长度分别为2、3、3的三段，此时得到的最大乘积是1">
+<meta property="og:type" content="article">
+<meta property="og:title" content="剑指offer14">
+<meta property="og:url" content="https://riddlego.github.io/2021/08/03/%E5%89%91%E6%8C%87offer14/index.html">
+<meta property="og:site_name" content="RiddleGo">
+<meta property="og:description" content="剑指 Offer 14- I. 剪绳子剑指 Offer 14- II. 剪绳子题目描述给你一根长度为 n 的绳子，请把绳子剪成整数长度的 m 段（m、n都是整数，n&gt;1并且m&gt;1），每段绳子的长度记为 k[0],k[1]…k[m-1] 。请问 k[0]k[1]…*k[m-1] 可能的最大乘积是多少？例如，当绳子的长度是8时，我们把它剪成长度分别为2、3、3的三段，此时得到的最大乘积是1">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-08-02T16:24:43.000Z">
+<meta property="article:modified_time" content="2021-08-05T14:32:37.775Z">
+<meta property="article:author" content="Russshare">
+<meta property="article:tag" content="剑指offer">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> 剑指offer14 - RiddleGo </title>
+  <meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">RiddleGo</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          剑指offer14
+        
+      </h1>
+
+      <time class="post-time">
+          8月 03 2021
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h2 id="剑指-Offer-14-I-剪绳子"><a href="#剑指-Offer-14-I-剪绳子" class="headerlink" title="剑指 Offer 14- I. 剪绳子"></a>剑指 Offer 14- I. 剪绳子</h2><h2 id="剑指-Offer-14-II-剪绳子"><a href="#剑指-Offer-14-II-剪绳子" class="headerlink" title="剑指 Offer 14- II. 剪绳子"></a>剑指 Offer 14- II. 剪绳子</h2><h3 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h3><p>给你一根长度为 n 的绳子，请把绳子剪成整数长度的 m 段（m、n都是整数，n&gt;1并且m&gt;1），每段绳子的长度记为 k[0],k[1]…k[m-1] 。请问 k[0]<em>k[1]</em>…*k[m-1] 可能的最大乘积是多少？例如，当绳子的长度是8时，我们把它剪成长度分别为2、3、3的三段，此时得到的最大乘积是18。</p>
+<p>示例 1：<br>输入: 2<br>输出: 1<br>解释: 2 = 1 + 1, 1 × 1 = 1</p>
+<p>示例 2:<br>输入: 10<br>输出: 36<br>解释: 10 = 3 + 3 + 4, 3 × 3 × 4 = 36</p>
+<p>提示：<br>2 &lt;= n &lt;= 58</p>
+<h3 id="思路描述"><a href="#思路描述" class="headerlink" title="思路描述"></a>思路描述</h3><p>剪绳子，求剪了绳子长度的乘积最大，这个时候，我开始想是剪得越多越好还是越长越好，其实这道题的解答我觉得是很难摆脱数学运算，还是需要一定的数学推导，在经历了（参观膜拜）大佬们的答案以后，发现这一部分还是稍有离开数学的推导的。</p>
+<p>我打算简短的介绍两个点<br>··· 1、长度方面<br>    长度为2的时候  只能是1，所以能不剪就不剪</p>
+<pre><code>2、我看见了大佬们的数学推论的，我觉得很有必要，但是对应付面试的话，我还是推荐整个动态规划算了来的快
+</code></pre>
+<p>为什么这道题可以用到动态规划，其实我想是这样的<br>    动态规划，就是你可以做一件事情，也可以不做这一件事情，但是你得选择这两种行为之中效果更大的或者更小的，或者有时候求可能性的话，那就是两个的和。就是出现了选择，这种选择会对未来的下一次行动造成影响，我觉得这个就动态规划体现。</p>
+<p>为什么没有必要研究特殊的数学规律？<br>    我觉得可以抱着兴趣研究一下，但是这样的研究是建立很多大佬的基础知识之上的，他们做了很多的题，所以啊，如果时间紧迫，那个不是上上策。</p>
+<p><strong>回归题目本身</strong><br>这道题，使用动态规划，那我真的必须推荐一下这个文章了，我还是那句话，要学会做一类题，而不是一道题。—<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/Cw39C9MY9Wr2JlcvBQZMcA">labuladong–动态规划</a><br>认真看一下哈宝贝，你会有所收获的。</p>
+<p>动态规划主要就是找到正确的状态转移方程：<br>    三步<br>    1、先确定「状态」<br>    2、然后确定dp函数的定义<br>    3、然后确定「选择」并择优</p>
+<p>那么反观到咱们这道题</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">状态肯定就是这个长度剪的情况下能取得的最大的乘积</span><br><span class="line"></span><br><span class="line">dp[i] ：i这个长度能取得的最大的乘积</span><br><span class="line"></span><br><span class="line">选择，挑最大的：也就是对于每个状态，可以做出什么选择改变当前状态。</span><br></pre></td></tr></table></figure>
+
+<p>不剪或者剪掉j 是这样写的吗？</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">max(dp[i],(i-j)*j)--------------(错误)</span><br></pre></td></tr></table></figure>
+<p>不是的，<strong>因为剪掉j以后，你不知道以后的i-j这个长度是剪了还是没有剪。</strong>其实这样写没有状态转移的那个样子，所以我们自己凭借直觉也得看出来，当然我是看答案看出来的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">max(dp[i-j]*j,(i-j)*j)</span><br><span class="line"></span><br><span class="line">max(dp[i],max(dp[i-j]*j,(i-j)*j))--------(正确)</span><br></pre></td></tr></table></figure>
+
+<p>现在整出了转移方程，我们得知道base case</p>
+<p>长度是大于等于2的，但是等于2的时候肯定就是1，这个长度特殊。</p>
+<p>dp[2]=1</p>
+<p>大于2的时候 最后这个2就不要剪了，因为最后对乘积没有帮助</p>
+<p>状态转移就是利用循环迭代消去了递归的问题，那么循环看状态转移方程我们就知道需要两重循环，但是循环的起始和结束是什么？</p>
+<p>i肯定从3开始，因为我们给出了base case—dp[2]=1</p>
+<p>j肯定是从2开始，因为等于3的时候我们能操作的最小就是2，参考我们的base case，一是因为2后面没有，dp[2]等于1</p>
+<p>现在一个动态规划该有的  </p>
+<p>base case–dp[2]=1<br>转移方程—-dp[i]=max(dp[i],max(dp[i-j]*j,(i-j)*i))<br>循环迭代的起始值 i=4,j=2</p>
+<p>开干</p>
+<p>这是第一版，<strong>毫不意外的报错了，因为dp[3]那里报错了</strong>，但是我就是觉得i-j应该大于等于2，当小于2的时候dp[1]都没有值啊</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">class Solution:</span><br><span class="line">    def cutTie(self,n:int)-&gt;int:</span><br><span class="line">        #可能这里你会问为什么n+1？因为我创建数组n的长度的时候，最后一个数组的下标是n-1，错位了，这样看着方便一些</span><br><span class="line">        dp&#x3D;[0]*(n+1)</span><br><span class="line"></span><br><span class="line">        dp[2]&#x3D;1</span><br><span class="line">        dp[3]&#x3D;2</span><br><span class="line">        #这里要保证 i-j的距离始终能保持2及其以上的距离。</span><br><span class="line">        for i in range (4,n+1):</span><br><span class="line">        #注意这里j的范围是2-（i-2）</span><br><span class="line">            for j in range (2, i-1):</span><br><span class="line">                dp[i]&#x3D;max(dp[i],max(dp[i-j]*j,(i-j)*j))</span><br><span class="line">        return dp[n]</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>dp[1]在初始化中被默认成了0<br>所以说不能说不存在，其次3必须在计算中，所以j的范围必然是2-i,不然第一个循环都会有问题（i=3,j在2-2）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">class Solution(object):</span><br><span class="line">    def cuttingRope(self, n):</span><br><span class="line">        dp&#x3D;[0]*(n+1)</span><br><span class="line">        dp[2]&#x3D;1</span><br><span class="line">        for i in range (3,n+1):</span><br><span class="line">            for j in range (2, i):</span><br><span class="line">                dp[i]&#x3D;max(dp[i],max(dp[i-j]*j,(i-j)*j))</span><br><span class="line">        return dp[n]</span><br></pre></td></tr></table></figure>
+
+<p>有时候吧，别太扣细节，细节其实不经意也处理了，但是我还是不放心，觉得逻辑过不去，最后在这里写出来我自己最能理解想的通的代码，哈哈该死的强迫症</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">class Solution(object):</span><br><span class="line">    def cuttingRope(self, n):</span><br><span class="line">        dp&#x3D;[0]*(n+1)</span><br><span class="line">        dp[2]&#x3D;1</span><br><span class="line">        #这里要保证 i-j的距离始终能保持2及其以上的距离。</span><br><span class="line">        for i in range (3,n+1):</span><br><span class="line">            if (i&#x3D;&#x3D;3):</span><br><span class="line">                dp[3]&#x3D;2</span><br><span class="line">                continue</span><br><span class="line">        #注意这里j的范围是2-（i-2）</span><br><span class="line">            for j in range (2, i-1):</span><br><span class="line">                dp[i]&#x3D;max(dp[i],max(dp[i-j]*j,(i-j)*j))</span><br><span class="line">        return dp[n]</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+<h2 id="剑指-Offer-14-II-剪绳子-II"><a href="#剑指-Offer-14-II-剪绳子-II" class="headerlink" title="剑指 Offer 14- II. 剪绳子 II"></a>剑指 Offer 14- II. 剪绳子 II</h2><h3 id="题目描述-1"><a href="#题目描述-1" class="headerlink" title="题目描述"></a>题目描述</h3><p>给你一根长度为 n 的绳子，请把绳子剪成整数长度的 m 段（m、n都是整数，n&gt;1并且m&gt;1），每段绳子的长度记为 k[0],k[1]…k[m - 1] 。请问 k[0]<em>k[1]</em>…*k[m - 1] 可能的最大乘积是多少？例如，当绳子的长度是8时，我们把它剪成长度分别为2、3、3的三段，此时得到的最大乘积是18。</p>
+<p>答案需要取模 1e9+7（1000000007），如计算初始结果为：1000000008，请返回 1。</p>
+<p> </p>
+<p>示例 1：</p>
+<p>输入: 2<br>输出: 1<br>解释: 2 = 1 + 1, 1 × 1 = 1<br>示例 2:</p>
+<p>输入: 10<br>输出: 36<br>解释: 10 = 3 + 3 + 4, 3 × 3 × 4 = 36</p>
+<h3 id="解题思路"><a href="#解题思路" class="headerlink" title="解题思路"></a>解题思路</h3><p>这道题和前面一样的，就是设计到了大数取余。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">class Solution(object):</span><br><span class="line">    def cuttingRope(self, n):</span><br><span class="line">        dp&#x3D;[0]*(n+1)</span><br><span class="line">        dp[2]&#x3D;1</span><br><span class="line">        #这里要保证 i-j的距离始终能保持2及其以上的距离。</span><br><span class="line">        for i in range (3,n+1):</span><br><span class="line">            if (i&#x3D;&#x3D;3):</span><br><span class="line">                dp[3]&#x3D;2</span><br><span class="line">                continue</span><br><span class="line">        #注意这里j的范围是2-（i-2）</span><br><span class="line">            for j in range (2, i-1):</span><br><span class="line">                dp[i]&#x3D;max(dp[i],max(dp[i-j]*j,(i-j)*j))</span><br><span class="line">        return dp[n]%1000000007</span><br></pre></td></tr></table></figure>
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/%E5%89%91%E6%8C%87offer/">剑指offer</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2021/08/03/%E5%89%91%E6%8C%87offer15/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">剑指offer15</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2021/08/03/%E5%89%91%E6%8C%87offer13/">
+        <span class="next-text nav-default">剑指offer13</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+      </footer>
+    
+  </article>
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2021
+    <span class="footer-author">Russshare.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

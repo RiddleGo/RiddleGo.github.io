@@ -1,37 +1,277 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
-{% block page_class %}page-post-detail{% endblock %}
 
 
-{% block content %}
+  <meta name="description" content="快速构建OneNet_APP"/>
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
-    </div>
+
+
+  <meta name="keywords" content="OneNet-APP," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+
+
+
+<link rel="canonical" href="https://riddlego.github.io/2021/05/08/OneNet-APP-1/"/>
+
+
+<meta name="description" content="OneNET_APP这一个APP，功能实现了简单的http的API调用背景：因为最近做一个物联网的项目，需要我把终端采集的数据进行可视化，同时需要随时随地的检测，于是搭建了这个简单的项目，没有很精致，只是实现了功能。因为五一单身狗宅在宿舍学了两三天做了这个，如果对你有点用，那将是太好了。 1. 工作流程 2. 涉及技术 模拟电路涉及 Zigbee TCP&#x2F;IP Java Js Android  3">
+<meta property="og:type" content="article">
+<meta property="og:title" content="快速构建OneNet_APP">
+<meta property="og:url" content="https://riddlego.github.io/2021/05/08/OneNet-APP-1/index.html">
+<meta property="og:site_name" content="RiddleGo">
+<meta property="og:description" content="OneNET_APP这一个APP，功能实现了简单的http的API调用背景：因为最近做一个物联网的项目，需要我把终端采集的数据进行可视化，同时需要随时随地的检测，于是搭建了这个简单的项目，没有很精致，只是实现了功能。因为五一单身狗宅在宿舍学了两三天做了这个，如果对你有点用，那将是太好了。 1. 工作流程 2. 涉及技术 模拟电路涉及 Zigbee TCP&#x2F;IP Java Js Android  3">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/OneNet_APP/workflow01.png">
+<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/OneNet_APP/appflow01.png">
+<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/OneNet_APP/fream_project.png">
+<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/OneNet_APP/fream_app.png">
+<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/OneNet_APP/Token.png">
+<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/OneNet_APP/config.png">
+<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/OneNet_APP/data_fream.png">
+<meta property="article:published_time" content="2021-05-08T06:18:09.000Z">
+<meta property="article:modified_time" content="2021-05-08T07:49:00.000Z">
+<meta property="article:author" content="Russshare">
+<meta property="article:tag" content="OneNet-APP">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/OneNet_APP/workflow01.png">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> 快速构建OneNet_APP - RiddleGo </title>
+  <meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">RiddleGo</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          快速构建OneNet_APP
+        
+      </h1>
+
+      <time class="post-time">
+          5月 08 2021
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h1 id="OneNET-APP"><a href="#OneNET-APP" class="headerlink" title="OneNET_APP"></a>OneNET_APP</h1><h2 id="这一个APP，功能实现了简单的http的API调用"><a href="#这一个APP，功能实现了简单的http的API调用" class="headerlink" title="这一个APP，功能实现了简单的http的API调用"></a>这一个APP，功能实现了简单的http的API调用</h2><p><em><strong>背景：因为最近做一个物联网的项目，需要我把终端采集的数据进行可视化，同时需要随时随地的检测，于是搭建了这个简单的项目，没有很精致，只是实现了功能。因为五一单身狗宅在宿舍学了两三天做了这个，如果对你有点用，那将是太好了。</strong></em></p>
+<h3 id="1-工作流程"><a href="#1-工作流程" class="headerlink" title="1. 工作流程"></a><strong>1. 工作流程</strong></h3><p><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/OneNet_APP/workflow01.png"></p>
+<h3 id="2-涉及技术"><a href="#2-涉及技术" class="headerlink" title="2. 涉及技术"></a><strong>2. 涉及技术</strong></h3><ol>
+<li>模拟电路涉及</li>
+<li>Zigbee</li>
+<li>TCP/IP</li>
+<li>Java</li>
+<li>Js</li>
+<li>Android</li>
+</ol>
+<h3 id="3-大概简述"><a href="#3-大概简述" class="headerlink" title="3. 大概简述"></a><strong>3. 大概简述</strong></h3><p>这是个完成度很完整，但是细节还很匮乏的项目，我是一个光学的小白换到现在的方向，完成这个项目学到了很多的东西。<br>无论是从基础的电路设计，还是到研读TCP/IP进行封装数据帧，再到设计了一个手机的APP。<br>原本是计划结合IPv6,所以OneNet上面需要用到新的Mqtt那个工作台，而那个工作台是不支持命令下发的，所以我就用了IPv4，这样当在通过下下发命令的时候，终端就开始工作，当不需要的时候就会处于睡眠的情况，这样可以大大降低功耗。</p>
+<h3 id="4-手机APP"><a href="#4-手机APP" class="headerlink" title="4. 手机APP"></a><strong>4. 手机APP</strong></h3><p>OneNet给了一个官方的SDK，但是这个SDK包含了太多的东西，对我这种Java和安卓小白一点也不友好。<br>于是乎就自己根据官方技术文档，没有用他们的，自己照猫画虎写了一个App,基本上能满足功能。</p>
+<p><strong>基本能实现基础的功能，如果你是商业用户肯定完全不够用，但是如果你是本科生想做一个毕设，只需要实现这个功能，那么我觉得还是完全够了的</strong><br><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/OneNet_APP/appflow01.png"></p>
+<h3 id="5-这里我来讲讲我的代码使用规则"><a href="#5-这里我来讲讲我的代码使用规则" class="headerlink" title="5.这里我来讲讲我的代码使用规则"></a><strong>5.这里我来讲讲我的代码使用规则</strong></h3><pre><code>我起初保留了原装sdk的api，但是我java水平确实有限，因此就自己写了一个，也没有分开放文件夹。（这样是不好的）
+
+其次主要是我自己没有涉及到sqllite等数据库，也就没有涉及到分层的模式，因为我就是利用这个app将云平台的数据拉扯过来进行一个现实。所以要是分层，只有一个显示层。
+
+所以这也是我为什么说这个适合学生毕设等，满足功能即可。
+
+我能保证 你就是会一点点java你就能实现这个功能
+
+e是菜鸟e骄傲（狗头）
+</code></pre>
+<h4 id="1-代码框架"><a href="#1-代码框架" class="headerlink" title="1. 代码框架"></a><strong>1. 代码框架</strong></h4><p> <img src="https://gitee.com/psycho1900/miss-reddle/raw/master/OneNet_APP/fream_project.png"></p>
+<p> 整个工程包含的代码如右图所示，我一一解释他们的功能<br> |文件名|作用|<br> |:—|:— |<br> |Choose|选择显示方式(折线图或者单点数值)|<br> |Code|单点数值显示|<br> |HttpGetData|获取数值的api|<br> |JsonUtil|本地json配置文件数值解析|<br> |Login|登录界面|<br> |Main2Activity|折线图显示|<br> |More|更多节点|<br> |Token|生成认证的token|</p>
+<h4 id="2-代码流程图"><a href="#2-代码流程图" class="headerlink" title="2. 代码流程图"></a><strong>2. 代码流程图</strong></h4><p>  这个部分我来讲述一下代码整个flow是什么  哟哟<br><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/OneNet_APP/fream_app.png"></p>
+<p>我是把httpData封装了，但是因为当时方便观察，我就把这里面的代码放在code里面去了，所以一样的，不过正确的编码风格应该将这种功能提出来做成一个单独的类来使用，高内聚，低耦合，永不过时。</p>
+<h4 id="3-代码使用教程"><a href="#3-代码使用教程" class="headerlink" title="3. 代码使用教程"></a><strong>3. 代码使用教程</strong></h4><p> 可能很多人已经心里暗自吐槽，这么个简单的东西bb半天，我只想知道怎么使用，客观稍等，这就上菜。</p>
+<p> 使用这个过程你需要跟着我将以下的几个部分修改成你的即可。</p>
+<p><strong>在这之前我要说一下折线显示这个部分，这个部分是使用的onenet的view这个平台，这个平台可以搭积木的般完成整个设计，而不涉及底层的代码，这需要部分你的js脚本把你的代码数据进行筛选一下即可</strong><br>然后在上面完成了以后，安卓上面只需要一个WebView的就可以展示出来，这样好像有点投机。哈哈 </p>
+<pre><code>修改部分
+assets里面的 是配置文件---用户名、密码、url。
+
+1、进入Token文件
+</code></pre>
+<p><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/OneNet_APP/Token.png"></p>
+<pre><code>2、app_config
+</code></pre>
+<p>  <img src="https://gitee.com/psycho1900/miss-reddle/raw/master/OneNet_APP/config.png"></p>
+<p>  <em><strong>不要直接复制哈</strong></em></p>
+<p>  “url1”:<br>  “<a target="_blank" rel="noopener" href="http://api.heclouds.com/devices/%E2%80%9C%E2%80%9D/datapoints?datastream_id=%E2%80%9C%E2%80%9D&amp;limit=1&quot;">http://api.heclouds.com/devices/“”/datapoints?datastream_id=“”&amp;limit=1&quot;</a>,  </p>
+<p>  这个url1你要去看一下mqtt的技术手册哦，讲的很清楚的。<br>  我就是把它的复制过来，然后酌情修改哦。</p>
+<p>  “url”:<br>  “<a target="_blank" rel="noopener" href="https://open.iot.10086.cn/view/main/#/share2d?id=%E2%80%9C%E2%80%9D&quot;">https://open.iot.10086.cn/view/main/#/share2d?id=“”&quot;</a></p>
+<p>  这个url是我webview的地址，当你在onenet平台上构建好可视化的应用，然后发布，就会产生这样的一个界面</p>
+<p>  <img src="https://gitee.com/psycho1900/miss-reddle/raw/master/OneNet_APP/data_fream.png"></p>
+<p>  这个文件是Code，因为不同的应用会产生不一样的数据，不一样的数据就会产生不一样的json的格式，所以这一部分需要你花点心思。</p>
+<p>  我就是使用的笨办法，在网上找了一个博客，然后不断地重复解析，无限套娃，最后拿到我要的数据：值和时间</p>
+<h4 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h4><p> <em><strong>以上就是全部的东西，希望能对你有一点点帮助</strong></em></p>
+<p> <em><strong>这个完全够你应付非计算机及相关专业的本科毕设啦，有一部分还是需要你自己认真一点哈，毕竟搞技术，一点不动脑子是不可能的呢哈哈哈。</strong></em></p>
+<p> <em><strong>代码开源，希望大家可以弄懂，然后个性化一部分，设计出属于自己的，以及搞懂了，答辩时也可以装作很厉害，说的很厉害的一点。</strong></em></p>
+<p> <em><strong>如果有用，欢迎star，撒拉黑哟</strong></em></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/RiddleGo/OneNET_APP">OneNet-APP源码</a></p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/OneNet-APP/">OneNet-APP</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2021/05/10/hexo%E6%96%87%E7%AB%A0%E6%93%8D%E4%BD%9C/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">hexo文章操作</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2020/01/01/HelloWorld/">
+        <span class="next-text nav-default">Hello World</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+      </footer>
+    
+  </article>
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2021
+    <span class="footer-author">Russshare.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

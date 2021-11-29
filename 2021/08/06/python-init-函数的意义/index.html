@@ -1,37 +1,228 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
-{% block page_class %}page-post-detail{% endblock %}
 
 
-{% block content %}
+  <meta name="description" content="python:__init__函数的意义"/>
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
-    </div>
+
+
+  <meta name="keywords" content="函数," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+
+
+
+<link rel="canonical" href="https://riddlego.github.io/2021/08/06/python-init-函数的意义/"/>
+
+
+<meta name="description" content="前辈原文链接—Python中__init__的用法和理解 1、在Python中定义类经常会用到__init__函数（方法），首先需要理解的是，两个下划线开头的函数是声明该属性为私有，不能在类的外部被使用或访问。**而__init__函数（方法）支持带参数类的初始化，也可为声明该类的属性（类中的变量）**。init__函数（方法）的第一个参数必须为self，后续参数为自己定义。(这里__init__">
+<meta property="og:type" content="article">
+<meta property="og:title" content="python:__init__函数的意义">
+<meta property="og:url" content="https://riddlego.github.io/2021/08/06/python-init-%E5%87%BD%E6%95%B0%E7%9A%84%E6%84%8F%E4%B9%89/index.html">
+<meta property="og:site_name" content="RiddleGo">
+<meta property="og:description" content="前辈原文链接—Python中__init__的用法和理解 1、在Python中定义类经常会用到__init__函数（方法），首先需要理解的是，两个下划线开头的函数是声明该属性为私有，不能在类的外部被使用或访问。**而__init__函数（方法）支持带参数类的初始化，也可为声明该类的属性（类中的变量）**。init__函数（方法）的第一个参数必须为self，后续参数为自己定义。(这里__init__">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-08-06T02:27:13.000Z">
+<meta property="article:modified_time" content="2021-08-06T06:59:11.617Z">
+<meta property="article:author" content="Russshare">
+<meta property="article:tag" content="函数">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> python:__init__函数的意义 - RiddleGo </title>
+  <meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">RiddleGo</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          python:__init__函数的意义
+        
+      </h1>
+
+      <time class="post-time">
+          8月 06 2021
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <p><a target="_blank" rel="noopener" href="https://blog.csdn.net/luzhan66/article/details/82822896?utm_medium=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromMachineLearnPai2~default-4.control&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromMachineLearnPai2~default-4.control">前辈原文链接—Python中__init__的用法和理解</a></p>
+<h3 id="1、"><a href="#1、" class="headerlink" title="1、"></a>1、</h3><p>在Python中定义类经常会用到__init__函数（方法），<strong>首先需要理解的是，两个下划线开头的函数是声明该属性为私有，</strong>不能在类的外部被使用或访问。**而__init__函数（方法）支持带参数类的初始化，也可为声明该类的属性（类中的变量）**。<strong>init__函数（方法）的第一个参数必须为self，后续参数为自己定义。<br>(这里__init__是系统的，不是私有变量，</strong>  和 __\__是有区别的)<br>从文字理解比较困难，通过下面的例子能非常容易理解这个概念：</p>
+<p>例如我们定义一个Box类，有width, height, depth三个属性，以及计算体积的方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">#!&#x2F;usr&#x2F;bin&#x2F;python</span><br><span class="line"># -*- coding utf-8 -*-</span><br><span class="line">#Created by Lu Zhan</span><br><span class="line"> </span><br><span class="line">class Box:</span><br><span class="line">    def setDimension(self, width, height, depth):</span><br><span class="line">        self.width &#x3D; width</span><br><span class="line">        self.height &#x3D; height</span><br><span class="line">        self.depth &#x3D; depth</span><br><span class="line"> </span><br><span class="line">    def getVolume(self):</span><br><span class="line">        return self.width * self.height * self.depth</span><br><span class="line"> </span><br><span class="line">b &#x3D; Box()</span><br><span class="line">b.setDimension(10, 20, 30)</span><br><span class="line">print(b.getVolume())</span><br></pre></td></tr></table></figure>
+
+<p>我们在Box类中定义了setDimension方法去设定该Box的属性，这样过于繁琐，<strong>而用__init__（）这个特殊的方法就可以方便地自己对类的属性进行定义，<strong>init</strong>()方法又被称为构造器（constructor）。</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">#!&#x2F;usr&#x2F;bin&#x2F;python</span><br><span class="line"># -*- coding utf-8 -*-</span><br><span class="line">#Created by Lu Zhan</span><br><span class="line"> </span><br><span class="line">class Box:</span><br><span class="line">    #def setDimension(self, width, height, depth):</span><br><span class="line">    #   self.width &#x3D; width</span><br><span class="line">    #   self.height &#x3D; height</span><br><span class="line">    #   self.depth &#x3D; depth</span><br><span class="line">    def __init__(self, width, height, depth):</span><br><span class="line">        self.width &#x3D; width</span><br><span class="line">        self.height &#x3D; height</span><br><span class="line">        self.depth &#x3D; depth</span><br><span class="line"> </span><br><span class="line">    def getVolume(self):</span><br><span class="line">        return self.width * self.height * self.depth</span><br><span class="line"> </span><br><span class="line">#可以看到这里使用起来就很轻松</span><br><span class="line">b &#x3D; Box(10, 20, 30)</span><br><span class="line">print(b.getVolume())</span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://langbin.blog.csdn.net/article/details/54800016?utm_medium=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~default-5.control&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~default-5.control">参考文章一python的__init__()</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.runoob.com/python/python-object.html">参考文章二</a></p>
+<h4 id="在Python中，有以下几种方式来定义变量："><a href="#在Python中，有以下几种方式来定义变量：" class="headerlink" title="在Python中，有以下几种方式来定义变量："></a>在Python中，有以下几种方式来定义变量：</h4><p>xx：公有变量<br>_xx：单前置下划线，私有化属性或方法，类对象和子类可以访问，from somemodule import *禁止导入<br>__xx：双前置下划线，私有化属性或方法，无法在外部直接访问（名字重整所以访问不到）<br>__xx__：双前后下划线，系统定义名字（不要自己发明这样的名字）<br>xx_：单后置下划线，用于避免与Python关键词的冲突</p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/%E5%87%BD%E6%95%B0/">函数</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2021/08/06/python-if-name-main/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">__name__==__main__</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2021/08/06/python-init-py%E6%96%87%E4%BB%B6%E7%9A%84%E6%84%8F%E4%B9%89/">
+        <span class="next-text nav-default">python:__init__.py文件的意义</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+      </footer>
+    
+  </article>
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2021
+    <span class="footer-author">Russshare.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

@@ -1,37 +1,282 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
-{% block page_class %}page-post-detail{% endblock %}
 
 
-{% block content %}
+  <meta name="description" content="学会这些shell小技巧_我就爱上Linux了"/>
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
-    </div>
+
+
+  <meta name="keywords" content="linux,shell," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+
+
+
+<link rel="canonical" href="https://riddlego.github.io/2021/06/24/学会这些shell小技巧-我就爱上Linux了/"/>
+
+
+<meta name="description" content="内容来自labuladong公众号 前几篇关于 Linux 的文章很受欢迎，很多读者都希望我多写写这方面的文章。我以后会定期分享一些 Linux 的实用小技巧，你用习惯之后可能就会和我一样，使用 Windows 就头疼。。。 先说句题外话，大家总是问能不能装双系统，装什么 Linux 发行版比较好。这里统一回答一下，装双系统很简单的，网上很多教程；至于发行版，推荐 Ubuntu，不要迷恋那些看起来">
+<meta property="og:type" content="article">
+<meta property="og:title" content="学会这些shell小技巧_我就爱上Linux了">
+<meta property="og:url" content="https://riddlego.github.io/2021/06/24/%E5%AD%A6%E4%BC%9A%E8%BF%99%E4%BA%9Bshell%E5%B0%8F%E6%8A%80%E5%B7%A7-%E6%88%91%E5%B0%B1%E7%88%B1%E4%B8%8ALinux%E4%BA%86/index.html">
+<meta property="og:site_name" content="RiddleGo">
+<meta property="og:description" content="内容来自labuladong公众号 前几篇关于 Linux 的文章很受欢迎，很多读者都希望我多写写这方面的文章。我以后会定期分享一些 Linux 的实用小技巧，你用习惯之后可能就会和我一样，使用 Windows 就头疼。。。 先说句题外话，大家总是问能不能装双系统，装什么 Linux 发行版比较好。这里统一回答一下，装双系统很简单的，网上很多教程；至于发行版，推荐 Ubuntu，不要迷恋那些看起来">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-06-24T01:57:49.000Z">
+<meta property="article:modified_time" content="2021-06-29T09:58:30.290Z">
+<meta property="article:author" content="Russshare">
+<meta property="article:tag" content="linux">
+<meta property="article:tag" content="shell">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> 学会这些shell小技巧_我就爱上Linux了 - RiddleGo </title>
+  <meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">RiddleGo</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          学会这些shell小技巧_我就爱上Linux了
+        
+      </h1>
+
+      <time class="post-time">
+          6月 24 2021
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <p><strong>内容来自labuladong公众号</strong></p>
+<p>前几篇关于 Linux 的文章很受欢迎，很多读者都希望我多写写这方面的文章。我以后会定期分享一些 Linux 的实用小技巧，你用习惯之后可能就会和我一样，使用 Windows 就头疼。。。</p>
+<p>先说句题外话，大家总是问能不能装双系统，装什么 Linux 发行版比较好。这里统一回答一下，装双系统很简单的，网上很多教程；<strong>至于发行版，推荐 Ubuntu</strong>，不要迷恋那些看起来牛逼的小众发行版，我们的评判标准是是否稳定，是否拥有完善的社区支持，这两点 Ubuntu 桌面版无疑是最好的。我之前遇到蓝牙键盘的适配问题，Ubuntu 社区上竟然有大佬直接写了个驱动，完美解决，真是意料之外。</p>
+<p>当然，你要是有时间爱折腾，可以随意。或者你有钱，你也不需要纠结 Linux 发行版，玩 MacBook 吧，它继承了 Linux 的优点，逼格还高，就是贵……</p>
+<p>回归主题，我认为 Linux 的迷人之处在于完善的社区和许多小而美的工具，加之管道符、重定向等等漂亮的设计理念，可以将很多复杂的工作自动化。本文就介绍一些基本的 Linux shell 技巧，相信可以帮你提高生产力！</p>
+<h3 id="输入相似文件名太麻烦"><a href="#输入相似文件名太麻烦" class="headerlink" title="输入相似文件名太麻烦"></a>输入相似文件名太麻烦</h3><p>用花括号括起来的字符串用逗号连接，可以自动扩展，非常有用，直接看例子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ echo &#123;one,two,three&#125;file</span><br><span class="line">onefile twofile threefile</span><br><span class="line"></span><br><span class="line">$ echo &#123;one,two,three&#125;&#123;1,2,3&#125;</span><br><span class="line">one1 one2 one3 two1 two2 two3 three1 three2 three3</span><br></pre></td></tr></table></figure>
+
+<p>你看，花括号中的每个字符都可以和之后（或之前）的字符串进行组合拼接，注意花括号和其中的逗号不可以用空格分隔，否则会被认为是普通的字符串对待。</p>
+<p>这个技巧有什么实际用处呢？最简单实用的就是给cp,mv,rm等命令扩展参数：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ cp &#x2F;very&#x2F;long&#x2F;path&#x2F;file&#123;,.bak&#125;</span><br><span class="line"># 给 file 复制一个叫做 file.bak 的副本</span><br><span class="line"></span><br><span class="line">$ rm file&#123;1,3,5&#125;.txt</span><br><span class="line"># 删除 file1.txt file3.txt file5.txt</span><br><span class="line"></span><br><span class="line">$ mv *.&#123;c,cpp&#125; src&#x2F;</span><br><span class="line"># 将所有 .c 和 .cpp 为后缀的文件移入 src 文件夹</span><br></pre></td></tr></table></figure>
+
+<h3 id="输入路径名称太麻烦"><a href="#输入路径名称太麻烦" class="headerlink" title="输入路径名称太麻烦"></a>输入路径名称太麻烦</h3><p><strong>用cd -返回刚才待的目录，</strong>直接看例子吧：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ pwd</span><br><span class="line">&#x2F;very&#x2F;long&#x2F;path</span><br><span class="line">$ cd # 回到家目录瞅瞅</span><br><span class="line">$ pwd</span><br><span class="line">&#x2F;home&#x2F;labuladong</span><br><span class="line">$ cd - # 再返回刚才那个目录</span><br><span class="line">$ pwd</span><br><span class="line">&#x2F;very&#x2F;long&#x2F;path</span><br></pre></td></tr></table></figure>
+<p><strong>特殊命令!$会替换成上一次命令最后的路径</strong>，直接看例子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># 没有加可执行权限</span><br><span class="line">$ &#x2F;usr&#x2F;bin&#x2F;script.sh</span><br><span class="line">zsh: permission denied: &#x2F;usr&#x2F;bin&#x2F;script.sh</span><br><span class="line"></span><br><span class="line">$ chmod +x !$</span><br><span class="line">chmod +x &#x2F;usr&#x2F;bin&#x2F;script.sh</span><br></pre></td></tr></table></figure>
+
+<p>*<em>特殊命令!<em>会替换成上一次命令输入的所有文件路径，直接看例子：</em></em></p>
+<h1 id="创建了三个脚本文件"><a href="#创建了三个脚本文件" class="headerlink" title="创建了三个脚本文件"></a>创建了三个脚本文件</h1><p>$ file script1.sh script2.sh script3.sh</p>
+<h1 id="给它们全部加上可执行权限"><a href="#给它们全部加上可执行权限" class="headerlink" title="给它们全部加上可执行权限"></a>给它们全部加上可执行权限</h1><p>$ chmod +x !*<br>chmod +x script1.sh script2.sh script3.sh</p>
+<p><strong>可以在环境变量CDPATH中加入你常用的工作目录</strong>，当cd命令在当前目录中找不到你指定的文件/目录时，会自动到CDPATH中的目录中寻找。</p>
+<p>比如说我常去家目录，也常去/var/log目录找日志，可以执行如下命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">$ export CDPATH&#x3D;&#39;~:&#x2F;var&#x2F;log&#39;</span><br><span class="line"># cd 命令将会在 ~ 目录和 &#x2F;var&#x2F;log 目录扩展搜索</span><br><span class="line"></span><br><span class="line">$ pwd</span><br><span class="line">&#x2F;home&#x2F;labuladong&#x2F;musics</span><br><span class="line">$ cd mysql</span><br><span class="line">cd &#x2F;var&#x2F;log&#x2F;mysql</span><br><span class="line">$ pwd</span><br><span class="line">&#x2F;var&#x2F;log&#x2F;mysql</span><br><span class="line">$ cd my_pictures</span><br><span class="line">cd &#x2F;home&#x2F;labuladong&#x2F;my_pictures</span><br></pre></td></tr></table></figure>
+<p>这个技巧是十分好用的，这样就免了经常写完整的路径名称，节约不少时间。</p>
+<p>需要注意的是，以上操作是 bash 支持的，其他主流 shell 解释器当然都支持扩展cd命令的搜索目录，但可能不是修改CDPATH这个变量，具体的设置方法可以自行搜索。</p>
+<h3 id="输入重复命令太麻烦"><a href="#输入重复命令太麻烦" class="headerlink" title="输入重复命令太麻烦"></a>输入重复命令太麻烦</h3><p><strong>使用特殊命令!!，可以自动替换成上一次使用的命令：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ apt install net-tools</span><br><span class="line">E: Could not open lock file - open (13: Permission denied)</span><br><span class="line"></span><br><span class="line">$ sudo !!</span><br><span class="line">sudo apt install net-tools</span><br><span class="line">[sudo] password for labuladong:</span><br></pre></td></tr></table></figure>
+
+<p>有的命令很长，一时间想不起来具体参数了怎么办？</p>
+<p><strong>对于 bash 终端，可以使用Ctrl+R快捷键反向搜索历史命令，</strong>之所以说是反向搜索，就是搜索最近一次输入的命令。</p>
+<p>比如按下Ctrl+R之后，输入sudo，bash 就会搜索出最近一次包含sudo的命令，你回车之后就可以运行该命令了：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(reverse-i-search)&#96;sudo&#39;: sudo apt install git</span><br></pre></td></tr></table></figure>
+
+<p>但是这个方法有缺点：首先，该功能似乎只有 bash 支持，我用的 zsh 作为 shell 终端，就用不了；第二，只能查找出一个（最近的）命令，如果我想找以前的某个命令，就没办法了。</p>
+<p>对于这种情况，我们最常用的方法是使用history命令配合管道符和grep命令来寻找某个历史命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># 过滤出所有包含 config 字段的历史命令</span><br><span class="line">$ history | grep &#39;config&#39;</span><br><span class="line"> 7352  .&#x2F;configure</span><br><span class="line"> 7434  git config --global --unset https.proxy</span><br><span class="line"> 9609  ifconfig</span><br><span class="line"> 9985  clip -o | sed -z &#39;s&#x2F;\n&#x2F;,\n&#x2F;g&#39; | clip</span><br><span class="line">10433  cd ~&#x2F;.config</span><br></pre></td></tr></table></figure>
+<p>你使用的所有 shell 命令都会被记录，前面的数字就表示这是第几个命令，找到你想重复使用的命令后，也不需要复制粘贴该命令，只要使用!+ 你想重用的命令编号即可运行该命令。</p>
+<p>拿上面的例子，我想重新运行git config那条命令，就可以这样：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ !7434</span><br><span class="line">git config --global --unset https.proxy</span><br><span class="line"># 运行完成</span><br></pre></td></tr></table></figure>
+
+<p>我觉得history加管道加grep这样打的字还是太多，可以在你的 shell 配置文件中（.bashrc，.zshrc等） 中写这样一个函数：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">his()</span><br><span class="line">&#123;</span><br><span class="line">    history | grep &quot;$@&quot;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>这样就不需要写那么多，只需要his ‘some_keyword’即可搜索历史命令。</p>
+<p>我一般不使用 bash 作为终端，我给大家推荐一款很好用的 shell 终端叫做 zsh，这也是我自己使用的 shell。这款终端还可以扩展各种插件，非常好用，具体配置方法可自行搜索。</p>
+<h3 id="其他小技巧"><a href="#其他小技巧" class="headerlink" title="其他小技巧"></a>其他小技巧</h3><p><strong>1、yes命令自动输入字符y进行确认：</strong></p>
+<p>我们安装某些软件的时候，可能有交互式的提问：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt install XXX</span><br><span class="line">...</span><br><span class="line">XXX will use 996 MB disk space, continue? [y&#x2F;n]</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>一般情况下我们都是一路 y 到底，但如果我们想自动化一些软件的安装就很烦，遇到这种交互式提问就卡住了，还得手动处理。</p>
+<p>yes命令可以帮助我们：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ yes | your_cmd</span><br></pre></td></tr></table></figure>
+<p>这样就会一路自动y下去，不会停下让我们输入了。</p>
+<p>如果你读过前文 Linux 进程、线程、文件描述符的底层原理，就知道其原理很简单：</p>
+<p>你单独运行一下yes命令，发现它就是打印出一大堆字符 y，通过管道把输出和your_cmd的标准输入相连接，如果your_cmd又提出无聊的问题，就会从标准输入读取数据，也就会读取到一个 y 和换行符，和你手动输入 y 确认是一个效果。</p>
+<p><strong>2、特殊变量$?记录上一次命令的返回值。</strong></p>
+<p>在 Linux shell 中，遵循 C 语言的习惯，返回值为 0 的话就是程序正常退出，非 0 值就是异常退出。读取上一次命令的返回值在平时使用命令行时感觉没什么用，但是如果你想编写一些 shell 脚本，知道返回值非常有用。</p>
+<p>举个实际的例子，比如我的 Github 仓库 fucking-algorithm ，我需要给其中所有 markdown 文件最下方添加上一篇、下一篇、目录三个页脚链接，有的文章已经有了页脚，大部分都没有。</p>
+<p>为了防止重复添加，我必须知道一个 md 文件末尾是否已添加，这时候就可以使用$?变量配合grep命令做到：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">#!&#x2F;bin&#x2F;bash</span><br><span class="line">filename&#x3D;$1</span><br><span class="line"># 查看文件尾部是否包含关键词</span><br><span class="line">tail | grep &#39;下一篇&#39; $filename</span><br><span class="line"># grep 查找到匹配会返回 0，找不到则返回非 0 值</span><br><span class="line">[ $? -ne 0 ] &amp;&amp; &#123; 添加页脚; &#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>3、特殊变量$$记录当前进程的 PID。</strong></p>
+<p>这个功能可能在平时使用时也不怎么用，但是在写 shell 脚本时也非常有用，比如说你要在/tmp创建临时文件，给文件起名字一直都是非常让人费脑子的，这时候可以使用$$变量扩展出当前进程的 PID 作为临时文件名，PID 在计算机中都是唯一的，所以绝不会重复，也不需要你记住临时文件的名字。</p>
+<p>好了，今天就分享这些技巧吧，如果大家对 Linux 有兴趣，可以点在看分享，数据不错的话下次再写点。</p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/linux/">linux</a>
+		  
+			<a href="/tags/shell/">shell</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2021/06/24/cookie%E5%92%8Csession%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">cookie和session到底是什么</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2021/06/24/%E6%AF%8F%E5%A4%A9%E4%B8%80%E9%81%93%E7%AE%97%E6%B3%95%E9%A2%98%EF%BC%9A%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95%E7%9A%84%E5%89%8D%E4%B8%96%E4%BB%8A%E7%94%9F/">
+        <span class="next-text nav-default">加密算法的前世今生</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+      </footer>
+    
+  </article>
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2021
+    <span class="footer-author">Russshare.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

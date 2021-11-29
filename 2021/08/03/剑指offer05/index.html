@@ -1,37 +1,262 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
-{% block page_class %}page-post-detail{% endblock %}
 
 
-{% block content %}
+  <meta name="description" content="剑指offer05"/>
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
-    </div>
+
+
+  <meta name="keywords" content="剑指offer," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+
+
+
+<link rel="canonical" href="https://riddlego.github.io/2021/08/03/剑指offer05/"/>
+
+
+<meta name="description" content="05. 替换空格请实现一个函数，把字符串 s 中的每个空格替换成”%20”。 示例 1： 输入：s &#x3D; “We are happy.”输出：”We%20are%20happy.” 123限制：0 &lt;&#x3D; s 的长度 &lt;&#x3D; 10000  这个玩意吧说简单确实简单，呵呵这样想，那你就年轻了，小伙子有没有想到字符串能不能本地改变的事情，反正我没有。 方法一、创建一个新的，然">
+<meta property="og:type" content="article">
+<meta property="og:title" content="剑指offer05">
+<meta property="og:url" content="https://riddlego.github.io/2021/08/03/%E5%89%91%E6%8C%87offer05/index.html">
+<meta property="og:site_name" content="RiddleGo">
+<meta property="og:description" content="05. 替换空格请实现一个函数，把字符串 s 中的每个空格替换成”%20”。 示例 1： 输入：s &#x3D; “We are happy.”输出：”We%20are%20happy.” 123限制：0 &lt;&#x3D; s 的长度 &lt;&#x3D; 10000  这个玩意吧说简单确实简单，呵呵这样想，那你就年轻了，小伙子有没有想到字符串能不能本地改变的事情，反正我没有。 方法一、创建一个新的，然">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-08-02T16:15:29.000Z">
+<meta property="article:modified_time" content="2021-08-02T16:19:14.395Z">
+<meta property="article:author" content="Russshare">
+<meta property="article:tag" content="剑指offer">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> 剑指offer05 - RiddleGo </title>
+  <meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">RiddleGo</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          剑指offer05
+        
+      </h1>
+
+      <time class="post-time">
+          8月 03 2021
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h2 id="05-替换空格"><a href="#05-替换空格" class="headerlink" title="05. 替换空格"></a>05. 替换空格</h2><p>请实现一个函数，把字符串 s 中的每个空格替换成”%20”。</p>
+<p>示例 1：</p>
+<p>输入：s = “We are happy.”<br>输出：”We%20are%20happy.”</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">限制：</span><br><span class="line"></span><br><span class="line">0 &lt;&#x3D; s 的长度 &lt;&#x3D; 10000</span><br></pre></td></tr></table></figure>
+
+<p>这个玩意吧说简单确实简单，呵呵这样想，那你就年轻了，小伙子有没有想到字符串能不能本地改变的事情，反正我没有。</p>
+<h3 id="方法一、创建一个新的，然后遍历添加替换。-这个适合字符串不能改变的—python或者java中strbuilder"><a href="#方法一、创建一个新的，然后遍历添加替换。-这个适合字符串不能改变的—python或者java中strbuilder" class="headerlink" title="方法一、创建一个新的，然后遍历添加替换。 这个适合字符串不能改变的—python或者java中strbuilder"></a>方法一、创建一个新的，然后遍历添加替换。 这个适合字符串不能改变的—python或者java中strbuilder</h3><p><strong>算法流程：</strong></p>
+<p>初始化一个 list (Python) / StringBuilder (Java) ，记为 res ；<br>遍历列表 s 中的每个字符 c ：<br>当 c 为空格时：向 res 后添加字符串 “%20” ；<br>当 c 不为空格时：向 res 后添加字符 c ；<br>将列表 res 转化为字符串并返回。</p>
+<p><strong>复杂度分析：</strong><br>时间复杂度 O(N)O(N) ： 遍历使用 O(N) ，每轮添加（修改）字符操作使用 O(1) ；<br>空间复杂度 O(N) ： Python 新建的 list 和 Java 新建的 StringBuilder 都使用了线性大小的额外空间。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">class Solution:</span><br><span class="line">  def replaceNum(self, s:str) -&gt;str:</span><br><span class="line">    res &#x3D; []</span><br><span class="line">    for c in s:</span><br><span class="line">      if (c &#x3D;&#x3D; &#39; &#39;):</span><br><span class="line">        res.append(&quot;%20&quot;)</span><br><span class="line">      else:</span><br><span class="line">        res.append(c)</span><br><span class="line">    return res</span><br></pre></td></tr></table></figure>
+<p>但是其实如果说这样遍历就有点简单了，面试可能要求你做一个in-place的方法，那么这个时候可以利用到python中的<strong>replace方法</strong></p>
+<p><strong>replace方法：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">函数原型</span><br><span class="line">str.replace(old, new[, max])</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">参数</span><br><span class="line">old -- 将被替换的子字符串。</span><br><span class="line">new -- 新字符串，用于替换old子字符串。</span><br><span class="line">max -- 可选字符串, 替换不超过 max 次</span><br><span class="line"></span><br><span class="line">返回值</span><br><span class="line">返回字符串中的 old（旧字符串） 替换成 new(新字符串)后生成的新字符串，</span><br><span class="line"></span><br><span class="line">如果指定第三个参数max，则替换不超过 max 次。</span><br></pre></td></tr></table></figure>
+<p>整个栗子看一下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">#!&#x2F;usr&#x2F;bin&#x2F;python</span><br><span class="line"> </span><br><span class="line">str &#x3D; &quot;this is string example....wow!!! this is really string&quot;;</span><br><span class="line">print str.replace(&quot;is&quot;, &quot;was&quot;);</span><br><span class="line">print str.replace(&quot;is&quot;, &quot;was&quot;, 3);</span><br><span class="line"></span><br><span class="line">#输出</span><br><span class="line">thwas was string example....wow!!! thwas was really string</span><br><span class="line">thwas was string example....wow!!! thwas is really string</span><br></pre></td></tr></table></figure>
+
+<p>所以咱们这道题直接这个方法，面试时候也可以整处理，不过力扣我就不知道能不能用了。</p>
+<h3 id="如果是java"><a href="#如果是java" class="headerlink" title="如果是java"></a>如果是java</h3><p>这里其实如果你用的java，你把这道题做出来以后，肯定还会问你一些问题，不过在这之前先把力扣的答案整上来。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">class Solution&#123;</span><br><span class="line">  public String replaceSpace(String s)&#123;</span><br><span class="line">    for(Character c : s.toCharArray())</span><br><span class="line">    &#123;</span><br><span class="line">      if (c &#x3D;&#x3D; &#39;&#39;)&#123;</span><br><span class="line">        res.append(&quot;%20&quot;);</span><br><span class="line">      &#125;else&#123;</span><br><span class="line">        res.append(c);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return res.toString();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>肯定会问你 string-stringbuilder-stringbuffer的区别，还会问你string能不能改变这个鸟问题。</p>
+<p>现在就顺便来锊一下，几个问题</p>
+<h4 id="1、String部分内部方法无法重写"><a href="#1、String部分内部方法无法重写" class="headerlink" title="1、String部分内部方法无法重写"></a>1、String部分内部方法无法重写</h4><p>如””.value为不存在String类时可以再内部直接调用的；当前通过””.toCharArray()实现String类型字符变为char数组。</p>
+<p>(Java的静态方法不能被重写（详解！）)[<a target="_blank" rel="noopener" href="https://blog.csdn.net/gao_zhennan/article/details/72892946?utm_medium=distribute.pc_relevant_t0.none-task-blog-2~default~BlogCommendFromMachineLearnPai2~default-1.control&amp;depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-2~default~BlogCommendFromMachineLearnPai2~default-1.control%5D">https://blog.csdn.net/gao_zhennan/article/details/72892946?utm_medium=distribute.pc_relevant_t0.none-task-blog-2~default~BlogCommendFromMachineLearnPai2~default-1.control&amp;depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-2~default~BlogCommendFromMachineLearnPai2~default-1.control]</a></p>
+<h4 id="2、String、StringBuffer与StringBuilder之间区别"><a href="#2、String、StringBuffer与StringBuilder之间区别" class="headerlink" title="2、String、StringBuffer与StringBuilder之间区别"></a>2、String、StringBuffer与StringBuilder之间区别</h4><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/itchuxuezhe_yang/article/details/89966303">String、StringBuffer与StringBuilder之间区别</a></p>
+<p>前辈们都写的很详细，大家认真研读即可</p>
+<h3 id="C"><a href="#C" class="headerlink" title="C++"></a>C++</h3><p>其实在力扣中这个思想还是蛮精彩的，我想说想不到是正常的，想到了是牛逼的，踏踏实实走好自己的路，这几天产生了很大的抵触情绪，后来想着不如苦中作乐。</p>
+<p><strong>在 C++ 语言中， string 被设计成「可变」的类型<a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/28442719/are-c-strings-mutable-unlike-java-strings">参考资料</a>，因此可以在不新建字符串的情况下实现原地修改。</strong></p>
+<p>由于需要将空格替换为 “%20” ，字符串的总字符数增加，因此需要扩展原字符串 s 的长度，计算公式为：新字符串长度 = 原字符串长度 + 2 * 空格个数 ，示例如下图所示。</p>
+<p><strong>算法流程：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">初始化：空格数量 count ，字符串 s 的长度 len ；</span><br><span class="line">统计空格数量：遍历 s ，遇空格则 count++ ；</span><br><span class="line">修改 s 长度：添加完 &quot;%20&quot; 后的字符串长度应为 len + 2 * count ；</span><br><span class="line">倒序遍历修改：i 指向原字符串尾部元素， j 指向新字符串尾部元素；**当 i &#x3D; j 时跳出（代表左方已没有空格，无需继续遍历）；**（因为你想嘛，如果有空格的话这个时候对应的下表一定是不一样的，因为新的数组长度是加了空格的，如果有空格，那一定被空格挤到了不属于他本来的位置。）</span><br><span class="line"></span><br><span class="line">当 s[i] 不为空格时：执行 s[j] &#x3D; s[i] ；</span><br><span class="line">当 s[i] 为空格时：将字符串闭区间 [j-2, j] 的元素修改为 &quot;%20&quot; ；由于修改了 3 个元素，因此需要 j -&#x3D; 2 ；</span><br><span class="line">返回值：已修改的字符串 s ；</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><strong>代码实现</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">class Solution&#123;</span><br><span class="line">  public:</span><br><span class="line">    string replaceSpace(string s)&#123;</span><br><span class="line">      int count&#x3D;0, len&#x3D;s.size();</span><br><span class="line">      &#x2F;&#x2F;统计空格数量</span><br><span class="line">      for (char c: s)&#123;</span><br><span class="line">        if c &#x3D;&#x3D; &#39; &#39;&#123;</span><br><span class="line">          count++;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      &#x2F;&#x2F;修改字符串长度</span><br><span class="line">      s.resize(len+2*count);</span><br><span class="line">      for i &#x3D; len-1,j&#x3D;s.size()-1;i&lt;j;i--,j--&#123;</span><br><span class="line">        if s[i]!&#x3D;&#39; &#39;&#123;</span><br><span class="line">          s[j]&#x3D;s[i];</span><br><span class="line">        &#125;else&#123;</span><br><span class="line">          s[j]&#x3D;&#39;0&#39;;</span><br><span class="line">          s[j-1]&#x3D;&#39;2&#39;;</span><br><span class="line">          s[j-2]&#x3D;&#39;%&#39;;</span><br><span class="line">          j&#x3D;j-2;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      return s;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="golang"><a href="#golang" class="headerlink" title="golang"></a>golang</h3><p>golang中我可能会创建一个新的切片 去保存，然后修改完毕后转成字符串输出，因为我暂时没有找到简单replace方法和修改长度容量的方法。</p>
+<p>一个字符串是一个不可改变的字节序列。字符串可以包含任意的数据，但是通常是用来包含人类可读的文本。</p>
+<p>len()返回字符串字节数目（不是rune数）。<br>通过索引可以访问某个字节值，索引大于等于0小于len(str)。越界会panic。索引不是不是对应的字符而是对应的字节，因为有有非ASCII的UTF8字符有多个字节。</p>
+<p><a target="_blank" rel="noopener" href="https://studygolang.com/articles/21629">参考文章：golang中的string</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/34de853aa255">golang中的string、编码</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">func replaceSpace(s string) string&#123;</span><br><span class="line">  &#x2F;&#x2F;先把原来的转成切片</span><br><span class="line">  c:&#x3D;[]byte(s)</span><br><span class="line">  count:&#x3D;0</span><br><span class="line">  &#x2F;&#x2F;这里记住前面是index，后面才是值</span><br><span class="line">  for _,value :&#x3D; range c&#123;</span><br><span class="line">    if c &#x3D;&#x3D; &#39; &#39;&#123;</span><br><span class="line">      count&#x3D;count+1</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  newStr :&#x3D; make([]byte,len(c)+2*count)</span><br><span class="line">  for i:&#x3D;len(c)-1,j:&#x3D;len(newStr)-1;i&lt;j;i--,j--&#123;</span><br><span class="line">    &#x2F;&#x2F;重复c++那个里面的</span><br><span class="line">    &#x2F;&#x2F;不过我这里就没有直接修改原来的数组</span><br><span class="line">    &#x2F;&#x2F;是直接在新的数组个赋值</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  return string(newStr)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>好了一道题逼逼赖赖了这么久。</p>
+<p><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/ti-huan-kong-ge-lcof/solution/mian-shi-ti-05-ti-huan-kong-ge-ji-jian-qing-xi-tu-/">答案来自前辈</a></p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/%E5%89%91%E6%8C%87offer/">剑指offer</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2021/08/03/%E5%89%91%E6%8C%87offer06/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">剑指offer06</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2021/08/03/%E5%89%91%E6%8C%87offer04/">
+        <span class="next-text nav-default">剑指offer04</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+      </footer>
+    
+  </article>
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2021
+    <span class="footer-author">Russshare.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

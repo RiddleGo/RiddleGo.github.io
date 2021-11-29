@@ -1,37 +1,253 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
-{% block page_class %}page-post-detail{% endblock %}
 
 
-{% block content %}
+  <meta name="description" content="__name__==__main__"/>
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
-    </div>
+
+
+  <meta name="keywords" content="python," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+
+
+
+<link rel="canonical" href="https://riddlego.github.io/2021/08/06/python-if-name-main/"/>
+
+
+<meta name="description" content="Python中的if name &#x3D;&#x3D; ‘main‘前辈的原文，为更好的阅读体验点击这里进入原文 在具体说明if name &#x3D;&#x3D; ‘main‘功能前，先从一个简单的实例直观上感受一下。123456789# const.py PI &#x3D; 3.14  def train():    print(&quot;PI:&quot;, PI) train()  12345678910111213# ar">
+<meta property="og:type" content="article">
+<meta property="og:title" content="__name__&#x3D;&#x3D;__main__">
+<meta property="og:url" content="https://riddlego.github.io/2021/08/06/python-if-name-main/index.html">
+<meta property="og:site_name" content="RiddleGo">
+<meta property="og:description" content="Python中的if name &#x3D;&#x3D; ‘main‘前辈的原文，为更好的阅读体验点击这里进入原文 在具体说明if name &#x3D;&#x3D; ‘main‘功能前，先从一个简单的实例直观上感受一下。123456789# const.py PI &#x3D; 3.14  def train():    print(&quot;PI:&quot;, PI) train()  12345678910111213# ar">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/20180814160750976.png">
+<meta property="article:published_time" content="2021-08-06T02:27:27.000Z">
+<meta property="article:modified_time" content="2021-08-06T03:59:13.185Z">
+<meta property="article:author" content="Russshare">
+<meta property="article:tag" content="python">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/20180814160750976.png">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> __name__==__main__ - RiddleGo </title>
+  <meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">RiddleGo</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          __name__==__main__
+        
+      </h1>
+
+      <time class="post-time">
+          8月 06 2021
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h2 id="Python中的if-name-‘main‘"><a href="#Python中的if-name-‘main‘" class="headerlink" title="Python中的if name == ‘main‘"></a>Python中的if <strong>name</strong> == ‘<strong>main</strong>‘</h2><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_33254870/article/details/81668297">前辈的原文，为更好的阅读体验点击这里进入原文</a></p>
+<h3 id="在具体说明if-name-‘main‘功能前，先从一个简单的实例直观上感受一下。"><a href="#在具体说明if-name-‘main‘功能前，先从一个简单的实例直观上感受一下。" class="headerlink" title="在具体说明if name == ‘main‘功能前，先从一个简单的实例直观上感受一下。"></a>在具体说明if <strong>name</strong> == ‘<strong>main</strong>‘功能前，先从一个简单的实例直观上感受一下。</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># const.py</span><br><span class="line"> </span><br><span class="line">PI &#x3D; 3.14</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">def train():</span><br><span class="line">    print(&quot;PI:&quot;, PI)</span><br><span class="line"> </span><br><span class="line">train()</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"># area.py</span><br><span class="line"> </span><br><span class="line">from const import PI</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">def calc_round_area(radius):</span><br><span class="line">    return PI * (radius ** 2)</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">def calculate():</span><br><span class="line">    print(&quot;round area: &quot;, calc_round_area(2))</span><br><span class="line"> </span><br><span class="line">calculate()</span><br></pre></td></tr></table></figure>
+<p>现在运行area.py文件，看结果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">PI：3.14</span><br><span class="line">round area: 12.56</span><br></pre></td></tr></table></figure>
+
+<p>可以看见，const.py中的train()也被运行了，实际上我们是不希望它被运行，只是想把const.py中 PI 变量导入到 area.py。现在把 const.py 改一下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">PI &#x3D; 3.14</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">def train():</span><br><span class="line">    print(&quot;PI:&quot;, PI)</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">if __name__ &#x3D;&#x3D; &quot;__main__&quot;:</span><br><span class="line">    train()</span><br></pre></td></tr></table></figure>
+
+<p>运行area.py文件发现没有执行const.py中train()。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">round area: 12.56</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-if-name-‘main‘功能"><a href="#1-if-name-‘main‘功能" class="headerlink" title="1. if name == ‘main‘功能"></a>1. if <strong>name</strong> == ‘<strong>main</strong>‘功能</h3><p>丛上述实例可以发现，运行const.py文件时if <strong>name</strong>==”<strong>main</strong>“: 语句之前与之后代码都被执行，但作为area.py导入文件时就不会执行if <strong>name</strong>==”<strong>main</strong>“: 语句之后代码。</p>
+<p>实际上if <strong>name</strong>==”<strong>main</strong>“:就相当于是 Python 模拟的程序入口。由于模块之间相互引用，不同模块可能都有这样的定义，而入口程序只能有一个，选中哪个入口程序取决于 <strong>name</strong> 的值。</p>
+<p>可以做一下测试：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># test.py</span><br><span class="line">print(&quot;hahaha&quot;)</span><br><span class="line">print(__name__)</span><br><span class="line"> </span><br><span class="line">if __name__ &#x3D;&#x3D; &#39;__main__&#39;:</span><br><span class="line">    print(&quot;I&#39;m test.py&quot;)</span><br></pre></td></tr></table></figure>
+<p><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/20180814160750976.png"></p>
+<p>可以发现，此时变量__name__的值为”<strong>main</strong>“，即打印“I’m test.py”。如果运行其他文件，通过运行的文件调用本文件，则不会打印该语句，因为程序入口不对，该语句不执行。</p>
+<p>举个栗子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"># receiver.py</span><br><span class="line">print(&quot;receiver_haha&quot;)</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">def test():</span><br><span class="line">    print(&quot;test can be called!&quot;)</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">def receiver_print():</span><br><span class="line">    print(&quot;I&#39;m receiver.py&quot;)</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">if __name__ &#x3D;&#x3D; &#39;__main__&#39;:</span><br><span class="line">    receiver_print()</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"># caller.py</span><br><span class="line">import receiver</span><br><span class="line"> </span><br><span class="line">print(&quot;caller_haha&quot;)</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">def test():</span><br><span class="line">    print(&quot;caller_test can be called!&quot;)</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">def caller_print():</span><br><span class="line">    print(&quot;I&#39;m caller.py&quot;)</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">if __name__ &#x3D;&#x3D; &#39;__main__&#39;:</span><br><span class="line">    caller_print()</span><br><span class="line">    test()</span><br></pre></td></tr></table></figure>
+
+<p>可以发现receiver.py中if <strong>name</strong>==”<strong>main</strong>“后语句没有执行，因为此时运行的是caller.py，而找不到进去receiver.py的入口！使用这种方法可以控制代码的执行！</p>
+<h3 id="2-name"><a href="#2-name" class="headerlink" title="2. name"></a>2. <strong>name</strong></h3><p>2.1 __name__是内置变量，可用于表示当前模块的名字（见上）。</p>
+<p>2.2 __name__是内置变量，可用于反映一个包的结构。</p>
+<h3 id="3-总结"><a href="#3-总结" class="headerlink" title="3.总结"></a>3.总结</h3><p>一个python文件通常有两种使用方法，第一是作为脚本直接执行，第二是 import 到其他的 python 脚本中被调用（模块重用）执行。</p>
+<p>因此 if <strong>name</strong> == ‘main’: 的作用就是控制这两种情况执行代码的过程，</p>
+<p>在 if <strong>name</strong> == ‘main’: 下的代码只有在第一种情况下（即文件作为脚本直接执行）才会被执行，</p>
+<p>而 import 到其他脚本中是不会被执行的。</p>
+<h3 id="if-name-‘main‘-的运行原理"><a href="#if-name-‘main‘-的运行原理" class="headerlink" title="if name == ‘main‘:的运行原理"></a>if <strong>name</strong> == ‘<strong>main</strong>‘:的运行原理</h3><p>每个python模块（python文件，也就是此处的 test.py 和 import_test.py）都包含内置的变量 __name__，<strong>当该模块被直接执行的时候，<strong>name</strong> 等于文件名（包含后缀 .py ）；</strong></p>
+<p><strong>如果该模块 import 到其他模块中，****则该模块的 <strong>name</strong> 等于模块名称（不包含后缀.py）。</strong></p>
+<p><strong>而 “<strong>main__” 始终指当前执行模块的名称（包含后缀.py）。****进而当模块被直接执行时，__name</strong> == ‘main’ 结果为真。</strong></p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/python/">python</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2021/08/06/python-%E5%87%BD%E6%95%B0%E4%B8%AD%E7%9A%84self/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">python:函数中的self</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2021/08/06/python-init-%E5%87%BD%E6%95%B0%E7%9A%84%E6%84%8F%E4%B9%89/">
+        <span class="next-text nav-default">python:__init__函数的意义</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+      </footer>
+    
+  </article>
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2021
+    <span class="footer-author">Russshare.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

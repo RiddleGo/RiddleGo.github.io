@@ -1,37 +1,243 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
-{% block page_class %}page-post-detail{% endblock %}
 
 
-{% block content %}
+  <meta name="description" content="算法怎样学习"/>
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
-    </div>
+
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+
+
+
+<link rel="canonical" href="https://riddlego.github.io/2021/10/20/算法怎样学习/"/>
+
+
+<meta name="description" content="前言从实力出发我实在是不配写这篇分享，但是还是斗胆分享一点小小心得和自己的看法、做法。如果真的有点用处那就是万分荣幸。 故事背景我先介绍一下背景，我面试所取得offer除了美团、字节以外都是手机厂，所以对算法的要求就是处于一个中等偏下到中等偏上。 也有投递字节、BAT，侥幸在简历画的功夫没有浪费，简历在整个秋招都是all pass 但是在做互联网大厂笔试的时候没有全部OC，基本上都是两个左右，有的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="算法怎样学习">
+<meta property="og:url" content="https://riddlego.github.io/2021/10/20/%E7%AE%97%E6%B3%95%E6%80%8E%E6%A0%B7%E5%AD%A6%E4%B9%A0/index.html">
+<meta property="og:site_name" content="RiddleGo">
+<meta property="og:description" content="前言从实力出发我实在是不配写这篇分享，但是还是斗胆分享一点小小心得和自己的看法、做法。如果真的有点用处那就是万分荣幸。 故事背景我先介绍一下背景，我面试所取得offer除了美团、字节以外都是手机厂，所以对算法的要求就是处于一个中等偏下到中等偏上。 也有投递字节、BAT，侥幸在简历画的功夫没有浪费，简历在整个秋招都是all pass 但是在做互联网大厂笔试的时候没有全部OC，基本上都是两个左右，有的">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-10-20T05:59:15.000Z">
+<meta property="article:modified_time" content="2021-10-20T06:00:37.128Z">
+<meta property="article:author" content="Russshare">
+<meta property="article:tag" content="zh-Hans">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> 算法怎样学习 - RiddleGo </title>
+  <meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">RiddleGo</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          算法怎样学习
+        
+      </h1>
+
+      <time class="post-time">
+          10月 20 2021
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>从实力出发我实在是不配写这篇分享，但是还是斗胆分享一点小小心得和自己的看法、做法。如果真的有点用处那就是万分荣幸。</p>
+<h2 id="故事背景"><a href="#故事背景" class="headerlink" title="故事背景"></a>故事背景</h2><p>我先介绍一下背景，我面试所取得offer除了美团、字节以外都是手机厂，所以对算法的要求就是处于一个中等偏下到中等偏上。</p>
+<p><strong>也有投递字节、BAT，侥幸在简历画的功夫没有浪费，简历在整个秋招都是all pass</strong></p>
+<p>但是在做互联网大厂笔试的时候没有全部OC，基本上都是两个左右，有的厂一个也进面试了，后面还拿了offer，只能说感谢面试官放我一马。</p>
+<p>这样这就是大概的情况，下面简单分享一下我的算法刷题经验。</p>
+<h2 id="我的准备经历"><a href="#我的准备经历" class="headerlink" title="我的准备经历"></a>我的准备经历</h2><p>故事的小黄花。。。blabla，好了不闹了。<br>我是四月份开始刷题，因为这个时候我需要想去体验一下面试，于是乎边刷题边投递了几家大厂，然后做笔试的时候一脸懵逼</p>
+<hr>
+<p>我是谁？我姓啥？我在哪？</p>
+<p>这是啥？要求啥？做个啥？</p>
+<p>真的我感觉我以前的代码白写了，在经历惨无人道的被虐之后，痛定思痛，我觉得我的刷题方法有问题。</p>
+<p><strong>1、一般看到一个题，一分钟没有思路，就看答案，然后觉得自己看懂了就会了。（实际上你懂得）</strong></p>
+<p><strong>2、刷题太着急，没从基础开始，随机刷题。（对普通人来说实际上这就是浪费）</strong></p>
+<p><strong>3、不相信方法，我对那些前辈讲的方法嗤之以鼻，觉得题刷就完事儿，整那么多花里胡哨的干嘛。（前辈我错了，我是傻蛋）</strong></p>
+<p>于是我到某乎、某sdn以及前辈的blog开始学习前辈的刷题经验，再看了很多的的经验学习分享，以及白嫖了许多大佬的学习资料后，我开始根据自己的情况整理刷题的路径和方法。</p>
+<p>这个时候我在研究所的实习面试通过了（国企面试yyds），于是乎这次的准备在我要实习和完成实验室项目课题的情况下开始了，于是这对我的计划要求愈发的提高。</p>
+<h3 id="资料准备"><a href="#资料准备" class="headerlink" title="资料准备"></a>资料准备</h3><p><strong>剑指offer</strong></p>
+<p>这本书，答应我，必须看。<br>其实刚刚开始我觉得看这些书太浪费时间，直接上题猛冲就完事，然而是我太单纯。当现在回过头我结合学习的经历和面试的经历，我才发现这本书是真的重要，而我当时忽视前辈们的意见，我真是个傻蛋。</p>
+<p>这本书循序渐进，你给我得劲的刷，耐心点，我面试手撕的题基本上全是出于此。</p>
+<p>建议三遍：</p>
+<p><strong>第一遍</strong>：快速刷题，不懂思路可以看答案，然后自己抄一遍，实现一遍，留个映像。</p>
+<p><strong>第二遍</strong>：因为今年全是线上的共享屏幕的手撕，但是面试华为的时候，面试官让我写在纸上，然后拍照上传的操作是把我惊艳到了。第二遍我建议如果以后线下面试，我建议可以拿着问题手写一遍代码，别看答案，自己想。</p>
+<p><strong>第三遍</strong>：这一遍就是巩固一下，到这个程度了，其实你对某些题之间的关系，与考点的归纳自己其实应该心里大概有个了解了。<strong>我一直倡导的记忆与学习不是死记硬背，而是思考与重复。</strong> 这一遍你可以去LeetCode上找到剑指offer题集刷。</p>
+<p>ps:为什么我要说是思考与重复，这也是亲身体会，因为实习和项目，我在两个月的高密度刷题学习后，当时感觉自己又可以了，然后在实习期间就懈怠了，一周想起了刷个两三道，然而当信誓旦旦打开力扣准备一展身手的时候，被一道做过的中等难度题难住了。（阿西）</p>
+<h3 id="牛客网"><a href="#牛客网" class="headerlink" title="牛客网"></a>牛客网</h3><p>这里就不啰嗦了，就去刷那个牛客热题132，然后开始针对性的做一些大厂的真题。作用就是体会难度和打击一下现在状态膨胀的自己。</p>
+<h3 id="LeetCode"><a href="#LeetCode" class="headerlink" title="LeetCode"></a>LeetCode</h3><p>说实话，我觉得算法真的对于一个程序员很重要，但是我觉得算法对于部分人不实用。对于这部分的人，我推荐LeetCode的真题，但是对于其他的题我持保留意见。</p>
+<p>所以大概以上的流程就是  </p>
+<hr>
+<p><strong>剑指offer–&gt;牛客网真题、热题–&gt;LeetCode大厂真题、热题</strong></p>
+<hr>
+<p>到这里你肯定会说，啰里啰嗦这么久也没有个刷题的方法，对于算法难点的解答什么的干活，其实我也想写，奈何前辈们已经泄露太多经典有效的方法了。我就不献丑了，这里我就推荐一下我关注的算法公众号，真的对我有帮助，也希望能对你有所收获。</p>
+<h3 id="labuladong"><a href="#labuladong" class="headerlink" title="labuladong"></a>labuladong</h3><p>偶然的邂逅吧，算法这部分确实被玩的透透的了，直接就是这个公众号—labuladong，然后什么动态规划、滑动窗口等等都讲的很清楚，对于算法这部分也讲的很详细。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这是一篇不太有干活的菜鸟分享，我这里不建议大家找一堆资料，小时候老师就说了一=本书看透比看很多本书好得多。</p>
+<p>所以大家找资料找到<strong>合适的自己的</strong>资料找一份就可以，然后就踏实的学习即可。不用整太多，反而会花了心思。</p>
+<p>剩下的就是坚持吧，突然想说人生啊就是不断地考试！！！</p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2021/10/20/%E6%AF%8F%E5%A4%A9%E9%83%BD%E5%9C%A8%E5%AD%A6%E4%BC%9A%E5%91%8A%E5%88%AB/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">每天都在学会告别</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2021/10/20/all-pass%E7%AE%80%E5%8E%86/">
+        <span class="next-text nav-default">all-pass简历</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+      </footer>
+    
+  </article>
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2021
+    <span class="footer-author">Russshare.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

@@ -1,37 +1,230 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
-{% block page_class %}page-post-detail{% endblock %}
 
 
-{% block content %}
+  <meta name="description" content="每天一道算法题：判断链表中是否有环--找出环的入口"/>
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
-    </div>
+
+
+  <meta name="keywords" content="面试,算法," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+
+
+
+<link rel="canonical" href="https://riddlego.github.io/2021/07/25/每天一道算法题：判断链表中是否有环/"/>
+
+
+<meta name="description" content="题目描述判断给定的链表中是否有环。如果有环则返回true，否则返回false。你能给出空间复杂度的解法么？输入分为2部分，第一部分为链表，第二部分代表是否有环，然后回组成head头结点传入到函数里面。-1代表无环，其他的数字代表有环，这些参数解释仅仅是为了方便读者自测调试 结题思路一个单向链表，判断链表中是否存在环，如果存在环找到环的入口位置并返回，如果不存在环则返回空。 思路： 定义快、慢指针，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="每天一道算法题：判断链表中是否有环--找出环的入口">
+<meta property="og:url" content="https://riddlego.github.io/2021/07/25/%E6%AF%8F%E5%A4%A9%E4%B8%80%E9%81%93%E7%AE%97%E6%B3%95%E9%A2%98%EF%BC%9A%E5%88%A4%E6%96%AD%E9%93%BE%E8%A1%A8%E4%B8%AD%E6%98%AF%E5%90%A6%E6%9C%89%E7%8E%AF/index.html">
+<meta property="og:site_name" content="RiddleGo">
+<meta property="og:description" content="题目描述判断给定的链表中是否有环。如果有环则返回true，否则返回false。你能给出空间复杂度的解法么？输入分为2部分，第一部分为链表，第二部分代表是否有环，然后回组成head头结点传入到函数里面。-1代表无环，其他的数字代表有环，这些参数解释仅仅是为了方便读者自测调试 结题思路一个单向链表，判断链表中是否存在环，如果存在环找到环的入口位置并返回，如果不存在环则返回空。 思路： 定义快、慢指针，">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-07-25T09:18:12.000Z">
+<meta property="article:modified_time" content="2021-07-25T09:38:59.706Z">
+<meta property="article:author" content="Russshare">
+<meta property="article:tag" content="面试">
+<meta property="article:tag" content="算法">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> 每天一道算法题：判断链表中是否有环--找出环的入口 - RiddleGo </title>
+  <meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">RiddleGo</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          每天一道算法题：判断链表中是否有环--找出环的入口
+        
+      </h1>
+
+      <time class="post-time">
+          7月 25 2021
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <p><strong>题目描述</strong><br>判断给定的链表中是否有环。如果有环则返回true，否则返回false。<br>你能给出空间复杂度的解法么？<br>输入分为2部分，第一部分为链表，第二部分代表是否有环，然后回组成head头结点传入到函数里面。-1代表无环，其他的数字代表有环，这些参数解释仅仅是为了方便读者自测调试</p>
+<p><strong>结题思路</strong><br>一个单向链表，判断链表中是否存在环，如果存在环找到环的入口位置并返回，如果不存在环则返回空。</p>
+<p>思路：</p>
+<p>定义快、慢指针，从链表头开始，快指针每次走两步，慢指针每次走一步，如果相遇，说明有环。</p>
+<p>碰撞之后慢指针回到链表头部，快慢指针每次走一步，第一次相遇就是环入口。</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_34593133/article/details/106434564">原文链接：</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">找出是否有环</span><br><span class="line">&#x2F;&#x2F;  1.快、慢指针法:</span><br><span class="line">&#x2F;&#x2F;  快指针一次走两格，慢指针一次走一格；如果不存在环，快指针指向nil时，</span><br><span class="line">&#x2F;&#x2F;  表示已经遍历完毕;如果存在环，则这两个指针会相遇.</span><br><span class="line"></span><br><span class="line">func LinkedLoopDetection(node *NodeList) bool &#123;</span><br><span class="line">	if node &#x3D;&#x3D; nil || node.next &#x3D;&#x3D; nil &#123;</span><br><span class="line">		return false</span><br><span class="line">	&#125;</span><br><span class="line">	head :&#x3D; NewNode(0)</span><br><span class="line">	head.next &#x3D; node</span><br><span class="line">	slow :&#x3D; node</span><br><span class="line">	fast :&#x3D; node</span><br><span class="line"></span><br><span class="line">	for fast !&#x3D; nil &amp;&amp; fast.next !&#x3D; nil &#123;</span><br><span class="line">		fast &#x3D; fast.next.next</span><br><span class="line">		slow &#x3D; slow.next</span><br><span class="line">		if fast &#x3D;&#x3D; slow &#123;</span><br><span class="line">			return true</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	return false</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;  2. 足迹法</span><br><span class="line">&#x2F;&#x2F;  把每一次遍历的结果都记录在一个散列表中，如果存在，则即是有环</span><br><span class="line"></span><br><span class="line">func LinkedLoopDetection1(node *NodeList) bool &#123;</span><br><span class="line">	if node &#x3D;&#x3D; nil || node.next &#x3D;&#x3D; nil &#123;</span><br><span class="line">		return false</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	nodeMap :&#x3D; make(map[*NodeList]int, 0)</span><br><span class="line">	index :&#x3D; 1</span><br><span class="line"></span><br><span class="line">	for node !&#x3D; nil &amp;&amp; node.next !&#x3D; nil &#123;</span><br><span class="line">		if nodeMap[node] !&#x3D; 0 &#123;</span><br><span class="line">			return true</span><br><span class="line">		&#125; else &#123;</span><br><span class="line">			nodeMap[node] &#x3D; index</span><br><span class="line">			index++</span><br><span class="line">		&#125;</span><br><span class="line">    node &#x3D; node.next</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	return false</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>测试用例</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">package other_pratice</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">	&quot;fmt&quot;</span><br><span class="line">	&quot;testing&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func TestLinkedLoopDetection(t *testing.T) &#123;</span><br><span class="line"></span><br><span class="line">	a :&#x3D; NewNode(0)</span><br><span class="line">	b :&#x3D; NewNode(2)</span><br><span class="line">	c :&#x3D; NewNode(5)</span><br><span class="line"></span><br><span class="line">	a.next &#x3D; b</span><br><span class="line">	b.next &#x3D; c</span><br><span class="line">	c.next &#x3D; a</span><br><span class="line"></span><br><span class="line">	res :&#x3D; LinkedLoopDetection1(a)</span><br><span class="line">	fmt.Println(res)</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">找出环的入口</span><br><span class="line">func boolCircle(head *Node) *Node&#123;</span><br><span class="line">  if head &#x3D;&#x3D;nil&#123;</span><br><span class="line">    return false</span><br><span class="line">  &#125;</span><br><span class="line">  fast :&#x3D; head</span><br><span class="line">  slow :&#x3D; head</span><br><span class="line">  cur :&#x3D; head</span><br><span class="line">	for cur !&#x3D; nil &amp;&amp; cur.Next !&#x3D; nil &#123;</span><br><span class="line">		slow &#x3D; slow.Next</span><br><span class="line">		fast &#x3D; fast.Next.Next</span><br><span class="line">		if slow &#x3D;&#x3D; fast &#123; &#x2F;&#x2F; 第一次相遇</span><br><span class="line">			break</span><br><span class="line">		&#125;</span><br><span class="line">		cur &#x3D; cur.Next</span><br><span class="line">	&#125;</span><br><span class="line">	&#x2F;&#x2F; 没有环</span><br><span class="line">	if fast &#x3D;&#x3D; nil || slow &#x3D;&#x3D; nil &#123;</span><br><span class="line">		return nil</span><br><span class="line">	&#125;</span><br><span class="line">  &#x2F;&#x2F;有环 就把慢结点放回第一个位置 然后  快慢都开始一步一个</span><br><span class="line">	slow &#x3D; head</span><br><span class="line">	for slow !&#x3D; fast &#123;</span><br><span class="line">		slow &#x3D; slow.Next</span><br><span class="line">		fast &#x3D; fast.Next</span><br><span class="line">	&#125;</span><br><span class="line">	return slow</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/%E9%9D%A2%E8%AF%95/">面试</a>
+		  
+			<a href="/tags/%E7%AE%97%E6%B3%95/">算法</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2021/07/25/%E6%AF%8F%E5%A4%A9%E4%B8%80%E9%81%93%E7%AE%97%E6%B3%95%E9%A2%98%EF%BC%9A%E5%90%88%E5%B9%B6%E4%B8%A4%E4%B8%AA%E6%9C%89%E5%BA%8F%E7%9A%84%E6%95%B0%E7%BB%84/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">每天一道算法题：合并两个有序的数组</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2021/07/25/%E6%AF%8F%E5%A4%A9%E4%B8%80%E9%81%93%E7%AE%97%E6%B3%95%E9%A2%98%EF%BC%9A%E6%9C%80%E9%95%BF%E6%97%A0%E9%87%8D%E5%A4%8D%E5%AD%90%E6%95%B0%E7%BB%84/">
+        <span class="next-text nav-default">每天一道算法题：最长无重复子数组</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+      </footer>
+    
+  </article>
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2021
+    <span class="footer-author">Russshare.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

@@ -1,37 +1,231 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
-{% block page_class %}page-post-detail{% endblock %}
 
 
-{% block content %}
+  <meta name="description" content="一文带你搞懂RPC到底是什么？"/>
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
-    </div>
+
+
+  <meta name="keywords" content="微服务,gRPC," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+
+
+
+<link rel="canonical" href="https://riddlego.github.io/2021/08/26/一文带你搞懂RPC到底是什么？/"/>
+
+
+<meta name="description" content="懵了！有了HTTP，为什么还要RPC？ 漫话：如何给女朋友解释什么是RPC 想搞定微服务，先搞定 RPC 框架？ 从核心概念和技术层面着眼，系统化认识RPC RPC框架的可靠性设计 从RPC预热转发看服务端性能调优 下面是前辈们写的也很好的文章，空了可以看一下，我这个笨蛋的学习方法就是重复。 Web | 什么是 RPC ? 离不开的微服务架构，脱不开的RPC细节（值得收藏）！！！ Web | 什么">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一文带你搞懂RPC到底是什么？">
+<meta property="og:url" content="https://riddlego.github.io/2021/08/26/%E4%B8%80%E6%96%87%E5%B8%A6%E4%BD%A0%E6%90%9E%E6%87%82RPC%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F/index.html">
+<meta property="og:site_name" content="RiddleGo">
+<meta property="og:description" content="懵了！有了HTTP，为什么还要RPC？ 漫话：如何给女朋友解释什么是RPC 想搞定微服务，先搞定 RPC 框架？ 从核心概念和技术层面着眼，系统化认识RPC RPC框架的可靠性设计 从RPC预热转发看服务端性能调优 下面是前辈们写的也很好的文章，空了可以看一下，我这个笨蛋的学习方法就是重复。 Web | 什么是 RPC ? 离不开的微服务架构，脱不开的RPC细节（值得收藏）！！！ Web | 什么">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-08-26T13:50:30.000Z">
+<meta property="article:modified_time" content="2021-08-26T14:43:50.175Z">
+<meta property="article:author" content="Russshare">
+<meta property="article:tag" content="微服务">
+<meta property="article:tag" content="gRPC">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> 一文带你搞懂RPC到底是什么？ - RiddleGo </title>
+  <meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">RiddleGo</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          一文带你搞懂RPC到底是什么？
+        
+      </h1>
+
+      <time class="post-time">
+          8月 26 2021
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/_kIlERTAgXHc1nWXwkHNHQ">懵了！有了HTTP，为什么还要RPC？</a></p>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/_5hPZoV9DgF30qjlVGNhiQ">漫话：如何给女朋友解释什么是RPC</a></p>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/vLsH9ZpGo648GydD43tu2w">想搞定微服务，先搞定 RPC 框架？</a></p>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/6AX2-zjvcpesSe93HihVoA">从核心概念和技术层面着眼，系统化认识RPC</a></p>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/mPupMIneVG_f-FlaOJ_mUA">RPC框架的可靠性设计</a></p>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/w0805t7UYE4A5qWlDGi0lQ">从RPC预热转发看服务端性能调优</a></p>
+<p><strong>下面是前辈们写的也很好的文章，空了可以看一下，我这个笨蛋的学习方法就是重复。</strong></p>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/N4Bwi1Ouiiqdf8UbLdL30A">Web | 什么是 RPC ?</a></p>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/CepNdL2A_QMcESgQVZBn2g">离不开的微服务架构，脱不开的RPC细节（值得收藏）！！！</a></p>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/N4Bwi1Ouiiqdf8UbLdL30A">Web | 什么是 RPC ?</a></p>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/N4Bwi1Ouiiqdf8UbLdL30A">一篇文章了解RPC框架原理</a></p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/">微服务</a>
+		  
+			<a href="/tags/gRPC/">gRPC</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2021/08/26/HTTP-%E5%8D%8F%E8%AE%AE%E6%97%A0%E7%8A%B6%E6%80%81%E4%B8%AD%E7%9A%84%E7%8A%B6%E6%80%81%E5%88%B0%E5%BA%95%E6%8C%87%E7%9A%84%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">HTTP-协议无状态中的"状态"到底指的是什么？</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2021/08/25/Go%E8%AF%AD%E8%A8%80%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-3-%E6%97%A5%E5%BF%97%E5%BA%93%E7%9A%84%E9%80%89%E5%9E%8B%E4%B8%8E%E5%BC%95%E5%85%A5/">
+        <span class="next-text nav-default">Go语言微服务框架-3.日志库的选型与引入</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+      </footer>
+    
+  </article>
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2021
+    <span class="footer-author">Russshare.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

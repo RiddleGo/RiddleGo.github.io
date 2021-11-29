@@ -1,37 +1,720 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
-{% block page_class %}page-post-detail{% endblock %}
 
 
-{% block content %}
+  <meta name="description" content="golang实现分布式缓存"/>
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
-    </div>
+
+
+  <meta name="keywords" content="分布式,Cache," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+
+
+
+<link rel="canonical" href="https://riddlego.github.io/2021/07/19/golang实现分布式缓存/"/>
+
+
+<meta name="description" content="文章来自极客兔兔前辈的文章 (前辈blog中有特别多的小项目很有价值，推荐哦！！！) 分布式缓存1、问题的引出1、为什么用缓存 1、第一次请求时将一些耗时操作的结果暂存，以后遇到相同的请求，直接返回暂存的数据。  2、在计算机系统中，缓存无处不在，比如我们访问一个网页，网页和引用的 JS&#x2F;CSS 等静态文件，根据不同的策略，会缓存在浏览器本地或是 CDN 服务器，那在第二次访问的时候，就会觉得网">
+<meta property="og:type" content="article">
+<meta property="og:title" content="golang实现分布式缓存">
+<meta property="og:url" content="https://riddlego.github.io/2021/07/19/golang%E5%AE%9E%E7%8E%B0%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98/index.html">
+<meta property="og:site_name" content="RiddleGo">
+<meta property="og:description" content="文章来自极客兔兔前辈的文章 (前辈blog中有特别多的小项目很有价值，推荐哦！！！) 分布式缓存1、问题的引出1、为什么用缓存 1、第一次请求时将一些耗时操作的结果暂存，以后遇到相同的请求，直接返回暂存的数据。  2、在计算机系统中，缓存无处不在，比如我们访问一个网页，网页和引用的 JS&#x2F;CSS 等静态文件，根据不同的策略，会缓存在浏览器本地或是 CDN 服务器，那在第二次访问的时候，就会觉得网">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98_00.jpg">
+<meta property="article:published_time" content="2021-07-19T12:54:15.000Z">
+<meta property="article:modified_time" content="2021-08-21T08:05:18.990Z">
+<meta property="article:author" content="Russshare">
+<meta property="article:tag" content="分布式">
+<meta property="article:tag" content="Cache">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98_00.jpg">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> golang实现分布式缓存 - RiddleGo </title>
+  <meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">RiddleGo</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          golang实现分布式缓存
+        
+      </h1>
+
+      <time class="post-time">
+          7月 19 2021
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <p><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/%E5%88%86%E5%B8%83%E5%BC%8F%E7%BC%93%E5%AD%98_00.jpg"></p>
+<p>文章来自极客兔兔前辈的<a target="_blank" rel="noopener" href="https://geektutu.com/post/geecache-day1.html">文章</a></p>
+<p>(前辈blog中有特别多的小项目很有价值，推荐哦！！！)</p>
+<h1 id="分布式缓存"><a href="#分布式缓存" class="headerlink" title="分布式缓存"></a>分布式缓存</h1><h2 id="1、问题的引出"><a href="#1、问题的引出" class="headerlink" title="1、问题的引出"></a>1、问题的引出</h2><h3 id="1、为什么用缓存"><a href="#1、为什么用缓存" class="headerlink" title="1、为什么用缓存"></a>1、为什么用缓存</h3><ul>
+<li><p>1、第一次请求时将一些耗时操作的结果暂存，以后遇到相同的请求，直接返回暂存的数据。</p>
+</li>
+<li><p>2、在计算机系统中，缓存无处不在，比如我们访问一个网页，网页和引用的 JS/CSS 等静态文件，根据不同的策略，会缓存在浏览器本地或是 CDN 服务器，那在第二次访问的时候，就会觉得网页加载的速度快了不少</p>
+<ul>
+<li>比如微博的点赞的数量，不可能每个人每次访问，都从数据库中查找所有点赞的记录再统计，数据库的操作是很耗时的，很难支持那么大的流量，所以一般点赞这类数据是缓存在 Redis 服务集群中的。</li>
+</ul>
+</li>
+</ul>
+<h3 id="2、缓存实现"><a href="#2、缓存实现" class="headerlink" title="2、缓存实现"></a>2、缓存实现</h3><ul>
+<li>缓存中最简单的莫过于存储在内存中的键值对缓存了。说到键值对，很容易想到的是字典(dict)类型，Go 语言中称之为 map。</li>
+</ul>
+<h3 id="3、map实现的问题"><a href="#3、map实现的问题" class="headerlink" title="3、map实现的问题"></a>3、map实现的问题</h3><ul>
+<li><p>那直接创建一个 map，每次有新数据就往 map 中插入不就好了，这不就是键值对缓存么？这样做有什么问题呢？</p>
+<ul>
+<li><p>1）内存不够了怎么办？</p>
+<ul>
+<li>1、那就随机删掉几条数据好了。随机删掉好呢？还是按照时间顺序好呢？或者是有没有其他更好的淘汰策略呢？</li>
+<li>2、不同数据的访问频率是不一样的，优先删除访问频率低的数据是不是更好呢？</li>
+<li>3、数据的访问频率可能随着时间变化，那优先删除最近最少访问的数据可能是一个更好的选择。我们需要实现一个合理的淘汰策略。</li>
+</ul>
+</li>
+<li><p>2）并发写入冲突了怎么办？</p>
+<ul>
+<li>对缓存的访问，一般不可能是串行的。map 是没有并发保护的，应对并发的场景，修改操作(包括新增，更新和删除)需要加锁。</li>
+</ul>
+</li>
+<li><p>3）单机性能不够怎么办？</p>
+<ul>
+<li><p>1、单台计算机的资源是有限的，计算、存储等都是有限的。随着业务量和访问量的增加，单台机器很容易遇到瓶颈。</p>
+</li>
+<li><p>2、如果利用多台计算机的资源，并行处理提高性能就要缓存应用能够支持分布式，这称为水平扩展(scale horizontally)。</p>
+</li>
+<li><p>3、与水平扩展相对应的是垂直扩展(scale vertically)，即通过增加单个节点的计算、存储、带宽等，来提高系统的性能，硬件的成本和性能并非呈线性关系，大部分情况下，分布式系统是一个更优的选择。</p>
+<ul>
+<li>硬件的成本和性能并非呈线性关系，</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="4、问题需要解决的"><a href="#4、问题需要解决的" class="headerlink" title="4、问题需要解决的"></a>4、问题需要解决的</h3><ul>
+<li>1、需要实现一个合理的淘汰策略。</li>
+<li>2、解决并发写入冲突</li>
+<li>3、解决单机性能瓶颈</li>
+</ul>
+<h2 id="2、GeeCache"><a href="#2、GeeCache" class="headerlink" title="2、GeeCache"></a>2、GeeCache</h2><h3 id="1、前言"><a href="#1、前言" class="headerlink" title="1、前言"></a>1、前言</h3><ul>
+<li><p>设计一个分布式缓存系统，需要考虑资源控制、淘汰策略、并发、分布式节点通信等各个方面的问题。而且，针对不同的应用场景，还需要在不同的特性之间权衡，例如，是否需要支持缓存更新？还是假定缓存在淘汰之前是不允许改变的。不同的权衡对应着不同的实现。</p>
+<ul>
+<li><p>1、资源控制、淘汰策略、并发、分布式节点通信</p>
+</li>
+<li><p>2、针对不同的应用场景，还需要在不同的特性之间权衡</p>
+<ul>
+<li>不同的权衡对应着不同的实现。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="2、groupcache"><a href="#2、groupcache" class="headerlink" title="2、groupcache"></a>2、groupcache</h3><ul>
+<li>groupcache 是 Go 语言版的 memcached，目的是在某些特定场合替代 memcached。groupcache 的作者也是 memcached 的作者。无论是了解单机缓存还是分布式缓存，深入学习这个库的实现都是非常有意义的</li>
+</ul>
+<h3 id="3、GeeCache"><a href="#3、GeeCache" class="headerlink" title="3、GeeCache"></a>3、GeeCache</h3><ul>
+<li><p>GeeCache 基本上模仿了 groupcache 的实现，为了将代码量限制在 500 行左右（groupcache 约 3000 行），裁剪了部分功能。但总体实现上，还是与 groupcache 非常接近的。</p>
+<ul>
+<li><p>特性</p>
+</li>
+<li><p>1、单机缓存和基于 HTTP 的分布式缓存</p>
+</li>
+<li><p>2、最近最少访问(Least Recently Used, LRU) 缓存策略</p>
+</li>
+<li><p>3、使用 Go 锁机制防止缓存击穿</p>
+<ul>
+<li><p>缓存</p>
+<ul>
+<li><p>1、缓存的处理流程</p>
+<ul>
+<li><p>2、缓存效应的分类</p>
+</li>
+<li><p>1、缓存穿透</p>
+<pre><code>  - 描述
+
+      -  缓存穿透是指缓存和数据库中都没有的数据，而用户不断发起请求，如发起为id为“-1”的数据或id为特别大不存在的数据。这时的用户很可能是攻击者，攻击会导致数据库压力过大。
+
+  - 解决方案
+
+      - 接口层增加校验，如用户鉴权校验，id做基础校验，id&lt;=0的直接拦截；
+      - 从缓存取不到的数据，在数据库中也没有取到，这时也可以将key-value对写为key-null，缓存有效时间可以设置短点，如30秒（设置太长会导致正常情况也没法使用）。这样可以防止攻击用户反复用同一个id暴力攻击
+</code></pre>
+</li>
+<li><p>2、缓存击穿</p>
+<pre><code>  - 描述
+
+      - 缓存击穿是指缓存中没有但数据库中有的数据（一般是缓存时间到期），这时由于并发用户特别多，同时读缓存没读到数据，又同时去数据库去取数据，引起数据库压力瞬间增大，造成过大压力
+
+  - 解决方案
+
+      - 设置热点数据永远不过期。
+      - 加互斥锁，互斥锁参考代码如下。
+
+          - 代码解读
+
+              -  1）缓存中有数据，直接走上述代码13行后就返回结果了
+
+              -  2）缓存中没有数据，第1个进入的线程，获取锁并从数据库去取数据，没释放锁之前，其他并行进入的线程会等待100ms，再重新去缓存取数据。这样就防止都去数据库重复取数据，重复往缓存中更新数据情况出现。
+
+              -  3）当然这是简化处理，理论上如果能根据key值加锁就更好了，就是线程A从数据库取key1的数据并不妨碍线程B取key2的数据，上面代码明显做不到这点。
+</code></pre>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>3、缓存雪崩</p>
+<ul>
+<li><p>描述</p>
+<ul>
+<li>缓存雪崩是指缓存中数据大批量到过期时间，而查询数据量巨大，引起数据库压力过大甚至down机。和缓存击穿不同的是，        缓存击穿指并发查同一条数据，缓存雪崩是不同数据都过期了，很多数据都查不到从而查数据库。</li>
+</ul>
+</li>
+<li><p>解决方案</p>
+<ul>
+<li>缓存数据的过期时间设置随机，防止同一时间大量数据过期现象发生。<pre><code>         - 缓存雪崩是指缓存中数据大批量到过期时间，而查询数据量巨大，引起数据库压力过大甚至down机。和缓存击穿不同的是，        缓存击穿指并发查同一条数据，缓存雪崩是不同数据都过期了，很多数据都查不到从而查数据库。
+         - 如果缓存数据库是分布式部署，将热点数据均匀分布在不同搞得缓存数据库中。
+         - 设置热点数据永远不过期。
+</code></pre>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>4、使用一致性哈希选择节点，实现负载均衡</p>
+<ul>
+<li><p>一致性哈希算法</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/24440059">https://zhuanlan.zhihu.com/p/24440059</a></li>
+</ul>
+</li>
+<li><p>主从复制</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_43879074/article/details/88525006">https://blog.csdn.net/weixin_43879074/article/details/88525006</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>5、使用 protobuf 优化节点间二进制通信</p>
+<ul>
+<li><p>protobuf</p>
+<ul>
+<li><p>ProtoBuf 是结构数据序列化[1] 方法，可简单类比于 XML[2]，其具有以下特点：</p>
+</li>
+<li><p>语言无关、平台无关。即 ProtoBuf 支持 Java、C++、Python 等多种语言，支持多个平台</p>
+</li>
+<li><p>高效。即比 XML 更小（3 ~ 10倍）、更快（20 ~ 100倍）、更为简单</p>
+</li>
+<li><p>扩展性、兼容性好。你可以更新数据结构，而不影响和破坏原有的旧程序</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/a24c88c0526a">https://www.jianshu.com/p/a24c88c0526a</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="3、动手写分布式缓存"><a href="#3、动手写分布式缓存" class="headerlink" title="3、动手写分布式缓存"></a>3、动手写分布式缓存</h2><h3 id="1、GeeCache第一天-LRU-缓存淘汰策略"><a href="#1、GeeCache第一天-LRU-缓存淘汰策略" class="headerlink" title="1、GeeCache第一天 LRU 缓存淘汰策略"></a>1、GeeCache第一天 LRU 缓存淘汰策略</h3><ul>
+<li><p>1、FIFO/LFU/LRU算法简介</p>
+<ul>
+<li><p>GeeCache 的缓存全部存储在内存中，内存是有限的，因此不可能无限制地添加数据。假定我们设置缓存能够使用的内存大小为 N，那么在某一个时间点，添加了某一条缓存记录之后，占用内存超过了 N，这个时候就需要从缓存中移除一条或多条数据了。那移除谁呢？我们肯定希望尽可能移除“没用”的数据，那如何判定数据“有用”还是“没用”呢？</p>
+</li>
+<li><p>1、FIFO(First In First Out)</p>
+<ul>
+<li>先进先出，也就是淘汰缓存中最老(最早添加)的记录。FIFO 认为，最早添加的记录，其不再被使用的可能性比刚添加的可能性大。</li>
+<li>这种算法的实现也非常简单，创建一个队列，新增记录添加到队尾，每次内存不够时，淘汰队首。但是很多场景下，部分记录虽然是最早添加但也最常被访问，而不得不因为呆的时间太长而被淘汰。这类数据会被频繁地添加进缓存，又被淘汰出去，导致缓存命中率降低。</li>
+</ul>
+</li>
+<li><p>2、LFU(Least Frequently Used)</p>
+<ul>
+<li><p>最少使用，也就是淘汰缓存中访问频率最低的记录。LFU 认为，如果数据过去被访问多次，那么将来被访问的频率也更高。</p>
+</li>
+<li><p>LFU 的实现需要维护一个按照访问次数排序的队列，每次访问，访问次数加1，队列重新排序，淘汰时选择访问次数最少的即可。</p>
+</li>
+<li><p>LFU 算法的命中率是比较高的，但缺点也非常明显，维护每个记录的访问次数，对内存的消耗是很高的；</p>
+</li>
+<li><p>另外，如果数据的访问模式发生变化，LFU 需要较长的时间去适应，也就是说 LFU 算法受历史数据的影响比较大。</p>
+<ul>
+<li>例如某个数据历史上访问次数奇高，但在某个时间点之后几乎不再被访问，但因为历史访问次数过高，而迟迟不能被淘汰。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>3、LRU(Least Recently Used)</p>
+<ul>
+<li>最近最少使用，相对于仅考虑时间因素的 FIFO 和仅考虑访问频率的 LFU，LRU 算法可以认为是相对平衡的一种淘汰算法。</li>
+<li>LRU 认为，如果数据最近被访问过，那么将来被访问的概率也会更高。</li>
+<li>LRU 算法的实现非常简单，维护一个队列，如果某条记录被访问了，则移动到队尾，那么队首则是最近最少访问的数据，淘汰该条记录即可。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>2、LRU算法实现</p>
+<ul>
+<li><p>1、核心数据结构</p>
+<pre><code>  - 1、绿色的是字典(map)，存储键和值的映射关系。这样根据某个键(key)查找对应的值(value)的复杂是O(1)，在字典中插入一条记录的复杂度也是O(1)。
+  - 2、红色的是双向链表(double linked list)实现的队列。将所有的值放到双向链表中，这样，当访问到某个值时，将其移动到队尾的复杂度是O(1)，在队尾新增一条记录以及删除一条记录的复杂度均为O(1)。
+</code></pre>
+<ul>
+<li><p>数据结构代码实现</p>
+<ul>
+<li>地址</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="2、GeeCache第二天-单机并发缓存"><a href="#2、GeeCache第二天-单机并发缓存" class="headerlink" title="2、GeeCache第二天 单机并发缓存"></a>2、GeeCache第二天 单机并发缓存</h3><p><strong>sync.Mutex 互斥锁的使用，并实现 LRU 缓存的并发控制。</strong></p>
+<p>实现 GeeCache 核心数据结构 Group，<strong>缓存不存在时，调用回调函数获取源数据</strong></p>
+<ul>
+<li><p>1、内容简介</p>
+<ul>
+<li> sync.Mutex 互斥锁的使用，并实现 LRU 缓存的并发控制。</li>
+<li>实现 GeeCache 核心数据结构 Group，缓存不存在时，调用回调函数获取源数据</li>
+</ul>
+</li>
+<li><p>2、sync.Mutex</p>
+<ul>
+<li><p>1、多个协程(goroutine)同时读写同一个变量，在并发度较高的情况下，会发生冲突。确保一次只有一个协程(goroutine)可以访问该变量以避免冲突，这称之为互斥，互斥锁可以解决这个问题。</p>
+</li>
+<li><p>2、sync.Mutex 是一个互斥锁，可以由不同的协程加锁和解锁。</p>
+<ul>
+<li><p>sync.Mutex 是 Go 语言标准库提供的一个互斥锁，当一个协程(goroutine)获得了这个锁的拥有权后，其它请求锁的协程(goroutine) 就会阻塞在 Lock() 方法的调用上，直到调用 Unlock() 锁被释放。</p>
+<ul>
+<li>例子（地址）</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>3、支持并发读写</p>
+<ul>
+<li><p>1、上一篇文章 GeeCache 第一天 实现了 LRU 缓存淘汰策略。接下来我们使用 sync.Mutex 封装 LRU 的几个方法，使之支持并发的读写。</p>
+</li>
+<li><p>2、在这之前，我们抽象了一个只读数据结构 ByteView 用来表示缓存值，是 GeeCache 主要的数据结构之一。</p>
+<ul>
+<li>ByteView</li>
+</ul>
+</li>
+<li><p>3、给lru.Cache添加并发特性</p>
+<ul>
+<li>代码地址</li>
+<li>延迟初始化(Lazy Initialization)，一个对象的延迟初始化意味着该对象的创建将会延迟至第一次使用该对象时。主要用于提高性能，并减少程序内存要求。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>4、主体结构 Group</p>
+<ul>
+<li><p>1、Group 是 GeeCache 最核心的数据结构，负责与用户的交互，并且控制缓存值存储和获取的流程。</p>
+</li>
+<li><p>2、流程图</p>
+</li>
+<li><p>3、Group结构在GeeCache中实现</p>
+</li>
+<li><p>4、流程1与3的实现（2远程结点获取后续讲到）</p>
+<ul>
+<li><p>1、回调 Getter</p>
+<ul>
+<li><p>我们思考一下，如果缓存不存在，应从数据源（文件，数据库等）获取数据并添加到缓存中。GeeCache 是否应该支持多种数据源的配置呢？</p>
+<ul>
+<li><p>不应该，一是数据源的种类太多，没办法一一实现；二是扩展性不好。如何从源头获取数据，应该是用户决定的事情，我们就把这件事交给用户好了。</p>
+</li>
+<li><p>因此，我们设计了一个回调函数(callback)，在缓存不存在时，调用这个函数，得到源数据。</p>
+<ul>
+<li>go语言是怎么实现接口的</li>
+<li>go语言的接口型函数</li>
+<li>定义一个函数类型 F，并且实现接口 A 的方法，然后在这个方法中调用自己。<br>这是 Go 语言中将其他函数（参数返回值定义与 F 一致）转换为接口 A 的常用技巧。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>2、 Group 的定义</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="3、GeeCache第三天-HTTP-服务端"><a href="#3、GeeCache第三天-HTTP-服务端" class="headerlink" title="3、GeeCache第三天 HTTP 服务端"></a>3、GeeCache第三天 HTTP 服务端</h3><ul>
+<li><p>1、内容简介</p>
+<ul>
+<li>1、如何使用 Go 语言标准库 http 搭建 HTTP Server</li>
+<li>2、实现 main 函数启动 HTTP Server 测试 API，代码约60行</li>
+</ul>
+</li>
+<li><p>2、http 标准库</p>
+<ul>
+<li>Go 语言提供了 http 标准库，可以非常方便地搭建 HTTP 服务端和客户端。</li>
+</ul>
+</li>
+<li><p>3、GeeCache HTTP 服务端</p>
+<ul>
+<li><p>分布式缓存需要实现节点间通信，建立基于 HTTP 的通信机制是比较常见和简单的做法。如果一个节点启动了 HTTP 服务，那么这个节点就可以被其他节点访问。今天我们就为单机节点搭建 HTTP Server。</p>
+<p>  - </p>
+</li>
+<li><p>首先我们创建一个结构体 HTTPPool，作为承载节点间 HTTP 通信的核心数据结构（包括服务端和客户端，今天只实现服务端）。</p>
+<ul>
+<li>代码地址</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="4、GeeCache第四天-一致性哈希-hash"><a href="#4、GeeCache第四天-一致性哈希-hash" class="headerlink" title="4、GeeCache第四天 一致性哈希(hash)"></a>4、GeeCache第四天 一致性哈希(hash)</h3><ul>
+<li><p>1、简介</p>
+<ul>
+<li>1、一致性哈希(consistent hashing)的原理以及为什么要使用一致性哈希。</li>
+<li>2、实现一致性哈希代码，添加相应的测试用例</li>
+</ul>
+</li>
+<li><p>2、为什么使用一致性哈希</p>
+<ul>
+<li><p>1、我该访问谁？</p>
+<ul>
+<li><p>对于分布式缓存来说，当一个节点接收到请求，如果该节点并没有存储缓存值，那么它面临的难题是，从谁那获取数据？自己，还是节点1, 2, 3, 4… 。假设包括自己在内一共有 10 个节点，当一个节点接收到请求时，随机选择一个节点，由该节点从数据源获取数据。</p>
+</li>
+<li><p>假设第一次随机选取了节点 1 ，节点 1 从数据源获取到数据的同时缓存该数据；那第二次，只有 1/10 的可能性再次选择节点 1, 有 9/10 的概率选择了其他节点，如果选择了其他节点，就意味着需要再一次从数据源获取数据，一般来说，这个操作是很耗时的。这样做，一是缓存效率低，二是各个节点上存储着相同的数据，浪费了大量的存储空间。</p>
+</li>
+<li><p>那有什么办法，对于给定的 key，每一次都选择同一个节点呢？使用 hash 算法也能够做到这一点。那把 key 的每一个字符的 ASCII 码加起来，再除以 10 取余数可以吗？当然可以，这可以认为是自定义的 hash 算法。</p>
+<ul>
+<li>从上面的图可以看到，任意一个节点任意时刻请求查找键 Tom 对应的值，都会分配给节点 2，有效地解决了上述的问题。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>2、节点数目变了怎么办？</p>
+<ul>
+<li><p>简单求取 Hash 值解决了缓存性能的问题，但是没有考虑节点数量变化的场景。</p>
+<ul>
+<li>假设，移除了其中一台节点，只剩下 9 个，那么之前 hash(key) % 10 变成了 hash(key) % 9，也就意味着几乎缓存值对应的节点都发生了改变。即几乎所有的缓存值都失效了。节点在接收到对应的请求时，均需要重新去数据源获取数据，容易引起 缓存雪崩。</li>
+<li>缓存雪崩：缓存在同一时刻全部失效，造成瞬时DB请求量大、压力骤增，引起雪崩。常因为缓存服务器宕机，或缓存设置了相同的过期时间引起。</li>
+</ul>
+</li>
+<li><p>一致性哈希算法可以解决这个问题。</p>
+<ul>
+<li><p>步骤</p>
+<ul>
+<li><p>1、一致性哈希算法将 key 映射到 2^32 的空间中，将这个数字首尾相连，形成一个环。</p>
+<ul>
+<li><p>1、计算节点/机器(通常使用节点的名称、编号和 IP 地址)的哈希值，放置在环上。</p>
+</li>
+<li><p>2、计算 key 的哈希值，放置在环上，顺时针寻找到的第一个节点，就是应选取的节点/机器。</p>
+<p>  - </p>
+</li>
+<li><p>3、结果</p>
+<ul>
+<li>环上有 peer2，peer4，peer6 三个节点，key11，key2，key27 均映射到 peer2，key23 映射到 peer4。此时，如果新增节点/机器 peer8，假设它新增位置如图所示，那么只有 key27 从 peer2 调整到 peer8，其余的映射均没有发生改变。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>  也就是说，一致性哈希算法，在新增/删除节点时，只需要重新定位该节点附近的一小部分数据，而不需要重新定位所有的节点，这就解决了上述的问题。</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>3、数据倾斜问题</p>
+<ul>
+<li><p>1、如果服务器的节点过少，容易引起 key 的倾斜。例如上面例子中的 peer2，peer4，peer6 分布在环的上半部分，下半部分是空的。那么映射到环下半部分的 key 都会被分配给 peer2，key 过度向 peer2 倾斜，缓存节点间负载不均。</p>
+</li>
+<li><p>2、为了解决这个问题，引入了虚拟节点的概念，一个真实节点对应多个虚拟节点。</p>
+<ul>
+<li><p>假设 1 个真实节点对应 3 个虚拟节点，那么 peer1 对应的虚拟节点是 peer1-1、 peer1-2、 peer1-3（通常以添加编号的方式实现），其余节点也以相同的方式操作。</p>
+<ul>
+<li>第一步，计算虚拟节点的 Hash 值，放置在环上。</li>
+<li>第二步，计算 key 的 Hash 值，在环上顺时针寻找到应选取的虚拟节点，例如是 peer2-1，那么就对应真实节点 peer2。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>3、结果</p>
+<ul>
+<li>虚拟节点扩充了节点的数量，解决了节点较少的情况下数据容易倾斜的问题。而且代价非常小，只需要增加一个字典(map)维护真实节点与虚拟节点的映射关系即可。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>3、实现</p>
+<ul>
+<li>代码地址</li>
+<li>依赖注入</li>
+<li>可变参数</li>
+</ul>
+</li>
+</ul>
+<h3 id="5、GeeCache第五天-分布式节点"><a href="#5、GeeCache第五天-分布式节点" class="headerlink" title="5、GeeCache第五天 分布式节点"></a>5、GeeCache第五天 分布式节点</h3><ul>
+<li><p>1、内容简介</p>
+<ul>
+<li>1、注册节点(Register Peers)，借助一致性哈希算法选择节点</li>
+<li>2、实现 HTTP 客户端，与远程节点的服务端通信</li>
+</ul>
+</li>
+<li><p>2、回顾获取数据流程</p>
+<ul>
+<li>我们在GeeCache 第二天 中描述了 geecache 的流程。在这之前已经实现了流程 ⑴ 和 ⑶</li>
+<li>今天实现流程 ⑵，从远程节点获取缓存值。</li>
+</ul>
+</li>
+<li><p>我们进一步细化流程 ⑵：</p>
+<ul>
+<li><p>实现</p>
+<ul>
+<li><p>1、抽象 PeerPicker</p>
+</li>
+<li><p>2、节点选择与 HTTP 客户端</p>
+<ul>
+<li>节点选择与 HTTP 客户端</li>
+<li>2、为 HTTPPool 添加节点选择的功能。</li>
+<li>3、实现 PeerPicker 接口。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="6、GeeCache第六天-防止缓存击穿"><a href="#6、GeeCache第六天-防止缓存击穿" class="headerlink" title="6、GeeCache第六天 防止缓存击穿"></a>6、GeeCache第六天 防止缓存击穿</h3><ul>
+<li><p>1、简介</p>
+<ul>
+<li>1、缓存雪崩、缓存击穿与缓存穿透的概念简介。</li>
+<li>2、使用 singleflight 防止缓存击穿，实现与测试。</li>
+</ul>
+</li>
+<li><p>2、缓存雪崩、缓存击穿与缓存穿透</p>
+<ul>
+<li>缓存雪崩：缓存在同一时刻全部失效，造成瞬时DB请求量大、压力骤增，引起雪崩。缓存雪崩通常因为缓存服务器宕机、缓存的 key 设置了相同的过期时间等引起。</li>
+<li>缓存击穿：一个存在的key，在缓存过期的一刻，同时有大量的请求，这些请求都会击穿到 DB ，造成瞬时DB请求量大、压力骤增。</li>
+<li>缓存穿透：查询一个不存在的数据，因为不存在则不会写到缓存中，所以每次都会去请求 DB，如果瞬间流量过大，穿透到 DB，导致宕机。</li>
+</ul>
+</li>
+<li><p>3、singleflight 的实现</p>
+<ul>
+<li>假设对数据库的访问没有做任何限制的，很可能向数据库也发起 N 次请求，容易导致缓存击穿和穿透。即使对数据库做了防护，HTTP 请求是非常耗费资源的操作，<strong>针对相同的 key，8003 节点向 8001 发起三次请求也是没有必要的。那这种情况下，我们如何做到只向远端节点发起一次请求呢？</strong></li>
+<li>问题解决代码</li>
+<li>锁</li>
+<li>sync.WaitGroup。</li>
+</ul>
+</li>
+</ul>
+<pre><code>    - sync.Mutex  
+    - sync.WaitGroup
+
+            wg.Add(1) 锁加1。
+            wg.Wait() 阻塞，直到锁被释放。
+            wg.Done() 锁减1。
+    - 线程同步WaitGroup
+</code></pre>
+<h3 id="7、GeeCache第七天-使用-Protobuf-通信"><a href="#7、GeeCache第七天-使用-Protobuf-通信" class="headerlink" title="7、GeeCache第七天 使用 Protobuf 通信"></a>7、GeeCache第七天 使用 Protobuf 通信</h3><ul>
+<li><p>1、简介</p>
+<ul>
+<li><p>1、为什么要使用 protobuf？</p>
+<ul>
+<li>1、protobuf 即 Protocol Buffers，Google 开发的一种数据描述语言，是一种轻便高效的结构化数据存储格式，与语言、平台无关，可扩展可序列化。protobuf 以二进制方式存储，占用空间小。</li>
+<li>2、protobuf 广泛地应用于远程过程调用(RPC) 的二进制传输，使用 protobuf 的目的非常简单，为了获得更高的性能。传输前使用 protobuf 编码，接收方再进行解码，可以显著地降低二进制传输的大小。另外一方面，protobuf 可非常适合传输结构化数据，便于通信字段的扩展。</li>
+</ul>
+</li>
+<li><p>2、使用 protobuf 进行节点间通信，编码报文，提高效率。</p>
+<ul>
+<li><p>使用步骤</p>
+<ul>
+<li>1、按照 protobuf 的语法，在 .proto 文件中定义数据结构，并使用 protoc 生成 Go 代码（.proto 文件是跨平台的，还可以生成 C、Java 等其他源码文件）。</li>
+<li>2、在项目代码中引用生成的 Go 代码。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>2、使用protobuf通信</p>
+</li>
+</ul>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a>
+		  
+			<a href="/tags/Cache/">Cache</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2021/07/19/%E9%9D%A2%E8%AF%95%E9%A2%98%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">面试题进程与线程</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2021/07/18/TCP-IP%E8%AF%A6%E8%A7%A3%EF%BC%9ATCP%E6%B5%81%E9%87%8F%E6%8E%A7%E5%88%B6%E3%80%81%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6/">
+        <span class="next-text nav-default">TCP-IP详解：TCP流量控制、拥塞控制</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+      </footer>
+    
+  </article>
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2021
+    <span class="footer-author">Russshare.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

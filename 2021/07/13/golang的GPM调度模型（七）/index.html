@@ -1,37 +1,325 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
-{% block page_class %}page-post-detail{% endblock %}
 
 
-{% block content %}
+  <meta name="description" content="golang的GPM调度模型（七）"/>
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
-    </div>
+
+
+  <meta name="keywords" content="golang,GPM调度模型," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+
+
+
+<link rel="canonical" href="https://riddlego.github.io/2021/07/13/golang的GPM调度模型（七）/"/>
+
+
+<meta name="description" content="原文连接 如果你不想看文字，就这个，讲的真的很清楚https:&#x2F;&#x2F;www.bilibili.com&#x2F;video&#x2F;BV19r4y1w7Nx?from&#x3D;search&amp;seid&#x3D;8091821917273363004 https:&#x2F;&#x2F;github.com&#x2F;qyuhen&#x2F;book 一直对goroutine的调度机制很好奇，最近在看雨痕的golang源码分析，(基于go1.4)感觉豁然开朗，受益匪浅">
+<meta property="og:type" content="article">
+<meta property="og:title" content="golang的GPM调度模型（七）">
+<meta property="og:url" content="https://riddlego.github.io/2021/07/13/golang%E7%9A%84GPM%E8%B0%83%E5%BA%A6%E6%A8%A1%E5%9E%8B%EF%BC%88%E4%B8%83%EF%BC%89/index.html">
+<meta property="og:site_name" content="RiddleGo">
+<meta property="og:description" content="原文连接 如果你不想看文字，就这个，讲的真的很清楚https:&#x2F;&#x2F;www.bilibili.com&#x2F;video&#x2F;BV19r4y1w7Nx?from&#x3D;search&amp;seid&#x3D;8091821917273363004 https:&#x2F;&#x2F;github.com&#x2F;qyuhen&#x2F;book 一直对goroutine的调度机制很好奇，最近在看雨痕的golang源码分析，(基于go1.4)感觉豁然开朗，受益匪浅">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-07-13T11:22:17.000Z">
+<meta property="article:modified_time" content="2021-07-13T11:27:30.579Z">
+<meta property="article:author" content="Russshare">
+<meta property="article:tag" content="golang">
+<meta property="article:tag" content="GPM调度模型">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> golang的GPM调度模型（七） - RiddleGo </title>
+  <meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">RiddleGo</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          golang的GPM调度模型（七）
+        
+      </h1>
+
+      <time class="post-time">
+          7月 13 2021
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <p><a target="_blank" rel="noopener" href="https://blog.csdn.net/liangzhiyang/article/details/52669851">原文连接</a></p>
+<p>如果你不想看文字，就这个，讲的真的很清楚<br><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV19r4y1w7Nx?from=search&amp;seid=8091821917273363004">https://www.bilibili.com/video/BV19r4y1w7Nx?from=search&amp;seid=8091821917273363004</a></p>
+<p><strong><a target="_blank" rel="noopener" href="https://github.com/qyuhen/book">https://github.com/qyuhen/book</a></strong></p>
+<p>一直对goroutine的调度机制很好奇，最近在看雨痕的golang源码分析，(基于go1.4)<br>感觉豁然开朗，受益匪浅；</p>
+<p>去繁就简，再加上自己的一些理解，整理了一下</p>
+<p>~~</p>
+<h3 id="调度器"><a href="#调度器" class="headerlink" title="调度器"></a>调度器</h3><p>主要基于三个基本对象上，G，M，P（定义在源码的src/runtime/runtime.h文件中）</p>
+<ol>
+<li><pre><code>G代表一个goroutine对象，每次go调用的时候，都会创建一个G对象
+</code></pre>
+</li>
+<li><pre><code>M代表一个线程，每次创建一个M的时候，都会有一个底层线程创建；所有的G任务，最终还是在M上执行
+</code></pre>
+</li>
+<li><pre><code>P代表一个处理器，每一个运行的M都必须绑定一个P，就像线程必须在么一个CPU核上执行一样
+</code></pre>
+</li>
+</ol>
+<p>P的个数就是GOMAXPROCS（最大256），启动时固定的，一般不修改； M的个数和P的个数不一定一样多（会有休眠的M或者不需要太多的M）（最大10000）；每一个P保存着本地G任务队列，也有一个全局G任务队列；</p>
+<p>如下图所示</p>
+<p>全局G任务队列会和各个本地G任务队列按照一定的策略互相交换（满了，则把本地队列的一半送给全局队列）</p>
+<p>P是用一个全局数组（255）来保存的，并且维护着一个全局的P空闲链表</p>
+<p>全局G任务队列会和各个本地G任务队列按照一定的策略互相交换（满了，则把本地队列的一半送给全局队列）</p>
+<p>P是用一个全局数组（255）来保存的，并且维护着一个全局的P空闲链表</p>
+<p><strong>每次go调用的时候</strong>，都会：</p>
+<ol>
+<li><pre><code>创建一个G对象，加入到本地队列或者全局队列
+</code></pre>
+</li>
+<li><pre><code>如果还有空闲的P，则创建一个M
+</code></pre>
+</li>
+<li><pre><code>M会启动一个底层线程，循环执行能找到的G任务
+</code></pre>
+</li>
+<li><pre><code>G任务的执行顺序是，先从本地队列找，本地没有则从全局队列找（一次性转移(全局G个数/P个数）个，再去其它P中找（一次性转移一半），
+</code></pre>
+</li>
+<li><pre><code>以上的G任务执行是按照队列顺序（也就是go调用的顺序）执行的。（这个地方是不是觉得很奇怪？？）
+</code></pre>
+</li>
+</ol>
+<p>对于上面的第2-3步，创建一个M，其过程：</p>
+<ol>
+<li><pre><code>先找到一个空闲的P，如果没有则直接返回，（哈哈，这个地方就保证了进程不会占用超过自己设定的cpu个数）
+</code></pre>
+</li>
+<li><pre><code>调用系统api创建线程，不同的操作系统，调用不一样，其实就是和c语言创建过程是一致的，（windows用的是CreateThread，linux用的是clone系统调用），(*^__^*)嘻嘻……
+</code></pre>
+</li>
+</ol>
+<p>3.<strong>然后创建的这个线程里面才是真正做事的</strong>，循环执行G任务</p>
+<p>那就会有个问题，如果一个系统调用或者G任务执行太长，他就会一直占用这个线程，由于本地队列的G任务是顺序执行的，其它G任务就会阻塞了，怎样中止长任务的呢？（这个地方我找了好久~o(╯□╰)o）</p>
+<p><strong>这样滴，启动的时候，会专门创建一个线程sysmon，用来监控和管理，在内部是一个循环：</strong></p>
+<ol>
+<li><pre><code>记录所有P的G任务计数schedtick，（schedtick会在每执行一个G任务后递增）
+</code></pre>
+</li>
+<li><p>   <strong>如果检查到 schedtick一直没有递增，说明这个P一直在执行同一个G任务，如果超过一定的时间（10ms），就在这个G任务的栈信息里面加一个标记</strong></p>
+</li>
+<li><p>   <strong>然后这个G任务在执行的时候，如果遇到非内联函数调用，就会检查一次这个标记，然后中断自己，把自己加到队列末尾，执行下一个G</strong></p>
+</li>
+<li><pre><code>O(∩_∩)O哈哈~，如果没有遇到非内联函数（有时候正常的小函数会被优化成内联函数）调用的话，那就惨了，会一直执行这个G任务，直到它自己结束；如果是个死循环，并且GOMAXPROCS=1的话，恭喜你，夯住了！亲测，的确如此
+</code></pre>
+</li>
+</ol>
+<p>对于一个G任务，中断后的恢复过程：</p>
+<ol>
+<li><pre><code>中断的时候将寄存器里的栈信息，保存到自己的G对象里面
+</code></pre>
+</li>
+<li><p> 当再次轮到自己执行时，将自己保存的栈信息复制到寄存器里面，这样就接着上次之后运行了。 <del>(≧▽≦)/</del></p>
+</li>
+</ol>
+<p>但是还有一个问题，就是系统启动的过程，雨痕没有说的太明白，我一直有很多问题都狠疑惑（<strong>第一个M怎么来的？，G怎么找到对应的P？等等</strong>），这个让我蛋疼了好久~</p>
+<p>不过我自己意淫了一下，补充在下面，欢迎大家指正</p>
+<ol>
+<li><pre><code>系统启动的时候，首先跑的是主线程，那第一个M应该就是主线程吧（按照C语言的理解，嘿嘿），这里叫M1，可以看前面的图
+</code></pre>
+</li>
+<li><pre><code>然后这个主线程会绑定第一个P1
+</code></pre>
+</li>
+<li><pre><code>咱们写的main函数，其实是作为一个goroutine来执行的（雨痕说的）
+</code></pre>
+</li>
+<li><pre><code>也就是第一个P1就有了一个G1任务，然后第一个M1就执行这个G1任务（也就是main函数），创建这个G1的时候不用创建M了，因为已经有了M1
+</code></pre>
+</li>
+<li><pre><code>这个main函数里面所有的goroutine，都绑定到当前的M1所对应的P1上，O(∩_∩)O哈哈~
+</code></pre>
+</li>
+<li><p>   然后<strong>创建main里的goroutine的时候（比如G2），就会创建新的M2，新的M2里的初始P2的本地任务队列是空的，会从P1里面取一些过来，哈哈</strong></p>
+</li>
+<li><p> 这样两个M1，M2各自执行自己的G任务，再依次往复，这下就圆满了~~~</p>
+</li>
+</ol>
+<p>综上：</p>
+<p>所以goroutine是按照抢占式调度的，<strong>一个goroutine最多执行10ms就会换作下一个</strong></p>
+<p>这个和目前主流系统的的cpu调度类似（按照时间分片）</p>
+<p>windows：20ms</p>
+<p>linux：5ms－800ms</p>
+<p>到这里都差不多了，这些在雨痕的笔记里面都有更详细的描述，不过很多地方比较凌乱，比较复杂，这里筛检了很多，方便读者理解</p>
+<p><strong>注意</strong>：</p>
+<p><strong>在Golang中编译器也会尝试进行内联，将小函数直接复制并编译，为了内联，尽量消除编译器无法侦测的dead code，利用gobuild -gcflags=-m编译命令可以查看程序内联状态，不得不说golang的编译工具链还是很强大的，十分有利于程序的优化。</strong>  </p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/golang/">golang</a>
+		  
+			<a href="/tags/GPM%E8%B0%83%E5%BA%A6%E6%A8%A1%E5%9E%8B/">GPM调度模型</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2021/07/13/golang%E7%9A%84%E8%B0%83%E8%AF%95%E6%B5%8B%E8%AF%95%EF%BC%88%E5%85%AB%EF%BC%89/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">golang的调试测试（八）</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2021/07/13/golang%E7%9A%84GC%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%EF%BC%88%E5%85%AD%EF%BC%89/">
+        <span class="next-text nav-default">golang的GC垃圾回收（六）</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+      </footer>
+    
+  </article>
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2021
+    <span class="footer-author">Russshare.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

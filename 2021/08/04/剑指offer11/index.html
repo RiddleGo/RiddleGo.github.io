@@ -1,37 +1,233 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
-{% block page_class %}page-post-detail{% endblock %}
 
 
-{% block content %}
+  <meta name="description" content="剑指offer11"/>
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
-    </div>
+
+
+  <meta name="keywords" content="剑指offer," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+
+
+
+<link rel="canonical" href="https://riddlego.github.io/2021/08/04/剑指offer11/"/>
+
+
+<meta name="description" content="剑指 Offer 11. 旋转数组的最小数字题目描述把一个数组最开始的若干个元素搬到数组的末尾，我们称之为数组的旋转。输入一个递增排序的数组的一个旋转，输出旋转数组的最小元素。例如，数组 [3,4,5,1,2] 为 [1,2,3,4,5] 的一个旋转，该数组的最小值为1。   示例 1： 输入：[3,4,5,1,2]输出：1示例 2： 输入：[2,2,2,0,1]输出：0 思路一般来说，对于数组中">
+<meta property="og:type" content="article">
+<meta property="og:title" content="剑指offer11">
+<meta property="og:url" content="https://riddlego.github.io/2021/08/04/%E5%89%91%E6%8C%87offer11/index.html">
+<meta property="og:site_name" content="RiddleGo">
+<meta property="og:description" content="剑指 Offer 11. 旋转数组的最小数字题目描述把一个数组最开始的若干个元素搬到数组的末尾，我们称之为数组的旋转。输入一个递增排序的数组的一个旋转，输出旋转数组的最小元素。例如，数组 [3,4,5,1,2] 为 [1,2,3,4,5] 的一个旋转，该数组的最小值为1。   示例 1： 输入：[3,4,5,1,2]输出：1示例 2： 输入：[2,2,2,0,1]输出：0 思路一般来说，对于数组中">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-08-04T06:11:45.000Z">
+<meta property="article:modified_time" content="2021-08-05T14:31:12.014Z">
+<meta property="article:author" content="Russshare">
+<meta property="article:tag" content="剑指offer">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> 剑指offer11 - RiddleGo </title>
+  <meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">RiddleGo</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          剑指offer11
+        
+      </h1>
+
+      <time class="post-time">
+          8月 04 2021
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h2 id="剑指-Offer-11-旋转数组的最小数字"><a href="#剑指-Offer-11-旋转数组的最小数字" class="headerlink" title="剑指 Offer 11. 旋转数组的最小数字"></a>剑指 Offer 11. 旋转数组的最小数字</h2><h3 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h3><p>把一个数组最开始的若干个元素搬到数组的末尾，我们称之为数组的旋转。输入一个递增排序的数组的一个旋转，输出旋转数组的最小元素。例如，数组 [3,4,5,1,2] 为 [1,2,3,4,5] 的一个旋转，该数组的最小值为1。  </p>
+<p>示例 1：</p>
+<p>输入：[3,4,5,1,2]<br>输出：1<br>示例 2：</p>
+<p>输入：[2,2,2,0,1]<br>输出：0</p>
+<h3 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h3><p>一般来说，对于数组中排序啊、找目的元素啊我觉得最常见的就是二分法。这个题也是，但是这个其中有两个坑是大多数人第一次做这个题选择的忽视了的。我将在下面的步骤讲出来。</p>
+<p>首先二分法，我们就得收缩我们的的区间，那么我们先根据索引取个中间值，<strong>但是中间取到了，和谁比较啊？</strong>（问题一）</p>
+<p>我们假如和左边比，比左边的大，那旋转的值肯定不是在左边，因为是有序的，旋转点是分界点，所以如果中间值还是比左边的大的话，说明左边这一部分是有序的，那么left移动到mid的位置，当小于它的时候，那就right等于mid。</p>
+<p>我们假如和右边比较的话，好像这个逻辑也是成立的，那是随便和哪个比较都可以吗？</p>
+<p>我们现在来看一下当12345的时候，如果我们和左边一比较，点移动到了右边，于是乎就找不到这个点1了。<br>这个时候我知道又有小可爱说那我和右边的比，54321， 一比较大于，那肯定就把左边的left继续往右移动。</p>
+<p>这样的时候涉及到数组，最后就和右边的，或者倒序，总有意想不到的惊喜。</p>
+<p><strong>第二个点就是什么时候停止下来，left==right</strong>,遇见这样的数组[1, 0, 1, 1, 1]，旋转点 x = 1，这样其实结束的时候不是真的所在的位置，但是通过一番推理计算，可推出 nums[i] = nums[m]nums[i]=nums[m] ，且区间 [i, m][i,m] 内所有元素值相等，即有：<br>nums[i] = nums[i+1] = … = nums[m] = nums[x]<br>nums[i]=nums[i+1]=⋯=nums[m]=nums[x]</p>
+<p>返回值能保证正确性，可能对应的索引位置是不对的，但是咱们道题只要求返回那个旋转点的值是多少，所以这个停止条件也是ok的。</p>
+<p><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/xuan-zhuan-shu-zu-de-zui-xiao-shu-zi-lcof/solution/mian-shi-ti-11-xuan-zhuan-shu-zu-de-zui-xiao-shu-3/">以上的具体分析点击这里哦，反正我看了，我不会再看了哈哈哈</a></p>
+<p>实际上，当出现 nums[m] = nums[j]时，一定有区间 [i, m] 内所有元素相等 或 区间 [m, j] 内所有元素相等（或两者皆满足）。对于寻找此类数组的最小值问题，可直接放弃二分查找，而使用线性查找替代。</p>
+<p>当nums[mid]&gt;nums[right]，这个时候就是你不知道到底这里是不是反转点，所以这个时候我们继续将右边的往中间移动一下，<a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/xuan-zhuan-shu-zu-de-zui-xiao-shu-zi-lcof/solution/xuan-zhuan-shu-zu-de-zui-xiao-shu-zi-by-leetcode-s/">理由就是点击这里———</a></p>
+<p>最后当left==right的时候，就时候停下来了，这个时候返回即可。left或者right都可以啊，因为这个时候相等了嘛、</p>
+<h3 id="实现代码"><a href="#实现代码" class="headerlink" title="实现代码"></a>实现代码</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">class Solution:</span><br><span class="line">    def findNum(self,nums)-&gt;int:</span><br><span class="line">        left,right&#x3D;0,len(nums)-1    </span><br><span class="line">        while left &lt; right</span><br><span class="line">            mid &#x3D; (left+right)&#x2F;2</span><br><span class="line">            if nums[mid]&lt;nums[right]:</span><br><span class="line">                right &#x3D; mid-1</span><br><span class="line">            elif nums[mid]&gt;nums[right]:</span><br><span class="line">                left &#x3D; mid+1</span><br><span class="line">            else:#这个时候 相等了，那么我就移动一下right 往左边移动一个</span><br><span class="line">                right&#x3D;right-1</span><br><span class="line">        return  nums[left]     </span><br></pre></td></tr></table></figure>
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/%E5%89%91%E6%8C%87offer/">剑指offer</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2021/08/06/python-multiprocessing/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">python:multiprocessing</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2021/08/04/%E5%89%91%E6%8C%87offer10/">
+        <span class="next-text nav-default">剑指offer10</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+      </footer>
+    
+  </article>
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2021
+    <span class="footer-author">Russshare.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

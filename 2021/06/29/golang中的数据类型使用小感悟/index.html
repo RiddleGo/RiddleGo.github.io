@@ -1,37 +1,224 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
-{% block page_class %}page-post-detail{% endblock %}
 
 
-{% block content %}
+  <meta name="description" content="golang中的数据类型使用小感悟"/>
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
-    </div>
+
+
+  <meta name="keywords" content="golang基础,数据类型," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+
+
+
+<link rel="canonical" href="https://riddlego.github.io/2021/06/29/golang中的数据类型使用小感悟/"/>
+
+
+<meta name="description" content="最近在做算法题，发现java和c++都有着相当多的类型，这让我十分的羡慕，作为一个曾经玩过这些的人转到golang现在只有数组、map、切片（这玩意底层不就是数组）。 我是非常的不习惯，不像java里面实现了各种的数据类型，都已经封装好了，我只需要针对不同的条件来选择最适合场景的数据结构即可，而golang你就得自己在底层采用list或者数组去封装成你想要的数据结构，以及绑定上蛮多对应的方法。 对">
+<meta property="og:type" content="article">
+<meta property="og:title" content="golang中的数据类型使用小感悟">
+<meta property="og:url" content="https://riddlego.github.io/2021/06/29/golang%E4%B8%AD%E7%9A%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E4%BD%BF%E7%94%A8%E5%B0%8F%E6%84%9F%E6%82%9F/index.html">
+<meta property="og:site_name" content="RiddleGo">
+<meta property="og:description" content="最近在做算法题，发现java和c++都有着相当多的类型，这让我十分的羡慕，作为一个曾经玩过这些的人转到golang现在只有数组、map、切片（这玩意底层不就是数组）。 我是非常的不习惯，不像java里面实现了各种的数据类型，都已经封装好了，我只需要针对不同的条件来选择最适合场景的数据结构即可，而golang你就得自己在底层采用list或者数组去封装成你想要的数据结构，以及绑定上蛮多对应的方法。 对">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-06-29T09:56:00.000Z">
+<meta property="article:modified_time" content="2021-08-26T10:09:12.033Z">
+<meta property="article:author" content="Russshare">
+<meta property="article:tag" content="golang基础">
+<meta property="article:tag" content="数据类型">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> golang中的数据类型使用小感悟 - RiddleGo </title>
+  <meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">RiddleGo</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          golang中的数据类型使用小感悟
+        
+      </h1>
+
+      <time class="post-time">
+          6月 29 2021
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <p>最近在做算法题，发现java和c++都有着相当多的类型，这让我十分的羡慕，作为一个曾经玩过这些的人转到golang现在只有数组、map、切片（这玩意底层不就是数组）。</p>
+<p>我是非常的不习惯，不像java里面实现了各种的数据类型，都已经封装好了，我只需要针对不同的条件来选择最适合场景的数据结构即可，而golang你就得自己在底层采用list或者数组去封装成你想要的数据结构，以及绑定上蛮多对应的方法。</p>
+<p>对于只想刷刷题的我有时候确实还是花费了蛮多的时间在这个上面，但是好处就是对数据的结构底层实现算是有了较深的认识，因为不但你的封装要考虑到方法与性能，同时还得考虑线程之间的安全，总是自定义永远是可以学习到更多的，单永远不会是最方便。</p>
+<p>我以后设计的时候就要注意把队列 链表啊  什么的这个方法的名字个性化一点 这个确实蛮重要的  可以根据方法判断出一个结构体的类型  而我以前都是一刀切  都使用一个方法，还以为很好  哈哈  naive</p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/golang%E5%9F%BA%E7%A1%80/">golang基础</a>
+		  
+			<a href="/tags/%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/">数据类型</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2021/06/29/golang%E5%AE%9E%E7%8E%B0%E5%A0%86%E6%A0%88/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">golang实现堆栈</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2021/06/28/LRU%E7%AE%97%E6%B3%95%E6%8B%86%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/">
+        <span class="next-text nav-default">LRU算法拆解与实现</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+      </footer>
+    
+  </article>
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2021
+    <span class="footer-author">Russshare.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

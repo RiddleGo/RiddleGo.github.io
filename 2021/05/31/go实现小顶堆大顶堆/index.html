@@ -1,37 +1,251 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
-{% block page_class %}page-post-detail{% endblock %}
 
 
-{% block content %}
+  <meta name="description" content="go实现小顶堆大顶堆"/>
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
-    </div>
+
+
+  <meta name="keywords" content="堆,golang算法,大顶堆,小顶堆," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+
+
+
+<link rel="canonical" href="https://riddlego.github.io/2021/05/31/go实现小顶堆大顶堆/"/>
+
+
+<meta name="description" content="前言：最近在看一个关于labuladong的算法文章，但是在实际操作的时候，发现自己竟然实现队里只会实现基础的添加，然后利用数组。有时候就刚刚准备做好这个，然后去leetcode去把259刷了。 golang中的堆的实现在”container&#x2F;heap”中,它的接口是如下定义的:   12345type Interface interface &amp;#123;      sort.Interface">
+<meta property="og:type" content="article">
+<meta property="og:title" content="go实现小顶堆大顶堆">
+<meta property="og:url" content="https://riddlego.github.io/2021/05/31/go%E5%AE%9E%E7%8E%B0%E5%B0%8F%E9%A1%B6%E5%A0%86%E5%A4%A7%E9%A1%B6%E5%A0%86/index.html">
+<meta property="og:site_name" content="RiddleGo">
+<meta property="og:description" content="前言：最近在看一个关于labuladong的算法文章，但是在实际操作的时候，发现自己竟然实现队里只会实现基础的添加，然后利用数组。有时候就刚刚准备做好这个，然后去leetcode去把259刷了。 golang中的堆的实现在”container&#x2F;heap”中,它的接口是如下定义的:   12345type Interface interface &amp;#123;      sort.Interface">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-05-31T13:19:34.000Z">
+<meta property="article:modified_time" content="2021-05-31T13:21:58.000Z">
+<meta property="article:author" content="Russshare">
+<meta property="article:tag" content="堆">
+<meta property="article:tag" content="golang算法">
+<meta property="article:tag" content="大顶堆">
+<meta property="article:tag" content="小顶堆">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> go实现小顶堆大顶堆 - RiddleGo </title>
+  <meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">RiddleGo</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          go实现小顶堆大顶堆
+        
+      </h1>
+
+      <time class="post-time">
+          5月 31 2021
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h3 id="前言："><a href="#前言：" class="headerlink" title="前言："></a>前言：</h3><p>最近在看一个关于labuladong的算法文章，但是在实际操作的时候，发现自己竟然实现队里只会实现基础的添加，然后利用数组。有时候就刚刚准备做好这个，然后去leetcode去把259刷了。</p>
+<h3 id="golang中的堆的实现"><a href="#golang中的堆的实现" class="headerlink" title="golang中的堆的实现"></a>golang中的堆的实现</h3><p>在”container/heap”中,它的接口是如下定义的:  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">type Interface interface &#123;  </span><br><span class="line">    sort.Interface  </span><br><span class="line">    Push(x interface&#123;&#125;) &#x2F;&#x2F; add x as element Len()  </span><br><span class="line">    Pop() interface&#123;&#125;   &#x2F;&#x2F; remove and return element Len() - 1.  </span><br><span class="line">&#125;  </span><br></pre></td></tr></table></figure>
+
+<p>现在我们来整个栗子瞅瞅<br>(不知道你们有没有这样的感觉，就是概念一堆，有时候看的还挺迷糊，上代码一看就清楚并理解了哈哈哈)</p>
+<p>container/heap的测试例子:  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">	&quot;container&#x2F;heap&quot;</span><br><span class="line">	&quot;fmt&quot;</span><br><span class="line">	&quot;sort&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; An IntHeap is a min-heap of ints.</span><br><span class="line">&#x2F;&#x2F;这里我们也可以看出堆是用一个数组实现的</span><br><span class="line">type IntHeap []int</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;计算堆的长度</span><br><span class="line">func (h IntHeap) Len() int           &#123; return len(h) &#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;这个是比较大小</span><br><span class="line">&#x2F;&#x2F;升降序由Less()来决定.</span><br><span class="line">func (h IntHeap) Less(i, j int) bool &#123; return h[i] &lt; h[j] &#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;交换堆的两个元素   有没有觉得go中的数据交换很爽</span><br><span class="line">func (h IntHeap) Swap(i, j int)      &#123; h[i], h[j] &#x3D; h[j], h[i] &#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;压入一个元素进入堆  我们其实知道堆的背后是数组 </span><br><span class="line">&#x2F;&#x2F;所以压入堆  就是在数组的尾部添加  </span><br><span class="line">func (h *IntHeap) Push(x interface&#123;&#125;) &#123;</span><br><span class="line">	&#x2F;&#x2F; Push and Pop use pointer receivers because they modify the slice&#39;s length,</span><br><span class="line">	&#x2F;&#x2F; not just its contents.</span><br><span class="line">	*h &#x3D; append(*h, x.(int))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;弹出 就是取出数组的最后的元素  数组的尾部就是堆顶   注意他还修改了数组的大小</span><br><span class="line">func (h *IntHeap) Pop() interface&#123;&#125; &#123;</span><br><span class="line">	old :&#x3D; *h</span><br><span class="line">	n :&#x3D; len(old)</span><br><span class="line">	x :&#x3D; old[n-1]</span><br><span class="line">	*h &#x3D; old[0 : n-1]</span><br><span class="line">	return x</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; This example inserts several ints into an IntHeap, checks the minimum,</span><br><span class="line">&#x2F;&#x2F; and removes them in order of priority.</span><br><span class="line">func main() &#123;</span><br><span class="line">	h :&#x3D; &amp;IntHeap&#123;100,16,4,8,70,2,36,22,5,12&#125;</span><br><span class="line"></span><br><span class="line">	fmt.Println(&quot;\nHeap:&quot;)</span><br><span class="line"></span><br><span class="line">    &#x2F;&#x2F;这一步 将数组变成了一个有序的结构  内部的源码非常的简洁漂亮</span><br><span class="line">	heap.Init(h)</span><br><span class="line"></span><br><span class="line">	fmt.Printf(&quot;最小值: %d\n&quot;, (*h)[0])</span><br><span class="line"></span><br><span class="line">	&#x2F;&#x2F;for(Pop)依次输出最小值,则相当于执行了HeapSort</span><br><span class="line">    &#x2F;&#x2F;因为这个堆每次都是pop出最小的值</span><br><span class="line">	fmt.Println(&quot;\nHeap sort:&quot;)</span><br><span class="line">	for h.Len() &gt; 0 &#123;</span><br><span class="line">		fmt.Printf(&quot;%d &quot;, heap.Pop(h))</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	&#x2F;&#x2F;增加一个新值,然后输出看看</span><br><span class="line">	fmt.Println(&quot;\nPush(h, 3),然后输出堆看看:&quot;)</span><br><span class="line">	heap.Push(h, 3)</span><br><span class="line">	for h.Len() &gt; 0 &#123;</span><br><span class="line">		fmt.Printf(&quot;%d &quot;, heap.Pop(h))</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	</span><br><span class="line">	fmt.Println(&quot;\n使用sort.Sort排序:&quot;)</span><br><span class="line">    h2 :&#x3D; IntHeap&#123;100,16,4,8,70,2,36,22,5,12&#125;</span><br><span class="line">    sort.Sort(h2)</span><br><span class="line">    for _,v :&#x3D; range h2 &#123;</span><br><span class="line">		fmt.Printf(&quot;%d &quot;,v)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出结果</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;*</span><br><span class="line">输出结果:</span><br><span class="line">-----------------------------------</span><br><span class="line">Heap:</span><br><span class="line">最小值: 2</span><br><span class="line"></span><br><span class="line">Heap sort:</span><br><span class="line">2 4 5 8 12 16 22 36 70 100</span><br><span class="line">Push(h, 3),然后输出堆看看:</span><br><span class="line">3</span><br><span class="line">使用sort.Sort排序:</span><br><span class="line">2 4 5 8 12 16 22 36 70 100</span><br><span class="line">*&#x2F;</span><br></pre></td></tr></table></figure>
+
+<p>此时 我们在结合我们刚刚说的这个的接口(我复制下来了)<br>在”container/heap”中,它的接口是如下定义的:  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">type Interface interface &#123;  </span><br><span class="line">    sort.Interface  </span><br><span class="line">    Push(x interface&#123;&#125;) &#x2F;&#x2F; add x as element Len()  </span><br><span class="line">    Pop() interface&#123;&#125;   &#x2F;&#x2F; remove and return element Len() - 1.  </span><br><span class="line">&#125;  </span><br></pre></td></tr></table></figure>
+<p>自定义的类,实现相关接口后,交由heap.Init()去构建堆.<br>从堆中Pop()后,数据就被从heap中移除了.<br>升降序由Less()来决定.<br>自定义类也可以直接用Sort来排序,因为实现了相关接口.</p>
+<p>（这里你应该懂golang关于interface的知识点，我实现了所有的接口内部的函数，那么我就默认实现了和这个接口。这个在我的另外一篇<a href="https://riddlego.github.io/2021/05/26/interface/">“interface中有提到过”</a>）</p>
+<p><strong>如果你好奇心足够，你肯定会好奇为什么heap.init就把一个数组变成了一个堆，你就当点进去，会发现这个函数在heap里面封装了很多函数，up,down。。。等等</strong></p>
+<p>那我是不是可以自己书写 然后自己构建一个</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">	&quot;fmt&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">var(</span><br><span class="line">  heap &#x3D; []int&#123;100,16,4,8,70,2,36,22,5,12&#125;	</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func Print(arr []int)&#123;		</span><br><span class="line">	for _,v :&#x3D; range arr &#123;</span><br><span class="line">		fmt.Printf(&quot;%d &quot;,v)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;构建堆</span><br><span class="line">func MakeHeap()&#123;	</span><br><span class="line">	n :&#x3D; len(heap)	</span><br><span class="line">	for i :&#x3D; n&#x2F;2-1 ;i &gt;&#x3D; 0;i--&#123;		</span><br><span class="line">		down(i, n)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;由父节点至子节点依次建堆</span><br><span class="line">&#x2F;&#x2F;parent      : i</span><br><span class="line">&#x2F;&#x2F;left child  : 2*i+1</span><br><span class="line">&#x2F;&#x2F;right child : 2*i+2</span><br><span class="line">func down(i,n int) &#123;</span><br><span class="line">	&#x2F;&#x2F;构建最小堆,父小于两子节点值</span><br><span class="line">	for &#123;	</span><br><span class="line"></span><br><span class="line">		j1 :&#x3D; 2*i + 1</span><br><span class="line">		if j1 &gt;&#x3D; n || j1 &lt; 0 &#123; &#x2F;&#x2F; j1 &lt; 0 after int overflow</span><br><span class="line">			break</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		&#x2F;&#x2F;找出两个节点中最小的(less: a&lt;b)</span><br><span class="line">		j :&#x3D; j1 &#x2F;&#x2F; left child		</span><br><span class="line">		if j2 :&#x3D; j1 + 1; j2 &lt; n &amp;&amp; !Less(j1, j2) &#123;</span><br><span class="line">			j &#x3D; j2 &#x2F;&#x2F; &#x3D; 2*i + 2  &#x2F;&#x2F; right child</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		&#x2F;&#x2F;然后与父节点i比较,如果父节点小于这个子节点最小值,则break,否则swap</span><br><span class="line">		if !Less(j, i) &#123;</span><br><span class="line">			break</span><br><span class="line">		&#125;</span><br><span class="line">		Swap(i, j)</span><br><span class="line">		i &#x3D; j	</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;由子节点至父节点依次重建堆</span><br><span class="line">func up(j int)  &#123;</span><br><span class="line">	</span><br><span class="line">	for &#123;</span><br><span class="line">		i :&#x3D; (j - 1) &#x2F; 2 &#x2F;&#x2F; parent      </span><br><span class="line">    </span><br><span class="line">		if i &#x3D;&#x3D; j || !Less(j, i) &#123; </span><br><span class="line">			&#x2F;&#x2F;less(子,父) !Less(9,5) &#x3D;&#x3D; true </span><br><span class="line">			&#x2F;&#x2F;父节点小于子节点,符合最小堆条件,break</span><br><span class="line">			break</span><br><span class="line">		&#125;</span><br><span class="line">		&#x2F;&#x2F;子节点比父节点小,互换</span><br><span class="line">		Swap(i, j)</span><br><span class="line">		j &#x3D; i</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func Push(x interface&#123;&#125;)&#123;</span><br><span class="line">	heap &#x3D; append(heap, x.(int))</span><br><span class="line">	up(len(heap)-1)</span><br><span class="line">	return </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func Pop() interface&#123;&#125; &#123;</span><br><span class="line">	n :&#x3D; len(heap) - 1</span><br><span class="line">	Swap(0, n)</span><br><span class="line">	down(0, n)</span><br><span class="line"></span><br><span class="line">	old :&#x3D;heap</span><br><span class="line">	n &#x3D; len(old)</span><br><span class="line">	x :&#x3D; old[n-1]</span><br><span class="line">	heap &#x3D; old[0 : n-1]</span><br><span class="line">	return x</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func Remove(i int) interface&#123;&#125; &#123;</span><br><span class="line">	n :&#x3D; len(heap) - 1</span><br><span class="line">	if n !&#x3D; i &#123;</span><br><span class="line">		Swap(i, n)</span><br><span class="line">		down(i, n)</span><br><span class="line">		up(i)</span><br><span class="line">	&#125;</span><br><span class="line">	return Pop()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;这个就是实现大顶堆或者小顶堆的关键</span><br><span class="line">func Less(a,b int)bool&#123;</span><br><span class="line">	return heap[a] &lt; heap[b]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func Swap(a,b int)&#123;</span><br><span class="line">	heap[a],heap[b] &#x3D; heap[b],heap[a]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func HeapSort()&#123;</span><br><span class="line">	&#x2F;&#x2F;升序 Less(heap[a] &gt; heap[b])	&#x2F;&#x2F;最大堆</span><br><span class="line">	&#x2F;&#x2F;降序 Less(heap[a] &lt; heap[b])	&#x2F;&#x2F;最小堆</span><br><span class="line">	for i :&#x3D; len(heap)-1 ;i &gt; 0;i--&#123;	</span><br><span class="line">		&#x2F;&#x2F;移除顶部元素到数组末尾,然后剩下的重建堆,依次循环</span><br><span class="line">		Swap(0, i)</span><br><span class="line">		down(0, i)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func main()&#123;</span><br><span class="line">	fmt.Println(&quot;\n数组:&quot;)</span><br><span class="line">	Print(heap)</span><br><span class="line"></span><br><span class="line">    MakeHeap()</span><br><span class="line">    fmt.Println(&quot;\n构建树后:&quot;)</span><br><span class="line">	Print(heap)</span><br><span class="line"></span><br><span class="line">	fmt.Println(&quot;\n增加 90,30,1 :&quot;)</span><br><span class="line">	Push(90)</span><br><span class="line">	Push(30)</span><br><span class="line">	Push(1)	</span><br><span class="line">	Print(heap)	</span><br><span class="line">	</span><br><span class="line">	n :&#x3D; Pop()</span><br><span class="line">	fmt.Println(&quot;\nPop出最小值(&quot;,n,&quot;)后:&quot;)</span><br><span class="line">	Print(heap)	</span><br><span class="line"></span><br><span class="line">	fmt.Println(&quot;\nRemove()掉idx为3即值&quot;,heap[3-1],&quot;后:&quot;)</span><br><span class="line">	Remove(3)	</span><br><span class="line">	Print(heap)	</span><br><span class="line"></span><br><span class="line">	fmt.Println(&quot;\nHeapSort()后:&quot;)</span><br><span class="line">	HeapSort()</span><br><span class="line">	Print(heap)	</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>输出结果</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;*</span><br><span class="line">输出结果:</span><br><span class="line">-----------------------------------</span><br><span class="line">数组:</span><br><span class="line">100 16 4 8 70 2 36 22 5 12</span><br><span class="line">构建树后:</span><br><span class="line">2 5 4 8 12 100 36 22 16 70</span><br><span class="line">增加 90,30,1 :</span><br><span class="line">1 5 2 8 12 4 36 22 16 70 90 100 30</span><br><span class="line">Pop出最小值( 1 )后:</span><br><span class="line">2 5 4 8 12 30 36 22 16 70 90 100</span><br><span class="line">Remove()掉idx为3即值 4 后:</span><br><span class="line">4 5 8 16 12 30 36 22 100 70 90</span><br><span class="line">HeapSort()后:</span><br><span class="line">100 90 70 36 30 22 16 12 8 5 4</span><br><span class="line"></span><br><span class="line">*&#x2F;</span><br></pre></td></tr></table></figure>
+<p>两相对比之后发现,container/heap 竞然,真的,仅且只是封装了一个堆而已.<br>把那些不确定的,各种需要定制的东西,都交给了用户去实现.<br>它仅仅只负责最核心的堆这部份的东西.<br>这样基础库清爽了,使用堆时也不会再感到缚手缚脚了.<br><strong><a href="BLOG:http://blog.csdn.ent/xcl168">本文转载</a></strong></p>
+<p>这里说的是自己定制 其实也没有定制太多，就是将封装的拿出来给大家看一下，我没有做什么见不得人的，我做的你也可以的做，而且不是很难。</p>
+<p>构建是大顶堆还是小顶堆 的关键函数是Less函数，在down函数构造堆得时候，根据Less的值确定构建堆得性质。</p>
+<p><strong>乘着今天阳光正好，我决定窝在宿舍把这个源码写一篇文章，解析一下。希望到时候看着不要太为难你们了！！！</strong><br><strong>不过我的文章基本上都是学的别人的，然后边看边理解，边加上一丢丢微不足道的自己的想法</strong><br><strong>想前辈致敬</strong></p>
+<p><em><strong>以上就是本次的全部内容，希望对你有所帮助！！！</strong></em></p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/%E5%A0%86/">堆</a>
+		  
+			<a href="/tags/golang%E7%AE%97%E6%B3%95/">golang算法</a>
+		  
+			<a href="/tags/%E5%A4%A7%E9%A1%B6%E5%A0%86/">大顶堆</a>
+		  
+			<a href="/tags/%E5%B0%8F%E9%A1%B6%E5%A0%86/">小顶堆</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2021/05/31/golang%E4%B8%ADmap%E7%9A%84%E5%B8%B8%E8%A7%81%E6%93%8D%E4%BD%9C/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">golang中map的常见操作</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2021/05/31/OTP/">
+        <span class="next-text nav-default">OTP</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+      </footer>
+    
+  </article>
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2021
+    <span class="footer-author">Russshare.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

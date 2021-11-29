@@ -1,37 +1,240 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
-{% block page_class %}page-post-detail{% endblock %}
 
 
-{% block content %}
+  <meta name="description" content="数组int能转换为数组interface吗？"/>
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
-    </div>
+
+
+  <meta name="keywords" content="interface," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+
+
+
+<link rel="canonical" href="https://riddlego.github.io/2021/09/01/数组int能转换为数组interface吗？/"/>
+
+
+<meta name="description" content="原文点击这里进入获得更好的排版阅读，感谢前辈 这个问题的答案是：不能。 如果你还想知道更多的信息，就往下看。^_^ 有些时候我们希望有这样的写法：定义一个参数为 []interface 的函数，在程序运行的过程中，传入 []int 或其他类型的 slice，以此来达到少写一些代码的目的。譬如下面这个弱智的求 slice 和的例子： 1234567891011121314151617181920pa">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数组int能转换为数组interface吗？">
+<meta property="og:url" content="https://riddlego.github.io/2021/09/01/%E6%95%B0%E7%BB%84int%E8%83%BD%E8%BD%AC%E6%8D%A2%E4%B8%BA%E6%95%B0%E7%BB%84interface%E5%90%97%EF%BC%9F/index.html">
+<meta property="og:site_name" content="RiddleGo">
+<meta property="og:description" content="原文点击这里进入获得更好的排版阅读，感谢前辈 这个问题的答案是：不能。 如果你还想知道更多的信息，就往下看。^_^ 有些时候我们希望有这样的写法：定义一个参数为 []interface 的函数，在程序运行的过程中，传入 []int 或其他类型的 slice，以此来达到少写一些代码的目的。譬如下面这个弱智的求 slice 和的例子： 1234567891011121314151617181920pa">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-09-01T12:21:00.000Z">
+<meta property="article:modified_time" content="2021-09-01T12:27:41.652Z">
+<meta property="article:author" content="Russshare">
+<meta property="article:tag" content="interface">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> 数组int能转换为数组interface吗？ - RiddleGo </title>
+  <meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">RiddleGo</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          数组int能转换为数组interface吗？
+        
+      </h1>
+
+      <time class="post-time">
+          9月 01 2021
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/tqR5zMPobm20lao-2QNrVA">原文点击这里进入获得更好的排版阅读，感谢前辈</a></p>
+<p>这个问题的答案是：不能。</p>
+<p>如果你还想知道更多的信息，就往下看。^_^</p>
+<p>有些时候我们希望有这样的写法：定义一个参数为 []interface 的函数，在程序运行的过程中，传入 []int 或其他类型的 slice，以此来达到少写一些代码的目的。譬如下面这个弱智的求 slice 和的例子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import &quot;fmt&quot;</span><br><span class="line"></span><br><span class="line">func sliceSum(inters []interface&#123;&#125;) (res interface&#123;&#125;) &#123;</span><br><span class="line"> nums :&#x3D; inters.([]int)</span><br><span class="line"></span><br><span class="line"> sum :&#x3D; 0</span><br><span class="line"> for _, num :&#x3D; range nums &#123;</span><br><span class="line">  sum +&#x3D; num</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"> return sum</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line"> is :&#x3D; []int&#123;7, 8, 9, 10&#125;</span><br><span class="line"></span><br><span class="line"> fmt.Println(sliceSum(is))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>为了把这个程序写得更通用一点，参数和返回值都是用的 interface 类型。编译，会报错：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">.&#x2F;inter.go:6:16: invalid type assertion: inters.([]int) (non-interface type []interface &#123;&#125; on left)</span><br><span class="line">.&#x2F;inter.go:19:22: cannot use is (type []int) as type []interface &#123;&#125; in argument to sliceSum</span><br></pre></td></tr></table></figure>
+
+<p>第一个错：不能将左边的 []interface{} 转换成右边的 []int，因为 []interface 本身并不是 interface 类型，所以不能进行断言。</p>
+<p>第二个错：sliceSum 函数不能接受 []int 类型的参数，因为 []int 不是 []interface 类型。</p>
+<p>先把程序改成正确的：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import &quot;fmt&quot;</span><br><span class="line"></span><br><span class="line">func sliceSum(inters []interface&#123;&#125;) (res interface&#123;&#125;)&#123;</span><br><span class="line"> sum :&#x3D; 0</span><br><span class="line"> for _, inter :&#x3D; range inters &#123;</span><br><span class="line">   sum +&#x3D; inter.(int)</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"> return sum</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line"> is :&#x3D; []int&#123;7, 8, 9, 10&#125;</span><br><span class="line">  </span><br><span class="line"> iis :&#x3D; make([]interface&#123;&#125;, len(is))</span><br><span class="line"> for i :&#x3D; 0; i &lt; len(is); i++ &#123;</span><br><span class="line">   iis[i] &#x3D; is[i]</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"> fmt.Println(sliceSum(iis))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>直接在循环的地方，对 inters 里的每个元素进行断言后再累加。</p>
+<p>再来研究下 Go 官方说的：[]int 和 []interface{} 内存模型不一样是什么意思。</p>
+<p>之前的 slice 文章讲过，slice 底层有 3 个属性：</p>
+<p>这里有很多的图—点击<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/tqR5zMPobm20lao-2QNrVA">原文点击这里进入获得更好的排版阅读，感谢前辈</a>进行阅读</p>
+<p>最后，总结一下：Go 官方规定，[]int 不能转换成 []interface{}，因为两者是不同的类型，[]interface 不是 interface 类型，且两者的内存布局并不相同。</p>
+<p>解决办法就是泛型。那泛型的原理是什么呢？又是怎么实现的呢？问就是不知道~😛</p>
+<p>注：本文内容主要来自于 Eli 的博客[1]。</p>
+<p>参考资料<br>[1]<br>博客: <a target="_blank" rel="noopener" href="https://eli.thegreenplace.net/2021/go-internals-invariance-and-memory-layout-of-slices/">https://eli.thegreenplace.net/2021/go-internals-invariance-and-memory-layout-of-slices/</a></p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/interface/">interface</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2021/09/01/RLock%E8%BF%87%E7%A8%8B%E8%A2%AB%E8%B0%83%E5%87%BA%E7%9A%84%E6%82%B2%E5%89%A7%EF%BC%9F/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">RLock过程被调出的悲剧？</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2021/09/01/%E6%8E%A8%E8%8D%90%E4%B8%89%E4%B8%AAGo%E5%AE%9E%E6%88%98%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/">
+        <span class="next-text nav-default">推荐三个Go实战开源项目</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+      </footer>
+    
+  </article>
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2021
+    <span class="footer-author">Russshare.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

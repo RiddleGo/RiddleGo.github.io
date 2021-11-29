@@ -1,37 +1,270 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
-{% block page_class %}page-post-detail{% endblock %}
 
 
-{% block content %}
+  <meta name="description" content="面试：golang中的map"/>
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
-    </div>
+
+
+  <meta name="keywords" content="map,线程安全," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+
+
+
+<link rel="canonical" href="https://riddlego.github.io/2021/07/31/面试：golang中的map/"/>
+
+
+<meta name="description" content="文章链接 涉及概念并发安全Map 分段锁 sync.Map CAS ( Compare And Swap ) 双检查 分段锁1234type SimpleCache struct &amp;#123;    mu    sync.RWMutex    items map[interface&amp;#123;&amp;#125;]*simpleItem&amp;#125;  在日常开发中， 上述这种数据结构肯定不少见，因为gol">
+<meta property="og:type" content="article">
+<meta property="og:title" content="面试：golang中的map">
+<meta property="og:url" content="https://riddlego.github.io/2021/07/31/%E9%9D%A2%E8%AF%95%EF%BC%9Agolang%E4%B8%AD%E7%9A%84map/index.html">
+<meta property="og:site_name" content="RiddleGo">
+<meta property="og:description" content="文章链接 涉及概念并发安全Map 分段锁 sync.Map CAS ( Compare And Swap ) 双检查 分段锁1234type SimpleCache struct &amp;#123;    mu    sync.RWMutex    items map[interface&amp;#123;&amp;#125;]*simpleItem&amp;#125;  在日常开发中， 上述这种数据结构肯定不少见，因为gol">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/%E5%88%86%E6%AE%B5%E9%94%81.png">
+<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/gomap01.png">
+<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/gomap02.png">
+<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/gomap03.png">
+<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/gomap04.png">
+<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/gomap05.png">
+<meta property="article:published_time" content="2021-07-31T08:10:09.000Z">
+<meta property="article:modified_time" content="2021-08-02T16:18:02.236Z">
+<meta property="article:author" content="Russshare">
+<meta property="article:tag" content="map">
+<meta property="article:tag" content="线程安全">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/%E5%88%86%E6%AE%B5%E9%94%81.png">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> 面试：golang中的map - RiddleGo </title>
+  <meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">RiddleGo</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          面试：golang中的map
+        
+      </h1>
+
+      <time class="post-time">
+          7月 31 2021
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <p><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000018448064">文章链接</a></p>
+<h2 id="涉及概念"><a href="#涉及概念" class="headerlink" title="涉及概念"></a>涉及概念</h2><p>并发安全Map</p>
+<p>分段锁</p>
+<p>sync.Map</p>
+<p>CAS ( Compare And Swap )</p>
+<p>双检查</p>
+<h3 id="分段锁"><a href="#分段锁" class="headerlink" title="分段锁"></a>分段锁</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">type SimpleCache struct &#123;</span><br><span class="line">    mu    sync.RWMutex</span><br><span class="line">    items map[interface&#123;&#125;]*simpleItem</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在日常开发中， 上述这种数据结构肯定不少见，<strong>因为golang的原生map是非并发安全的，所以为了保证map的并发安全，最简单的方式就是给map加锁。</strong></p>
+<p>之前使用过两个本地内存缓存的开源库， gcache, cache2go，其中存储缓存对象的结构都是这样，对于轻量级的缓存库，为了设计简洁（包含清理过期对象等 ) 再加上当需要缓存大量数据时有redis,memcache等明星项目解决。 </p>
+<p><strong>但是如果抛开这些因素遇到真正数量巨大的数据量时，直接对一个map加锁，当map中的值越来越多，访问map的请求越来越多，大家都竞争这一把锁显得并发访问控制变重。</strong></p>
+<p>在go1.9引入sync.Map 之前，比较流行的做法就是使用分段锁，顾名思义就是将锁分段，将锁的粒度变小，<strong>将存储的对象分散到各个分片中，每个分片由一把锁控制，这样使得当需要对在A分片上的数据进行读写时不会影响B分片的读写。</strong></p>
+<p><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/%E5%88%86%E6%AE%B5%E9%94%81.png"></p>
+<h4 id="分段锁的实现"><a href="#分段锁的实现" class="headerlink" title="分段锁的实现"></a>分段锁的实现</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; Map 分片</span><br><span class="line">type ConcurrentMap []*ConcurrentMapShared</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 每一个Map 是一个加锁的并发安全Map</span><br><span class="line">type ConcurrentMapShared struct &#123;</span><br><span class="line">    items map[string]interface&#123;&#125;</span><br><span class="line">    sync.RWMutex    &#x2F;&#x2F; 各个分片Map各自的锁</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>主流的分段锁，即通过hash取模的方式找到当前访问的key处于哪一个分片之上，再对该分片进行加锁之后再读写。分片定位时，常用有BKDR, FNV32等hash算法得到key的hash值。</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">func New() ConcurrentMap &#123;</span><br><span class="line">    &#x2F;&#x2F; SHARD_COUNT  默认32个分片</span><br><span class="line">    m :&#x3D; make(ConcurrentMap, SHARD_COUNT)</span><br><span class="line">    for i :&#x3D; 0; i &lt; SHARD_COUNT; i++ &#123;</span><br><span class="line">        m[i] &#x3D; &amp;ConcurrentMapShared&#123;</span><br><span class="line">            items: make(map[string]interface&#123;&#125;),</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return m</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在初始化好分片后， 对分片上的数据进行读写时就需要用hash取模进行分段定位来确认即将要读写的分片。</p>
+<h4 id="获取段定位"><a href="#获取段定位" class="headerlink" title="获取段定位"></a>获取段定位</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">func (m ConcurrentMap) GetShard(key string) *ConcurrentMapShared &#123;</span><br><span class="line">    return m[uint(fnv32(key))%uint(SHARD_COUNT)]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; FNV hash</span><br><span class="line">func fnv32(key string) uint32 &#123;</span><br><span class="line">    hash :&#x3D; uint32(2166136261)</span><br><span class="line">    const prime32 &#x3D; uint32(16777619)</span><br><span class="line">    for i :&#x3D; 0; i &lt; len(key); i++ &#123;</span><br><span class="line">        hash *&#x3D; prime32</span><br><span class="line">        hash ^&#x3D; uint32(key[i])</span><br><span class="line">    &#125;</span><br><span class="line">    return hash</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>之后对于map的GET SET 就简单顺利成章的完成</p>
+<h4 id="Set-And-Get"><a href="#Set-And-Get" class="headerlink" title="Set And Get"></a>Set And Get</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">func (m ConcurrentMap) Set(key string, value interface&#123;&#125;) &#123;</span><br><span class="line">    shard :&#x3D; m.GetShard(key) &#x2F;&#x2F; 段定位找到分片</span><br><span class="line">    shard.Lock()              &#x2F;&#x2F; 分片上锁</span><br><span class="line">    shard.items[key] &#x3D; value &#x2F;&#x2F; 分片操作 </span><br><span class="line">    shard.Unlock()              &#x2F;&#x2F; 分片解锁</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func (m ConcurrentMap) Get(key string) (interface&#123;&#125;, bool) &#123;</span><br><span class="line">    shard :&#x3D; m.GetShard(key)</span><br><span class="line">    shard.RLock()</span><br><span class="line">    val, ok :&#x3D; shard.items[key]</span><br><span class="line">    shard.RUnlock()</span><br><span class="line">    return val, ok</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p> 由此一个分段锁Map就实现了， 但是比起普通的Map, 常用到的方法比如获取所有key, 获取所有Val 操作是要比原生Map复杂的，因为要遍历每一个分片的每一个数据， 好在golang的并发特性使得解决这类问题变得非常简单</p>
+<h4 id="Keys"><a href="#Keys" class="headerlink" title="Keys"></a>Keys</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 统计当前分段map中item的个数</span><br><span class="line">func (m ConcurrentMap) Count() int &#123;</span><br><span class="line">    count :&#x3D; 0</span><br><span class="line">    for i :&#x3D; 0; i &lt; SHARD_COUNT; i++ &#123;</span><br><span class="line">        shard :&#x3D; m[i]</span><br><span class="line">        shard.RLock()</span><br><span class="line">        count +&#x3D; len(shard.items)</span><br><span class="line">        shard.RUnlock()</span><br><span class="line">    &#125;</span><br><span class="line">    return count</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 获取所有的key</span><br><span class="line">func (m ConcurrentMap) Keys() []string &#123;</span><br><span class="line">    count :&#x3D; m.Count()</span><br><span class="line">    ch :&#x3D; make(chan string, count)</span><br><span class="line"></span><br><span class="line">    &#x2F;&#x2F; 每一个分片启动一个协程 遍历key</span><br><span class="line">    go func() &#123;</span><br><span class="line">        wg :&#x3D; sync.WaitGroup&#123;&#125;</span><br><span class="line">        wg.Add(SHARD_COUNT)</span><br><span class="line">        for _, shard :&#x3D; range m &#123;</span><br><span class="line"></span><br><span class="line">            go func(shard *ConcurrentMapShared) &#123;</span><br><span class="line">                defer wg.Done()</span><br><span class="line">                </span><br><span class="line">                shard.RLock()</span><br><span class="line"></span><br><span class="line">                &#x2F;&#x2F; 每个分片中的key遍历后都写入统计用的channel</span><br><span class="line">                for key :&#x3D; range shard.items &#123;</span><br><span class="line">                    ch &lt;- key</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                shard.RUnlock()</span><br><span class="line">            &#125;(shard)</span><br><span class="line">        &#125;</span><br><span class="line">        wg.Wait()</span><br><span class="line">        close(ch)</span><br><span class="line">    &#125;()</span><br><span class="line"></span><br><span class="line">    keys :&#x3D; make([]string, count)</span><br><span class="line">    &#x2F;&#x2F; 统计各个协程并发读取Map分片的key</span><br><span class="line">    for k :&#x3D; range ch &#123;</span><br><span class="line">        keys &#x3D; append(keys, k)</span><br><span class="line">    &#125;</span><br><span class="line">    return keys</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里写了一个benchMark来对该分段锁Map和原生的Map加锁方式进行压测， 场景为将一万个不重复的键值对同时以100万次写和100万次读，分别进行5次压测， 如下压测代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">func BenchmarkMapShared(b *testing.B) &#123;</span><br><span class="line">    num :&#x3D; 10000</span><br><span class="line">    testCase :&#x3D; genNoRepetTestCase(num) &#x2F;&#x2F; 10000个不重复的键值对</span><br><span class="line">    m :&#x3D; New()</span><br><span class="line">    for _, v :&#x3D; range testCase &#123;</span><br><span class="line">        m.Set(v.Key, v.Val)</span><br><span class="line">    &#125;</span><br><span class="line">    b.ResetTimer()</span><br><span class="line"></span><br><span class="line">    for i :&#x3D; 0; i &lt; 5; i++ &#123;</span><br><span class="line">        b.Run(strconv.Itoa(i), func(b *testing.B) &#123;</span><br><span class="line"></span><br><span class="line">            b.N &#x3D; 1000000</span><br><span class="line"></span><br><span class="line">            wg :&#x3D; sync.WaitGroup&#123;&#125;</span><br><span class="line">            wg.Add(b.N * 2)</span><br><span class="line">            for i :&#x3D; 0; i &lt; b.N; i++ &#123;</span><br><span class="line">                e :&#x3D; testCase[rand.Intn(num)]</span><br><span class="line"></span><br><span class="line">                go func(key string, val interface&#123;&#125;) &#123;</span><br><span class="line">                    m.Set(key, val)</span><br><span class="line">                    wg.Done()</span><br><span class="line">                &#125;(e.Key, e.Val)</span><br><span class="line"></span><br><span class="line">                go func(key string) &#123;</span><br><span class="line">                    _, _ &#x3D; m.Get(key)</span><br><span class="line">                    wg.Done()</span><br><span class="line">                &#125;(e.Key)</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line">            wg.Wait()</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>原生Map加锁压测结果<br><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/gomap01.png"></p>
+<p>分段锁压测结果<br><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/gomap02.png"></p>
+<p>可以看出在将锁的粒度细化后再面对大量需要控制并发安全的访问时，分段锁Map的耗时比原生Map加锁要快3倍有余</p>
+<h3 id="Sync-Map"><a href="#Sync-Map" class="headerlink" title="Sync.Map"></a>Sync.Map</h3><p>go1.9之后加入了支持并发安全的Map <strong>sync.Map</strong>, <strong>sync.Map 通过一份只使用原子操作的数据和一份冗余了只读数据的加锁数据实现一定程度上的读写分离，使得大多数读操作和更新操作是原子操作，写入新数据才加锁的方式来提升性能。</strong>以下是 sync.Map源码剖析, 结构体中的注释都会在具体实现代码中提示相呼应</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">type Map struct &#123;</span><br><span class="line">    &#x2F;&#x2F; 保护dirty的锁</span><br><span class="line">    mu Mutex                        </span><br><span class="line">    &#x2F;&#x2F; 只读数据（修改采用原子操作)</span><br><span class="line">    read atomic.Value                </span><br><span class="line">    &#x2F;&#x2F; 包含只读中所有数据（冗余），写入新数据时也在dirty中操作</span><br><span class="line">    dirty map[interface&#123;&#125;]*entry  </span><br><span class="line">    &#x2F;&#x2F; 当原子操作访问只读read时找不到数据时会去dirty中寻找，此时misses+1，dirty及作为存储新写入的数据，又冗余了只读结构中的数据，所以当misses &gt; dirty 的长度时， 会将dirty升级为read，同时将老的dirty置nil</span><br><span class="line">    misses int </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; Map struct 中的 read 就是readOnly 的指针</span><br><span class="line">type readOnly struct &#123;</span><br><span class="line">    &#x2F;&#x2F; 基础Map</span><br><span class="line">    m   map[interface&#123;&#125;]*entry </span><br><span class="line">    &#x2F;&#x2F; 用于表示当前dirty中是否有read中不存在的数据， 在写入数据时， 如果发现dirty中没有新数据且dirty为nil时，会将read中未被删除的数据拷贝一份冗余到dirty中， 过程与Map struct中的 misses相呼应</span><br><span class="line">    amended bool </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 数据项</span><br><span class="line">type entry struct &#123;</span><br><span class="line">    p unsafe.Pointer </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 用于标记数据项已被删除（主要保证数据冗余时的并发安全）</span><br><span class="line">&#x2F;&#x2F; 上述Map结构中说到有一个将read数据拷贝冗余至dirty的过程， 因为删除数据项是将*entry置nil, 为了避免冗余过程中因并发问题导致*entry改变而影响到拷贝后的dirty正确性，所以sync.Map使用expunged来标记entry是否被删除</span><br><span class="line">var expunged &#x3D; unsafe.Pointer(new(interface&#123;&#125;))</span><br></pre></td></tr></table></figure>
+
+<p>在下面sync.Map具体实现中将会看到很多“双检查”代码，<strong>因为通过原子操作获取的值可能在进行其他非原子操作过程中已改变，所以再非原子操作后需要使用之前原子操作获取的值需要再次进行原子操作获取。</strong></p>
+<p>    <strong>compareAndSwap交换并比较， 用于在多线程编程中实现不被打断的数据交换操作，从而避免多线程同时改写某一数据时导致数据不一致问题。</strong></p>
+<h4 id="sync-Map-Write"><a href="#sync-Map-Write" class="headerlink" title="sync.Map Write"></a>sync.Map Write</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br></pre></td><td class="code"><pre><span class="line">func (m *Map) Store(key, value interface&#123;&#125;) &#123;</span><br><span class="line">    &#x2F;&#x2F; 先不上锁，而是从只读数据中按key读取， 如果已存在以compareAndSwap操作进行覆盖(update)</span><br><span class="line">    read, _ :&#x3D; m.read.Load().(readOnly)</span><br><span class="line">    if e, ok :&#x3D; read.m[key]; ok &amp;&amp; e.tryStore(&amp;value) &#123;</span><br><span class="line">        return</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    m.mu.Lock()</span><br><span class="line">    &#x2F;&#x2F; 双检查获取read</span><br><span class="line">    read, _ &#x3D; m.read.Load().(readOnly)</span><br><span class="line">    &#x2F;&#x2F; 如果data在read中，更新entry</span><br><span class="line">    if e, ok :&#x3D; read.m[key]; ok &#123;</span><br><span class="line">        &#x2F;&#x2F; 如果原子操作读到的数据是被标记删除的， 则视为新数据写入dirty</span><br><span class="line">        if e.unexpungeLocked() &#123;</span><br><span class="line">            m.dirty[key] &#x3D; e</span><br><span class="line">        &#125;</span><br><span class="line">        &#x2F;&#x2F; 原子操作写新数据</span><br><span class="line">        e.storeLocked(&amp;value)</span><br><span class="line">    &#125; else if e, ok :&#x3D; m.dirty[key]; ok &#123;</span><br><span class="line">        &#x2F;&#x2F; 原子操作写新数据</span><br><span class="line">        e.storeLocked(&amp;value)</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        &#x2F;&#x2F; 新数据 </span><br><span class="line">        &#x2F;&#x2F; 当dirty中没有新数据时，将read中数据冗余到dirty</span><br><span class="line">        if !read.amended &#123;</span><br><span class="line">            m.dirtyLocked()</span><br><span class="line">            m.read.Store(readOnly&#123;m: read.m, amended: true&#125;)</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        m.dirty[key] &#x3D; newEntry(value)</span><br><span class="line">    &#125;</span><br><span class="line">    m.mu.Unlock()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func (e *entry) tryStore(i *interface&#123;&#125;) bool &#123;</span><br><span class="line">    p :&#x3D; atomic.LoadPointer(&amp;e.p)</span><br><span class="line">    if p &#x3D;&#x3D; expunged &#123;</span><br><span class="line">        return false</span><br><span class="line">    &#125;</span><br><span class="line">    for &#123;</span><br><span class="line">        if atomic.CompareAndSwapPointer(&amp;e.p, p, unsafe.Pointer(i)) &#123;</span><br><span class="line">            return true</span><br><span class="line">        &#125;</span><br><span class="line">        p &#x3D; atomic.LoadPointer(&amp;e.p)</span><br><span class="line">        if p &#x3D;&#x3D; expunged &#123;</span><br><span class="line">            return false</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 在dirty中没有比read多出的新数据时触发冗余</span><br><span class="line">func (m *Map) dirtyLocked() &#123;</span><br><span class="line">    if m.dirty !&#x3D; nil &#123;</span><br><span class="line">        return</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    read, _ :&#x3D; m.read.Load().(readOnly)</span><br><span class="line">    m.dirty &#x3D; make(map[interface&#123;&#125;]*entry, len(read.m))</span><br><span class="line">    for k, e :&#x3D; range read.m &#123;</span><br><span class="line">        &#x2F;&#x2F; 检查entry是否被删除， 被删除的数据不冗余</span><br><span class="line">        if !e.tryExpungeLocked() &#123;</span><br><span class="line">            m.dirty[k] &#x3D; e</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func (e *entry) tryExpungeLocked() (isExpunged bool) &#123;</span><br><span class="line">    p :&#x3D; atomic.LoadPointer(&amp;e.p)</span><br><span class="line">    for p &#x3D;&#x3D; nil &#123;</span><br><span class="line">        &#x2F;&#x2F; 将被删除（置nil）的数据以cas原子操作标记为expunged（防止因并发情况下其他操作导致冗余进dirty的数据不正确）</span><br><span class="line">        if atomic.CompareAndSwapPointer(&amp;e.p, nil, expunged) &#123;</span><br><span class="line">            return true</span><br><span class="line">        &#125;</span><br><span class="line">        p &#x3D; atomic.LoadPointer(&amp;e.p)</span><br><span class="line">    &#125;</span><br><span class="line">    return p &#x3D;&#x3D; expunged</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="sync-Map-Read"><a href="#sync-Map-Read" class="headerlink" title="sync.Map Read"></a>sync.Map Read</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">func (m *Map) Load(key interface&#123;&#125;) (value interface&#123;&#125;, ok bool) &#123;</span><br><span class="line">    read, _ :&#x3D; m.read.Load().(readOnly)</span><br><span class="line">    e, ok :&#x3D; read.m[key]</span><br><span class="line"></span><br><span class="line">    &#x2F;&#x2F; 只读数据中没有，并且dirty有比read多的数据，加锁在dirty中找</span><br><span class="line">    if !ok &amp;&amp; read.amended &#123;</span><br><span class="line">        m.mu.Lock()</span><br><span class="line">        &#x2F;&#x2F; 双检查， 因为上锁之前的语句是非原子性的</span><br><span class="line">        read, _ &#x3D; m.read.Load().(readOnly)</span><br><span class="line">        e, ok &#x3D; read.m[key]</span><br><span class="line">        if !ok &amp;&amp; read.amended &#123;</span><br><span class="line">            &#x2F;&#x2F; 只读中没有读取到的次数+1</span><br><span class="line">            e, ok &#x3D; m.dirty[key]</span><br><span class="line">            &#x2F;&#x2F; 检查是否达到触发dirty升级read的条件</span><br><span class="line">            m.missLocked()</span><br><span class="line">        &#125;</span><br><span class="line">        m.mu.Unlock()</span><br><span class="line">    &#125;</span><br><span class="line">    if !ok &#123;</span><br><span class="line">        return nil, false</span><br><span class="line">    &#125;</span><br><span class="line">    &#x2F;&#x2F; atomic.Load 但被标记为删除的会返回nil</span><br><span class="line">    return e.load()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func (m *Map) missLocked() &#123;</span><br><span class="line">    m.misses++</span><br><span class="line">    if m.misses &lt; len(m.dirty) &#123;</span><br><span class="line">        return</span><br><span class="line">    &#125;</span><br><span class="line">    m.read.Store(readOnly&#123;m: m.dirty&#125;)</span><br><span class="line">    m.dirty &#x3D; nil</span><br><span class="line">    m.misses &#x3D; 0</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="sync-Map-DELETE"><a href="#sync-Map-DELETE" class="headerlink" title="sync.Map DELETE"></a>sync.Map DELETE</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">func (m *Map) Delete(key interface&#123;&#125;) &#123;</span><br><span class="line">    read, _ :&#x3D; m.read.Load().(readOnly)</span><br><span class="line">    e, ok :&#x3D; read.m[key]</span><br><span class="line">    &#x2F;&#x2F; 只读中不存在需要到dirty中去删除</span><br><span class="line">    if !ok &amp;&amp; read.amended &#123;</span><br><span class="line">        m.mu.Lock() </span><br><span class="line">        &#x2F;&#x2F; 双检查， 因为上锁之前的语句是非原子性的</span><br><span class="line">        read, _ &#x3D; m.read.Load().(readOnly)</span><br><span class="line">        e, ok &#x3D; read.m[key]</span><br><span class="line">        if !ok &amp;&amp; read.amended &#123;</span><br><span class="line">            delete(m.dirty, key)</span><br><span class="line">        &#125;</span><br><span class="line">        m.mu.Unlock()</span><br><span class="line">    &#125;</span><br><span class="line">    if ok &#123;</span><br><span class="line">        e.delete()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func (e *entry) delete() (hadValue bool) &#123;</span><br><span class="line">    for &#123;</span><br><span class="line">        p :&#x3D; atomic.LoadPointer(&amp;e.p)</span><br><span class="line">        if p &#x3D;&#x3D; nil || p &#x3D;&#x3D; expunged &#123;</span><br><span class="line">            return false</span><br><span class="line">        &#125;</span><br><span class="line">        if atomic.CompareAndSwapPointer(&amp;e.p, p, nil) &#123;</span><br><span class="line">            return true</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>同样以刚刚压测原生加锁Map和分段锁的方式来压测sync.Map<br><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/gomap03.png"></p>
+<p>压测平均下来sync.Map和分段锁差别不大，但是比起分段锁， sync.Map则将锁的粒度更加的细小到对数据的状态上，使得大多数据可以无锁化操作， 同时比分段锁拥有更好的拓展性，因为分段锁使用前总是要定一个分片数量， 在做扩容或者缩小时很麻烦, 但要达到sync.Map这种性能既好又能动态扩容的程度，代码就相对复杂很多。</p>
+<p><strong>还有注意在使用sync.Map时切忌不要将其拷贝，</strong> go源码中有对sync.Map注释到” A Map must not be copied after first use.”因为当sync.Map被拷贝之后， Map类型的dirty还是那个map 但是read 和 锁却不是之前的read和锁(都不在一个世界你拿什么保护我), 所以必然导致并发不安全（为了写博我把sync.Map代码复制出来一份把私有成员改成可外部访问的打印指针）</p>
+<p><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/gomap04.png"><br><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/gomap05.png"></p>
+<h3 id="这篇文章很硬核，建议认真阅读"><a href="#这篇文章很硬核，建议认真阅读" class="headerlink" title="这篇文章很硬核，建议认真阅读"></a>这篇文章很硬核，建议认真阅读</h3>
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/map/">map</a>
+		  
+			<a href="/tags/%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8/">线程安全</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2021/07/31/%E9%9D%A2%E8%AF%95%EF%BC%9A%E5%A6%82%E4%BD%95%E4%BF%9D%E8%AF%81%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E6%95%B0%E6%8D%AE%E4%B8%80%E8%87%B4%E6%80%A7/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">面试：如何保证分布式系统数据一致性</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2021/07/31/%E9%9D%A2%E8%AF%95%EF%BC%9A%E6%80%8E%E4%B9%88%E8%A7%A3%E5%86%B3hash%E5%86%B2%E7%AA%81%EF%BC%9F/">
+        <span class="next-text nav-default">面试：怎么解决hash冲突？</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+      </footer>
+    
+  </article>
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2021
+    <span class="footer-author">Russshare.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

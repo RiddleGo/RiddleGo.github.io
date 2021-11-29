@@ -1,37 +1,229 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
-{% block page_class %}page-post-detail{% endblock %}
 
 
-{% block content %}
+  <meta name="description" content="每天一道算法题：大数加法"/>
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
-    </div>
+
+
+  <meta name="keywords" content="面试,算法," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+
+
+
+<link rel="canonical" href="https://riddlego.github.io/2021/07/25/每天一道算法题：大数加法/"/>
+
+
+<meta name="description" content="题目描述以字符串的形式读入两个数字，编写一个函数计算它们的和，以字符串形式返回。（字符串长度不大于100000，保证字符串仅由’0’~’9’这10种字符组成） 题目分析 算法1.保证s是较长的字符串，t是较短的字符串；如果不是，交换之。 2.用StrngBuilder保存计算结果，remainder保留进位；逐位计算和，计算到t字符串结束，每次计算和记得加上进位。 3.计算s比t多出的字符，同样记">
+<meta property="og:type" content="article">
+<meta property="og:title" content="每天一道算法题：大数加法">
+<meta property="og:url" content="https://riddlego.github.io/2021/07/25/%E6%AF%8F%E5%A4%A9%E4%B8%80%E9%81%93%E7%AE%97%E6%B3%95%E9%A2%98%EF%BC%9A%E5%A4%A7%E6%95%B0%E5%8A%A0%E6%B3%95/index.html">
+<meta property="og:site_name" content="RiddleGo">
+<meta property="og:description" content="题目描述以字符串的形式读入两个数字，编写一个函数计算它们的和，以字符串形式返回。（字符串长度不大于100000，保证字符串仅由’0’~’9’这10种字符组成） 题目分析 算法1.保证s是较长的字符串，t是较短的字符串；如果不是，交换之。 2.用StrngBuilder保存计算结果，remainder保留进位；逐位计算和，计算到t字符串结束，每次计算和记得加上进位。 3.计算s比t多出的字符，同样记">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-07-25T11:00:30.000Z">
+<meta property="article:modified_time" content="2021-07-25T11:10:30.308Z">
+<meta property="article:author" content="Russshare">
+<meta property="article:tag" content="面试">
+<meta property="article:tag" content="算法">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> 每天一道算法题：大数加法 - RiddleGo </title>
+  <meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">RiddleGo</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          每天一道算法题：大数加法
+        
+      </h1>
+
+      <time class="post-time">
+          7月 25 2021
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <p>题目描述<br>以字符串的形式读入两个数字，编写一个函数计算它们的和，以字符串形式返回。<br>（字符串长度不大于100000，保证字符串仅由’0’~’9’这10种字符组成）</p>
+<p>题目分析</p>
+<p>算法<br>1.保证s是较长的字符串，t是较短的字符串；如果不是，交换之。</p>
+<p>2.用StrngBuilder保存计算结果，remainder保留进位；逐位计算和，计算到t字符串结束，每次计算和记得加上进位。</p>
+<p>3.计算s比t多出的字符，同样记得加上进位。</p>
+<p>4.最后如果进位不为0，结果还要加上进位。</p>
+<p>5.得到的字符串翻转即是答案。</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/gaozhuang63/article/details/110670351">原文链接：</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">java</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">import java.util.*;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">public class Solution &#123;</span><br><span class="line">    &#x2F;**</span><br><span class="line">     * 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可</span><br><span class="line">     * 计算两个数之和</span><br><span class="line">     * @param s string字符串 表示第一个整数</span><br><span class="line">     * @param t string字符串 表示第二个整数</span><br><span class="line">     * @return string字符串</span><br><span class="line">     *&#x2F;</span><br><span class="line">    public String solve (String s, String t) &#123;</span><br><span class="line">        &#x2F;&#x2F; write code here</span><br><span class="line">        if(s.length() &lt; t.length())&#123;</span><br><span class="line">            String tmp &#x3D; s;</span><br><span class="line">            s &#x3D; t;</span><br><span class="line">            t &#x3D; tmp;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        StringBuilder sb &#x3D; new StringBuilder();</span><br><span class="line">        int longLength &#x3D; s.length();</span><br><span class="line">        int shortLength &#x3D; t.length();</span><br><span class="line">        int carry &#x3D; 0;</span><br><span class="line">        </span><br><span class="line">        for(int i &#x3D; 0 ; i &lt; shortLength ; i++)&#123;</span><br><span class="line">            int add &#x3D; (s.charAt(longLength -1 -i) -&#39;0&#39;) +(t.charAt(shortLength -1 -i) -&#39;0&#39;)+carry ;</span><br><span class="line">            sb.append(add %10);</span><br><span class="line">            carry &#x3D; add&#x2F;10;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        for(int i &#x3D; shortLength ; i&lt; longLength ;i++)&#123;</span><br><span class="line">            int add &#x3D; (s.charAt(longLength -1-i) -&#39;0&#39;) +carry;</span><br><span class="line">            sb.append(add %10);</span><br><span class="line">            carry &#x3D; add&#x2F;10;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        if(carry !&#x3D; 0)&#123;</span><br><span class="line">            sb.append(carry);</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        return sb.reverse().toString();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">golang </span><br><span class="line"></span><br><span class="line">func solve(s, t string) string&#123;</span><br><span class="line">  if len(s) &lt; len(t)&#123;</span><br><span class="line">    s, t  &#x3D; t, s</span><br><span class="line">  &#125;</span><br><span class="line">  &#x2F;&#x2F;定义Buffer类型</span><br><span class="line">  var bt bytes.Buffer</span><br><span class="line">  longLength &#x3D; len(s)</span><br><span class="line">  shortLength &#x3D; len(t)</span><br><span class="line">  carry :&#x3D; 0</span><br><span class="line"></span><br><span class="line">  for i:&#x3D;0;i&lt;shortLength;i++&#123;</span><br><span class="line">    add &#x3D; (s[longLength -1 -i]-&#39;0&#39;) + (t[shortLength -1 -i]-&#39;0&#39;)+carry</span><br><span class="line"></span><br><span class="line">    bt.WriteString(int(add)%10)</span><br><span class="line">    carry &#x3D; add&#x2F;10</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  &#x2F;&#x2F;计算不相等长度的部分</span><br><span class="line">  for i:&#x3D;shortLength;i&lt;longLength;i++&#123;</span><br><span class="line">    add &#x3D; (s[longLength -1 -i]-&#39;0&#39;)+carry</span><br><span class="line">    bt.WriteString(int(add)%10)</span><br><span class="line">    carry &#x3D; add&#x2F;10</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  if(carry !&#x3D; 0)&#123;</span><br><span class="line">    bt.append(carry);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  &#x2F;&#x2F;获得拼接后的字符串</span><br><span class="line">  s3 :&#x3D; bt.String()</span><br><span class="line"></span><br><span class="line">  return s3</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/%E9%9D%A2%E8%AF%95/">面试</a>
+		  
+			<a href="/tags/%E7%AE%97%E6%B3%95/">算法</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2021/07/26/%E6%AF%8F%E5%A4%A9%E4%B8%80%E9%81%93%E7%AE%97%E6%B3%95%E9%A2%98%EF%BC%9A%E6%8C%89%E4%B9%8B%E5%AD%97%E5%BD%A2%E9%A1%BA%E5%BA%8F%E6%89%93%E5%8D%B0%E4%BA%8C%E5%8F%89%E6%A0%91/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">每天一道算法题：按之字形顺序打印二叉树</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2021/07/25/%E6%AF%8F%E5%A4%A9%E4%B8%80%E9%81%93%E7%AE%97%E6%B3%95%E9%A2%98%EF%BC%9A%E5%88%A0%E9%99%A4%E9%93%BE%E8%A1%A8%E7%9A%84%E5%80%92%E6%95%B0%E7%AC%ACn%E4%B8%AA%E8%8A%82%E7%82%B9/">
+        <span class="next-text nav-default">每天一道算法题：删除链表的倒数第n个节点</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+      </footer>
+    
+  </article>
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2021
+    <span class="footer-author">Russshare.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

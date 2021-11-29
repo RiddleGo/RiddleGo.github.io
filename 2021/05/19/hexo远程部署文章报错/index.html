@@ -1,37 +1,231 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
-{% block page_class %}page-post-detail{% endblock %}
 
 
-{% block content %}
+  <meta name="description" content="hexo远程部署文章报错"/>
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
-    </div>
+
+
+  <meta name="keywords" content="BUG," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+
+
+
+<link rel="canonical" href="https://riddlego.github.io/2021/05/19/hexo远程部署文章报错/"/>
+
+
+<meta name="description" content="最近每次上传之前就会出错 fatal: unable to access ‘https:&#x2F;&#x2F;github.com&#x2F;RiddleGo&#x2F;RiddleGo.github.io.git&#x2F;&#39;: OpenSSL SSL_read: Connection was reset, errno 10054FATAL {  err: Error: Spawn failed 百度找到了这个方法  做个备忘录 按照">
+<meta property="og:type" content="article">
+<meta property="og:title" content="hexo远程部署文章报错">
+<meta property="og:url" content="https://riddlego.github.io/2021/05/19/hexo%E8%BF%9C%E7%A8%8B%E9%83%A8%E7%BD%B2%E6%96%87%E7%AB%A0%E6%8A%A5%E9%94%99/index.html">
+<meta property="og:site_name" content="RiddleGo">
+<meta property="og:description" content="最近每次上传之前就会出错 fatal: unable to access ‘https:&#x2F;&#x2F;github.com&#x2F;RiddleGo&#x2F;RiddleGo.github.io.git&#x2F;&#39;: OpenSSL SSL_read: Connection was reset, errno 10054FATAL {  err: Error: Spawn failed 百度找到了这个方法  做个备忘录 按照">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-05-19T08:42:42.000Z">
+<meta property="article:modified_time" content="2021-11-29T14:37:50.087Z">
+<meta property="article:author" content="Russshare">
+<meta property="article:tag" content="BUG">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> hexo远程部署文章报错 - RiddleGo </title>
+  <meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">RiddleGo</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          hexo远程部署文章报错
+        
+      </h1>
+
+      <time class="post-time">
+          5月 19 2021
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <p>最近每次上传之前就会出错</p>
+<p>fatal: unable to access ‘<a target="_blank" rel="noopener" href="https://github.com/RiddleGo/RiddleGo.github.io.git/&#39;">https://github.com/RiddleGo/RiddleGo.github.io.git/&#39;</a>: O<br>penSSL SSL_read: Connection was reset, errno 10054<br>FATAL {<br>  err: Error: Spawn failed</p>
+<p>百度找到了这个方法  做个备忘录</p>
+<p>按照以下的顺序依次在bash中执行</p>
+<p>解决方法：<br>1.查看git配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git config --global -l</span><br></pre></td></tr></table></figure>
+
+<p>2.检查环境变量</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">env|grep -i proxy  </span><br></pre></td></tr></table></figure>
+
+<p>执行了以后重新执行我原本的命令即可成功</p>
+<p><em><strong>？？？？？？原理？？？？？我也不知道<br>莫名奇妙的错误 莫名其妙的解决      离谱</strong></em></p>
+<p>Git报错解决：OpenSSL SSL_read: Connection was reset, errno 10054 错误解决</p>
+<p>打开Git命令页面，执行git命令脚本：修改设置，解除ssl验证</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git config --global http.sslVerify &quot;false&quot;</span><br></pre></td></tr></table></figure>
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/BUG/">BUG</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2021/05/26/golang%E7%9A%84%E5%87%A0%E7%A7%8D%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%8B%BC%E6%8E%A5/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">golang的几种字符串拼接</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2021/05/19/Word%E6%96%87%E4%BB%B6%E8%BD%ACMD%E6%96%87%E4%BB%B6/">
+        <span class="next-text nav-default">Word文件转MD文件</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+      </footer>
+    
+  </article>
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2021
+    <span class="footer-author">Russshare.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

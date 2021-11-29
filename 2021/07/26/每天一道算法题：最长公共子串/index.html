@@ -1,37 +1,250 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
-{% block page_class %}page-post-detail{% endblock %}
 
 
-{% block content %}
+  <meta name="description" content="每天一道算法题：最长公共子串"/>
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
-    </div>
+
+
+  <meta name="keywords" content="面试,算法," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+
+
+
+<link rel="canonical" href="https://riddlego.github.io/2021/07/26/每天一道算法题：最长公共子串/"/>
+
+
+<meta name="description" content="描述有两个字符串（可能包含空格）,请找出其中最长的公共连续子串,输出其长度。(长度在1000以内) 例如： 输入：abcde bcd 输出：3 回到顶部解析1、把两个字符串分别以行和列组成一个二维矩阵。 2、比较二维矩阵中每个点对应行列字符中否相等，相等的话值设置为1，否则设置为0。 3、通过查找出值为1的最长对角线就能找到最长公共子串。 比如：str&#x3D;acbcbcef，str2&#x3D;abcbced，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="每天一道算法题：最长公共子串">
+<meta property="og:url" content="https://riddlego.github.io/2021/07/26/%E6%AF%8F%E5%A4%A9%E4%B8%80%E9%81%93%E7%AE%97%E6%B3%95%E9%A2%98%EF%BC%9A%E6%9C%80%E9%95%BF%E5%85%AC%E5%85%B1%E5%AD%90%E4%B8%B2/index.html">
+<meta property="og:site_name" content="RiddleGo">
+<meta property="og:description" content="描述有两个字符串（可能包含空格）,请找出其中最长的公共连续子串,输出其长度。(长度在1000以内) 例如： 输入：abcde bcd 输出：3 回到顶部解析1、把两个字符串分别以行和列组成一个二维矩阵。 2、比较二维矩阵中每个点对应行列字符中否相等，相等的话值设置为1，否则设置为0。 3、通过查找出值为1的最长对角线就能找到最长公共子串。 比如：str&#x3D;acbcbcef，str2&#x3D;abcbced，">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/02listpublic.png">
+<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/03listpublic.png">
+<meta property="article:published_time" content="2021-07-26T14:33:48.000Z">
+<meta property="article:modified_time" content="2021-07-28T11:43:35.443Z">
+<meta property="article:author" content="Russshare">
+<meta property="article:tag" content="面试">
+<meta property="article:tag" content="算法">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/02listpublic.png">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> 每天一道算法题：最长公共子串 - RiddleGo </title>
+  <meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">RiddleGo</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          每天一道算法题：最长公共子串
+        
+      </h1>
+
+      <time class="post-time">
+          7月 26 2021
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <p>描述<br>有两个字符串（可能包含空格）,请找出其中最长的公共连续子串,输出其长度。(长度在1000以内)</p>
+<p>例如：</p>
+<p>输入：abcde bcd</p>
+<p>输出：3</p>
+<p>回到顶部<br><strong>解析</strong><br>1、把两个字符串分别以行和列组成一个二维矩阵。</p>
+<p>2、比较二维矩阵中每个点对应行列字符中否相等，相等的话值设置为1，否则设置为0。</p>
+<p>3、通过查找出值为1的最长对角线就能找到最长公共子串。</p>
+<p>比如：str=acbcbcef，str2=abcbced，则str和str2的最长公共子串为bcbce，最长公共子串长度为5。</p>
+<p>针对于上面的两个字符串我们可以得到的二维矩阵如下：</p>
+<p><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/02listpublic.png"></p>
+<p>从上图可以看到，str1和str2共有5个公共子串，但最长的公共子串长度为5。</p>
+<p>为了进一步优化算法的效率，我们可以再计算某个二维矩阵的值的时候顺便计算出来当前最长的公共子串的长度，即某个二维矩阵元素的值由record[i][j]=1演变为record[i][j]=1 +record[i-1][j-1]，这样就避免了后续查找对角线长度的操作了。修改后的二维矩阵如下：</p>
+<p><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/03listpublic.png"></p>
+<p>递推公式为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">当A[i] !&#x3D; B[j]，dp[i][j] &#x3D; 0</span><br><span class="line"></span><br><span class="line">当A[i] &#x3D;&#x3D; B[j]，</span><br><span class="line"></span><br><span class="line">若i &#x3D; 0 || j &#x3D;&#x3D; 0，dp[i][j] &#x3D; 1</span><br><span class="line"></span><br><span class="line">否则 dp[i][j] &#x3D; dp[i - 1][j - 1] + 1</span><br></pre></td></tr></table></figure>
+<p>代码</p>
+<p><strong>暴力法</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">public int getLCS(String s, String s2) &#123;</span><br><span class="line">        if (s &#x3D;&#x3D; null || t &#x3D;&#x3D; null) &#123;</span><br><span class="line">            return 0;</span><br><span class="line">        &#125;</span><br><span class="line">        int l1 &#x3D; s.length();</span><br><span class="line">        int l2 &#x3D; t.length();</span><br><span class="line">        int res &#x3D; 0;</span><br><span class="line">        for (int i &#x3D; 0; i &lt; l1; i++) &#123;</span><br><span class="line">            for (int j &#x3D; 0; j &lt; l2; j++) &#123;</span><br><span class="line">                int m &#x3D; i;</span><br><span class="line">                int k &#x3D; j;</span><br><span class="line">                int len &#x3D; 0;</span><br><span class="line">                while (m &lt; l1 &amp;&amp; k &lt; l2 &amp;&amp; s.charAt(m) &#x3D;&#x3D; t.charAt(k)) &#123;</span><br><span class="line">                    len++;</span><br><span class="line">                    m++;</span><br><span class="line">                    k++;</span><br><span class="line">                &#125;</span><br><span class="line">                res &#x3D; Math.max(res, len);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return res;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p><strong>动态规划</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">public int getLCS(String s, String t) &#123;</span><br><span class="line">        if (s &#x3D;&#x3D; null || t &#x3D;&#x3D; null) &#123;</span><br><span class="line">            return 0;</span><br><span class="line">        &#125;</span><br><span class="line">        int result &#x3D; 0;</span><br><span class="line">        int sLength &#x3D; s.length();</span><br><span class="line">        int tLength &#x3D; t.length();</span><br><span class="line">        int[][] dp &#x3D; new int[sLength][tLength];</span><br><span class="line">        for (int i &#x3D; 0; i &lt; sLength; i++) &#123;</span><br><span class="line">            for (int k &#x3D; 0; k &lt; tLength; k++) &#123;</span><br><span class="line">                if (s.charAt(i) &#x3D;&#x3D; t.charAt(k)) &#123;</span><br><span class="line">                    if (i &#x3D;&#x3D; 0 || k &#x3D;&#x3D; 0) &#123;</span><br><span class="line">                        dp[i][k] &#x3D; 1;</span><br><span class="line">                    &#125; else &#123;</span><br><span class="line">                        dp[i][k] &#x3D; dp[i - 1][k - 1] + 1;</span><br><span class="line">                    &#125;</span><br><span class="line">                    result &#x3D; Math.max(dp[i][k], result);</span><br><span class="line">                &#125; else &#123;</span><br><span class="line">                    dp[i][k] &#x3D; 0;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return result;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p> <strong>简化一下递推公式</strong>：</p>
+<p>当A[i] != B[j]，dp[i][j] = 0</p>
+<p>否则 dp[i][j] = dp[i - 1][j - 1] + 1</p>
+<p>全部都归结为一个公式即可，二维数组默认值为0</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">public int getLCS(String s, String t) &#123;</span><br><span class="line">        if (s &#x3D;&#x3D; null || t &#x3D;&#x3D; null) &#123;</span><br><span class="line">            return 0;</span><br><span class="line">        &#125;</span><br><span class="line">        int result &#x3D; 0;</span><br><span class="line">        int sLength &#x3D; s.length();</span><br><span class="line">        int tLength &#x3D; t.length();</span><br><span class="line">        int[][] dp &#x3D; new int[sLength + 1][tLength + 1];</span><br><span class="line">        for (int i &#x3D; 1; i &lt;&#x3D; sLength; i++) &#123;</span><br><span class="line">            for (int k &#x3D; 1; k &lt;&#x3D; tLength; k++) &#123;</span><br><span class="line">                if (s.charAt(i - 1) &#x3D;&#x3D; t.charAt(k - 1)) &#123;</span><br><span class="line">                    dp[i][k] &#x3D; dp[i - 1][k - 1] + 1;</span><br><span class="line">                    result &#x3D; Math.max(dp[i][k], result);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">&#x2F;&#x2F;        for (int i &#x3D; 1; i &lt;&#x3D; sLength + 1; i++) &#123;</span><br><span class="line">&#x2F;&#x2F;            for (int k &#x3D; 1; k &lt;&#x3D; tLength + 1; k++) &#123;</span><br><span class="line">&#x2F;&#x2F;                System.out.print(dp[i - 1][k - 1] + &quot; &quot;);</span><br><span class="line">&#x2F;&#x2F;            &#125;</span><br><span class="line">&#x2F;&#x2F;            System.out.println();</span><br><span class="line">&#x2F;&#x2F;        &#125;</span><br><span class="line">        return result;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>行、列都多一行，更适应公式。</p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/%E9%9D%A2%E8%AF%95/">面试</a>
+		  
+			<a href="/tags/%E7%AE%97%E6%B3%95/">算法</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2021/07/26/%E6%AF%8F%E5%A4%A9%E4%B8%80%E9%81%93%E7%AE%97%E6%B3%95%E9%A2%98%EF%BC%9A%E4%B8%A4%E4%B8%AA%E9%93%BE%E8%A1%A8%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%85%AC%E5%85%B1%E7%BB%93%E7%82%B9/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">每天一道算法题：两个链表的第一个公共结点</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2021/07/26/%E6%AF%8F%E5%A4%A9%E4%B8%80%E9%81%93%E7%AE%97%E6%B3%95%E9%A2%98%EF%BC%9A%E6%8C%89%E4%B9%8B%E5%AD%97%E5%BD%A2%E9%A1%BA%E5%BA%8F%E6%89%93%E5%8D%B0%E4%BA%8C%E5%8F%89%E6%A0%91/">
+        <span class="next-text nav-default">每天一道算法题：按之字形顺序打印二叉树</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+      </footer>
+    
+  </article>
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2021
+    <span class="footer-author">Russshare.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

@@ -1,37 +1,247 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
-{% block page_class %}page-post-detail{% endblock %}
 
 
-{% block content %}
+  <meta name="description" content="Body Senser APP"/>
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
-    </div>
+
+
+  <meta name="keywords" content="APP,BLE," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+
+
+
+<link rel="canonical" href="https://riddlego.github.io/2021/05/14/Body-Senser-APP/"/>
+
+
+<meta name="description" content="Body Senser APP前言：我们知道智能手环可以采集人体的脉搏等生命体征，记录运动的轨迹。这是应为其内部具有相当多的传感器，其测量出数据将数据进行显示，或者通过蓝牙传输到手机进行chars可视化。进而通过采集的数据，可以进行大数据分析，定制推送相应的产品或者运动课程以及生活建议。 About智能手环本文是设计了一个蓝牙的APP，可以通过蓝牙传输获取到Body Senser采集的数据，并显示">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Body Senser APP">
+<meta property="og:url" content="https://riddlego.github.io/2021/05/14/Body-Senser-APP/index.html">
+<meta property="og:site_name" content="RiddleGo">
+<meta property="og:description" content="Body Senser APP前言：我们知道智能手环可以采集人体的脉搏等生命体征，记录运动的轨迹。这是应为其内部具有相当多的传感器，其测量出数据将数据进行显示，或者通过蓝牙传输到手机进行chars可视化。进而通过采集的数据，可以进行大数据分析，定制推送相应的产品或者运动课程以及生活建议。 About智能手环本文是设计了一个蓝牙的APP，可以通过蓝牙传输获取到Body Senser采集的数据，并显示">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/OneNet_APP/Senser%20Body.png">
+<meta property="article:published_time" content="2021-05-14T05:54:02.000Z">
+<meta property="article:modified_time" content="2021-05-14T06:31:04.000Z">
+<meta property="article:author" content="Russshare">
+<meta property="article:tag" content="APP">
+<meta property="article:tag" content="BLE">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/OneNet_APP/Senser%20Body.png">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> Body Senser APP - RiddleGo </title>
+  <meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">RiddleGo</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          Body Senser APP
+        
+      </h1>
+
+      <time class="post-time">
+          5月 14 2021
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h1 id="Body-Senser-APP"><a href="#Body-Senser-APP" class="headerlink" title="Body Senser APP"></a>Body Senser APP</h1><h3 id="前言："><a href="#前言：" class="headerlink" title="前言："></a>前言：</h3><p>我们知道智能手环可以采集人体的脉搏等生命体征，记录运动的轨迹。这是应为其内部具有相当多的传感器，其测量出数据将数据进行显示，或者通过蓝牙传输到手机进行chars可视化。进而通过采集的数据，可以进行大数据分析，定制推送相应的产品或者运动课程以及生活建议。</p>
+<h3 id="About智能手环"><a href="#About智能手环" class="headerlink" title="About智能手环"></a>About智能手环</h3><p>本文是设计了一个蓝牙的APP，可以通过蓝牙传输获取到Body Senser采集的数据，并显示在手机上。</p>
+<p>通常手环上的天气是通过运动健康推送的，运动健康的天气需要打开手机的定位来更新获取。手环本身是不具备联网功能，当然这是说的普通的手环。因为手环还对功耗有一定的要求，联网的话将会提升功耗，因此不具备这个功能也是可以理解的。</p>
+<h3 id="1、为什么选择蓝牙作为通信，而不是其他的协议？"><a href="#1、为什么选择蓝牙作为通信，而不是其他的协议？" class="headerlink" title="1、为什么选择蓝牙作为通信，而不是其他的协议？"></a>1、为什么选择蓝牙作为通信，而不是其他的协议？</h3><pre><code>我们先想一下我们使用的条件。
+1、首先设备数量有限，没有哪个靓仔需要带两个手环吧。（此时让我想起了王思聪的狗子脚上带了四个Iwatch)
+2、需要功耗低，这样我使用的时间就会很长，一个手环很少用还不住的充电，这谁顶得住。
+3、数据传输量不大，基本的手环都不会拿来进行看视频啊什么的。
+</code></pre>
+<p><strong>BLE的特点</strong><br>蓝牙（BlueTooth）是一种设备之间进行无线通信的技术，可实现固定设备、移动设备和楼宇个人域网之间的短距离数据交换，蓝牙可连接多个设备，克服了数据同步的难题。蓝牙使用短波特高频（UHF）无线电波，经由2．4至2．485GHz的ISM频段来进行通信，通信距离从几米到几百米不等。</p>
+<p>优点 ：</p>
+<p>“低功耗蓝牙”模式下实现了低功耗，覆盖范围增强，最大范围可超过100米</p>
+<p>支持复杂网络：针对一对一连接最优化，并支持星形拓扑的一对多连接等</p>
+<p>智能连接：增加设置设备间连接频率的支持，Ipv6网络支持。</p>
+<p>较高安全性：使用AES－128 CCM加密算法进行数据包加密和认证。</p>
+<p>蓝牙模块体积很小，便于集成。</p>
+<p>可以建立临时性的对等连接（Ad－hoc Connection）：根据蓝牙设备在网络中的角色，可分为主设备（Master）与从设备（Slave）。</p>
+<p>缺点：</p>
+<p>蓝牙的各个版本不兼容，组网能力差；网络节点少，不适合多点布控</p>
+<p>所以综上，蓝牙是非常符合情况的选择。</p>
+<h3 id="2、手机APP"><a href="#2、手机APP" class="headerlink" title="2、手机APP"></a>2、手机APP</h3><p>APP进行了详细的代码注释<br>这是整个APP的框架图<br><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/OneNet_APP/Senser%20Body.png"></p>
+<p>功能没有多余的精巧设计，登录，连接，设置，图标显示，阈值超量警报</p>
+<p>这里的图表使用了<a target="_blank" rel="noopener" href="https://github.com/PhilJay/MPAndroidChart/releases">MPAndroidChart</a></p>
+<h3 id="3、智能手环"><a href="#3、智能手环" class="headerlink" title="3、智能手环"></a>3、智能手环</h3><p>手环采用了CC2540作为主控芯片</p>
+<p>它具有以下几个优势<br>第一个：成本低，性价比高。做个要加蓝牙的小项目是绰绰有余。利用率能达到最大。<br>第二个 : 加强型C8051,有16IO口 ，8个12位ADC，自带温度传感器，蓝牙无线通讯，集成了很多的功能。<br>第三个：USB功能，和空中升级OTA功能</p>
+<p><em><strong>以上就是本次的全部分享，希望对你有帮助。</strong></em></p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/APP/">APP</a>
+		  
+			<a href="/tags/BLE/">BLE</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2021/05/19/Shell-%E5%9F%BA%E7%A1%80%E5%91%BD%E4%BB%A4/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">Shell 基础命令</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2021/05/12/Android%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95/">
+        <span class="next-text nav-default">Android单元测试</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+      </footer>
+    
+  </article>
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2021
+    <span class="footer-author">Russshare.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

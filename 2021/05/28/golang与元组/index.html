@@ -1,37 +1,253 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
-{% block page_class %}page-post-detail{% endblock %}
 
 
-{% block content %}
+  <meta name="description" content="golang与元组"/>
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
-    </div>
+
+
+  <meta name="keywords" content="interface,数据结构," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+
+
+
+<link rel="canonical" href="https://riddlego.github.io/2021/05/28/golang与元组/"/>
+
+
+<meta name="description" content="前言：第一次接触元组是在玩python的时候，那个时候对这个万一还是认识不够深。后来在接触到需要多值返回的时候，才发现这玩意真的不错，而我那个时候老老实实构建一个类，然后构建对象赋值返回，或者创造数组或者链表来返回。这样确实费力气和浪费空间。 碰巧在一个帖子上看见golang和元组，于是便转载一下，留个纪念。 1、为什么要使用元组？在JavaScript或php之类语言， 因为不支持元组， 严重影">
+<meta property="og:type" content="article">
+<meta property="og:title" content="golang与元组">
+<meta property="og:url" content="https://riddlego.github.io/2021/05/28/golang%E4%B8%8E%E5%85%83%E7%BB%84/index.html">
+<meta property="og:site_name" content="RiddleGo">
+<meta property="og:description" content="前言：第一次接触元组是在玩python的时候，那个时候对这个万一还是认识不够深。后来在接触到需要多值返回的时候，才发现这玩意真的不错，而我那个时候老老实实构建一个类，然后构建对象赋值返回，或者创造数组或者链表来返回。这样确实费力气和浪费空间。 碰巧在一个帖子上看见golang和元组，于是便转载一下，留个纪念。 1、为什么要使用元组？在JavaScript或php之类语言， 因为不支持元组， 严重影">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-05-28T01:51:16.000Z">
+<meta property="article:modified_time" content="2021-05-28T09:00:22.000Z">
+<meta property="article:author" content="Russshare">
+<meta property="article:tag" content="interface">
+<meta property="article:tag" content="数据结构">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> golang与元组 - RiddleGo </title>
+  <meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">RiddleGo</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          golang与元组
+        
+      </h1>
+
+      <time class="post-time">
+          5月 28 2021
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h3 id="前言："><a href="#前言：" class="headerlink" title="前言："></a>前言：</h3><p>第一次接触元组是在玩python的时候，那个时候对这个万一还是认识不够深。后来在接触到需要多值返回的时候，才发现这玩意真的不错，而我那个时候老老实实构建一个类，然后构建对象赋值返回，或者创造数组或者链表来返回。这样确实费力气和浪费空间。</p>
+<p>碰巧在<a target="_blank" rel="noopener" href="https://www.cnblogs.com/aspwebchh/p/6943843.html">一个帖子</a>上看见golang和元组，于是便转载一下，留个纪念。</p>
+<h3 id="1、为什么要使用元组？"><a href="#1、为什么要使用元组？" class="headerlink" title="1、为什么要使用元组？"></a>1、为什么要使用元组？</h3><p>在JavaScript或php之类语言， 因为不支持元组， 严重影响了编程体验和代码可读性，用过从语言层面原生支持元组语法的语言后， 才会觉得不支持元组的语言真的low到了家，元组真的是编程语言中不可多得的优良特性。</p>
+<p><strong>元组最重要的特点是用来实现多值返现，</strong>  <strong>对于天生就支持多值返回特性的语言， 如golang， 元组存在的意义不大。</strong> 然而， 对于只支持单反回值函数的语言碰到有多返回值需求的场景时就操蛋了， 假如要实现多返回值效果， 通常有两种方案。</p>
+<h4 id="第一种"><a href="#第一种" class="headerlink" title="第一种"></a>第一种</h4><p><strong>把这些要返回的值塞入一个对象，然后返回这个对象。</strong>然而， 这种做法会增加不必要的代码量， 在类似于<strong>Java之类的死板语言中的做法是先写一个类，实例化后填充数据再返回</strong>， 折腾，造孽。<strong>JavaScript和php中稍微好点， 直接返回object或array就可以</strong>，但是要为返回值指定名称这一步也是冗余的，很多时候通过返回值的类型就能确定返回值的作用了，指定名称多此一举。</p>
+<h4 id="第二种"><a href="#第二种" class="headerlink" title="第二种"></a>第二种</h4><p><strong>把这些要返回的值塞入一个列表，然后返回这个列表。</strong> 然而， <strong>这种做法会对代码的可读性造成影响</strong>，<strong>在Java之类的静态语言中，根本无法使用这种方法，它的语言特性规定，列表数据结构中只能存放同类型的元素。</strong> 当然，你可以使用Object类型的列表，但以这种方式写出来的代码，但是我相信任何一个技术水平过关或者有职业操守的程序员都不会这么做。<strong>而对于支持多类型元素列表的语言如JavaScript、php以及python到的确可以以这种方式实现，</strong> <strong>但是在这些语言的世界里，所有的列表都是一样的</strong></p>
+<p>这下必须举个栗子了：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[]</span><br><span class="line"></span><br><span class="line">[1,2,3]</span><br><span class="line"></span><br><span class="line">[&quot;a&quot;,&quot;b&quot;,&quot;c&quot;]</span><br><span class="line"></span><br><span class="line">[1,2,3,&quot;a&quot;,&quot;b&quot;,&quot;c&quot;]</span><br></pre></td></tr></table></figure>
+
+<p>这些列表对于这类语言来说长的是没差的。</p>
+<p>而元组却不同， 每个不同规格的元组是不同的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">(1,2,3)</span><br><span class="line"></span><br><span class="line">(&quot;a&quot;,&quot;b&quot;,&quot;c&quot;)</span><br><span class="line"></span><br><span class="line">(1,2,3,&quot;a&quot;,&quot;b&quot;,&quot;c&quot;)</span><br></pre></td></tr></table></figure>
+<p>是不同的， 因为它们背后的定义分别是</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">(int,int,int)</span><br><span class="line"></span><br><span class="line">(string,string,string)</span><br><span class="line"></span><br><span class="line">(int,int,int,string,string,string)</span><br></pre></td></tr></table></figure>
+<p>或许你认为，<strong>动态类型语言中， 根本没有编绎期类型检查一说，</strong> 所有类型都是在运行期确定的， 所以不从性能的角度考虑， 元组和列表还是没有差别的。 然而， 现在编程语言的IDE基本都具备了语法检查的能力， 就算是动态类型语言，不按照函数返回值的规格去使用返回值，IDE也能给出错误提示， 因此，把元组和列表进行区分，对代码的可读性还是很有帮助的。 而且在静态类型语言中这种好处会被放大，连c#都要把元组做成语言内置的语法特性，这足以说明元组能起到的作用不容小嘘。</p>
+<p>最后，我想</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">let tuple &#x3D; (1,&quot;a&quot;,true);</span><br><span class="line"></span><br><span class="line">let v1, v2,v3 &#x3D; tuple;</span><br></pre></td></tr></table></figure>
+
+<p>总比</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">let list &#x3D; [1,&quot;a&quot;,true];</span><br><span class="line"></span><br><span class="line">let v1 &#x3D; list[0];</span><br><span class="line"></span><br><span class="line">let v2 &#x3D; list[1];</span><br><span class="line"></span><br><span class="line">let v3 &#x3D; list[2];</span><br></pre></td></tr></table></figure>
+
+
+<p>来的方便吧。</p>
+<p><strong>(这一部分是js中的代码，本来想删除的，但是为了体现优势，还是忍住了)</strong></p>
+<p>因此， 在支持元级语法的语言当中， 千万不要浪费这项优秀的编程工具， 要使它在你的代码体现出合理的价值 </p>
+<h3 id="2、golang中的数组"><a href="#2、golang中的数组" class="headerlink" title="2、golang中的数组"></a>2、golang中的数组</h3><p>正如上午所谈论到的，golang是在语言级别支持了多值返回。结合死板与灵活，那么我们要实现一个元组的数据结构，应该怎么做？<br>上代码举个栗子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">type job struct &#123;</span><br><span class="line">    url string</span><br><span class="line">    depth int</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">queue :&#x3D; make(chan job)</span><br><span class="line">queue &lt;- job&#123;url, depth&#125;</span><br><span class="line"></span><br><span class="line">这里他是想通过管道发送两个值，然后把这两个值封装到了一个自定义的数据结构中。</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>有点不好理解？那就整个简单的栗子</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line">import &quot;fmt&quot;</span><br><span class="line">type Pair struct &#123;</span><br><span class="line">    a, b interface&#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line">func main() &#123;</span><br><span class="line">    p1 :&#x3D; Pair&#123;&quot;finished&quot;, 42&#125;</span><br><span class="line">    p2 :&#x3D; Pair&#123;6.1, &quot;hello&quot;&#125;</span><br><span class="line">    fmt.Println(&quot;p1&#x3D;&quot;, p1, &quot;p2&#x3D;&quot;, p2)</span><br><span class="line">    fmt.Println(&quot;p1.b&quot;, p1.b)</span><br><span class="line">    &#x2F;&#x2F; But to use the values you&#39;ll need a type assertion</span><br><span class="line">    s :&#x3D; p1.a.(string) + &quot; now&quot;</span><br><span class="line">    fmt.Println(&quot;p1.a&quot;, s)</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>一目了然对不对，美滋滋</p>
+<p><em><strong>以上就是本次的全部内容，希望对你有所帮助！！！</strong></em></p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/interface/">interface</a>
+		  
+			<a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2021/05/28/git%E5%85%A5%E9%97%A8/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">git入门</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2021/05/28/golang%E6%95%B0%E5%AD%A6%E8%AE%A1%E7%AE%97%E5%87%BD%E6%95%B0/">
+        <span class="next-text nav-default">golang数学计算函数</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+      </footer>
+    
+  </article>
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2021
+    <span class="footer-author">Russshare.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

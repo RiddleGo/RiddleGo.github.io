@@ -1,37 +1,240 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
-{% block page_class %}page-post-detail{% endblock %}
 
 
-{% block content %}
+  <meta name="description" content="docker镜像"/>
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
-    </div>
+
+
+  <meta name="keywords" content="云计算,docker," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+
+
+
+<link rel="canonical" href="https://riddlego.github.io/2021/08/08/docker镜像/"/>
+
+
+<meta name="description" content="什么是docker？什么是镜像？镜像与容器的区别？一台物理机器虚拟化出很多个拥有完整操作系统，并且相互独立的“虚拟计算机” 虚拟化技术：全虚拟化 + 操作系统（OS）虚拟化全虚拟化比如VMware 而Docker则是基于操作系统虚拟化的一种实现。 首先docker 三个关键点—》镜像、容器、仓库第一我先讲一下基础的概念— Docker是一个容器化平台，它以容器的形式将你的应用程序及所有的依赖项打包">
+<meta property="og:type" content="article">
+<meta property="og:title" content="docker镜像">
+<meta property="og:url" content="https://riddlego.github.io/2021/08/08/docker%E9%95%9C%E5%83%8F/index.html">
+<meta property="og:site_name" content="RiddleGo">
+<meta property="og:description" content="什么是docker？什么是镜像？镜像与容器的区别？一台物理机器虚拟化出很多个拥有完整操作系统，并且相互独立的“虚拟计算机” 虚拟化技术：全虚拟化 + 操作系统（OS）虚拟化全虚拟化比如VMware 而Docker则是基于操作系统虚拟化的一种实现。 首先docker 三个关键点—》镜像、容器、仓库第一我先讲一下基础的概念— Docker是一个容器化平台，它以容器的形式将你的应用程序及所有的依赖项打包">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-08-08T11:41:14.000Z">
+<meta property="article:modified_time" content="2021-08-08T11:44:13.237Z">
+<meta property="article:author" content="Russshare">
+<meta property="article:tag" content="云计算">
+<meta property="article:tag" content="docker">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> docker镜像 - RiddleGo </title>
+  <meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">RiddleGo</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          docker镜像
+        
+      </h1>
+
+      <time class="post-time">
+          8月 08 2021
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h2 id="什么是docker？什么是镜像？镜像与容器的区别？"><a href="#什么是docker？什么是镜像？镜像与容器的区别？" class="headerlink" title="什么是docker？什么是镜像？镜像与容器的区别？"></a>什么是docker？什么是镜像？镜像与容器的区别？</h2><p>一台物理机器虚拟化出很多个拥有完整操作系统，并且相互独立的“虚拟计算机”</p>
+<h4 id="虚拟化技术：全虚拟化-操作系统（OS）虚拟化"><a href="#虚拟化技术：全虚拟化-操作系统（OS）虚拟化" class="headerlink" title="虚拟化技术：全虚拟化 + 操作系统（OS）虚拟化"></a>虚拟化技术：全虚拟化 + 操作系统（OS）虚拟化</h4><p>全虚拟化比如VMware 而Docker则是基于操作系统虚拟化的一种实现。</p>
+<h3 id="首先docker-三个关键点—》镜像、容器、仓库"><a href="#首先docker-三个关键点—》镜像、容器、仓库" class="headerlink" title="首先docker 三个关键点—》镜像、容器、仓库"></a>首先docker 三个关键点—》镜像、容器、仓库</h3><p>第一我先讲一下基础的概念—</p>
+<p>Docker是一个容器化平台，它以容器的形式将你的应用程序及所有的依赖项打包在一起，以确保你的应用程序在任何环境中无缝运行。</p>
+<p>仓库是存放镜像的场所，Repository是同一类Docker镜像的集合，包含了不同tag的Docker镜像，就是一种存储、管理、分发镜像的一种应用服务。。</p>
+<p>镜像就是运行容器的前提，它包含了我容器运行时候所需要的程序、库、资源、配置文件等一些东西。</p>
+<p>Docker是一个容器化平台，它以容器的形式将你的应用程序及所有的依赖项打包在一起，以确保你的应用程序在任何环境中无缝运行。</p>
+<h3 id="然后我细讲一下镜像—"><a href="#然后我细讲一下镜像—" class="headerlink" title="然后我细讲一下镜像—"></a>然后我细讲一下镜像—</h3><p>–镜像不包含任何动态数据，其内容在构建之后也不会被改变。镜像是一个固定的文件，这次读盘和下次读盘内容是一样的。镜像是一种分层的结构，Docker镜像是分层构建的，Dockerfile 中每条指令都会新建一层。</p>
+<h3 id="容器"><a href="#容器" class="headerlink" title="容器"></a>容器</h3><p>事实上，<strong>容器（container）和镜像（image）的最主要区别就是在镜像加了顶层的读写层。</strong>所有对容器的修改都发生在此层，镜像并不会被修改，也就是经常提到的 COW(copy-on-write)技术。</p>
+<p>容器需要读取某个文件时，直接从底部只读层去读即可，<strong>而如果需要修改某文件，则将该文件拷贝到顶部读写层进行修改，</strong>只读层保持不变。</p>
+<p>每个容器都有自己的读写层，因此多个容器可以使用同一个镜像，另外容器被删除时，其对应的读写层也会被删除（如果你希望多个容器共享或者持久化数据，可以使用 Docker volume）。</p>
+<p>最后，执行命令 docker ps -s，可以看到最后有两列 size 和 virtual size。其中 <strong>size就是容器读写层占用的磁盘空间，</strong>而 <strong>virtual size 就是读写层加上对应只读层所占用的磁盘空间。</strong>如果两个容器是从同一个镜像创建，那么只读层就是 100%共享，即使不是从同一镜像创建，其镜像仍然可能共享部分只读层（如一个镜像是基于另一个创建）。因此，docker 实际占用的磁盘空间远远小于 virtual size 的总和。</p>
+<p>这也是因为一个Docker镜像被划分为多个镜像层layer。每一个layer其实都有唯一的标识diffid，基于layer内容经过sha256计算得出，且可以通过diffid得到layer的索引ID，实现按内容寻址。也因为Docker镜像分层的特点，可以实现不同镜像间共享相同layer，避免重复下载，节约资源，提升效率。</p>
+<p>每个层其实是有一个指针指向自己的下一个层，这些层的交互、管理就需要存储驱动程序，也即联合文件系统（UnionFS）。<br><a target="_blank" rel="noopener" href="https://docs.docker.com/storage/storagedriver/">About storage drivers/存储驱动程序</a></p>
+<h3 id="跳出原理"><a href="#跳出原理" class="headerlink" title="跳出原理"></a>跳出原理</h3><p>再回到应用方面，那么再想到我们如果运行一个软件，我运行软件就不用说根据不同的操作系统环境而需要重新配置，镜像不经包含了软件，还包含了我所需要的环境变量等等，我想也也是一次编译，四处运行的口号的意义之一嘛，这也是很基础的应用，但也是最接近我的。<br>摆脱掉系统对我们的限制，这样的部署方式，这样的隔离技术使得Docker成为了一个很厉害的技术。在大集群的部署，结合K8s的容器自动化管理，将会给我们整个生产带来很多的遍历和帮助。</p>
+<p><a target="_blank" rel="noopener" href="https://www.zhihu.com/search?type=content&q=docker%E9%95%9C%E5%83%8F">容器与镜像的区别</a></p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/70424048">容器与虚拟机</a></p>
+<p><a target="_blank" rel="noopener" href="https://fuckcloudnative.io/posts/docker-images-part1-reducing-image-size/">两个奇技淫巧，将 Docker 镜像体积减小 99%</a></p>
+<p><a target="_blank" rel="noopener" href="http://dockerone.com/article/101">http://dockerone.com/article/101</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/e1f7b8d5184c">docker底层原理介绍</a></p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">云计算</a>
+		  
+			<a href="/tags/docker/">docker</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2021/08/08/k8s%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">k8s实现原理</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2021/08/06/%E9%9D%A2%E8%AF%95%EF%BC%9A%E4%BC%A0%E7%BB%9F%E6%95%B0%E6%8D%AE%E5%BA%93/">
+        <span class="next-text nav-default">面试：传统数据库</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+      </footer>
+    
+  </article>
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2021
+    <span class="footer-author">Russshare.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

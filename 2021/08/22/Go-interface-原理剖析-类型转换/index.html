@@ -1,37 +1,293 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
-{% block page_class %}page-post-detail{% endblock %}
 
 
-{% block content %}
+  <meta name="description" content="Go-interface-原理剖析--类型转换"/>
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
-    </div>
+
+
+  <meta name="keywords" content="interface," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+
+
+
+<link rel="canonical" href="https://riddlego.github.io/2021/08/22/Go-interface-原理剖析-类型转换/"/>
+
+
+<meta name="description" content="Go interface 原理剖析–类型转换原文链接–点击这里阅读更多好文 可能你看过的 interface 剖析的文章比较多了，这些文章基本都是从汇编角度分析类型转换或者动态转发。不过随着 Go 版本升级，对应的 Go 汇编也发生了巨大的变化，如果单从汇编角度去分析 interface 变的非常有难度，本篇文章我会从内存分配+汇编角度切入 interface，去了解 interface 的原理。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Go-interface-原理剖析--类型转换">
+<meta property="og:url" content="https://riddlego.github.io/2021/08/22/Go-interface-%E5%8E%9F%E7%90%86%E5%89%96%E6%9E%90-%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2/index.html">
+<meta property="og:site_name" content="RiddleGo">
+<meta property="og:description" content="Go interface 原理剖析–类型转换原文链接–点击这里阅读更多好文 可能你看过的 interface 剖析的文章比较多了，这些文章基本都是从汇编角度分析类型转换或者动态转发。不过随着 Go 版本升级，对应的 Go 汇编也发生了巨大的变化，如果单从汇编角度去分析 interface 变的非常有难度，本篇文章我会从内存分配+汇编角度切入 interface，去了解 interface 的原理。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/process/eface.png">
+<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/process/iface.png">
+<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/process/eface01.pmg.webp.jpg">
+<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/process/iface01.png">
+<meta property="article:published_time" content="2021-08-22T02:36:14.000Z">
+<meta property="article:modified_time" content="2021-08-22T02:57:04.234Z">
+<meta property="article:author" content="Russshare">
+<meta property="article:tag" content="interface">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/process/eface.png">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> Go-interface-原理剖析--类型转换 - RiddleGo </title>
+  <meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">RiddleGo</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          Go-interface-原理剖析--类型转换
+        
+      </h1>
+
+      <time class="post-time">
+          8月 22 2021
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h2 id="Go-interface-原理剖析–类型转换"><a href="#Go-interface-原理剖析–类型转换" class="headerlink" title="Go interface 原理剖析–类型转换"></a>Go interface 原理剖析–类型转换</h2><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/lMvU80jhkabMvqXeTFiDnw">原文链接–点击这里阅读更多好文</a></p>
+<p>可能你看过的 interface 剖析的文章比较多了，这些文章基本都是从汇编角度分析类型转换或者动态转发。<strong>不过随着 Go 版本升级，对应的 Go 汇编也发生了巨大的变化，</strong>如果单从汇编角度去分析 interface 变的非常有难度，<strong>本篇文章我会从内存分配+汇编角度切入 interface，去了解 interface 的原理。</strong></p>
+<p>限于篇幅 interface 有关动态转发和反射的内容，请关注后续的文章。本篇文章主要是关于类型转换。</p>
+<p><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/process/eface.png"></p>
+<p><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/process/iface.png"></p>
+<p><strong>eface</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">func main() &#123;</span><br><span class="line">   var ti interface&#123;&#125;</span><br><span class="line">   var a int &#x3D; 100</span><br><span class="line">   ti &#x3D; a</span><br><span class="line">   fmt.Println(ti)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这段最常见的代码，现在提出一些问题：</p>
+<ul>
+<li><p>如何查看 ti 是 eface 还是 iface ?</p>
+</li>
+<li><p>值 100 保存在哪里了 ？</p>
+</li>
+<li><p>如何看 ti 的真实的值的类型 ？</p>
+</li>
+</ul>
+<p>大部分源码分析都是从汇编入手来看的，这里也把对应的汇编贴出来</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">0x0040 00064 (main.go:44)	MOVQ	$100, (SP)</span><br><span class="line">0x0048 00072 (main.go:44)	CALL	runtime.convT64(SB)</span><br><span class="line">0x004d 00077 (main.go:44)	MOVQ	8(SP), AX</span><br><span class="line">0x0052 00082 (main.go:44)	MOVQ	AX, &quot;&quot;..autotmp_3+64(SP)</span><br><span class="line">0x0057 00087 (main.go:44)	LEAQ	type.int(SB), CX</span><br><span class="line">0x005e 00094 (main.go:44)	MOVQ	CX, &quot;&quot;.ti+72(SP)</span><br><span class="line">0x0063 00099 (main.go:44)	MOVQ	AX, &quot;&quot;.ti+80(SP)</span><br></pre></td></tr></table></figure>
+
+<p>这段汇编有下面这些特点：</p>
+<ul>
+<li><p>CALL runtime.convT64(SB)：将 100 作为 runtime.convT64 的参数，该函数申请了一段内存，将 100 放入了这段内存里</p>
+</li>
+<li><p>将类型 type.int 放入到 SP+72 的位置</p>
+</li>
+<li><p>将包含 100 的那块内存的指针，放入到 SP + 80 的位置</p>
+</li>
+</ul>
+<p>这段汇编从直观上来说，interface 转换成 eface 是看不出来的。这个如何观察呢？这个就需要借助 gdb 了。</p>
+<p><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/process/eface01.pmg.webp.jpg"></p>
+<p>再继续深究下，如何利用内存分布来验证是 eface 呢？需要另外再添加点代码。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">type eface struct &#123;</span><br><span class="line">    _type *_type</span><br><span class="line">    data  unsafe.Pointer</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">type _type struct &#123;</span><br><span class="line">    size       uintptr</span><br><span class="line">    ptrdata    uintptr &#x2F;&#x2F; size of memory prefix holding all pointers</span><br><span class="line">    hash       uint32</span><br><span class="line">    tflag      tflag</span><br><span class="line">    align      uint8</span><br><span class="line">    fieldAlign uint8</span><br><span class="line">    kind       uint8</span><br><span class="line">    equal      func(unsafe.Pointer, unsafe.Pointer) bool</span><br><span class="line">    gcdata     *byte</span><br><span class="line">    str        nameOff</span><br><span class="line">    ptrToThis  typeOff</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line">    var ti interface&#123;&#125;</span><br><span class="line">    var a int &#x3D; 100</span><br><span class="line">    ti &#x3D; a</span><br><span class="line"></span><br><span class="line">    fmt.Println(&quot;type:&quot;, *(*eface)(unsafe.Pointer(&amp;ti))._type)</span><br><span class="line">    fmt.Println(&quot;data:&quot;, *(*int)((*eface)(unsafe.Pointer(&amp;ti)).data))</span><br><span class="line">    fmt.Println((*eface)(unsafe.Pointer(&amp;ti)))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>output:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">type: &#123;8 0 4149441018 15 8 8 2 0x10032e0 0x10e6b60 959 27232&#125;</span><br><span class="line">data: 100</span><br><span class="line">&amp;&#123;0x10ade20 0x1155bc0&#125;</span><br></pre></td></tr></table></figure>
+<p>从这个结果上能够看出来</p>
+<ul>
+<li><p>eface.kind = 2, 对应着 runtime.kindInt</p>
+</li>
+<li><p>eface.data = 100</p>
+</li>
+</ul>
+<p>从内存上分配上看，我们基本看出来了 eface 的内存布局及对应的最终的 eface 的类型转换结果。</p>
+<h3 id="iface"><a href="#iface" class="headerlink" title="iface"></a>iface</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">type Person interface &#123;</span><br><span class="line">   Say() string</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">type Man struct &#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func (m *Man) Say() string &#123;</span><br><span class="line">   return &quot;Man&quot;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line">    var p Person</span><br><span class="line"></span><br><span class="line">    m :&#x3D; &amp;Man&#123;&#125;</span><br><span class="line">    p &#x3D; m</span><br><span class="line">    println(p.Say())</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>iface 我们也看下汇编：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">0x0029 00041 (main.go:24)	LEAQ	runtime.zerobase(SB), AX</span><br><span class="line">0x0030 00048 (main.go:24)	MOVQ	AX, &quot;&quot;..autotmp_6+48(SP)</span><br><span class="line">0x0035 00053 (main.go:24)	MOVQ	AX, &quot;&quot;.m+32(SP)</span><br><span class="line">0x003a 00058 (main.go:25)	MOVQ	AX, &quot;&quot;..autotmp_3+64(SP)</span><br><span class="line">0x003f 00063 (main.go:25)	LEAQ	go.itab.*&quot;&quot;.Man,&quot;&quot;.Person(SB), CX</span><br><span class="line">0x0046 00070 (main.go:25)	MOVQ	CX, &quot;&quot;.p+72(SP)</span><br><span class="line">0x004b 00075 (main.go:25)	MOVQ	AX, &quot;&quot;.p+80(SP)</span><br></pre></td></tr></table></figure>
+<p>这段汇编上，能够看出来是有 itab 的，但是是否真的是转成了 iface，汇编上仍然反应不出来。</p>
+<p>同样，我们继续用 gdb 查看 Person interface 确实被转换成了 iface。</p>
+<p><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/process/iface01.png"></p>
+<p>关于 iface 内存布局，我们仍然加点代码来查看</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">type itab struct &#123;</span><br><span class="line">    inter *interfacetype</span><br><span class="line">    _type *_type</span><br><span class="line">    hash  uint32</span><br><span class="line">    _     [4]byte</span><br><span class="line">    fun   [1]uintptr</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">type iface struct &#123;</span><br><span class="line">    tab  *itab</span><br><span class="line">    data unsafe.Pointer</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">type Person interface &#123;</span><br><span class="line">    Say() string</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">type Man struct &#123;</span><br><span class="line">    Name string</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func (m *Man) Say() string &#123;</span><br><span class="line">    return &quot;Man&quot;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line">    var p Person</span><br><span class="line"></span><br><span class="line">    m :&#x3D; &amp;Man&#123;Name: &quot;hhf&quot;&#125;</span><br><span class="line">    p &#x3D; m</span><br><span class="line">    println(p.Say())</span><br><span class="line"></span><br><span class="line">    fmt.Println(&quot;itab:&quot;, *(*iface)(unsafe.Pointer(&amp;p)).tab)</span><br><span class="line">    fmt.Println(&quot;data:&quot;, *(*Man)((*iface)(unsafe.Pointer(&amp;p)).data))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>output:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Man</span><br><span class="line">itab: &#123;0x10b3ba0 0x10b1900 1224794265 [0 0 0 0] [17445152]&#125;</span><br><span class="line">data: &#123;hhf&#125;</span><br></pre></td></tr></table></figure>
+
+<p>关于想继续探究 eface, iface 的内存布局的同学，可以基于上面的代码，利用 unsafe 的相关函数去看对应的内存位置上的值。</p>
+<h3 id="类型断言"><a href="#类型断言" class="headerlink" title="类型断言"></a>类型断言</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">type Person interface &#123;</span><br><span class="line">   Say() string</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">type Man struct &#123;</span><br><span class="line">   Name string</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func (m *Man) Say() string &#123;</span><br><span class="line">   return &quot;Man&quot;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line">   var p Person</span><br><span class="line"></span><br><span class="line">    m :&#x3D; &amp;Man&#123;Name: &quot;hhf&quot;&#125;</span><br><span class="line">    p &#x3D; m</span><br><span class="line"></span><br><span class="line">    if m1, ok :&#x3D; p.(*Man); ok &#123;</span><br><span class="line">      fmt.Println(m1.Name)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们仅关注类型断言那块内容，贴出对应的汇编</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">0x0087 00135 (main.go:23)	MOVQ	&quot;&quot;.p+104(SP), AX</span><br><span class="line">0x008c 00140 (main.go:23)	MOVQ	&quot;&quot;.p+112(SP), CX</span><br><span class="line">0x0091 00145 (main.go:23)	LEAQ	go.itab.*&quot;&quot;.Man,&quot;&quot;.Person(SB), DX</span><br><span class="line">0x0098 00152 (main.go:23)	CMPQ	DX, AX</span><br></pre></td></tr></table></figure>
+
+<p>能够看出来的是：将 iface.itab 放入了 AX，将 go.itab.*””.Man,””.Person(SB) 放入了 DX，比较两者是否相等，来判断 Person 的真实类型是否是 Man。</p>
+<p>另外一个类型断言的方式就是 switch 了，其实两者本质上没啥区别。</p>
+<h3 id="坑"><a href="#坑" class="headerlink" title="坑"></a>坑</h3><p>interface 最著名的坑的，应该就是下面这个了。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">func main() &#123;</span><br><span class="line">    var a interface&#123;&#125; &#x3D; nil</span><br><span class="line">    var b *int &#x3D; nil</span><br><span class="line">    </span><br><span class="line">    isNil(a)</span><br><span class="line">    isNil(b)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func isNil(x interface&#123;&#125;) &#123;</span><br><span class="line">    if x &#x3D;&#x3D; nil &#123;</span><br><span class="line">      fmt.Println(&quot;empty interface&quot;)</span><br><span class="line">      return</span><br><span class="line">    &#125;</span><br><span class="line">    fmt.Println(&quot;non-empty interface&quot;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="output"><a href="#output" class="headerlink" title="output:"></a>output:</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">empty interface</span><br><span class="line">non-empty interface</span><br></pre></td></tr></table></figure>
+<p>为什么会这样呢？这就涉及到 interface == nil 的判断方式了。一般情况只有 eface 的 type 和 data 都为 nil 时，interface == nil 才是 true。</p>
+<p>当我们把 b 复制给 interface 时，x._type.Kind = kindPtr。虽说 x.data = nil，但是不符合 interface == nil 的判断条件了。</p>
+<h3 id="关于-interface-源码阅读的一点建议"><a href="#关于-interface-源码阅读的一点建议" class="headerlink" title="关于 interface 源码阅读的一点建议"></a>关于 interface 源码阅读的一点建议</h3><p>关于 interface 源码阅读的一点建议，如果想利用汇编看源码的话，尽量选择 go1.14.x。</p>
+<p>选择 Go 汇编来看 interface，基本上也是为了查看 interface 最终被转换成 eface 还是 iface，调用了 runtime 的哪些函数，以及对应的函数栈分布。如果 Go 版本选择的太高的话，go 汇编变化太大了，可能汇编上就看不到对应的内容了。</p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/interface/">interface</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2021/08/22/Go-%E8%AF%AD%E8%A8%80%E4%B8%AD%E7%9A%84%E4%B8%80%E4%BA%9B%E9%9D%9E%E5%B8%B8%E8%A7%84%E4%BC%98%E5%8C%96/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">Go-语言中的一些非常规优化</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2021/08/22/%E4%BD%BF%E7%94%A8reflect%E5%8C%85%E5%9C%A8%E5%8F%8D%E5%B0%84%E4%B8%96%E7%95%8C%E9%87%8C%E8%AF%BB%E5%86%99%E5%90%84%E7%B1%BB%E5%9E%8B%E5%8F%98%E9%87%8F/">
+        <span class="next-text nav-default">使用reflect包在反射世界里读写各类型变量</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+      </footer>
+    
+  </article>
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2021
+    <span class="footer-author">Russshare.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

@@ -1,38 +1,311 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post-collapse.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
 
-{% block title %}{{ __('title.category') }}: {{ page.category }} | {{ config.title }}{% endblock %}
 
-{% block content %}
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
-  {######################}
-  {### CATEGORY BLOCK ###}
-  {######################}
-  <div class="post-block category">
 
-    <div id="posts" class="posts-collapse">
-      <div class="collection-title">
-        <{% if theme.seo %}h2{% else %}h1{% endif %}>{#
-        #}{{ page.category }}{#
-        #}<small>{{  __('title.category')  }}</small>
-        </{% if theme.seo %}h2{% else %}h1{% endif %}>
+
+  <meta name="description" content="听风说你来自远方"/>
+
+
+
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+
+
+
+<link rel="canonical" href="https://riddlego.github.io/categories/golang数据结构/"/>
+
+
+<meta name="description" content="听风说你来自远方">
+<meta property="og:type" content="website">
+<meta property="og:title" content="RiddleGo">
+<meta property="og:url" content="https://riddlego.github.io/categories/golang%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/index.html">
+<meta property="og:site_name" content="RiddleGo">
+<meta property="og:description" content="听风说你来自远方">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:author" content="Russshare">
+<meta property="article:tag" content="zh-Hans">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title>
+  
+    golang数据结构 - RiddleGo
+  
+</title>
+  <meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">RiddleGo</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+  
+<div id="primary">
+  <section id="archive" class="archive">
+    
+      
+        <div class="archive-title category">
+          <h2 class="archive-name">golang数据结构</h2>
+        </div>
+      
+    
+
+    
+      
+
+      <div class="archive-post">
+        <span class="archive-post-time">
+          
+            2021-09-01
+          
+        </span>
+        <span class="archive-post-title">
+          <a href="/2021/09/01/%E6%95%B0%E7%BB%84int%E8%83%BD%E8%BD%AC%E6%8D%A2%E4%B8%BA%E6%95%B0%E7%BB%84interface%E5%90%97%EF%BC%9F/" class="archive-post-link">
+            数组int能转换为数组interface吗？
+          </a>
+        </span>
+      </div>
+    
+      
+
+      <div class="archive-post">
+        <span class="archive-post-time">
+          
+            2021-08-22
+          
+        </span>
+        <span class="archive-post-title">
+          <a href="/2021/08/22/Go-interface-%E5%8E%9F%E7%90%86%E5%89%96%E6%9E%90-%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2/" class="archive-post-link">
+            Go-interface-原理剖析--类型转换
+          </a>
+        </span>
+      </div>
+    
+      
+
+      <div class="archive-post">
+        <span class="archive-post-time">
+          
+            2021-08-22
+          
+        </span>
+        <span class="archive-post-title">
+          <a href="/2021/08/22/Golang%E8%AF%AD%E8%A8%80%E4%B8%ADmap%E6%9C%89%E5%93%AA%E4%BA%9B%E9%99%B7%E9%98%B1%EF%BC%9F/" class="archive-post-link">
+            Golang语言中map有哪些陷阱？
+          </a>
+        </span>
+      </div>
+    
+      
+
+      <div class="archive-post">
+        <span class="archive-post-time">
+          
+            2021-06-29
+          
+        </span>
+        <span class="archive-post-title">
+          <a href="/2021/06/29/golang%E5%AE%9E%E7%8E%B0%E5%A0%86%E6%A0%88/" class="archive-post-link">
+            golang实现堆栈
+          </a>
+        </span>
+      </div>
+    
+      
+
+      <div class="archive-post">
+        <span class="archive-post-time">
+          
+            2021-05-31
+          
+        </span>
+        <span class="archive-post-title">
+          <a href="/2021/05/31/golang%E4%B8%ADmap%E7%9A%84%E5%B8%B8%E8%A7%81%E6%93%8D%E4%BD%9C/" class="archive-post-link">
+            golang中map的常见操作
+          </a>
+        </span>
+      </div>
+    
+      
+
+      <div class="archive-post">
+        <span class="archive-post-time">
+          
+            2021-05-31
+          
+        </span>
+        <span class="archive-post-title">
+          <a href="/2021/05/31/go%E5%AE%9E%E7%8E%B0%E5%B0%8F%E9%A1%B6%E5%A0%86%E5%A4%A7%E9%A1%B6%E5%A0%86/" class="archive-post-link">
+            go实现小顶堆大顶堆
+          </a>
+        </span>
+      </div>
+    
+      
+
+      <div class="archive-post">
+        <span class="archive-post-time">
+          
+            2021-05-28
+          
+        </span>
+        <span class="archive-post-title">
+          <a href="/2021/05/28/golang%E4%B8%8E%E5%85%83%E7%BB%84/" class="archive-post-link">
+            golang与元组
+          </a>
+        </span>
+      </div>
+    
+      
+
+      <div class="archive-post">
+        <span class="archive-post-time">
+          
+            2021-05-26
+          
+        </span>
+        <span class="archive-post-title">
+          <a href="/2021/05/26/queue%E7%9A%84%E5%AE%9E%E7%8E%B0%E4%B8%8E%E6%93%8D%E4%BD%9C/" class="archive-post-link">
+            queue的实现与操作
+          </a>
+        </span>
+      </div>
+    
+      
+
+      <div class="archive-post">
+        <span class="archive-post-time">
+          
+            2021-05-26
+          
+        </span>
+        <span class="archive-post-title">
+          <a href="/2021/05/26/list%E7%9A%84%E5%AE%9E%E7%8E%B0%E4%B8%8E%E6%93%8D%E4%BD%9C/" class="archive-post-link">
+            “list的实现与操作”
+          </a>
+        </span>
+      </div>
+    
+  </section>
+ </div>
+
+  
+  <nav class="pagination">
+    
+    
+  </nav>
+
+
+
       </div>
 
-      {% for post in page.posts %}
-        {{ post_template.render(post) }}
-      {% endfor %}
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2021
+    <span class="footer-author">Russshare.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
     </div>
+    
 
-  </div>
-  {##########################}
-  {### END CATEGORY BLOCK ###}
-  {##########################}
 
-  {% include '_partials/pagination.swig' %}
+    
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(false) }}
-{% endblock %}
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

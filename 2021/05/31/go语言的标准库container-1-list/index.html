@@ -1,37 +1,251 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
-{% block page_class %}page-post-detail{% endblock %}
 
 
-{% block content %}
+  <meta name="description" content="go语言的标准库container-1-list"/>
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
-    </div>
+
+
+  <meta name="keywords" content="golang数据结构,list,链表," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+
+
+
+<link rel="canonical" href="https://riddlego.github.io/2021/05/31/go语言的标准库container-1-list/"/>
+
+
+<meta name="description" content="前言：以前有过一个go语言怎么使用list的，这篇文章就来看看这个玩意里面长的什么样子（因为刚刚看到前辈写的关于heap的文章，哈哈没忍住把这个一起copy过来学习一下哈哈，原文） GO语言list剖析 1. 使用方法在GO语言的标准库中，提供了一个container包，这个包中提供了三种数据类型，就是heap,list和ring，本节要讲的是list的使用以及源码剖析。要使用GO提供的list链">
+<meta property="og:type" content="article">
+<meta property="og:title" content="go语言的标准库container-1-list">
+<meta property="og:url" content="https://riddlego.github.io/2021/05/31/go%E8%AF%AD%E8%A8%80%E7%9A%84%E6%A0%87%E5%87%86%E5%BA%93container-1-list/index.html">
+<meta property="og:site_name" content="RiddleGo">
+<meta property="og:description" content="前言：以前有过一个go语言怎么使用list的，这篇文章就来看看这个玩意里面长的什么样子（因为刚刚看到前辈写的关于heap的文章，哈哈没忍住把这个一起copy过来学习一下哈哈，原文） GO语言list剖析 1. 使用方法在GO语言的标准库中，提供了一个container包，这个包中提供了三种数据类型，就是heap,list和ring，本节要讲的是list的使用以及源码剖析。要使用GO提供的list链">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-05-31T13:29:23.000Z">
+<meta property="article:modified_time" content="2021-05-31T13:30:42.000Z">
+<meta property="article:author" content="Russshare">
+<meta property="article:tag" content="golang数据结构">
+<meta property="article:tag" content="list">
+<meta property="article:tag" content="链表">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> go语言的标准库container-1-list - RiddleGo </title>
+  <meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">RiddleGo</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          go语言的标准库container-1-list
+        
+      </h1>
+
+      <time class="post-time">
+          5月 31 2021
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h3 id="前言："><a href="#前言：" class="headerlink" title="前言："></a>前言：</h3><p>以前有过一个go语言怎么使用list的，这篇文章就来看看这个玩意里面长的什么样子（因为刚刚看到前辈写的关于heap的文章，哈哈没忍住把这个一起copy过来学习一下哈哈，<a target="_blank" rel="noopener" href="https://www.cnblogs.com/huxianglin/p/6924425.html">原文</a>）</p>
+<p><strong>GO语言list剖析</strong></p>
+<h3 id="1-使用方法"><a href="#1-使用方法" class="headerlink" title="1. 使用方法"></a>1. 使用方法</h3><p>在GO语言的标准库中，提供了一个container包，这个包中提供了三种数据类型，就是heap,list和ring，本节要讲的是list的使用以及源码剖析。<br>要使用GO提供的list链表，则首先需要导入list包，如下所示：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line">import(</span><br><span class="line">	&quot;container&#x2F;list&quot;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>导入包之后，需要了解list中定义了两种数据类型，Element和List，定义如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; Element is an element of a linked list.</span><br><span class="line">type Element struct &#123;</span><br><span class="line">    &#x2F;&#x2F; Next and previous pointers in the doubly-linked list of elements.</span><br><span class="line">    &#x2F;&#x2F; To simplify the implementation, internally a list l is implemented</span><br><span class="line">    &#x2F;&#x2F; as a ring, such that &amp;l.root is both the next element of the last</span><br><span class="line">    &#x2F;&#x2F; list element (l.Back()) and the previous element of the first list</span><br><span class="line">    &#x2F;&#x2F; element (l.Front()).</span><br><span class="line">    next, prev *Element</span><br><span class="line"></span><br><span class="line">    &#x2F;&#x2F; The list to which this element belongs.</span><br><span class="line">    list *List</span><br><span class="line"></span><br><span class="line">    &#x2F;&#x2F; The value stored with this element.</span><br><span class="line">    Value interface&#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">type List struct &#123;</span><br><span class="line">    root Element &#x2F;&#x2F; sentinel list element, only &amp;root, root.prev, and root.next are used</span><br><span class="line">    len  int     &#x2F;&#x2F; current list length excluding (this) sentinel element</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>Element里面定义了两个Element类型的指针next, prev以及List类型的指针list, Value用来存储值，List里面定义了一个Element作为链表的Root，len作为链表的长度。</p>
+<p>import之后，就可以使用链表了：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">func main()  &#123;</span><br><span class="line">    list_test:&#x3D;list.New()  &#x2F;&#x2F; 创建list对象</span><br><span class="line">    list_test.PushBack(&quot;123&quot;)  &#x2F;&#x2F; 往List队列尾部插入数据</span><br><span class="line">    list_test.PushBack(&quot;456&quot;)</span><br><span class="line">    list_test.PushBack(&quot;789&quot;)</span><br><span class="line">    fmt.Println(list_test.Len())  &#x2F;&#x2F; 输出list长度</span><br><span class="line">    fmt.Println(list_test.Front())  &#x2F;&#x2F; 输出list第一个元素</span><br><span class="line">    fmt.Println(list_test.Front().Next())  &#x2F;&#x2F; 输出list第一个元素的下一个元素</span><br><span class="line">    fmt.Println(list_test.Front().Next().Next())  &#x2F;&#x2F; 输出list第三个元素</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="2-list提供的方法"><a href="#2-list提供的方法" class="headerlink" title="2. list提供的方法"></a>2. list提供的方法</h3><p>list提供的方法如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">type Element</span><br><span class="line">    func (e *Element) Next() *Element</span><br><span class="line">    func (e *Element) Prev() *Element</span><br><span class="line">type List</span><br><span class="line">    func New() *List</span><br><span class="line">    func (l *List) Back() *Element   &#x2F;&#x2F; 返回最后一个元素</span><br><span class="line">    func (l *List) Front() *Element  &#x2F;&#x2F; 返回第一个元素</span><br><span class="line">    func (l *List) Init() *List  &#x2F;&#x2F; 链表初始化</span><br><span class="line">    func (l *List) InsertAfter(v interface&#123;&#125;, mark *Element) *Element &#x2F;&#x2F; 在某个元素前插入</span><br><span class="line">    func (l *List) InsertBefore(v interface&#123;&#125;, mark *Element) *Element  &#x2F;&#x2F; 在某个元素后插入</span><br><span class="line">    func (l *List) Len() int &#x2F;&#x2F; 返回链表长度</span><br><span class="line">    func (l *List) MoveAfter(e, mark *Element)  &#x2F;&#x2F; 把e元素移动到mark之后</span><br><span class="line">    func (l *List) MoveBefore(e, mark *Element)  &#x2F;&#x2F; 把e元素移动到mark之前</span><br><span class="line">    func (l *List) MoveToBack(e *Element) &#x2F;&#x2F; 把e元素移动到队列最后</span><br><span class="line">    func (l *List) MoveToFront(e *Element) &#x2F;&#x2F; 把e元素移动到队列最头部</span><br><span class="line">    func (l *List) PushBack(v interface&#123;&#125;) *Element  &#x2F;&#x2F; 在队列最后插入元素</span><br><span class="line">    func (l *List) PushBackList(other *List)  &#x2F;&#x2F; 在队列最后插入接上新队列</span><br><span class="line">    func (l *List) PushFront(v interface&#123;&#125;) *Element  &#x2F;&#x2F; 在队列头部插入元素</span><br><span class="line">    func (l *List) PushFrontList(other *List) &#x2F;&#x2F; 在队列头部插入接上新队列</span><br><span class="line">    func (l *List) Remove(e *Element) interface&#123;&#125; &#x2F;&#x2F; 删除某个元素</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-源码剖析"><a href="#3-源码剖析" class="headerlink" title="3. 源码剖析"></a>3. 源码剖析</h3><p>首先，使用list.New()方法，返回的是一个List对象的指针，源码func New() *List { return new(List).Init() }并执行了List对象的Init()方法对list进行初始化，初始化root的prev和next指针以及list的长度。<br>之后调用list_test.PushBack(“123”)在队列尾部插入元素123，源码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">func (l *List) PushBack(v interface&#123;&#125;) *Element &#123;</span><br><span class="line">	l.lazyInit()</span><br><span class="line">	return l.insertValue(v, l.root.prev)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>调用lazyInit(),如果链表没有初始化，则先初始化一遍，之后，调用list的insertValue方法，insertValue方法初始化节点之后，调用insert方法进行插入链表。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">func (l *List) insertValue(v interface&#123;&#125;, at *Element) *Element &#123;</span><br><span class="line">	return l.insert(&amp;Element&#123;Value: v&#125;, at)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>整篇文章最精髓的地方就在insert方法中了，源码如下：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">func (l *List) insert(e, at *Element) *Element &#123;</span><br><span class="line">	n :&#x3D; at.next  &#x2F;&#x2F; 用中间变量n保存at节点的next指针</span><br><span class="line">	at.next &#x3D; e  &#x2F;&#x2F; at节点的next指向要插入的节点</span><br><span class="line">	e.prev &#x3D; at  &#x2F;&#x2F; 要插入的节点e的prev指向at节点</span><br><span class="line">	e.next &#x3D; n  &#x2F;&#x2F; e的next节点指向中间变量n保存的指针</span><br><span class="line">	n.prev &#x3D; e  &#x2F;&#x2F; at节点的下一个节点的prev指向e节点</span><br><span class="line">	e.list &#x3D; l  &#x2F;&#x2F; e节点的list指向链表的root节点</span><br><span class="line">	l.len++  &#x2F;&#x2F; 链表的长度加一</span><br><span class="line">	return e  &#x2F;&#x2F; 返回刚插入节点的指针</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>这里的链表结构是双向链表，</strong>并且在root节点的prev指针指向了链表的结尾，链表结尾的next指针也指向了root节点，这样，其实形成了一个环形结构，如果是向链表的尾部插入新数据，则将root.prev传递给insert方法的at参数，如果是向头部插入，则将root传递给insert方法的at参数。</p>
+<p><strong>这样做的好处是显而易见的，那就是从链表的尾部插入数据，将不需要遍历一遍链表，而只需要将root节点的prev传递给insert方法中就可以了，大大节省了从尾部插入节点的时间。</strong>这段代码我看了很久，觉得这个包中最精髓的地方也就在这了，这也是这篇文章诞生的原因。</p>
+<p>源码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; Copyright 2009 The Go Authors. All rights reserved.</span><br><span class="line">&#x2F;&#x2F; Use of this source code is governed by a BSD-style</span><br><span class="line">&#x2F;&#x2F; license that can be found in the LICENSE file.</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; Package list implements a doubly linked list.</span><br><span class="line">&#x2F;&#x2F;</span><br><span class="line">&#x2F;&#x2F; To iterate over a list (where l is a *List):</span><br><span class="line">&#x2F;&#x2F;	for e :&#x3D; l.Front(); e !&#x3D; nil; e &#x3D; e.Next() &#123;</span><br><span class="line">&#x2F;&#x2F;		&#x2F;&#x2F; do something with e.Value</span><br><span class="line">&#x2F;&#x2F;	&#125;</span><br><span class="line">&#x2F;&#x2F;</span><br><span class="line">package list</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; Element is an element of a linked list.</span><br><span class="line">type Element struct &#123;</span><br><span class="line">	&#x2F;&#x2F; Next and previous pointers in the doubly-linked list of elements.</span><br><span class="line">	&#x2F;&#x2F; To simplify the implementation, internally a list l is implemented</span><br><span class="line">	&#x2F;&#x2F; as a ring, such that &amp;l.root is both the next element of the last</span><br><span class="line">	&#x2F;&#x2F; list element (l.Back()) and the previous element of the first list</span><br><span class="line">	&#x2F;&#x2F; element (l.Front()).</span><br><span class="line">	next, prev *Element</span><br><span class="line"></span><br><span class="line">	&#x2F;&#x2F; The list to which this element belongs.</span><br><span class="line">	list *List</span><br><span class="line"></span><br><span class="line">	&#x2F;&#x2F; The value stored with this element.</span><br><span class="line">	Value interface&#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; Next returns the next list element or nil.</span><br><span class="line">func (e *Element) Next() *Element &#123;</span><br><span class="line">	if p :&#x3D; e.next; e.list !&#x3D; nil &amp;&amp; p !&#x3D; &amp;e.list.root &#123;</span><br><span class="line">		return p</span><br><span class="line">	&#125;</span><br><span class="line">	return nil</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; Prev returns the previous list element or nil.</span><br><span class="line">func (e *Element) Prev() *Element &#123;</span><br><span class="line">	if p :&#x3D; e.prev; e.list !&#x3D; nil &amp;&amp; p !&#x3D; &amp;e.list.root &#123;</span><br><span class="line">		return p</span><br><span class="line">	&#125;</span><br><span class="line">	return nil</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; List represents a doubly linked list.</span><br><span class="line">&#x2F;&#x2F; The zero value for List is an empty list ready to use.</span><br><span class="line">type List struct &#123;</span><br><span class="line">	root Element &#x2F;&#x2F; sentinel list element, only &amp;root, root.prev, and root.next are used</span><br><span class="line">	len  int     &#x2F;&#x2F; current list length excluding (this) sentinel element</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; Init initializes or clears list l.</span><br><span class="line">func (l *List) Init() *List &#123;</span><br><span class="line">	l.root.next &#x3D; &amp;l.root</span><br><span class="line">	l.root.prev &#x3D; &amp;l.root</span><br><span class="line">	l.len &#x3D; 0</span><br><span class="line">	return l</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; New returns an initialized list.</span><br><span class="line">func New() *List &#123; return new(List).Init() &#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; Len returns the number of elements of list l.</span><br><span class="line">&#x2F;&#x2F; The complexity is O(1).</span><br><span class="line">func (l *List) Len() int &#123; return l.len &#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; Front returns the first element of list l or nil.</span><br><span class="line">func (l *List) Front() *Element &#123;</span><br><span class="line">	if l.len &#x3D;&#x3D; 0 &#123;</span><br><span class="line">		return nil</span><br><span class="line">	&#125;</span><br><span class="line">	return l.root.next</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; Back returns the last element of list l or nil.</span><br><span class="line">func (l *List) Back() *Element &#123;</span><br><span class="line">	if l.len &#x3D;&#x3D; 0 &#123;</span><br><span class="line">		return nil</span><br><span class="line">	&#125;</span><br><span class="line">	return l.root.prev</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; lazyInit lazily initializes a zero List value.</span><br><span class="line">func (l *List) lazyInit() &#123;</span><br><span class="line">	if l.root.next &#x3D;&#x3D; nil &#123;</span><br><span class="line">		l.Init()</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; insert inserts e after at, increments l.len, and returns e.</span><br><span class="line">func (l *List) insert(e, at *Element) *Element &#123;</span><br><span class="line">	n :&#x3D; at.next</span><br><span class="line">	at.next &#x3D; e</span><br><span class="line">	e.prev &#x3D; at</span><br><span class="line">	e.next &#x3D; n</span><br><span class="line">	n.prev &#x3D; e</span><br><span class="line">	e.list &#x3D; l</span><br><span class="line">	l.len++</span><br><span class="line">	return e</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; insertValue is a convenience wrapper for insert(&amp;Element&#123;Value: v&#125;, at).</span><br><span class="line">func (l *List) insertValue(v interface&#123;&#125;, at *Element) *Element &#123;</span><br><span class="line">	return l.insert(&amp;Element&#123;Value: v&#125;, at)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; remove removes e from its list, decrements l.len, and returns e.</span><br><span class="line">func (l *List) remove(e *Element) *Element &#123;</span><br><span class="line">	e.prev.next &#x3D; e.next</span><br><span class="line">	e.next.prev &#x3D; e.prev</span><br><span class="line">	e.next &#x3D; nil &#x2F;&#x2F; avoid memory leaks</span><br><span class="line">	e.prev &#x3D; nil &#x2F;&#x2F; avoid memory leaks</span><br><span class="line">	e.list &#x3D; nil</span><br><span class="line">	l.len--</span><br><span class="line">	return e</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; Remove removes e from l if e is an element of list l.</span><br><span class="line">&#x2F;&#x2F; It returns the element value e.Value.</span><br><span class="line">func (l *List) Remove(e *Element) interface&#123;&#125; &#123;</span><br><span class="line">	if e.list &#x3D;&#x3D; l &#123;</span><br><span class="line">		&#x2F;&#x2F; if e.list &#x3D;&#x3D; l, l must have been initialized when e was inserted</span><br><span class="line">		&#x2F;&#x2F; in l or l &#x3D;&#x3D; nil (e is a zero Element) and l.remove will crash</span><br><span class="line">		l.remove(e)</span><br><span class="line">	&#125;</span><br><span class="line">	return e.Value</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; PushFront inserts a new element e with value v at the front of list l and returns e.</span><br><span class="line">func (l *List) PushFront(v interface&#123;&#125;) *Element &#123;</span><br><span class="line">	l.lazyInit()</span><br><span class="line">	return l.insertValue(v, &amp;l.root)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; PushBack inserts a new element e with value v at the back of list l and returns e.</span><br><span class="line">func (l *List) PushBack(v interface&#123;&#125;) *Element &#123;</span><br><span class="line">	l.lazyInit()</span><br><span class="line">	return l.insertValue(v, l.root.prev)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; InsertBefore inserts a new element e with value v immediately before mark and returns e.</span><br><span class="line">&#x2F;&#x2F; If mark is not an element of l, the list is not modified.</span><br><span class="line">func (l *List) InsertBefore(v interface&#123;&#125;, mark *Element) *Element &#123;</span><br><span class="line">	if mark.list !&#x3D; l &#123;</span><br><span class="line">		return nil</span><br><span class="line">	&#125;</span><br><span class="line">	&#x2F;&#x2F; see comment in List.Remove about initialization of l</span><br><span class="line">	return l.insertValue(v, mark.prev)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; InsertAfter inserts a new element e with value v immediately after mark and returns e.</span><br><span class="line">&#x2F;&#x2F; If mark is not an element of l, the list is not modified.</span><br><span class="line">func (l *List) InsertAfter(v interface&#123;&#125;, mark *Element) *Element &#123;</span><br><span class="line">	if mark.list !&#x3D; l &#123;</span><br><span class="line">		return nil</span><br><span class="line">	&#125;</span><br><span class="line">	&#x2F;&#x2F; see comment in List.Remove about initialization of l</span><br><span class="line">	return l.insertValue(v, mark)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; MoveToFront moves element e to the front of list l.</span><br><span class="line">&#x2F;&#x2F; If e is not an element of l, the list is not modified.</span><br><span class="line">func (l *List) MoveToFront(e *Element) &#123;</span><br><span class="line">	if e.list !&#x3D; l || l.root.next &#x3D;&#x3D; e &#123;</span><br><span class="line">		return</span><br><span class="line">	&#125;</span><br><span class="line">	&#x2F;&#x2F; see comment in List.Remove about initialization of l</span><br><span class="line">	l.insert(l.remove(e), &amp;l.root)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; MoveToBack moves element e to the back of list l.</span><br><span class="line">&#x2F;&#x2F; If e is not an element of l, the list is not modified.</span><br><span class="line">func (l *List) MoveToBack(e *Element) &#123;</span><br><span class="line">	if e.list !&#x3D; l || l.root.prev &#x3D;&#x3D; e &#123;</span><br><span class="line">		return</span><br><span class="line">	&#125;</span><br><span class="line">	&#x2F;&#x2F; see comment in List.Remove about initialization of l</span><br><span class="line">	l.insert(l.remove(e), l.root.prev)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; MoveBefore moves element e to its new position before mark.</span><br><span class="line">&#x2F;&#x2F; If e or mark is not an element of l, or e &#x3D;&#x3D; mark, the list is not modified.</span><br><span class="line">func (l *List) MoveBefore(e, mark *Element) &#123;</span><br><span class="line">	if e.list !&#x3D; l || e &#x3D;&#x3D; mark || mark.list !&#x3D; l &#123;</span><br><span class="line">		return</span><br><span class="line">	&#125;</span><br><span class="line">	l.insert(l.remove(e), mark.prev)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; MoveAfter moves element e to its new position after mark.</span><br><span class="line">&#x2F;&#x2F; If e or mark is not an element of l, or e &#x3D;&#x3D; mark, the list is not modified.</span><br><span class="line">func (l *List) MoveAfter(e, mark *Element) &#123;</span><br><span class="line">	if e.list !&#x3D; l || e &#x3D;&#x3D; mark || mark.list !&#x3D; l &#123;</span><br><span class="line">		return</span><br><span class="line">	&#125;</span><br><span class="line">	l.insert(l.remove(e), mark)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; PushBackList inserts a copy of an other list at the back of list l.</span><br><span class="line">&#x2F;&#x2F; The lists l and other may be the same.</span><br><span class="line">func (l *List) PushBackList(other *List) &#123;</span><br><span class="line">	l.lazyInit()</span><br><span class="line">	for i, e :&#x3D; other.Len(), other.Front(); i &gt; 0; i, e &#x3D; i-1, e.Next() &#123;</span><br><span class="line">		l.insertValue(e.Value, l.root.prev)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; PushFrontList inserts a copy of an other list at the front of list l.</span><br><span class="line">&#x2F;&#x2F; The lists l and other may be the same.</span><br><span class="line">func (l *List) PushFrontList(other *List) &#123;</span><br><span class="line">	l.lazyInit()</span><br><span class="line">	for i, e :&#x3D; other.Len(), other.Back(); i &gt; 0; i, e &#x3D; i-1, e.Prev() &#123;</span><br><span class="line">		l.insertValue(e.Value, &amp;l.root)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>（我是打印下来，然后笔笔勾画看了的，比较我这个菜鸟代码多了还是头晕哈哈哈）</p>
+<p>到这里，如果你是认真看过来的，其实真的你知道了golang的基础，你会觉得其实能搞懂逻辑的。</p>
+<p>这里面真的你看不见复杂的代码，只有一些简单的代码将逻辑一一实现，真的很精彩。</p>
+<p>到了这个年级突然懂了为什么大佬都喜欢看源码，当然我还是不喜欢看，我喜欢看。。。咳咳</p>
+<p><strong>感谢前辈的精妙分享</strong></p>
+<p><em><strong>以上就是本次的全部内容，希望对你有所帮助！！！</strong></em></p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/golang%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">golang数据结构</a>
+		  
+			<a href="/tags/list/">list</a>
+		  
+			<a href="/tags/%E9%93%BE%E8%A1%A8/">链表</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2021/06/21/%E6%89%8B%E5%86%99%E4%B8%AD%E9%97%B4%E4%BB%B6/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">手写中间件</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2021/05/31/go%E8%AF%AD%E8%A8%80%E7%9A%84%E6%A0%87%E5%87%86%E5%BA%93container-2-heap/">
+        <span class="next-text nav-default">go语言的标准库container-2-heap</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+      </footer>
+    
+  </article>
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2021
+    <span class="footer-author">Russshare.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

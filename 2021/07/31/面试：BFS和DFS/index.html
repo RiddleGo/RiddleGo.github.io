@@ -1,37 +1,257 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
-{% block page_class %}page-post-detail{% endblock %}
 
 
-{% block content %}
+  <meta name="description" content="面试：BFS和DFS"/>
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
-    </div>
+
+
+  <meta name="keywords" content="BFS,DFS," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+
+
+
+<link rel="canonical" href="https://riddlego.github.io/2021/07/31/面试：BFS和DFS/"/>
+
+
+<meta name="description" content="原文链接一原文链接二 1 引子深度优先搜索（Deep First Search） 广度优先搜索（Breath First Search） 当菜鸟们（比如我）初步接触算法的时候，会接触这两种简单的盲目搜索算法，相较与其他众多的算法，这两种算法相对较好理解，运用范围也很广，在众多的学科竞赛里都可以见到它们的影子，话不多说，我们开始。 2 深度优先搜索（Deep First Search）深度优先搜索算">
+<meta property="og:type" content="article">
+<meta property="og:title" content="面试：BFS和DFS">
+<meta property="og:url" content="https://riddlego.github.io/2021/07/31/%E9%9D%A2%E8%AF%95%EF%BC%9ABFS%E5%92%8CDFS/index.html">
+<meta property="og:site_name" content="RiddleGo">
+<meta property="og:description" content="原文链接一原文链接二 1 引子深度优先搜索（Deep First Search） 广度优先搜索（Breath First Search） 当菜鸟们（比如我）初步接触算法的时候，会接触这两种简单的盲目搜索算法，相较与其他众多的算法，这两种算法相对较好理解，运用范围也很广，在众多的学科竞赛里都可以见到它们的影子，话不多说，我们开始。 2 深度优先搜索（Deep First Search）深度优先搜索算">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-07-31T08:11:47.000Z">
+<meta property="article:modified_time" content="2021-07-31T15:05:20.766Z">
+<meta property="article:author" content="Russshare">
+<meta property="article:tag" content="BFS">
+<meta property="article:tag" content="DFS">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> 面试：BFS和DFS - RiddleGo </title>
+  <meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">RiddleGo</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          面试：BFS和DFS
+        
+      </h1>
+
+      <time class="post-time">
+          7月 31 2021
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/164555377">原文链接一</a><br><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/24986203">原文链接二</a></p>
+<h3 id="1-引子"><a href="#1-引子" class="headerlink" title="1 引子"></a>1 引子</h3><p>深度优先搜索（Deep First Search）</p>
+<p>广度优先搜索（Breath First Search）</p>
+<p>当菜鸟们（比如我）初步接触算法的时候，会接触这两种简单的盲目搜索算法，相较与其他众多的算法，这两种算法相对较好理解，运用范围也很广，在众多的学科竞赛里都可以见到它们的影子，话不多说，我们开始。</p>
+<h3 id="2-深度优先搜索（Deep-First-Search）"><a href="#2-深度优先搜索（Deep-First-Search）" class="headerlink" title="2 深度优先搜索（Deep First Search）"></a>2 深度优先搜索（Deep First Search）</h3><p><strong>深度优先搜索算法（Depth First Search）：</strong> 一种用于遍历或搜索树或图的算法。 <strong>沿着树的深度遍历图的节点，</strong>尽可能深的搜索图的分支。<strong>当节点v的所在边都己被探寻过或者在搜寻时结点不满足条件，搜索将回溯到发现节点v的那条边的起始节点。</strong>整个进程反复进行直到所有节点都被访问为止。属于盲目搜索,最糟糕的情况算法时间复杂度为O(!n)。</p>
+<p><strong>做一个形象的比喻，dfs好比走迷宫，得一直走到头，看看路的尽头是不是出口，如果是，就直接走出去，如果不是，那就返回上一个“标记点”寻找不一样的可行方法。</strong> <strong>dfs的实现关键在于回溯，这个可以用两种方法实现（递归、堆栈），以下给出伪代码。</strong></p>
+<p>深度优先搜索的步骤分为 1.递归下去 2.回溯上来。顾名思义，深度优先，则是以深度为准则，先一条路走到底，直到达到目标。这里称之为递归下去。</p>
+<p>否则既没有达到目标又无路可走了，那么则退回到上一步的状态，走其他路。这便是回溯上来。</p>
+<h4 id="2-1递归实现："><a href="#2-1递归实现：" class="headerlink" title="2 |1递归实现："></a>2 |1递归实现：</h4><p>递归实现是DFS最广泛的使用方法。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">void dfs(int x,int y)</span><br><span class="line">&#123;</span><br><span class="line">        if(达到出口||无法继续)</span><br><span class="line">        &#123;</span><br><span class="line">            相应操作;</span><br><span class="line">            return；</span><br><span class="line">        &#125;</span><br><span class="line">        if（对应x方向的下一步可以继续）</span><br><span class="line">        &#123;</span><br><span class="line">               添加标记;&#x2F;&#x2F;给该位置记上标记，如果后续递归调用碰到了这个点，则该方向不能继续下一步</span><br><span class="line">               dfs(x+1,y);&#x2F;&#x2F;调用递归</span><br><span class="line">               取消标记;&#x2F;&#x2F;上一步对应的递归操作全部结束，则要取消标记对后续操作的影响</span><br><span class="line">        &#125;</span><br><span class="line">        else if（对应y方向的下一步可以继续）&#123;</span><br><span class="line">               添加标记; </span><br><span class="line">               dfs(x,y+1);</span><br><span class="line">               取消标记;</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-2栈实现："><a href="#2-2栈实现：" class="headerlink" title="2 |2栈实现："></a>2 |2栈实现：</h4><p>栈实现的基本思路是将一个节点所有未被访问的“邻居”（即“一层邻居节点”）压入栈中“待用”，然后围绕顶部节点进行判定，每个节点被访问后被踹出，为了代码的简洁易懂，使用了c++的stl。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">void dfs_stack(int start, int n) &#123;</span><br><span class="line">    stack &lt;element_type&gt; s;&#x2F;&#x2F;创建栈</span><br><span class="line">    for (int i&#x3D;0;i&lt;n;i++) &#123;</span><br><span class="line">        if (下一步可走&amp;&amp;该点未被标记&#x2F;排除) &#123;</span><br><span class="line">            标记访问;</span><br><span class="line">            s.push(i);&#x2F;&#x2F;入栈</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    while (!s.empty()) &#123;&#x2F;&#x2F;如果栈非空</span><br><span class="line">        访问s.top()（栈顶）;</span><br><span class="line">        相应操作;</span><br><span class="line">        s.pop();&#x2F;&#x2F;出栈</span><br><span class="line">        for (int i &#x3D; 1; i &lt;&#x3D; n; i++) &#123;</span><br><span class="line">            if (（栈顶的）下一步可走&amp;&amp;该点未被标记) &#123;</span><br><span class="line">                标记访问</span><br><span class="line">                s.push(i);&#x2F;&#x2F;入栈</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;    </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-3例题理解-洛谷-P2392-kkksc03考前临时抱佛脚："><a href="#2-3例题理解-洛谷-P2392-kkksc03考前临时抱佛脚：" class="headerlink" title="2 |3例题理解 洛谷 P2392 kkksc03考前临时抱佛脚："></a>2 |3例题理解 洛谷 P2392 kkksc03考前临时抱佛脚：</h4><p><strong>题目背景</strong><br>kkksc03 的大学生活非常的颓废，平时根本不学习。但是，临近期末考试，他必须要开始抱佛脚，以求不挂科。</p>
+<p><strong>题目描述</strong><br>这次期末考试，kkksc03 需要考 4 科。因此要开始刷习题集，每科都有一个习题集，分别有 s1​,s2​,s3​,s4​ 道题目，完成每道题目需要一些时间，可能不等。 kkksc03 有一个能力，他的左右两个大脑可以同时计算 2道不同的题目，但是仅限于同一科。因此，kkksc03 必须一科一科的复习。 由于 kkksc03 还急着去处理洛谷的 bug，因此他希望尽快把事情做完，所以他希望知道能够完成复习的最短时间。</p>
+<p><strong>输入格式</strong><br>本题包含 5 行数据：第 1 行，为四个正整数 s1​,s2​,s3​,s4​。 第 2 行，为A1​,A2​,…,As1​​ 共s1​ 个数，表示第一科习题集每道题目所消耗的时间。 第 3 行，为 B1​,B2​,…,Bs2​​ 共s2​ 个数。 第 4 行，为 C1​,C2​,…,Cs3​​ 共s3​ 个数。 第 5 行，为 D1​,D2​,…,Ds4​​ 共 s4​ 个数，意思均同上。</p>
+<p><strong>输出格式</strong><br>输出一行,为复习完毕最短时间。</p>
+<p><strong>输入输出样例</strong><br>输入 1 2 1 3 5 4 3 6 2 4 3<br>输出 20</p>
+<p><strong>AC代码</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;bits&#x2F;stdc++.h&gt;</span><br><span class="line">#define LL long long</span><br><span class="line">#define INF 0x3f3f3f3f</span><br><span class="line">using namespace std;</span><br><span class="line"></span><br><span class="line">int Left, Right, minn, ans&#x3D;0;</span><br><span class="line">int s[5];</span><br><span class="line">int a[21][5];</span><br><span class="line">void dfs(int x, int y) &#123;</span><br><span class="line">    if (x &gt; s[y]) &#123;&#x2F;&#x2F;任务全部分配完毕，做最后处理</span><br><span class="line">        minn &#x3D; min(minn, max(Left, Right));</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    Left +&#x3D; a[x][y];&#x2F;&#x2F;任务丢给左脑(标记)</span><br><span class="line">    search(x + 1, y);</span><br><span class="line">    Left -&#x3D; a[x][y];&#x2F;&#x2F;把左脑的任务抽出给右脑（取消标记）</span><br><span class="line">    Right +&#x3D; a[x][y];&#x2F;&#x2F;任务丢给右脑(标记)</span><br><span class="line">    search(x + 1, y);</span><br><span class="line">    Right -&#x3D; a[x][y];&#x2F;&#x2F;把右脑的任务抽出给左脑（取消标记）</span><br><span class="line">&#125;</span><br><span class="line">int main() &#123;</span><br><span class="line">    cin &gt;&gt; s[1] &gt;&gt; s[2] &gt;&gt; s[3] &gt;&gt; s[4];</span><br><span class="line">    for (int i &#x3D; 1; i &lt;&#x3D; 4; i++) &#123;&#x2F;&#x2F;减少码量</span><br><span class="line">        Left &#x3D; Right &#x3D; 0;</span><br><span class="line">        minn &#x3D; INF;</span><br><span class="line">        for (int j &#x3D; 1; j &lt;&#x3D; s[i]; j++)</span><br><span class="line">            cin &gt;&gt; a[j][i];</span><br><span class="line">        dfs(1, i);&#x2F;&#x2F;分别对4门科目深搜；</span><br><span class="line">        ans +&#x3D; minn;</span><br><span class="line">    &#125;</span><br><span class="line">    cout &lt;&lt; ans;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br><span class="line">本代码部分摘自洛谷题解</span><br></pre></td></tr></table></figure>
+<h4 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h4><p>DFS为很多多种情况的问题提供了了一个不太用动脑子的解决方案，对于一些可以暴力解决的搜索，全排列案例有一些参考价值。</p>
+<h3 id="3-广度优先搜索（Breath-First-Search）"><a href="#3-广度优先搜索（Breath-First-Search）" class="headerlink" title="3 广度优先搜索（Breath First Search）"></a>3 广度优先搜索（Breath First Search）</h3><p>广度优先搜索较之深度优先搜索之不同在于，深度优先搜索旨在不管有多少条岔路，先一条路走到底，不成功就返回上一个路口然后就选择下一条岔路，而广度优先搜索旨在面临一个路口时，把所有的岔路口都记下来，然后选择其中一个进入，然后将它的分路情况记录下来，然后再返回来进入另外一个岔路，并重复这样的操作，用图形来表示则是这样的，例子同上</p>
+<p>广度优先搜索（Breath First Search）：属于一种盲目搜寻法，目的是系统地展开并检查图中的所有节点，以找寻结果。换句话说，它并不考虑结果的可能位置，彻底地搜索整张图，直到找到结果为止。因为所有节点都必须被储存，因此BFS的空间复杂度为 O(|V| + |E|)，其中 |V| 是节点的数目，而 |E| 是图中边的数目。最差情形下，时间复杂度为 O(|V| + |E|)，其中 |V| 是节点的数目，而 |E| 是图中边的数目。</p>
+<p>再来一个形象的比喻，你是一个高度近视者，有一次起床，你的眼镜找不到了，于是你就在你四周摸索，直到慢慢摸出你的眼镜。 BFS一般用队列实现，因为队列先进先出的模式很契合bfs的判定方式——先遍历所有可行的下一步，再放入队中，在从队顶一个一个的判定结果，循环执行直到得到结果。</p>
+<h4 id="3-1实现："><a href="#3-1实现：" class="headerlink" title="3 |1实现："></a>3 |1实现：</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;queue&gt;&#x2F;&#x2F;stl的queue容器</span><br><span class="line"> </span><br><span class="line">void bfs(起始状态)&#123;</span><br><span class="line">	queue&lt;element_type&gt; qu;&#x2F;&#x2F;创建队列</span><br><span class="line">    qu.push(起始状态入队)；</span><br><span class="line">    while(!qu.empty())&#123;&#x2F;&#x2F;当队列非空</span><br><span class="line">        if(当前状态x方向可走)</span><br><span class="line">            qu.push(当前状态+x);&#x2F;&#x2F;该状态入队</span><br><span class="line">        if(当前状态向y方向可走)</span><br><span class="line">            qu.push(当前状态+y);&#x2F;&#x2F;该状态入队</span><br><span class="line">        …………………</span><br><span class="line">        处理(队顶)qu.top();</span><br><span class="line">        相应操作；</span><br><span class="line">        qu.pop();&#x2F;&#x2F;队首弹出队</span><br><span class="line">    &#125;&#x2F;&#x2F;一次循环结束，执行下一次循环</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="3-2例题理解-OpenJ-Bailian-2790-迷宫"><a href="#3-2例题理解-OpenJ-Bailian-2790-迷宫" class="headerlink" title="3 |2例题理解 OpenJ_Bailian - 2790 迷宫"></a>3 |2例题理解 OpenJ_Bailian - 2790 迷宫</h4><p>题目背景<br>一天Extense在森林里探险的时候不小心走入了一个迷宫，迷宫可以看成是由n * n的格点组成，每个格点只有2种状态，.和#，前者表示可以通行后者表示不能通行。同时当Extense处在某个格点时，他只能移动到东南西北(或者说上下左右)四个方向之一的相邻格点上，Extense想要从点A走到点B，问在不走出迷宫的情况下能不能办到。如果起点或者终点有一个不能通行(为#)，则看成无法办到。</p>
+<p>Input<br>第1行是测试数据的组数k，后面跟着k组输入。每组测试数据的第1行是一个正整数n (1 &lt;= n &lt;= 100)，表示迷宫的规模是n * n的。接下来是一个n * n的矩阵，矩阵中的元素为.或者#。再接下来一行是4个整数ha, la, hb, lb，描述A处在第ha行, 第la列，B处在第hb行, 第lb列。注意到ha, la, hb, lb全部是从0开始计数的。</p>
+<p>Output<br>k行，每行输出对应一个输入。能办到则输出“YES”，否则输出“NO”。</p>
+<p>Sample Input<br>2<br>3<br>.##<br>..#<br>#..<br>0 0 2 2<br>5<br>…..<br>###.#<br>..#..<br>###..<br>…#.<br>0 0 4 0<br>Sample Output<br>YES<br>NO</p>
+<h4 id="AC代码"><a href="#AC代码" class="headerlink" title="AC代码"></a>AC代码</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;bits&#x2F;stdc++.h&gt;</span><br><span class="line">#define mod 1000000007</span><br><span class="line">#define eps 1e-6</span><br><span class="line">#define ll long long</span><br><span class="line">#define INF 0x3f3f3f3f</span><br><span class="line">#define MEM(x,y) memset(x,y,sizeof(x))</span><br><span class="line">using namespace std;</span><br><span class="line">int T,n,m;</span><br><span class="line">int sx,sy,ex,ey;&#x2F;&#x2F;初始位置  结束位置</span><br><span class="line">char mp[1005][1005];&#x2F;&#x2F;原始地图</span><br><span class="line">int dt[][2]&#x3D; &#123;&#123;1,0&#125;,&#123;-1,0&#125;,&#123;0,1&#125;,&#123;0,-1&#125;&#125;;&#x2F;&#x2F;方向</span><br><span class="line">struct node</span><br><span class="line">&#123;</span><br><span class="line">    int x,y;&#x2F;&#x2F;横纵坐标</span><br><span class="line">&#125;;</span><br><span class="line">node now,net;</span><br><span class="line">void bfs()</span><br><span class="line">&#123;</span><br><span class="line">    int f&#x3D;0;</span><br><span class="line">    queue&lt;node&gt;q;</span><br><span class="line">    now.x&#x3D;sx,now.y&#x3D;sy;</span><br><span class="line">    mp[now.x][now.y]&#x3D;&#39;#&#39;;&#x2F;&#x2F;这里走过 变&#39;.&#39;为&#39;#&#39;即可</span><br><span class="line">    q.push(now);</span><br><span class="line">    while(!q.empty())</span><br><span class="line">    &#123;</span><br><span class="line">        now&#x3D;q.front();</span><br><span class="line">        q.pop();</span><br><span class="line">        if(now.x&#x3D;&#x3D;ex&amp;&amp;now.y&#x3D;&#x3D;ey)&#x2F;&#x2F;到达终点</span><br><span class="line">        &#123;</span><br><span class="line">            f&#x3D;1;</span><br><span class="line">            cout&lt;&lt;&quot;YES&quot;&lt;&lt;endl;</span><br><span class="line">            break;</span><br><span class="line">        &#125;</span><br><span class="line">        for(int i&#x3D;0; i&lt;4; i++)</span><br><span class="line">        &#123;</span><br><span class="line">            net.x&#x3D;now.x+dt[i][0];</span><br><span class="line">            net.y&#x3D;now.y+dt[i][1];</span><br><span class="line">            if(net.x&gt;&#x3D;0&amp;&amp;net.x&lt;n&amp;&amp;net.y&gt;&#x3D;0&amp;&amp;net.y&lt;n&amp;&amp;mp[net.x][net.y]&#x3D;&#x3D;&#39;.&#39;)</span><br><span class="line">            &#123;</span><br><span class="line">                q.push(net);</span><br><span class="line">                mp[net.x][net.y]&#x3D;&#39;#&#39;;&#x2F;&#x2F;这里走过 变&#39;.&#39;为&#39;#&#39;即可</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    if(f&#x3D;&#x3D;0)</span><br><span class="line">    &#123;</span><br><span class="line">        cout&lt;&lt;&quot;NO&quot;&lt;&lt;endl;</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">    cin&gt;&gt;T;</span><br><span class="line">    while(T--)</span><br><span class="line">    &#123;</span><br><span class="line">        cin&gt;&gt;n;</span><br><span class="line">        for(int i&#x3D;0; i&lt;n; i++)</span><br><span class="line">            for(int j&#x3D;0; j&lt;n; j++)</span><br><span class="line">                cin&gt;&gt;mp[i][j];</span><br><span class="line">        cin&gt;&gt;sx&gt;&gt;sy&gt;&gt;ex&gt;&gt;ey;</span><br><span class="line">&#x2F;&#x2F;        cout&lt;&lt;mp[sx][sy]&lt;&lt;&quot; &quot;&lt;&lt;mp[ex][ey]&lt;&lt;endl;</span><br><span class="line">        if(mp[sx][sy]&#x3D;&#x3D;&#39;#&#39;||mp[ex][ey]&#x3D;&#x3D;&#39;#&#39;)&#x2F;&#x2F;判断初始与结束位置</span><br><span class="line">            cout&lt;&lt;&quot;NO&quot;&lt;&lt;endl;</span><br><span class="line">        else</span><br><span class="line">            bfs();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>本代码摘自<a target="_blank" rel="noopener" href="https://www.cnblogs.com/sky-stars/p/11135249.html">https://www.cnblogs.com/sky-stars/p/11135249.html</a><br>总结：<br>由于BFS是将每一个可能的情况都列举出来了，那么第一次得到的一定是达到解的最短线路，在最短路问题中，很多算法也是继承于BFS的思想诞生的。但是由于BFS对于空间的占用很大，相对的DFS对时间的需求也较高，多数题目要通过优化操作来实现这些算法，才能通过。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>入门者建议 BFS，不要 DFS。运气好的话，DFS 一开始就找对了方向，一路 D 到底，找到结果。运气不好的话，你没有一个 D 下去能找到结果的，郁闷死你，还不如 BFS。熟练之后，可以 BFS 加剪枝。更高级的做法是 DP（动态规划），但考虑到大多数程序员在刷题之外不懂 DP，这个超纲了所以不说了。</p>
+<p>在DFS中我们说关键点是递归以及回溯，在BFS中，关键点则是状态的选取和标记。</p>
+<p>对于这两个搜索方法，其实我们是可以轻松的看出来，他们有许多差异与许多相同点的。<br>1.数据结构上的运用<br>DFS用递归的形式，用到了栈结构，先进后出。<br>BFS选取状态用队列的形式，先进先出。</p>
+<p>2.复杂度<br>DFS的复杂度与BFS的复杂度大体一致，不同之处在于遍历的方式与对于问题的解决出发点不同，<strong>DFS适合目标明确，而BFS适合大范围的寻找。</strong></p>
+<p>3.思想<br>思想上来说这两种方法都是穷竭列举所有的情况。</p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/BFS/">BFS</a>
+		  
+			<a href="/tags/DFS/">DFS</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2021/07/31/%E9%9D%A2%E8%AF%95%EF%BC%9A%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95%E7%9A%84%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E9%97%AE%E9%A2%98/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">面试：排序算法的常见面试问题</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2021/07/31/%E9%9D%A2%E8%AF%95%EF%BC%9A%E5%A6%82%E4%BD%95%E4%BF%9D%E8%AF%81%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E6%95%B0%E6%8D%AE%E4%B8%80%E8%87%B4%E6%80%A7/">
+        <span class="next-text nav-default">面试：如何保证分布式系统数据一致性</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+      </footer>
+    
+  </article>
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2021
+    <span class="footer-author">Russshare.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

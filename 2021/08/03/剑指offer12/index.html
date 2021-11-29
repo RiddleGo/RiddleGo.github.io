@@ -1,37 +1,259 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
-{% block page_class %}page-post-detail{% endblock %}
 
 
-{% block content %}
+  <meta name="description" content="剑指offer12"/>
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
-    </div>
+
+
+  <meta name="keywords" content="剑指offer," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+
+
+
+<link rel="canonical" href="https://riddlego.github.io/2021/08/03/剑指offer12/"/>
+
+
+<meta name="description" content="剑指 Offer 12. 矩阵中的路径给定一个 m x n 二维字符网格 board 和一个字符串单词 word 。如果 word 存在于网格中，返回 true ；否则，返回 false 。 单词必须按照字母顺序，通过相邻的单元格内的字母构成，其中“相邻”单元格是那些水平相邻或垂直相邻的单元格。同一个单元格内的字母不允许被重复使用。   例如，在下面的 3×4 的矩阵中包含单词 “ABCCED”（">
+<meta property="og:type" content="article">
+<meta property="og:title" content="剑指offer12">
+<meta property="og:url" content="https://riddlego.github.io/2021/08/03/%E5%89%91%E6%8C%87offer12/index.html">
+<meta property="og:site_name" content="RiddleGo">
+<meta property="og:description" content="剑指 Offer 12. 矩阵中的路径给定一个 m x n 二维字符网格 board 和一个字符串单词 word 。如果 word 存在于网格中，返回 true ；否则，返回 false 。 单词必须按照字母顺序，通过相邻的单元格内的字母构成，其中“相邻”单元格是那些水平相邻或垂直相邻的单元格。同一个单元格内的字母不允许被重复使用。   例如，在下面的 3×4 的矩阵中包含单词 “ABCCED”（">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-08-02T16:24:05.000Z">
+<meta property="article:modified_time" content="2021-08-05T14:31:35.788Z">
+<meta property="article:author" content="Russshare">
+<meta property="article:tag" content="剑指offer">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> 剑指offer12 - RiddleGo </title>
+  <meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">RiddleGo</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          剑指offer12
+        
+      </h1>
+
+      <time class="post-time">
+          8月 03 2021
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h2 id="剑指-Offer-12-矩阵中的路径"><a href="#剑指-Offer-12-矩阵中的路径" class="headerlink" title="剑指 Offer 12. 矩阵中的路径"></a>剑指 Offer 12. 矩阵中的路径</h2><p>给定一个 m x n 二维字符网格 board 和一个字符串单词 word 。如果 word 存在于网格中，返回 true ；否则，返回 false 。</p>
+<p>单词必须按照字母顺序，通过相邻的单元格内的字母构成，其中“相邻”单元格是那些水平相邻或垂直相邻的单元格。同一个单元格内的字母不允许被重复使用。</p>
+<p> </p>
+<p>例如，在下面的 3×4 的矩阵中包含单词 “ABCCED”（单词中的字母已标出）。</p>
+<p><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/ju-zhen-zhong-de-lu-jing-lcof/">https://leetcode-cn.com/problems/ju-zhen-zhong-de-lu-jing-lcof/</a></p>
+<p>示例 1：</p>
+<p>输入：board = [[“A”,”B”,”C”,”E”],[“S”,”F”,”C”,”S”],[“A”,”D”,”E”,”E”]], word = “ABCCED”<br>输出：true<br>示例 2：</p>
+<p>输入：board = [[“a”,”b”],[“c”,”d”]], word = “abcd”<br>输出：false
+ </p>
+<h3 id="解题思路"><a href="#解题思路" class="headerlink" title="解题思路"></a>解题思路</h3><p>这种东西，一出现我就想到了使用回溯这样的思路，DFS，但是有啥用，我写不出来啊，难受。</p>
+<p>但是在我给了自己大耳瓜子之后，我决定依次先来掠掠，怎么能轻易放弃。</p>
+<p>我拿到这个道题，有了回溯这个想法以后第一个时间，我应该怎么入手啊，我拿到了一个二维的数组。</p>
+<pre><code class="入手：我们要知道我们需要匹配这个word的字符串，当我们遍历到匹配完所有的时候，这个时候就可以返回true。">
+那么我们这个匹配函数，需要做的就是：
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">1、定位矩阵字符串的位置---通过i,j</span><br><span class="line">2、记录匹配字符的长度---刚刚起始的时候一个都没有，是0</span><br><span class="line">3、当我匹配到了，证明我来过。</span><br><span class="line">4、在进入下一个递归（dfs）之后</span><br><span class="line">5、记得去掉我曾经来过的那个标记</span><br><span class="line">6、为什么这里要去掉那个标志？这个就是回溯的一个关键点</span><br><span class="line">    你想想，我返回的是res，当有一个是成立的时候，它就为true，如果不是，那我肯定要进入另外一个中开始新的dfs，这个时候你肯定不能继续保留你修改的东西。所以啊，就是我觉得可以这样理解，就是能行，我就拿来试一下，能行我自己心里有个数，用完我就还原，不影响你其他人的dfs。</span><br></pre></td></tr></table></figure>
+
+
+
+下面开始准备写一下代码了。。。
+
+不过在这之前我先来再推荐一下一篇我看的文章[labuladong](https://mp.weixin.qq.com/s/nMUHqvwzG2LmWA9jMIHwQQ)
+
+这个讲了关于回溯法的框架
+废话不多说，直接上回溯算法框架。解决一个回溯问题，实际上就是一个决策树的遍历过程。你只需要思考 3 个问题：
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1、路径：也就是已经做出的选择。</span><br><span class="line"></span><br><span class="line">2、选择列表：也就是你当前可以做的选择。</span><br><span class="line"></span><br><span class="line">3、结束条件：也就是到达决策树底层，无法再做选择的条件。</span><br></pre></td></tr></table></figure>
+
+代码框架
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">result &#x3D; []</span><br><span class="line">def backtrack(路径, 选择列表):</span><br><span class="line">    if 满足结束条件:</span><br><span class="line">        result.add(路径)</span><br><span class="line">        return</span><br><span class="line"></span><br><span class="line">    for 选择 in 选择列表:</span><br><span class="line">        做选择</span><br><span class="line">        backtrack(路径, 选择列表)</span><br><span class="line">        撤销选择</span><br></pre></td></tr></table></figure>
+
+
+
+**其核心就是 for 循环里面的递归，在递归调用之前「做选择」，在递归调用之后「撤销选择」，**特别简单。
+
+其实你想做出一道题很简单（简单个屁），但是真的能做到一类题都能触类旁通，那是真的很厉害了。
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">class Solution:</span><br><span class="line">    def exist(self,board: List[List[str]], word: str)-&gt;bool:</span><br><span class="line">        for i in range(len(board)):</span><br><span class="line">            for j in range(len(board[0])):</span><br><span class="line">                if dfs(i,j,0):</span><br><span class="line">                    return True</span><br><span class="line">        return false</span><br><span class="line"></span><br><span class="line">        def dfs(i,j,k):</span><br><span class="line">            if not 0&lt;&#x3D;i&lt;len(board) or not 0&lt;&#x3D;j &lt; len(board[0]) or board[i][j] !&#x3D; word[k]: return False</span><br><span class="line">            #满足结束条件:</span><br><span class="line">            if k &#x3D;&#x3D; len(word) - 1: return True</span><br><span class="line">            #路径.add(选择)</span><br><span class="line">            board[i][j]&#x3D;&#x3D;&#39;&#39;</span><br><span class="line">            #backtrack(路径, 选择列表)</span><br><span class="line">            res&#x3D;dfs(i+1,j,k+1) or dfs(i-1,j,k+1) or dfs(i,j+1,k+1) or dfs(i,j-1,k+1)</span><br><span class="line">            #路径.remove(选择)</span><br><span class="line">            board[i][j]&#x3D;word[k]</span><br><span class="line">            #将该选择再加入选择列表 </span><br><span class="line">            return res</span><br></pre></td></tr></table></figure>
+
+套用框架
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">class Solution:</span><br><span class="line">    def exits(self,board:List[List[str]],word:str)-&gt;bool:</span><br><span class="line">         for i in range len(board):</span><br><span class="line">            for j in range len(board[0]):</span><br><span class="line">            #从整个矩形的任何位置出发</span><br><span class="line">                if dfs(i,j,0):</span><br><span class="line">                    return True</span><br><span class="line">        return false</span><br><span class="line">        </span><br><span class="line">        dfs(i,j,k):</span><br><span class="line">            if not 0&lt;&#x3D;i&lt;len(board) or not 0&lt;&#x3D;j&lt;len(board[0]) or board[i][j] !&#x3D; work[k]:</span><br><span class="line">                return False</span><br><span class="line">            if k&#x3D;&#x3D;len(word)-1:return True</span><br><span class="line"></span><br><span class="line">            borad[i][j]&#x3D;&#x3D;&#39;&#39;</span><br><span class="line">            res&#x3D;dfs(i + 1, j, k + 1) or dfs(i - 1, j, k + 1) or dfs(i, j + 1, k + 1) or dfs(i, j - 1, k + 1)</span><br><span class="line">            borad[i][j]&#x3D;word[k]</span><br><span class="line">            return res</span><br></pre></td></tr></table></figure>
+</code></pre>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/%E5%89%91%E6%8C%87offer/">剑指offer</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2021/08/03/%E5%89%91%E6%8C%87offer13/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">剑指offer13</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2021/08/03/%E5%89%91%E6%8C%87offer09/">
+        <span class="next-text nav-default">剑指offer09</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+      </footer>
+    
+  </article>
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2021
+    <span class="footer-author">Russshare.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

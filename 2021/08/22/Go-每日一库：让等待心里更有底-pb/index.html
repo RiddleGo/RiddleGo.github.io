@@ -1,37 +1,236 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
-{% block page_class %}page-post-detail{% endblock %}
 
 
-{% block content %}
+  <meta name="description" content="Go-每日一库：让等待心里更有底---pb"/>
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
-    </div>
+
+
+  <meta name="keywords" content="CLI," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+
+
+
+<link rel="canonical" href="https://riddlego.github.io/2021/08/22/Go-每日一库：让等待心里更有底-pb/"/>
+
+
+<meta name="description" content="命令行界面（英语：command-line interface，缩写：CLI）是在图形用户界面得到普及之前使用最为广泛的用户界面，它通常不支持鼠标，用户通过键盘输入指令，计算机接收到指令后，予以执行。也有人称之为字符用户界面（CUI）。 通常认为，命令行界面（CLI）没有图形用户界面（GUI）那么方便用户操作。因为，命令行界面的软件通常需要用户记忆操作的命令，但是，由于其本身的特点，命令行界面要较">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Go-每日一库：让等待心里更有底---pb">
+<meta property="og:url" content="https://riddlego.github.io/2021/08/22/Go-%E6%AF%8F%E6%97%A5%E4%B8%80%E5%BA%93%EF%BC%9A%E8%AE%A9%E7%AD%89%E5%BE%85%E5%BF%83%E9%87%8C%E6%9B%B4%E6%9C%89%E5%BA%95-pb/index.html">
+<meta property="og:site_name" content="RiddleGo">
+<meta property="og:description" content="命令行界面（英语：command-line interface，缩写：CLI）是在图形用户界面得到普及之前使用最为广泛的用户界面，它通常不支持鼠标，用户通过键盘输入指令，计算机接收到指令后，予以执行。也有人称之为字符用户界面（CUI）。 通常认为，命令行界面（CLI）没有图形用户界面（GUI）那么方便用户操作。因为，命令行界面的软件通常需要用户记忆操作的命令，但是，由于其本身的特点，命令行界面要较">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-08-22T02:59:33.000Z">
+<meta property="article:modified_time" content="2021-08-22T04:51:48.407Z">
+<meta property="article:author" content="Russshare">
+<meta property="article:tag" content="CLI">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> Go-每日一库：让等待心里更有底---pb - RiddleGo </title>
+  <meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">RiddleGo</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          Go-每日一库：让等待心里更有底---pb
+        
+      </h1>
+
+      <time class="post-time">
+          8月 22 2021
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <p>命令行界面（英语：command-line interface，缩写：CLI）是在图形用户界面得到普及之前使用最为广泛的用户界面，它通常不支持鼠标，用户通过键盘输入指令，计算机接收到指令后，予以执行。也有人称之为字符用户界面（CUI）。</p>
+<p>通常认为，命令行界面（CLI）没有图形用户界面（GUI）那么方便用户操作。因为，命令行界面的软件通常需要用户记忆操作的命令，但是，由于其本身的特点，命令行界面要较图形用户界面节约计算机系统的资源。在熟记命令的前提下，使用命令行界面往往要较使用图形用户界面的操作速度要快。所以，图形用户界面的操作系统中，都保留着可选的命令行界面。</p>
+<h2 id="正文开始"><a href="#正文开始" class="headerlink" title="正文开始"></a>正文开始</h2><p>据 2020 年 Go 官方调查报告显示，使用 Go 进行 CLI 开发排名第二。Go 爱好者们，应该也有不少用 Go 写命令行程序的。</p>
+<p>今天推荐一个命令行程序有用的辅助库：控制台进度条。</p>
+<p>项目地址：<a target="_blank" rel="noopener" href="https://github.com/cheggaaa/pb%EF%BC%8CStar">https://github.com/cheggaaa/pb，Star</a> 数：2.9k+。</p>
+<p>看一个简单的使用例子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line"> &quot;time&quot;</span><br><span class="line"> </span><br><span class="line"> &quot;github.com&#x2F;cheggaaa&#x2F;pb&#x2F;v3&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line"> count :&#x3D; 100000</span><br><span class="line"> &#x2F;&#x2F; create and start new bar</span><br><span class="line"> bar :&#x3D; pb.StartNew(count)</span><br><span class="line"> </span><br><span class="line"> &#x2F;&#x2F; start bar from &#39;default&#39; template</span><br><span class="line"> &#x2F;&#x2F; bar :&#x3D; pb.Default.Start(count)</span><br><span class="line"> </span><br><span class="line"> &#x2F;&#x2F; start bar from &#39;simple&#39; template</span><br><span class="line"> &#x2F;&#x2F; bar :&#x3D; pb.Simple.Start(count)</span><br><span class="line"> </span><br><span class="line"> &#x2F;&#x2F; start bar from &#39;full&#39; template</span><br><span class="line"> &#x2F;&#x2F; bar :&#x3D; pb.Full.Start(count)</span><br><span class="line"> </span><br><span class="line"> for i :&#x3D; 0; i &lt; count; i++ &#123;</span><br><span class="line">  bar.Increment()</span><br><span class="line">  time.Sleep(time.Millisecond)</span><br><span class="line"> &#125;</span><br><span class="line"> bar.Finish()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>运行结果类似这样：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; go run test.go</span><br><span class="line">37158 &#x2F; 100000 [&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&gt;_______________________________] 37.16% 1m11s</span><br></pre></td></tr></table></figure>
+
+<p>如果不喜欢这个简单的样式，可以自己进行简单的定制。</p>
+<p>目前该库最新版本是 v3，因此建议这么使用（基于 Module）：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go get github.com&#x2F;cheggaaa&#x2F;pb&#x2F;v3</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h3><p>bubbletea GitHub：<a target="_blank" rel="noopener" href="https://github.com/charmbracelet/bubbletea">https://github.com/charmbracelet/bubbletea</a></p>
+<p>bubble GitHub：<a target="_blank" rel="noopener" href="https://github.com/charmbracelet/bubbles">https://github.com/charmbracelet/bubbles</a></p>
+<p><strong>Go 每日一库 GitHub：<a target="_blank" rel="noopener" href="https://github.com/darjun/go-daily-lib">https://github.com/darjun/go-daily-lib</a></strong></p>
+<p>issue：<a target="_blank" rel="noopener" href="https://github.com/darjun/go-daily-lib/issues/22">https://github.com/darjun/go-daily-lib/issues/22</a></p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/CLI/">CLI</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2021/08/22/Golang-%E8%AF%AD%E8%A8%80%E6%80%8E%E4%B9%88%E4%BD%BF%E7%94%A8go-micro%E5%92%8Cgin%E5%BC%80%E5%8F%91%E5%BE%AE%E6%9C%8D%E5%8A%A1%EF%BC%9F/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">Golang-语言怎么使用go-micro和gin开发微服务？</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2021/08/22/Golang-%E5%AE%98%E6%96%B9%E6%8E%A8%E8%8D%90%E4%BD%BF%E7%94%A8%E7%9A%84-Redis-%E5%AE%A2%E6%88%B7%E7%AB%AF-redigo/">
+        <span class="next-text nav-default">Golang-官方推荐使用的-Redis-客户端-redigo</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+      </footer>
+    
+  </article>
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2021
+    <span class="footer-author">Russshare.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

@@ -1,37 +1,278 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
-{% block page_class %}page-post-detail{% endblock %}
 
 
-{% block content %}
+  <meta name="description" content="面试：golang-II"/>
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
-    </div>
+
+
+  <meta name="keywords" content="golang,面试," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+
+
+
+<link rel="canonical" href="https://riddlego.github.io/2021/08/15/面试：golang-II/"/>
+
+
+<meta name="description" content="１００、m个n大小的有序数组求并集，一开始是2路归并，求时间复杂度，后来在面试官提醒直接m路归并，求时间复杂度合并N个长度为M的有序数组为一个N*M的有序数组 １０１、static关键字，还有其他关键字吗static关键字的四种用法 １０２、hash表设计，线程安全？线程安全的哈希表容器 golang线程安全的maphttps:&#x2F;&#x2F;blog.csdn.net&#x2F;weixin_43851310&#x2F;art">
+<meta property="og:type" content="article">
+<meta property="og:title" content="面试：golang-II">
+<meta property="og:url" content="https://riddlego.github.io/2021/08/15/%E9%9D%A2%E8%AF%95%EF%BC%9Agolang-II/index.html">
+<meta property="og:site_name" content="RiddleGo">
+<meta property="og:description" content="１００、m个n大小的有序数组求并集，一开始是2路归并，求时间复杂度，后来在面试官提醒直接m路归并，求时间复杂度合并N个长度为M的有序数组为一个N*M的有序数组 １０１、static关键字，还有其他关键字吗static关键字的四种用法 １０２、hash表设计，线程安全？线程安全的哈希表容器 golang线程安全的maphttps:&#x2F;&#x2F;blog.csdn.net&#x2F;weixin_43851310&#x2F;art">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-08-15T09:45:22.000Z">
+<meta property="article:modified_time" content="2021-08-17T02:35:36.942Z">
+<meta property="article:author" content="Russshare">
+<meta property="article:tag" content="golang">
+<meta property="article:tag" content="面试">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> 面试：golang-II - RiddleGo </title>
+  <meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">RiddleGo</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          面试：golang-II
+        
+      </h1>
+
+      <time class="post-time">
+          8月 15 2021
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h3 id="１００、m个n大小的有序数组求并集，一开始是2路归并，求时间复杂度，后来在面试官提醒直接m路归并，求时间复杂度"><a href="#１００、m个n大小的有序数组求并集，一开始是2路归并，求时间复杂度，后来在面试官提醒直接m路归并，求时间复杂度" class="headerlink" title="１００、m个n大小的有序数组求并集，一开始是2路归并，求时间复杂度，后来在面试官提醒直接m路归并，求时间复杂度"></a>１００、m个n大小的有序数组求并集，一开始是2路归并，求时间复杂度，后来在面试官提醒直接m路归并，求时间复杂度</h3><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/lzxin/p/11888176.html">合并N个长度为M的有序数组为一个N*M的有序数组</a></p>
+<h3 id="１０１、static关键字，还有其他关键字吗"><a href="#１０１、static关键字，还有其他关键字吗" class="headerlink" title="１０１、static关键字，还有其他关键字吗"></a>１０１、static关键字，还有其他关键字吗</h3><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/dotgua/p/6354151.html">static关键字的四种用法</a></p>
+<h3 id="１０２、hash表设计，线程安全？"><a href="#１０２、hash表设计，线程安全？" class="headerlink" title="１０２、hash表设计，线程安全？"></a>１０２、hash表设计，线程安全？</h3><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qiuchaoxi/article/details/79754124">线程安全的哈希表容器</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/liyunlong41/article/details/84259488?utm_medium=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromMachineLearnPai2~default-13.baidujsUnder6&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromMachineLearnPai2~default-13.baidujsUnder6">golang线程安全的map</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_43851310/article/details/87897247?utm_medium=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromMachineLearnPai2~default-9.control&amp;depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromMachineLearnPai2~default-9.control">https://blog.csdn.net/weixin_43851310/article/details/87897247?utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-9.control&amp;depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-9.control</a><br><a target="_blank" rel="noopener" href="https://programskills.blog.csdn.net/article/details/74892663?utm_medium=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromMachineLearnPai2~default-13.baidujsUnder6&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromMachineLearnPai2~default-13.baidujsUnder6">java线程安全的容器有哪些？</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_43851310/article/details/87897247?utm_medium=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromMachineLearnPai2~default-9.control&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromMachineLearnPai2~default-9.control">golang_并发安全: slice和map并发不安全及解决方法</a></p>
+<h3 id="１０３、-线程自己独享什么"><a href="#１０３、-线程自己独享什么" class="headerlink" title="１０３、 线程自己独享什么"></a>１０３、 线程自己独享什么</h3><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/WangQYoho/article/details/52598859?utm_medium=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromMachineLearnPai2~default-11.baidujsUnder6&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromMachineLearnPai2~default-11.baidujsUnder6">进程？线程？到底共享了什么私有了什么</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/sinat_21026543/article/details/81912378?utm_medium=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromMachineLearnPai2~default-2.control&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromMachineLearnPai2~default-2.control">操作系统–多线程之间共享哪些资源？</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/pt666/article/details/70876410?utm_medium=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromMachineLearnPai2~default-9.control&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromMachineLearnPai2~default-9.control">堆和栈的概念和区别</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/hairetz/article/details/4141043?utm_medium=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromMachineLearnPai2~default-3.control&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromMachineLearnPai2~default-3.control">堆和栈的区别（转过无数次的文章）</a></p>
+<p><a target="_blank" rel="noopener" href="https://dablelv.blog.csdn.net/article/details/80849966?utm_medium=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~default-9.control&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~default-9.control">堆与栈的区别</a></p>
+<p><a target="_blank" rel="noopener" href="https://cuggz.blog.csdn.net/article/details/108063587">面试题：堆、栈、队列的区别以及使用场景</a></p>
+<p>栈可以用于字符匹配，数据反转等场景<br>队列可以用于任务队列，共享打印机等场景<br>堆可以用于优先队列，堆排序等场景</p>
+<p>所以堆与栈的区别很明显：</p>
+<p>1.栈内存存储的是局部变量而堆内存存储的是实体；</p>
+<p>2.栈内存的更新速度要快于堆内存，因为局部变量的生命周期很短；</p>
+<p>3.栈内存存放的变量生命周期一旦结束就会被释放，而堆内存存放的实体会被垃圾回收机制不定时的回收。</p>
+<h3 id="１０４、网络编程过程"><a href="#１０４、网络编程过程" class="headerlink" title="１０４、网络编程过程"></a>１０４、网络编程过程</h3><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/yjxsdzx/article/details/72652179">网络编程的一般步骤</a></p>
+<h3 id="１０６、看什么书"><a href="#１０６、看什么书" class="headerlink" title="１０６、看什么书"></a>１０６、看什么书</h3><h3 id="１０７、排行榜怎么实现"><a href="#１０７、排行榜怎么实现" class="headerlink" title="１０７、排行榜怎么实现"></a>１０７、排行榜怎么实现</h3><p><a target="_blank" rel="noopener" href="https://blog.51cto.com/u_5660061/2412498">实现排行榜功能</a></p>
+<h3 id="１０８、go的锁如何实现，用了什么cpu指令"><a href="#１０８、go的锁如何实现，用了什么cpu指令" class="headerlink" title="１０８、go的锁如何实现，用了什么cpu指令"></a>１０８、go的锁如何实现，用了什么cpu指令</h3><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_31967569/article/details/80987352">Go 中的锁源码实现：Mutex</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_41882200/article/details/115636769">1. go的锁如何实现，用了什么cpu指令</a></p>
+<h3 id="１０９、go的runtime如何实现"><a href="#１０９、go的runtime如何实现" class="headerlink" title="１０９、go的runtime如何实现"></a>１０９、go的runtime如何实现</h3><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/u010918487/article/details/81561321">golang 的runtime机制</a></p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/111370792">go runtime 简析</a></p>
+<p><a target="_blank" rel="noopener" href="https://studygolang.com/articles/10114">说说Golang的runtime</a></p>
+<h3 id="１１０、看过sql的连接池实现吗"><a href="#１１０、看过sql的连接池实现吗" class="headerlink" title="１１０、看过sql的连接池实现吗"></a>１１０、看过sql的连接池实现吗</h3><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/guobinhui/article/details/85157805?utm_medium=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~default-3.baidujsUnder6&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~default-3.baidujsUnder6">数据库连接池原理之(一)：通俗易懂的数据库连接池原理以及实现机制讲解</a></p>
+<h3 id="１１１、ctx包了解吗？有什么用？"><a href="#１１１、ctx包了解吗？有什么用？" class="headerlink" title="１１１、ctx包了解吗？有什么用？"></a>１１１、ctx包了解吗？有什么用？</h3><p><a target="_blank" rel="noopener" href="https://studygolang.com/articles/9517">golang中context包解读</a></p>
+<h3 id="１１２、go什么情况下会发生内存泄漏？（他说ctx没有cancel的时候，这个真不知道）"><a href="#１１２、go什么情况下会发生内存泄漏？（他说ctx没有cancel的时候，这个真不知道）" class="headerlink" title="１１２、go什么情况下会发生内存泄漏？（他说ctx没有cancel的时候，这个真不知道）"></a>１１２、go什么情况下会发生内存泄漏？（他说ctx没有cancel的时候，这个真不知道）</h3><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_44328662/article/details/89741782?utm_medium=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromMachineLearnPai2~default-2.baidujsUnder6&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromMachineLearnPai2~default-2.baidujsUnder6">Golang 内存泄漏场景</a></p>
+<h3 id="１１３、怎么实现协程完美退出？"><a href="#１１３、怎么实现协程完美退出？" class="headerlink" title="１１３、怎么实现协程完美退出？"></a>１１３、怎么实现协程完美退出？</h3><p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/79d27f200bcf">Golang并发：并发协程的优雅退出</a></p>
+<h3 id="１１４、智力题：1000瓶酒中有1瓶毒酒，10只老鼠，7天后毒性才发作，第8天要卖了，怎么求那瓶毒酒？"><a href="#１１４、智力题：1000瓶酒中有1瓶毒酒，10只老鼠，7天后毒性才发作，第8天要卖了，怎么求那瓶毒酒？" class="headerlink" title="１１４、智力题：1000瓶酒中有1瓶毒酒，10只老鼠，7天后毒性才发作，第8天要卖了，怎么求那瓶毒酒？"></a>１１４、智力题：1000瓶酒中有1瓶毒酒，10只老鼠，7天后毒性才发作，第8天要卖了，怎么求那瓶毒酒？</h3><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/ppppppppp2009/article/details/8072307">1000瓶酒其中1瓶有毒，10只老鼠找出毒酒</a></p>
+<h3 id="１１５、简单dp题，n-n矩阵从左上角到右下角有多少种走法（只限往下和往右走）"><a href="#１１５、简单dp题，n-n矩阵从左上角到右下角有多少种走法（只限往下和往右走）" class="headerlink" title="１１５、简单dp题，n*n矩阵从左上角到右下角有多少种走法（只限往下和往右走）"></a>１１５、简单dp题，n*n矩阵从左上角到右下角有多少种走法（只限往下和往右走）</h3><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/Code_7900x/article/details/78770814">给定一个矩阵m*n，从左上角开始每次只能向右或者向下走，最后到右下角的位置共有多少种路径</a></p>
+<h3 id="１１６、用channel实现定时器？（实际上是两个协程同步）"><a href="#１１６、用channel实现定时器？（实际上是两个协程同步）" class="headerlink" title="１１６、用channel实现定时器？（实际上是两个协程同步）"></a>１１６、用channel实现定时器？（实际上是两个协程同步）</h3><p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/245d9cbfe132?from=groupmessage@">Go并发编程之Channel和定时器</a></p>
+<h3 id="１１８、操作系统内存管理？进程通讯，为什么共享存储区效率最高"><a href="#１１８、操作系统内存管理？进程通讯，为什么共享存储区效率最高" class="headerlink" title="１１８、操作系统内存管理？进程通讯，为什么共享存储区效率最高"></a>１１８、操作系统内存管理？进程通讯，为什么共享存储区效率最高</h3><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/LU_ZHAO/article/details/105237107">【操作系统】 为什么说共享内存是最快的一种IPC方式呢？</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_39621075/article/details/111860621">进程间通信那种效率最高_进程间的三种通信方式，管道、消息队列、共享内存，哪一种的效率最高呢？…</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/alantu2018/p/8991409.html">linux内核剖析（十一）进程间通信之-共享内存Shared Memory</a></p>
+<h3 id="１１９、实现一个hashmap，解决hash冲突的方法，解决hash倾斜的方法"><a href="#１１９、实现一个hashmap，解决hash冲突的方法，解决hash倾斜的方法" class="headerlink" title="１１９、实现一个hashmap，解决hash冲突的方法，解决hash倾斜的方法"></a>１１９、实现一个hashmap，解决hash冲突的方法，解决hash倾斜的方法</h3><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/ptsx0607/article/details/68945883?utm_source=itdadao&utm_medium=referral">HashMap的实现原理及hash冲突解决方法</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/visant/article/details/80045154?utm_medium=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromMachineLearnPai2~default-13.baidujsUnder6&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromMachineLearnPai2~default-13.baidujsUnder6">https://blog.csdn.net/ptsx0607/article/details/68945883?utm_source=itdadao&amp;utm_medium=referral</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/u010039929/article/details/55044407?utm_medium=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~default-6.baidujsUnder6&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~default-6.baidujsUnder6">大数据常见问题之数据倾斜</a></p>
+<h3 id="１２０、怎么理解go的interface"><a href="#１２０、怎么理解go的interface" class="headerlink" title="１２０、怎么理解go的interface"></a>１２０、怎么理解go的interface</h3><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/justaipanda/article/details/43155949?utm_medium=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~default-8.baidujsUnder6&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~default-8.baidujsUnder6">golang技术随笔（一）深入理解interface</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/lwldcr/article/details/77370948?utm_medium=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~default-5.baidujsUnder6&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~default-5.baidujsUnder6">interface{} 与 []interface{}</a></p>
+<h3 id="１２１、100亿个数选top5，小根堆"><a href="#１２１、100亿个数选top5，小根堆" class="headerlink" title="１２１、100亿个数选top5，小根堆"></a>１２１、100亿个数选top5，小根堆</h3><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/sophia__yu/article/details/80216369">100亿个数中找出最大的前K个数（海量TopK问题）</a></p>
+<h3 id="１２２、数组和为n的数组对"><a href="#１２２、数组和为n的数组对" class="headerlink" title="１２２、数组和为n的数组对"></a>１２２、数组和为n的数组对</h3><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/lfri/p/12571013.html">在无序数组中所有发现和为sum的数对</a></p>
+<h3 id="１２４、redis容灾，备份，扩容"><a href="#１２４、redis容灾，备份，扩容" class="headerlink" title="１２４、redis容灾，备份，扩容"></a>１２４、redis容灾，备份，扩容</h3><p><a target="_blank" rel="noopener" href="https://zhanghuan.blog.csdn.net/article/details/80307827?utm_medium=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromMachineLearnPai2~default-8.baidujsUnder6&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromMachineLearnPai2~default-8.baidujsUnder6">Redis持久化机制和线上环境容灾备份与恢复</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_39940205/article/details/80536611">Redis 备份、容灾及高可用实战</a></p>
+<h3 id="１２５、跳跃表，为什么使用跳跃表而不使用红黑树"><a href="#１２５、跳跃表，为什么使用跳跃表而不使用红黑树" class="headerlink" title="１２５、跳跃表，为什么使用跳跃表而不使用红黑树"></a>１２５、跳跃表，为什么使用跳跃表而不使用红黑树</h3><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq9808/article/details/104865385">redis为什么选择了跳跃表而不是红黑树</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/everlose/p/13034513.html">为啥 Redis 使用跳表而不是红黑树</a></p>
+<h3 id="１２６、输入url后涉及什么"><a href="#１２６、输入url后涉及什么" class="headerlink" title="１２６、输入url后涉及什么"></a>１２６、输入url后涉及什么</h3><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_21993785/article/details/81188253?utm_medium=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromMachineLearnPai2~default-11.baidujsUnder6&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromMachineLearnPai2~default-11.baidujsUnder6">在浏览器中输入URL后，执行的全部过程。（一次完整的http请求过程）</a></p>
+<h3 id="１２７、tcp怎么找到哪个套接字"><a href="#１２７、tcp怎么找到哪个套接字" class="headerlink" title="１２７、tcp怎么找到哪个套接字"></a>１２７、tcp怎么找到哪个套接字</h3><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/renrenhappy/article/details/5928994">TCP如何区分监听套接字和已连接套接字</a></p>
+<h3 id="１２８、ipc方式，共享存储区原理"><a href="#１２８、ipc方式，共享存储区原理" class="headerlink" title="１２８、ipc方式，共享存储区原理"></a>１２８、ipc方式，共享存储区原理</h3><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/lyn_00/article/details/84789508">几种常见进程间通信（IPC）方式之共享存储</a></p>
+<h3 id="１３０、进程虚拟空间布局"><a href="#１３０、进程虚拟空间布局" class="headerlink" title="１３０、进程虚拟空间布局"></a>１３０、进程虚拟空间布局</h3><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/FreeeLinux/article/details/53782986?utm_medium=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~default-8.baidujsUnder6&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~default-8.baidujsUnder6">Linux虚拟地址空间布局以及进程栈和线程栈总结</a></p>
+<h3 id="１３１、进程状态转换"><a href="#１３１、进程状态转换" class="headerlink" title="１３１、进程状态转换"></a>１３１、进程状态转换</h3><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/sofia_fhx/article/details/88758007">操作系统-进程状态转换图</a></p>
+<h3 id="１３２、线程的栈在哪里分配"><a href="#１３２、线程的栈在哪里分配" class="headerlink" title="１３２、线程的栈在哪里分配"></a>１３２、线程的栈在哪里分配</h3><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/Hanoi_ahoj/article/details/105115117">操作系统】线程栈如何分配</a></p>
+<h3 id="１３３、多个线程读，一个线程写-一个int32会不会有问题，int64呢（这里面试官后来说了要看数据总线的位数，32位的话写int32没问题，int64就有问题）"><a href="#１３３、多个线程读，一个线程写-一个int32会不会有问题，int64呢（这里面试官后来说了要看数据总线的位数，32位的话写int32没问题，int64就有问题）" class="headerlink" title="１３３、多个线程读，一个线程写 一个int32会不会有问题，int64呢（这里面试官后来说了要看数据总线的位数，32位的话写int32没问题，int64就有问题）"></a>１３３、多个线程读，一个线程写 一个int32会不会有问题，int64呢（这里面试官后来说了要看数据总线的位数，32位的话写int32没问题，int64就有问题）</h3><p><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/434403546">golang在64位操作系统下，对int64类型全局变量多线程读写是否是线程安全的？需要加锁吗？</a></p>
+<p><a target="_blank" rel="noopener" href="https://bbs.csdn.net/topics/190072632">看似简单的问题：一个线程对int写，另一个线程对该int读，是否安全？</a></p>
+<h3 id="１３４、判断二叉树是否为满二叉树"><a href="#１３４、判断二叉树是否为满二叉树" class="headerlink" title="１３４、判断二叉树是否为满二叉树"></a>１３４、判断二叉树是否为满二叉树</h3><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_40938077/article/details/80471997?utm_medium=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromMachineLearnPai2~default-3.baidujsUnder6&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromMachineLearnPai2~default-3.baidujsUnder6">判断一个二叉树是否为完全二叉树</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.51cto.com/19940325/1834990">判断一棵树是否为完全二叉树</a></p>
+<h3 id="１３５、lru实现"><a href="#１３５、lru实现" class="headerlink" title="１３５、lru实现"></a>１３５、lru实现</h3><p><a target="_blank" rel="noopener" href="https://studygolang.com/articles/23183?fr=sidebar">Golang 实现LRU算法</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/u010647109/article/details/83746784">LRU算法的GO语言实现</a></p>
+<h3 id="１３６、一个大整数（字符串形式表示的），移动字符求比它大的数中最小的"><a href="#１３６、一个大整数（字符串形式表示的），移动字符求比它大的数中最小的" class="headerlink" title="１３６、一个大整数（字符串形式表示的），移动字符求比它大的数中最小的"></a>１３６、一个大整数（字符串形式表示的），移动字符求比它大的数中最小的</h3><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/wujunokay/article/details/12191043">整型数组处理算法（九）给定任意一个正整数，求比这个数大且最小的“不重复数”（性能优化）[2014百度笔试题]</a></p>
+<h3 id="１３７、点赞系统设计"><a href="#１３７、点赞系统设计" class="headerlink" title="１３７、点赞系统设计"></a>１３７、点赞系统设计</h3><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_34264849/article/details/84401198">通用点赞设计与实现</a></p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/golang/">golang</a>
+		  
+			<a href="/tags/%E9%9D%A2%E8%AF%95/">面试</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2021/08/20/%E5%A6%82%E4%BD%95%E9%81%BF%E5%85%8DGo%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%89%A7%E8%A1%8C%E4%BA%A7%E7%94%9F%E2%80%9C%E5%AD%A4%E5%84%BF%E2%80%9D%E8%BF%9B%E7%A8%8B%EF%BC%9F/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">如何避免Go命令行执行产生“孤儿”进程？</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2021/08/10/%E9%9D%A2%E8%AF%95%EF%BC%9Agolang-I/">
+        <span class="next-text nav-default">面试：golang-I</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+      </footer>
+    
+  </article>
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2021
+    <span class="footer-author">Russshare.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

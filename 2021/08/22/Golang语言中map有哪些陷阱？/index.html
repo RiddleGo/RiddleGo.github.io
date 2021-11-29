@@ -1,37 +1,239 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
-{% block page_class %}page-post-detail{% endblock %}
 
 
-{% block content %}
+  <meta name="description" content="Golang语言中map有哪些陷阱？"/>
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
-    </div>
+
+
+  <meta name="keywords" content="map," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+
+
+
+<link rel="canonical" href="https://riddlego.github.io/2021/08/22/Golang语言中map有哪些陷阱？/"/>
+
+
+<meta name="description" content="原文链接-感谢前辈 Golang 语言中 map 有哪些陷阱？01—介绍在 Golang 语言中，map 是一个无序的键值对的集合。其中，键是唯一的，并且键的类型必须是可以通过操作符 &#x3D;&#x3D; 进行比较的数据类型；值可以添加、查询和删除。 但是，在我们使用 Golang 语言中的 map 时，也是有一些陷阱需要我们注意。本文我们介绍一下 map 中有哪些陷阱。 02—map 未初始化未初始化的 map">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Golang语言中map有哪些陷阱？">
+<meta property="og:url" content="https://riddlego.github.io/2021/08/22/Golang%E8%AF%AD%E8%A8%80%E4%B8%ADmap%E6%9C%89%E5%93%AA%E4%BA%9B%E9%99%B7%E9%98%B1%EF%BC%9F/index.html">
+<meta property="og:site_name" content="RiddleGo">
+<meta property="og:description" content="原文链接-感谢前辈 Golang 语言中 map 有哪些陷阱？01—介绍在 Golang 语言中，map 是一个无序的键值对的集合。其中，键是唯一的，并且键的类型必须是可以通过操作符 &#x3D;&#x3D; 进行比较的数据类型；值可以添加、查询和删除。 但是，在我们使用 Golang 语言中的 map 时，也是有一些陷阱需要我们注意。本文我们介绍一下 map 中有哪些陷阱。 02—map 未初始化未初始化的 map">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-08-21T17:18:54.000Z">
+<meta property="article:modified_time" content="2021-08-21T17:28:25.507Z">
+<meta property="article:author" content="Russshare">
+<meta property="article:tag" content="map">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> Golang语言中map有哪些陷阱？ - RiddleGo </title>
+  <meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">RiddleGo</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          Golang语言中map有哪些陷阱？
+        
+      </h1>
+
+      <time class="post-time">
+          8月 22 2021
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/MAMEJQv_aoJ6sfrUT6Bqkw">原文链接-感谢前辈</a></p>
+<h2 id="Golang-语言中-map-有哪些陷阱？"><a href="#Golang-语言中-map-有哪些陷阱？" class="headerlink" title="Golang 语言中 map 有哪些陷阱？"></a>Golang 语言中 map 有哪些陷阱？</h2><h3 id="01—介绍"><a href="#01—介绍" class="headerlink" title="01—介绍"></a>01—介绍</h3><p>在 Golang 语言中，<strong>map 是一个无序的键值对的集合</strong>。其中，键是唯一的，<strong>并且键的类型必须是可以通过操作符 == 进行比较的数据类型；值可以添加、查询和删除。</strong></p>
+<p>但是，在我们使用 Golang 语言中的 map 时，也是有一些陷阱需要我们注意。本文我们介绍一下 map 中有哪些陷阱。</p>
+<h3 id="02—map-未初始化"><a href="#02—map-未初始化" class="headerlink" title="02—map 未初始化"></a>02—map 未初始化</h3><p>未初始化的 map，它的值是 nil。如果我们没有使用 Golang 内置函数 make 或者使用字面量初始化 map，<strong>直接给该 map 添加元素就会触发 panic</strong>，但是，对该 map 进行查询和删除操作不会报错。</p>
+<p>示例代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">var m1 map[string]string</span><br><span class="line">m2 :&#x3D; make(map[string]string, 5)</span><br><span class="line">m1[&quot;name&quot;] &#x3D; &quot;frank&quot;</span><br><span class="line">m2[&quot;name&quot;] &#x3D; &quot;lucy&quot;</span><br></pre></td></tr></table></figure>
+
+<p>阅读上面这段代码，给 m1 添加元素会触发 panic，给 m2 添加元素不会触发 panic。</p>
+<p>需要注意的是，值为 nil 的 map 和空 map 的长度都是 0；</p>
+<p><strong>使用内置函数 make 初始化 map 时，可以选择（可选）指定 map 的容量，这样可以减少内存分配的次数，提升应用程序的性能。</strong></p>
+<h3 id="03—key-是否存在"><a href="#03—key-是否存在" class="headerlink" title="03—key 是否存在"></a>03—key 是否存在</h3><p>在 Golang 语言中，我们通常需要使用 key 去查询 map 中的 value。不过这里可是有陷阱的，很多初学者会掉进去。</p>
+<p>Golang 语言中的 map 在查询元素时，实际上会有两个返回值，第一个返回值是 map 的 value 值，第二个返回值是布尔类型，用于判定该 key 是否存在，<strong>因为 Golang 语言中的 map 在查询指定 key 的 value 值时，如果该 key 不存在，也不会报错，将会返回该 map 的 value 相应类型的零值。</strong>这个隐藏的陷阱可是让不少初学者痛苦万分，所以我们在查询 map 指定 key 的 value 值时，最好是用两个变量接收返回值。</p>
+<p>示例代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">m :&#x3D; map[string]string&#123;</span><br><span class="line">    &quot;name&quot;: &quot;frank&quot;,</span><br><span class="line">    &quot;blog&quot;: &quot;golanghub.org&quot;,</span><br><span class="line">&#125;</span><br><span class="line">name, ok :&#x3D; m[&quot;name&quot;]</span><br><span class="line">if ok &#123;</span><br><span class="line">    fmt.Println(name)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="04—并发操作-map"><a href="#04—并发操作-map" class="headerlink" title="04—并发操作 map"></a>04—并发操作 map</h3><p><strong>在 Golang 语言中，map 的读写操作不是并发安全的，当有多个协程并发读写 map 时，可能会产生读写冲突，引发 panic，导致应用程序退出。</strong></p>
+<p>可能有读者会有疑问，Golang 官方为什么不把 map 设计为原生支持并发读写呢？实际上 Golang 社区也提出过这个问题，官方对该问题作出的回答是他们认为在大多数场景不需要并发读写 map，如果为了支持并发读写而原生使用互斥锁，那么将会降低 map 的性能，有些得不偿失，建议大家在需要并发读写 map 的场景中，自行使用互斥锁。</p>
+<p>但是，社区对于官方的这个回答并不满意，<strong>所以 Golang 官方在标准库 sync 包中加入了 sync.Map 包，大家除了自行使用互斥锁之外，也可以在并发读写 map 的场景中选择使用 sync.Map 包。</strong></p>
+<p>示例代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">type ConcurrentMap struct &#123;</span><br><span class="line">    data map[interface&#123;&#125;]interface&#123;&#125;</span><br><span class="line">    sync.RWMutex</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="05—总结"><a href="#05—总结" class="headerlink" title="05—总结"></a>05—总结</h3><p>本文我们主要介绍 Golang 语言中 map 的一些陷阱，并给出相应的解决方案，特别是初学者的读者朋友，需要注意这些小细节，避免在编码时掉进陷阱。关于 Map 的更多介绍文章，感兴趣的读者朋友们可以翻阅之前的文章。</p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/map/">map</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2021/08/22/Go%E8%AF%AD%E8%A8%80%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-1-%E6%90%AD%E5%BB%BAgRPC-HTTP%E7%9A%84%E5%8F%8C%E9%87%8D%E7%BD%91%E5%85%B3%E6%9C%8D%E5%8A%A1/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">Go语言微服务框架-1.搭建gRPC+HTTP的双重网关服务</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2021/08/21/%E4%BD%BF%E7%94%A8context%E3%80%81WaitGroup%E4%BC%98%E9%9B%85%E5%A4%84%E7%90%86goroutine/">
+        <span class="next-text nav-default">使用context、WaitGroup优雅处理goroutine</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+      </footer>
+    
+  </article>
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2021
+    <span class="footer-author">Russshare.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

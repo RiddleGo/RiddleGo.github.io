@@ -1,37 +1,281 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
-{% block page_class %}page-post-detail{% endblock %}
 
 
-{% block content %}
+  <meta name="description" content="LRU算法拆解与实现"/>
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
-    </div>
+
+
+  <meta name="keywords" content="算法,面试题," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+
+
+
+<link rel="canonical" href="https://riddlego.github.io/2021/06/28/LRU算法拆解与实现/"/>
+
+
+<meta name="description" content="计算机的缓存容量有限，如果缓存满了就要删除一些内容，给新内容腾位置。 但问题是，删除哪些内容呢？我们肯定希望删掉哪些没什么用的缓存，而把有用的数据继续留在缓存里，方便之后继续使用。那么，什么样的数据，我们判定为「有用的」的数据呢？ LRU 的全称是 Least Recently Used，也就是说我们认为最近使用过的数据应该是是「有用的」，很久都没用过的数据应该是无用的，内存满了就优先删那些很久没">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LRU算法拆解与实现">
+<meta property="og:url" content="https://riddlego.github.io/2021/06/28/LRU%E7%AE%97%E6%B3%95%E6%8B%86%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/index.html">
+<meta property="og:site_name" content="RiddleGo">
+<meta property="og:description" content="计算机的缓存容量有限，如果缓存满了就要删除一些内容，给新内容腾位置。 但问题是，删除哪些内容呢？我们肯定希望删掉哪些没什么用的缓存，而把有用的数据继续留在缓存里，方便之后继续使用。那么，什么样的数据，我们判定为「有用的」的数据呢？ LRU 的全称是 Least Recently Used，也就是说我们认为最近使用过的数据应该是是「有用的」，很久都没用过的数据应该是无用的，内存满了就优先删那些很久没">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/zigbeesecurity/01.jpg">
+<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/LRU/02.jpg">
+<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/LRU/03.jpg">
+<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/LRU/04.jpg">
+<meta property="article:published_time" content="2021-06-28T08:42:03.000Z">
+<meta property="article:modified_time" content="2021-06-29T10:00:29.434Z">
+<meta property="article:author" content="Russshare">
+<meta property="article:tag" content="算法">
+<meta property="article:tag" content="面试题">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/zigbeesecurity/01.jpg">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> LRU算法拆解与实现 - RiddleGo </title>
+  <meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">RiddleGo</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          LRU算法拆解与实现
+        
+      </h1>
+
+      <time class="post-time">
+          6月 28 2021
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <p>计算机的缓存容量有限，如果缓存满了就要删除一些内容，给新内容腾位置。</p>
+<p>但问题是，删除哪些内容呢？我们肯定希望删掉哪些没什么用的缓存，而把有用的数据继续留在缓存里，方便之后继续使用。那么，什么样的数据，我们判定为「有用的」的数据呢？</p>
+<p>LRU 的全称是 Least Recently Used，<strong>也就是说我们认为最近使用过的数据应该是是「有用的」，很久都没用过的数据应该是无用的，内存满了就优先删那些很久没用过的数据。</strong></p>
+<p>举个简单的例子，安卓手机都可以把软件放到后台运行，比如我先后打开了「设置」「手机管家」「日历」，那么现在他们在后台排列的顺序是这样的：<br><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/zigbeesecurity/01.jpg"></p>
+<p>但是这时候如果我访问了一下「设置」界面，那么「设置」就会被提前到第一个，变成这样：<br><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/LRU/02.jpg"></p>
+<p>假设我的手机只允许我同时开 3 个应用程序，现在已经满了。那么如果我新开了一个应用「时钟」，就必须关闭一个应用为「时钟」腾出一个位置，关那个呢？</p>
+<p>按照 LRU 的策略，就关最底下的「手机管家」，因为那是最久未使用的，然后把新开的应用放到最上面：<br><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/LRU/03.jpg"><br>现在你应该理解 LRU（Least Recently Used）策略了。当然还有其他缓存淘汰策略，比如不要按访问的时序来淘汰，而是按访问频率（LFU 策略）来淘汰等等，各有应用场景。本文讲解 LRU 算法策略。</p>
+<h3 id="一、LRU-算法描述"><a href="#一、LRU-算法描述" class="headerlink" title="一、LRU 算法描述"></a>一、LRU 算法描述</h3><p><strong>牛客</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">设计LRU缓存结构，该结构在构造时确定大小，假设大小为K，并有如下两个功能</span><br><span class="line">set(key, value)：将记录(key, value)插入该结构</span><br><span class="line">get(key)：返回key对应的value值</span><br><span class="line">[要求]</span><br><span class="line">set和get方法的时间复杂度为O(1)</span><br><span class="line">某个key的set或get操作一旦发生，认为这个key的记录成了最常使用的。</span><br><span class="line">当缓存的大小超过K时，移除最不经常使用的记录，即set或get最久远的。</span><br><span class="line">若opt&#x3D;1，接下来两个整数x, y，表示set(x, y)</span><br><span class="line">若opt&#x3D;2，接下来一个整数x，表示get(x)，若x未出现过或已被移除，则返回-1</span><br><span class="line">对于每个操作2，输出一个答案</span><br><span class="line"></span><br><span class="line">输入：</span><br><span class="line">[[1,1,1],[1,2,2],[1,3,2],[2,1],[1,4,4],[2,2]],3</span><br><span class="line"></span><br><span class="line">返回值：</span><br><span class="line">[1,-1]</span><br><span class="line"></span><br><span class="line">说明：</span><br><span class="line">第一次操作后：最常使用的记录为(&quot;1&quot;, 1)</span><br><span class="line">第二次操作后：最常使用的记录为(&quot;2&quot;, 2)，(&quot;1&quot;, 1)变为最不常用的</span><br><span class="line">第三次操作后：最常使用的记录为(&quot;3&quot;, 2)，(&quot;1&quot;, 1)还是最不常用的</span><br><span class="line">第四次操作后：最常用的记录为(&quot;1&quot;, 1)，(&quot;2&quot;, 2)变为最不常用的</span><br><span class="line">第五次操作后：大小超过了3，所以移除此时最不常使用的记录(&quot;2&quot;, 2)，加入记录(&quot;4&quot;, 4)，并且为最常使用的记录，然后(&quot;3&quot;, 2)变为最不常使用的记录</span><br></pre></td></tr></table></figure>
+
+
+<p><strong>力扣</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">146 题「LRU缓存机制」就是让你设计数据结构：</span><br><span class="line"></span><br><span class="line">首先要接收一个 capacity 参数作为缓存的最大容量，然后实现两个 API，一个是 put(key, val) 方法存入键值对，另一个是 get(key) 方法获取 key 对应的 val，如果 key 不存在则返回 -1。</span><br><span class="line"></span><br><span class="line">注意哦，get 和 put 方法必须都是 O(1) 的时间复杂度，我们举个具体例子来看看 LRU 算法怎么工作。</span><br></pre></td></tr></table></figure>
+<p>先整个栗子看看LRU算法是怎么工作</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;* 缓存容量为 2 *&#x2F;</span><br><span class="line">cache :&#x3D; &amp;LRUCache&#123;2&#125;;</span><br><span class="line">&#x2F;&#x2F; 你可以把 cache 理解成一个队列</span><br><span class="line">&#x2F;&#x2F; 假设左边是队头，右边是队尾</span><br><span class="line">&#x2F;&#x2F; 最近使用的排在队头，久未使用的排在队尾</span><br><span class="line">&#x2F;&#x2F; 圆括号表示键值对 (key, val)</span><br><span class="line"></span><br><span class="line">cache.put(1, 1);</span><br><span class="line">&#x2F;&#x2F; cache &#x3D; [(1, 1)]</span><br><span class="line"></span><br><span class="line">cache.put(2, 2);</span><br><span class="line">&#x2F;&#x2F; cache &#x3D; [(2, 2), (1, 1)]</span><br><span class="line"></span><br><span class="line">cache.get(1);       &#x2F;&#x2F; 返回 1</span><br><span class="line">&#x2F;&#x2F; cache &#x3D; [(1, 1), (2, 2)]</span><br><span class="line">&#x2F;&#x2F; 解释：因为最近访问了键 1，所以提前至队头</span><br><span class="line">&#x2F;&#x2F; 返回键 1 对应的值 1</span><br><span class="line"></span><br><span class="line">cache.put(3, 3);</span><br><span class="line">&#x2F;&#x2F; cache &#x3D; [(3, 3), (1, 1)]</span><br><span class="line">&#x2F;&#x2F; 解释：缓存容量已满，需要删除内容空出位置</span><br><span class="line">&#x2F;&#x2F; 优先删除久未使用的数据，也就是队尾的数据</span><br><span class="line">&#x2F;&#x2F; 然后把新的数据插入队头</span><br><span class="line"></span><br><span class="line">cache.get(2);       &#x2F;&#x2F; 返回 -1 (未找到)</span><br><span class="line">&#x2F;&#x2F; cache &#x3D; [(3, 3), (1, 1)]</span><br><span class="line">&#x2F;&#x2F; 解释：cache 中不存在键为 2 的数据</span><br><span class="line"></span><br><span class="line">cache.put(1, 4);    </span><br><span class="line">&#x2F;&#x2F; cache &#x3D; [(1, 4), (3, 3)]</span><br><span class="line">&#x2F;&#x2F; 解释：键 1 已存在，把原始值 1 覆盖为 4</span><br><span class="line">&#x2F;&#x2F; 不要忘了也要将键值对提前到队头</span><br></pre></td></tr></table></figure>
+<h3 id="二、LRU-算法设计"><a href="#二、LRU-算法设计" class="headerlink" title="二、LRU 算法设计"></a>二、LRU 算法设计</h3><p>分析上面的操作过程，**要让 put 和 get 方法的时间复杂度为 O(1)**，我们可以总结出 cache 这个数据结构必要的条件：</p>
+<p><strong>1</strong>、显然 cache 中的元素必须有时序，以区分最近使用的和久未使用的数据，当容量满了之后要删除最久未使用的那个元素腾位置。</p>
+<p><strong>2</strong>、我们要在 cache 中快速找某个 key 是否已存在并得到对应的 val；</p>
+<p><strong>3</strong>、<strong>每次访问 cache 中的某个 key，需要将这个元素变为最近使用的，也就是说 cache 要支持在任意位置快速插入和删除元素。</strong></p>
+<p>那么，什么数据结构同时符合上述条件呢？<strong>哈希表查找快，但是数据无固定顺序</strong>；<strong>链表有顺序之分，插入删除快，但是查找慢。</strong> 所以结合一下，形成一种新的数据结构：<strong>哈希链表 LinkedHashMap。</strong></p>
+<p><strong>LRU 缓存算法的核心数据结构就是哈希链表，双向链表和哈希表的结合体。这个数据结构长这样：</strong><br><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/LRU/04.jpg"></p>
+<p>借助这个结构，我们来逐一分析上面的 3 个条件：</p>
+<p><strong>1</strong>、如果我们每次默认<strong>从链表尾部添加元素</strong>，<strong>那么显然越靠尾部的元素就是最近使用的，越靠头部的元素就是最久未使用的。</strong></p>
+<p><strong>2</strong>、<strong>对于某一个 key，我们可以通过哈希表快速定位到链表中的节点，从而取得对应 val。</strong></p>
+<p><strong>3</strong>、<strong>链表显然是支持在任意位置快速插入和删除的，改改指针就行</strong>。<strong>只不过传统的链表无法按照索引快速访问某一个位置的元素，而这里借助哈希表，</strong>可以通过 key 快速映射到任意一个链表节点，然后进行插入和删除。</p>
+<p>也许读者会问，为什么要是双向链表，单链表行不行？另外，既然哈希表中已经存了 key，为什么链表中还要存 key 和 val 呢，只存 val 不就行了？</p>
+<p>想的时候都是问题，只有做的时候才有答案。这样设计的原因，必须等我们亲自实现 LRU 算法之后才能理解，所以我们开始看代码吧～<br>(答案在后面东哥有说哦！！！)</p>
+<h3 id="三、代码实现"><a href="#三、代码实现" class="headerlink" title="三、代码实现"></a>三、代码实现</h3><p>很多编程语言都有内置的哈希链表或者类似 LRU 功能的库函数，但是为了帮大家理解算法的细节，我们先自己造轮子实现一遍 LRU 算法，然后再使用 Java 内置的 LinkedHashMap 来实现一遍。（如果你是golang，别想了，轮子什么都得造，什么轮子都得自己造。）</p>
+<p>首先，我们把双链表的节点类写出来，为了简化，key 和 val 都认为是 int 类型：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">type Node struct &#123;</span><br><span class="line">	key  int</span><br><span class="line">	val  int</span><br><span class="line">	next *Node</span><br><span class="line">	prev *Node</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func (node Node) NewNode(k, v int) &#123;</span><br><span class="line">	node.key &#x3D; k</span><br><span class="line">	node.val &#x3D; v</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;然后依靠我们的 Node 类型构建一个双链表，实现几个 LRU 算法必须的 API：</span><br><span class="line"></span><br><span class="line">type DoubleList struct &#123;</span><br><span class="line">	&#x2F;&#x2F;头尾虚节点</span><br><span class="line">	head Node</span><br><span class="line">	tail Node</span><br><span class="line"></span><br><span class="line">	&#x2F;&#x2F;链表元素数</span><br><span class="line">	size int</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func (dl DoubleList) NewDoubleList() &#123;</span><br><span class="line">	&#x2F;&#x2F;初始化双向链表的数据</span><br><span class="line">	dl.head &#x3D; Node&#123;0, 0, nil, nil&#125;</span><br><span class="line">	dl.tail &#x3D; Node&#123;0, 0, nil, nil&#125;</span><br><span class="line">	dl.head.next &#x3D; &amp;dl.tail</span><br><span class="line">	dl.tail.prev &#x3D; &amp;dl.head</span><br><span class="line">	dl.size &#x3D; 0</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;在链表尾部添加节点x，时间O(1)</span><br><span class="line">func (dl DoubleList) addLast(x Node) &#123;</span><br><span class="line">	&#x2F;&#x2F;先操作新加的元素的指针</span><br><span class="line"></span><br><span class="line">	x.prev &#x3D; dl.tail.prev</span><br><span class="line">	x.next &#x3D; &amp;dl.tail</span><br><span class="line"></span><br><span class="line">	&#x2F;&#x2F;添加在tail之前  在tail.prev的之后</span><br><span class="line">	dl.tail.prev.next &#x3D; &amp;x</span><br><span class="line">	dl.tail.prev &#x3D; &amp;x</span><br><span class="line"></span><br><span class="line">	&#x2F;&#x2F;整个链表的长度+1</span><br><span class="line">	dl.size++</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 删除链表中的 x 节点（x 一定存在）</span><br><span class="line">&#x2F;&#x2F; 由于是双链表且给的是目标 Node 节点，时间 O(1)</span><br><span class="line">func (dl DoubleList) remove(x Node) &#123;</span><br><span class="line">	&#x2F;&#x2F;跳过结点</span><br><span class="line">	x.prev.next &#x3D; x.next</span><br><span class="line">	&#x2F;&#x2F;将后面的结点的前置节点  跳过该结点</span><br><span class="line">	x.next.prev &#x3D; x.prev</span><br><span class="line">	dl.size--</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 删除链表中第一个节点，并返回该节点，时间 O(1)</span><br><span class="line">func (dl DoubleList) removeFirst() Node &#123;</span><br><span class="line">	if dl.head.next &#x3D;&#x3D; nil &#123;</span><br><span class="line">		return Node&#123;&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	first :&#x3D; dl.head.next</span><br><span class="line">	dl.remove(*first)</span><br><span class="line"></span><br><span class="line">	return *first</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 返回链表长度，时间 O(1)</span><br><span class="line">func (dl DoubleList) sizeLen() int &#123;</span><br><span class="line">	return dl.size</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>到这里就能回答刚才「为什么必须要用双向链表」的问题了，<strong>因为我们需要删除操作。删除一个节点不光要得到该节点本身的指针，也需要操作其前驱节点的指针，而双向链表才能支持直接查找前驱，保证操作的时间复杂度 O(1)。</strong></p>
+<p><strong>注意我们实现的双链表 API 只能从尾部插入，也就是说靠尾部的数据是最近使用的，靠头部的数据是最久为使用的。</strong></p>
+<p>有了双向链表的实现，我们只需要在 LRU 算法中把它和哈希表结合起来即可，先搭出代码框架：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">type LRUCache struct &#123;</span><br><span class="line">	&#x2F;&#x2F; key -&gt; Node(key, val)</span><br><span class="line">	hashmap map[int]Node</span><br><span class="line">	&#x2F;&#x2F; Node(k1, v1) &lt;-&gt; Node(k2, v2)...</span><br><span class="line">	cache DoubleList</span><br><span class="line">	&#x2F;&#x2F;最大容量</span><br><span class="line">	cap int</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func (lc LRUCache) NewLRUCache(cap int) &#123;</span><br><span class="line">	lc.cap &#x3D; cap</span><br><span class="line">	lc.hashmap &#x3D; make(map[int]Node)</span><br><span class="line">	lc.cache &#x3D; DoubleList&#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>先不慌去实现 LRU 算法的 get 和 put 方法。由于我们要同时维护一个双链表 cache 和一个哈希表 map，<strong>很容易漏掉一些操作，比如说删除某个 key 时，在 cache 中删除了对应的 Node，但是却忘记在 map 中删除 key。</strong></p>
+<p><strong>解决这种问题的有效方法是：在这两种数据结构之上提供一层抽象 API。</strong></p>
+<p>说的有点玄幻，实际上很简单，<strong>就是尽量让 LRU 的主方法 get 和 put 避免直接操作 map 和 cache 的细节。</strong>我们可以先实现下面几个函数：<br>(我想这里的意思就是，我们上层的get和put方法是直接的调用，我们将多种的操作封装到底下的实现，这个就好比一个是我每次工作按十个按钮启动十个机器，但是我现在设置一个总线讲十个按钮连接（封装）到一个按钮，然后我按下这一个按钮好比按了十个按钮，这样也会避免我每次少按一个，这也是封装思想的一种体现。)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;封装的函数</span><br><span class="line">&#x2F;* 将某个 key 提升为最近使用的 *&#x2F;</span><br><span class="line">func (lc LRUCache) makeRecently(key int) &#123;</span><br><span class="line">	x :&#x3D; lc.hashmap[key]</span><br><span class="line">	&#x2F;&#x2F;先从链表删除这个元素</span><br><span class="line">	lc.cache.remove(x)</span><br><span class="line">	&#x2F;&#x2F;重新加到队尾</span><br><span class="line">	lc.cache.addLast(x)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;添加最近使用的元素</span><br><span class="line">func (lc LRUCache) addRecently(key, val int) &#123;</span><br><span class="line">	x :&#x3D; Node&#123;key, val, nil, nil&#125;</span><br><span class="line">	&#x2F;&#x2F; 链表尾部就是最近使用的元素</span><br><span class="line">	lc.cache.addLast(x)</span><br><span class="line">	&#x2F;&#x2F; 别忘了在 map 中添加 key 的映射</span><br><span class="line">	lc.hashmap[key] &#x3D; x</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;* 删除某一个 key *&#x2F;</span><br><span class="line">func (lc LRUCache) deleteKey(key int) &#123;</span><br><span class="line">	x :&#x3D; lc.hashmap[key]</span><br><span class="line">	&#x2F;&#x2F; 从链表中删除</span><br><span class="line">	lc.cache.remove(x)</span><br><span class="line">	&#x2F;&#x2F; 从 map 中删除</span><br><span class="line">	delete(lc.hashmap, key)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;* 删除最久未使用的元素 *&#x2F;</span><br><span class="line">func (lc LRUCache) removeLeastRecently() &#123;</span><br><span class="line">	&#x2F;&#x2F; 链表头部的第一个元素就是最久未使用的</span><br><span class="line">	deletedNode :&#x3D; lc.cache.removeFirst()</span><br><span class="line">	&#x2F;&#x2F; 同时别忘了从 map 中删除它的 key</span><br><span class="line">	deletedKey :&#x3D; deletedNode.key</span><br><span class="line">	delete(lc.hashmap, deletedKey)</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>这里就能回答之前的问答题「为什么要在链表中同时存储 key 和 val，而不是只存储 val」，注意 removeLeastRecently 函数中，我们需要用 deletedNode 得到 deletedKey。</p>
+<p><strong>也就是说，当缓存容量已满，我们不仅仅要删除最后一个 Node 节点，还要把 map 中映射到该节点的 key 同时删除，而这个 key 只能由 Node 得到。如果 Node 结构中只存储 val，那么我们就无法得知 key 是什么，就无法删除 map 中的键，造成错误。</strong></p>
+<p>上述方法就是简单的操作封装，调用这些函数可以避免直接操作 cache 链表和 map 哈希表，下面我先来实现 LRU 算法的 get 方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;LRU 算法的 get 方法</span><br><span class="line">func (lc LRUCache) get(key int) int &#123;</span><br><span class="line">	&#x2F;&#x2F;如果没有数据 就返回-1</span><br><span class="line">	if _, ok :&#x3D; lc.hashmap[key]; !ok &#123;</span><br><span class="line">		return -1</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	&#x2F;&#x2F;如果有该数据</span><br><span class="line">	&#x2F;&#x2F;将该数据提升为最近使用的</span><br><span class="line">	lc.makeRecently(key)</span><br><span class="line">	return lc.hashmap[key].val</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>put 方法稍微复杂一些，我们先来画个图搞清楚它的逻辑：</p>
+<p>图片</p>
+<p>这样我们可以轻松写出 put 方法的代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;LRU 算法的 put 方法</span><br><span class="line">func (lc LRUCache) put(key, val int) &#123;</span><br><span class="line">	&#x2F;&#x2F;</span><br><span class="line">	if _, ok :&#x3D; lc.hashmap[key]; ok &#123;</span><br><span class="line">		&#x2F;&#x2F;删除旧的数据</span><br><span class="line">		lc.deleteKey(key)</span><br><span class="line">		&#x2F;&#x2F;&#x2F;&#x2F; 新插入的数据为最近使用的数据</span><br><span class="line">		lc.addRecently(key, val)</span><br><span class="line">		return</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	if lc.cap &#x3D;&#x3D; lc.cache.sizeLen() &#123;</span><br><span class="line">		&#x2F;&#x2F; 删除最久未使用的元素</span><br><span class="line">		lc.removeLeastRecently()</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	&#x2F;&#x2F; 添加为最近使用的元素</span><br><span class="line">	lc.addRecently(key, val)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以上算是实现了LRU，但是牛客网刷题没法用啊，但是到这里你应该已经懂了思想，所以接下来我们就整一个能直接使用的。<br>这里就直接上代码了哈，比较LRU这种思想是统一的，实现的大概也是相同的，就不解释了，不过该注释的地方我还是会注释的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">type Node struct &#123;</span><br><span class="line">	key  int</span><br><span class="line">	val  int</span><br><span class="line">	next *Node</span><br><span class="line">	prev *Node</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func (node Node) NewNode(k, v int) &#123;</span><br><span class="line">	node.key &#x3D; k</span><br><span class="line">	node.val &#x3D; v</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;然后依靠我们的 Node 类型构建一个双链表，实现几个 LRU 算法必须的 API：</span><br><span class="line"></span><br><span class="line">type DoubleList struct &#123;</span><br><span class="line">	&#x2F;&#x2F;头尾虚节点</span><br><span class="line">	head Node</span><br><span class="line">	tail Node</span><br><span class="line">	&#x2F;&#x2F;链表元素数</span><br><span class="line">	size int</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func (dl DoubleList) NewDoubleList(k int) &#123;</span><br><span class="line">	&#x2F;&#x2F;初始化双向链表的数据</span><br><span class="line">	dl.head &#x3D; Node&#123;-1, -1, nil, nil&#125;</span><br><span class="line">	dl.tail &#x3D; Node&#123;-1, -1, nil, nil&#125;</span><br><span class="line">	dl.head.next &#x3D; &amp;dl.tail</span><br><span class="line">	dl.tail.prev &#x3D; &amp;dl.head</span><br><span class="line">	dl.size &#x3D; k</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">var hashmap &#x3D; make(map[int]Node)</span><br><span class="line"></span><br><span class="line">func (dl DoubleList) LRU(operator [][]int, k int) []int &#123;</span><br><span class="line">	dl.NewDoubleList(k)</span><br><span class="line">	if len(operator) &lt; 1 &#123;</span><br><span class="line">		return []int&#123;&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	res :&#x3D; make([]int, k)</span><br><span class="line"></span><br><span class="line">	for _, op :&#x3D; range operator &#123;</span><br><span class="line">		if op[0] &#x3D;&#x3D; 1 &#123;</span><br><span class="line">			dl.set(op[1], op[2])</span><br><span class="line">		&#125; else if op[0] &#x3D;&#x3D; 2 &#123;</span><br><span class="line">			value :&#x3D; dl.get(op[1])</span><br><span class="line">			res &#x3D; append(res, value)</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	return res</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;接下来就是实现set和get</span><br><span class="line">func (dl DoubleList) set(key, val int) &#123;</span><br><span class="line">	if _, ok :&#x3D; hashmap[key]; !ok &#123;</span><br><span class="line">		&#x2F;&#x2F;第一步：先封装成node节点的格式</span><br><span class="line">		node :&#x3D; Node&#123;key, val, nil, nil&#125;</span><br><span class="line">		&#x2F;&#x2F;第二部 映射到hashmap中</span><br><span class="line">		hashmap[key] &#x3D; node</span><br><span class="line">		&#x2F;&#x2F;第三步 放入链表</span><br><span class="line">		&#x2F;&#x2F;放入之前先检查</span><br><span class="line">		if dl.size &lt;&#x3D; 0 &#123;</span><br><span class="line">			dl.removeLast()</span><br><span class="line">		&#125; else &#123;</span><br><span class="line">			dl.size--</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		dl.insertFirst(node)</span><br><span class="line">	&#125; else &#123;</span><br><span class="line">		&#x2F;&#x2F;map中意见有了</span><br><span class="line">		node :&#x3D; hashmap[key]</span><br><span class="line">		node.val &#x3D; val</span><br><span class="line">		hashmap[key] &#x3D; node</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func (dl DoubleList) get(key int) int &#123;</span><br><span class="line">	ret :&#x3D; -1</span><br><span class="line">	if _, ok :&#x3D; hashmap[key]; ok &#123;</span><br><span class="line">		ret &#x3D; hashmap[key].val</span><br><span class="line">		&#x2F;&#x2F;记得取了以后一点要把数据放到最前的位置</span><br><span class="line">		dl.moveToHead(hashmap[key])</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	return ret</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;整个数据结构也是  最近访问的在头部  最后的在尾部</span><br><span class="line"></span><br><span class="line">func (dl DoubleList) moveToHead(node Node) &#123;</span><br><span class="line">	&#x2F;&#x2F;如果本来就是最新的  就保持</span><br><span class="line">	if node.prev &#x3D;&#x3D; &amp;dl.head &#123;</span><br><span class="line">		return</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	&#x2F;&#x2F;先把这个删了</span><br><span class="line">	node.prev.next &#x3D; node.next</span><br><span class="line">	node.next.prev &#x3D; node.prev</span><br><span class="line"></span><br><span class="line">	&#x2F;&#x2F;再插进头部</span><br><span class="line">	dl.insertFirst(node)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;移除最后的  最久没有使用的  链表尾部的</span><br><span class="line">func (dl DoubleList) removeLast() &#123;</span><br><span class="line">	&#x2F;&#x2F;删的时候 记得两个地方都需要删除</span><br><span class="line">	&#x2F;&#x2F;一是map</span><br><span class="line">	delete(hashmap, dl.tail.key)</span><br><span class="line"></span><br><span class="line">	&#x2F;&#x2F;二是链表</span><br><span class="line">	dl.tail.prev.prev.next &#x3D; &amp;dl.tail</span><br><span class="line">	dl.tail.prev &#x3D; dl.tail.prev.prev</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func (dl DoubleList) insertFirst(node Node) &#123;</span><br><span class="line">	node.prev &#x3D; &amp;dl.head</span><br><span class="line">	node.next &#x3D; dl.head.next</span><br><span class="line"></span><br><span class="line">	dl.head.next &#x3D; &amp;node</span><br><span class="line">	dl.head.next.prev &#x3D; &amp;node</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>提交了牛客网 还是会报错，这个系统的报错是无法识别LRU，离谱。算了估计是这个环境的问题，但是通过以上相信肯定还是有所收获。</p>
+<h3 id="打个总结"><a href="#打个总结" class="headerlink" title="打个总结"></a>打个总结</h3><p>提交个golang版本，其实这个主要是要学会构建list和map的新型数据结构，同时注意一下几个细节：<br>1、队尾是最久没有使用的，首是最新使用的（每个人可以自定义），通过位置表明体现LRU<br>2、每次的增改都要记得将数据放到最新使用的位置。<br>3、增加的时候记得判断是否容量到达了最大值<br>4、删除时记得map和list都需要删除<br>5、可以将细节封装到底层的函数，最后的put和get调用（这个在我编写嵌入式程序的时候也深有体会）<br>6、还有一些小细节记得小心，每次完成一个功能记得判断是否正确的实现了<br>无论是从底层小函数往上写，还是从上层函数往下写，其实都是可以的，看自己的思维模式。</p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/%E7%AE%97%E6%B3%95/">算法</a>
+		  
+			<a href="/tags/%E9%9D%A2%E8%AF%95%E9%A2%98/">面试题</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2021/06/29/golang%E4%B8%AD%E7%9A%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E4%BD%BF%E7%94%A8%E5%B0%8F%E6%84%9F%E6%82%9F/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">golang中的数据类型使用小感悟</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2021/06/28/%E6%9C%80%E5%B0%8F%E7%9A%84k%E4%B8%AA%E6%95%B0/">
+        <span class="next-text nav-default">最小的k个数</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+      </footer>
+    
+  </article>
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2021
+    <span class="footer-author">Russshare.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

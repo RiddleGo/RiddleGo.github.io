@@ -1,37 +1,224 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
-{% block page_class %}page-post-detail{% endblock %}
 
 
-{% block content %}
+  <meta name="description" content="软件工程：开发模式"/>
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
-    </div>
+
+
+  <meta name="keywords" content="设计模式,开发模式," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+
+
+
+<link rel="canonical" href="https://riddlego.github.io/2021/07/28/软件工程：开发模式/"/>
+
+
+<meta name="description" content="软件工程 开发模式1、瀑布模型、原型模型、喷泉模型和V模型的优缺点及适用场景https:&#x2F;&#x2F;blog.csdn.net&#x2F;qq_23381995&#x2F;article&#x2F;details&#x2F;61622590?utm_medium&#x3D;distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7Edefault-10.base&amp;a">
+<meta property="og:type" content="article">
+<meta property="og:title" content="软件工程：开发模式">
+<meta property="og:url" content="https://riddlego.github.io/2021/07/28/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%EF%BC%9A%E5%BC%80%E5%8F%91%E6%A8%A1%E5%BC%8F/index.html">
+<meta property="og:site_name" content="RiddleGo">
+<meta property="og:description" content="软件工程 开发模式1、瀑布模型、原型模型、喷泉模型和V模型的优缺点及适用场景https:&#x2F;&#x2F;blog.csdn.net&#x2F;qq_23381995&#x2F;article&#x2F;details&#x2F;61622590?utm_medium&#x3D;distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7Edefault-10.base&amp;a">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-07-28T11:33:33.000Z">
+<meta property="article:modified_time" content="2021-07-28T11:37:16.504Z">
+<meta property="article:author" content="Russshare">
+<meta property="article:tag" content="设计模式">
+<meta property="article:tag" content="开发模式">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> 软件工程：开发模式 - RiddleGo </title>
+  <meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">RiddleGo</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          软件工程：开发模式
+        
+      </h1>
+
+      <time class="post-time">
+          7月 28 2021
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h2 id="软件工程-开发模式"><a href="#软件工程-开发模式" class="headerlink" title="软件工程 开发模式"></a>软件工程 开发模式</h2><h3 id="1、瀑布模型、原型模型、喷泉模型和V模型的优缺点及适用场景"><a href="#1、瀑布模型、原型模型、喷泉模型和V模型的优缺点及适用场景" class="headerlink" title="1、瀑布模型、原型模型、喷泉模型和V模型的优缺点及适用场景"></a>1、瀑布模型、原型模型、喷泉模型和V模型的优缺点及适用场景</h3><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_23381995/article/details/61622590?utm_medium=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~default-10.base&amp;depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~default-10.base">https://blog.csdn.net/qq_23381995/article/details/61622590?utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7Edefault-10.base&amp;depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7Edefault-10.base</a></p>
+<h3 id="2、开发模式（敏捷开发，瀑布式开发，螺旋型开发，迭代开发，devOps开发）"><a href="#2、开发模式（敏捷开发，瀑布式开发，螺旋型开发，迭代开发，devOps开发）" class="headerlink" title="2、开发模式（敏捷开发，瀑布式开发，螺旋型开发，迭代开发，devOps开发）"></a>2、开发模式（敏捷开发，瀑布式开发，螺旋型开发，迭代开发，devOps开发）</h3><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/sinat_35566306/article/details/90404606?utm_medium=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromMachineLearnPai2~default-2.base&amp;depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromMachineLearnPai2~default-2.base">https://blog.csdn.net/sinat_35566306/article/details/90404606?utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-2.base&amp;depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-2.base</a></p>
+<h3 id="3、四个开发模型的优缺点"><a href="#3、四个开发模型的优缺点" class="headerlink" title="3、四个开发模型的优缺点"></a>3、四个开发模型的优缺点</h3><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/Dreamer_HUI/article/details/97994815">https://blog.csdn.net/Dreamer_HUI/article/details/97994815</a>  </p>
+<h3 id="4、瀑布开发模式和敏捷开发模式的区别和思考"><a href="#4、瀑布开发模式和敏捷开发模式的区别和思考" class="headerlink" title="4、瀑布开发模式和敏捷开发模式的区别和思考"></a>4、瀑布开发模式和敏捷开发模式的区别和思考</h3><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/vessalasd1/article/details/70142105?utm_medium=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromMachineLearnPai2~default-3.base&amp;depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromMachineLearnPai2~default-3.base">https://blog.csdn.net/vessalasd1/article/details/70142105?utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-3.base&amp;depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-3.base</a></p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a>
+		  
+			<a href="/tags/%E5%BC%80%E5%8F%91%E6%A8%A1%E5%BC%8F/">开发模式</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2021/07/28/pyqt-QGroupbox/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">pyqt-QGroupbox</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2021/07/27/Python%E8%B0%83%E7%94%A8C-%E7%A8%8B%E5%BA%8F/">
+        <span class="next-text nav-default">Python调用C++程序</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+      </footer>
+    
+  </article>
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2021
+    <span class="footer-author">Russshare.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

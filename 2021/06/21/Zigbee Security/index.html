@@ -1,37 +1,413 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
-{% block page_class %}page-post-detail{% endblock %}
 
 
-{% block content %}
+  <meta name="description" content="Zigbee Security"/>
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
-    </div>
+
+
+  <meta name="keywords" content="CC2530,加密通信," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+
+
+
+<link rel="canonical" href="https://riddlego.github.io/2021/06/21/Zigbee Security/"/>
+
+
+<meta name="description" content="1.1 ZigBee Security 架构在ZigBee协议栈架构中，安全是一个重要的关注点，ZigBee使用IEEE 802.15.4中基本的安全元素，比如： Advanced Encryption Standard (AES) 加密 Counter with CBC-MAC (CCM) 安全模型 • 128-bit AES 加密算法 • 美国国家标准与技术研究院认同的安全 • 定义密钥Key">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Zigbee Security">
+<meta property="og:url" content="https://riddlego.github.io/2021/06/21/Zigbee%20Security/index.html">
+<meta property="og:site_name" content="RiddleGo">
+<meta property="og:description" content="1.1 ZigBee Security 架构在ZigBee协议栈架构中，安全是一个重要的关注点，ZigBee使用IEEE 802.15.4中基本的安全元素，比如： Advanced Encryption Standard (AES) 加密 Counter with CBC-MAC (CCM) 安全模型 • 128-bit AES 加密算法 • 美国国家标准与技术研究院认同的安全 • 定义密钥Key">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/zigbeesecurity/01.png">
+<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/zigbeesecurity/02.png">
+<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/zigbeesecurity/03.png">
+<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/zigbeesecurity/04.png">
+<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/zigbeesecurity/05.png">
+<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/zigbeesecurity/06.png">
+<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/zigbeesecurity/07.png">
+<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/zigbeesecurity/08.png">
+<meta property="article:published_time" content="2021-06-21T10:41:27.000Z">
+<meta property="article:modified_time" content="2021-07-18T09:55:20.595Z">
+<meta property="article:author" content="Russshare">
+<meta property="article:tag" content="CC2530">
+<meta property="article:tag" content="加密通信">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/zigbeesecurity/01.png">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> Zigbee Security - RiddleGo </title>
+  <meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">RiddleGo</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          Zigbee Security
+        
+      </h1>
+
+      <time class="post-time">
+          6月 21 2021
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h3 id="1-1-ZigBee-Security-架构"><a href="#1-1-ZigBee-Security-架构" class="headerlink" title="1.1 ZigBee Security 架构"></a>1.1 ZigBee Security 架构</h3><p>在ZigBee协议栈架构中，安全是一个重要的关注点，ZigBee使用IEEE 802.15.4中基本的安全元素，比如：</p>
+<p>Advanced Encryption Standard (AES) 加密</p>
+<p>Counter with CBC-MAC (CCM) 安全模型</p>
+<p>• 128-bit AES 加密算法</p>
+<p>• 美国国家标准与技术研究院认同的安全</p>
+<p>• 定义密钥Key的类型 (Link key, Network key)</p>
+<p>• 定义密钥Key的创建和维护</p>
+<p>• 密钥Key能被硬链接到应用中//硬件加密</p>
+<p>• CCM* (Unified/simpler mode of operation)</p>
+<p>• Trust Center</p>
+<p>• 应用层可以定制安全//自主安全</p>
+<p>ZigBee协议栈架构</p>
+<p><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/zigbeesecurity/01.png"></p>
+<p>安全服务提供者（Security Service Provider）模块与应用层和网络层相互作用。即ZigBee在应用层和网络层实现对消息的安全加密。</p>
+<p>目前，ZigBee支持一种标准安全（Standard Security），在很早的ZigBee版本中支持限制性安全（Residential Security） 和高级安全（High Security），现在已经被弃用。</p>
+<p>• ZigBee在网络层和应用层实现对消息的加密。</p>
+<p>• ZigBee目前仅支持一种安全模式：标准安全模式。</p>
+<h4 id="1-2-Network-Layer-Security"><a href="#1-2-Network-Layer-Security" class="headerlink" title="1.2 Network Layer Security"></a>1.2 Network Layer Security</h4><p>本节描述了网络层安全（Network Layer Security）包含的相关概念。网络层安全属于标准安全，其不依赖于应用层，可以直接运行在ZigBee节点上。所有经ZigBee认证的设备都必须使用网络层安全，它提供一种基本的访问控制方法，用来控制节点是否允许其加入到某一特定的ZigBee网络。与网络层安全对应的是APS Layer Security（应用层安全）。</p>
+<h5 id="1-2-1-Network-Key"><a href="#1-2-1-Network-Key" class="headerlink" title="1.2.1 Network Key"></a>1.2.1 Network Key</h5><p>网络安全使用Network Key来对消息进行加密和解密。当设备成功加入ZigBee网络并被认证之后，该设备会对Network Key进行备份，并使用这个Network Key对网络消息进行加密和解密。每一个Network Key对应一个序列码（Sequence Number）。因此用序列码来识别某一个特定的Network Key。当Network Key更新时，序列码会增加1。序列码的好处是可以让设备识别当前的加密消息中使用了哪个Network Key。序列码的范围是0-255，当到达255之后，再从0开始计数。（这侧面证明，一个网络最多拥有256个设备）</p>
+<p>• 所有的ZigBee相关的Key的长度都是128 Bit。</p>
+<p>• 所有加入安全网络中的设备都拥有一个对Network Key的备份。</p>
+<h5 id="1-2-2-Hop-by-Hop-security"><a href="#1-2-2-Hop-by-Hop-security" class="headerlink" title="1.2.2 Hop by Hop security"></a>1.2.2 Hop by Hop security</h5><p>ZigBee的网络安全是基于逐跳（Hop by Hop）原理，每个路由在转发和处理数据包之前需要认证这个加密数据包是否有效。认证过程是先对安全数据包进行解密，然后验证数据包的完整性。在发送数据包给下一跳目标之前，路由使用其自己的网络参数（如源地址和帧数）重新对数据包进行加密。</p>
+<p>如果没有这种保护机制，黑客可以relay一个消息到网络中，并被路由到其他设备，因此造成网络资源的消耗。使用逐跳安全使得路由能阻止企图恶意消耗网络带宽的行为。</p>
+<p>• 网络层的逐跳（Hop by Hop）安全对应与APS层（应用层）的端到端（End-to-End）安全。</p>
+<h5 id="1-2-3-Package-security"><a href="#1-2-3-Package-security" class="headerlink" title="1.2.3 Package security"></a>1.2.3 Package security</h5><p>网络层的安全数据包结构如下：<br> <img src="https://gitee.com/psycho1900/miss-reddle/raw/master/zigbeesecurity/02.png"></p>
+<h6 id="1-2-3-1-Auxiliary-Header"><a href="#1-2-3-1-Auxiliary-Header" class="headerlink" title="1.2.3.1 Auxiliary Header"></a>1.2.3.1 Auxiliary Header</h6><p>辅助头（Auxiliary Header）包含一系列数据，包括</p>
+<ol>
+<li><p>   Key的类型（密钥其实有两种，网络层的加密，还有路由层），</p>
+</li>
+<li><p>   序列码（如果是Network Key的话），</p>
+</li>
+<li><p>   发送安全数据包节点的IEEE地址和帧数（Frame Counter）。</p>
+</li>
+</ol>
+<p>接收安全数据包节点使用辅助头的这些数据来进行认证和解密数据包。</p>
+<h6 id="1-2-3-2-Authentication-and-Encryption"><a href="#1-2-3-2-Authentication-and-Encryption" class="headerlink" title="1.2.3.2 Authentication and Encryption"></a>1.2.3.2 Authentication and Encryption</h6><ol>
+<li><p>   ZigBee使用128位的对称加密密钥（AES-128）来加密所有在网络层传输的数据。</p>
+</li>
+<li><p>   网络头和辅助头是以明文发送，但都经过认证的。</p>
+</li>
+<li><p>   而网络层的负载（Payload）同时被认证和加密。</p>
+</li>
+<li><p>   AES-128用来创建一个对整个消息的网络部分（包括NWK头、AUX头和Playload）的Hash运算，并将结果附加到消息的末尾，即Message Integrity Code（MIC，4个字节）。</p>
+</li>
+<li><p>   MIC用于对消息进行认证，以确保其没有被修改。</p>
+</li>
+<li><p>   接收节点在收到该消息后，对消息进行Hash运算得到新的MIC值，并将其与消息末尾的MIC值进行对比</p>
+</li>
+<li><p>   如果相同，则代表消息是一个有效安全数据包，如果不相同，则接收节点会忽略这个消息。<br><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/zigbeesecurity/03.png"></p>
+</li>
+</ol>
+<h6 id="1-2-3-3-The-Network-Security-Frame-Counter"><a href="#1-2-3-3-The-Network-Security-Frame-Counter" class="headerlink" title="1.2.3.3 The Network Security Frame Counter"></a>1.2.3.3 The Network Security Frame Counter</h6><ol>
+<li><p>   Frame Counter（帧数）包含在辅助头里面，用来避免Replay Attacks（重放攻击）。</p>
+</li>
+<li><p>   所有的设备都有自己的发送数据的帧数，并同时维护它们的相邻设备（Route）和子设备的帧数。</p>
+</li>
+<li><p>   当设备发送一个数据包时，发送帧数会增加1。</p>
+</li>
+<li><p>   接收设备接收数据包时，验证这个数据包的帧数是否在之前接收的数据的数据帧基础上增加1。</p>
+</li>
+<li><p>   如果这个帧数没有增加1，那么这个数据包被默默丢弃。</p>
+</li>
+<li><p>   如果接收设备不是最终的目的节点，只是一个路由设备，则数据包将被解密并被修改为该路由设备的帧数，然后重新加密并发送到下一跳。</p>
+</li>
+<li><p>   帧数是一个32 bit的数，在帧数到达最大值（0x80000000）之前，Network Key能被更新。如果本地设备的帧数大于0x80000000，帧数会被复位到0。</p>
+</li>
+</ol>
+<p>•    重放攻击（Replay Attacks）又称重播攻击、回放攻击或新鲜性攻击（Freshness Attacks），是指攻击者发送一个目的主机已接收过的包，特别是在认证的过程中，用于认证用户身份所接收的包，来达到欺骗系统的目的，主要用于身份认证过程，破坏认证的安全性。</p>
+<h6 id="1-2-3-4-Unencrypted-Network-Data（入网的时候是个不安全过程）"><a href="#1-2-3-4-Unencrypted-Network-Data（入网的时候是个不安全过程）" class="headerlink" title="1.2.3.4 Unencrypted Network Data（入网的时候是个不安全过程）"></a>1.2.3.4 Unencrypted Network Data（入网的时候是个不安全过程）</h6><p>所有正常的网络数据包均需要有网络安全（Network Key）和有效的帧数（Frame Counter）。 但有一种情况下是例外，当设备加入网络的过程中，此时设备没有Network Key。<br>在这种情况下，入网设备的消息依靠它的父节点来中转，直到它完全加入到网络并且已经认证。因此，任何其他的消息，如果在被接收时，没有网络层的安全，将被默默丢弃。<br>(后面实验涉及到了)</p>
+<h4 id="1-3-APS-Layer-Security"><a href="#1-3-APS-Layer-Security" class="headerlink" title="1.3 APS Layer Security"></a>1.3 APS Layer Security</h4><p>本小节描述了ZigBee APS层安全相关内容。</p>
+<h5 id="1-3-1-End-to-End-Security"><a href="#1-3-1-End-to-End-Security" class="headerlink" title="1.3.1 End-to-End Security"></a>1.3.1 End-to-End Security</h5><p>APS安全使用端对端的安全，当在网络中来发送安全的消息，除了源节点和目的节点之外没有其他节点能解密这个消息。这与网络层提供的逐跳（Hop by Hop）安全不同。APS安全使用分享的Key，只有源节点和目的节点知道这个Key，因此提供端对端的安全。</p>
+<p>APS安全和网络安全可以同时对消息进行加密，在这种情况下，先使用APS安全对消息进行加密，然后使用网络安全进行加密。</p>
+<p>APS层的安全数据包结构如下：<br> <img src="https://gitee.com/psycho1900/miss-reddle/raw/master/zigbeesecurity/04.png"></p>
+<h5 id="1-3-2-Link-Keys"><a href="#1-3-2-Link-Keys" class="headerlink" title="1.3.2 Link Keys"></a>1.3.2 Link Keys</h5><p>APS安全中使用的Key被称为Link Key。两个设备进行通信时，需要先建立Link Key之后才能发送APS安全数据。<br>ZigBee网络中共有两种类型的Link Key：</p>
+<p>Trust Center Link Key<br>Application Link Key。</p>
+<h6 id="1-3-2-1-Trust-Center-Link-Keys"><a href="#1-3-2-1-Trust-Center-Link-Keys" class="headerlink" title="1.3.2.1 Trust Center Link Keys"></a>1.3.2.1 Trust Center Link Keys</h6><p>Trust Center Link Key是一种特殊的Link Key，两个通信的设备中有一个设备是Trust Center。协议栈使用Trust Center Key（key）来发送和接收Trust Center(设备)的 APS 命令 消息<br>应用层也可以使用这个Trust Center Link Key来发送APS加密数据消息</p>
+<p>所有的网络中的设备必须有Link Key。<br>在Trust Center Network中，设备必须有Trust Center Link Key；<br>在Distributed Trust Center Network中被称为Distributed Trust Center Link Key。</p>
+<h6 id="1-3-2-2-Application-Link-Keys"><a href="#1-3-2-2-Application-Link-Keys" class="headerlink" title="1.3.2.2 Application Link Keys"></a>1.3.2.2 Application Link Keys</h6><p>Application Link Key是网络中两个节点之间建立的分享Key，并且这两个节点都不是Trust Center。<br>它对于应用层消息来讲是一种可选的安全机制。</p>
+<p>当一个设备和不同的设备进行通信的时候，该设备可以拥有不同的Application Link Key。<br>设备可以通过两种方式获取Application Link Key：</p>
+<p>• 设备预先设置Application Link Key。</p>
+<p>• 向Trust Center发送一个申请 Application Link Key的请求，Trust Center同时将Application Link Key发送给它和另一个设备。当请求Application Link Key时，设备向Trust Center发起一个请求，发送过程中使用 Trust Center Link Key进行加密。对这两个设备而言，Trust Center扮演第三方角色，Trust Center收到请求之后，同时给发起者和响应者发送Application Link Key，并分别以各自的Trust Center Link Key对该Key进行加密，之后它们之间就能进行安全的通信。请求建立一个Application Link Key的过程如下图：<br> <img src="https://gitee.com/psycho1900/miss-reddle/raw/master/zigbeesecurity/05.png"></p>
+<h5 id="1-3-3-Unencrypted-APS-Data"><a href="#1-3-3-Unencrypted-APS-Data" class="headerlink" title="1.3.3 Unencrypted APS Data"></a>1.3.3 Unencrypted APS Data</h5><p>APS层的安全是独立于网络层的安全，即两者之间是单独的，没有任何联系。（下面的实验涉及到）在协议栈中，当一些特定的安全消息（APS commands）发送或来自于Trust Center时需要APS层的安全。APS安全对于应用层来说是可选择的。应用层的消息在APS层不会自动加密，当接收者发现消息没有APS加密时，也不会被忽略。当消息没有APS层加密时，应用可以选择接受或拒绝该消息。例如：SE 规范中描述ZigBee簇消息必须要有APS层安全。</p>
+<h4 id="1-4-Trust-Center-Network"><a href="#1-4-Trust-Center-Network" class="headerlink" title="1.4 Trust Center Network"></a>1.4 Trust Center Network</h4><p>Trust Center Network即Centralized security network，它是由ZigBee coordinator形成，且其承担Trust Center的功能。每个节点加入到这个网络需要被Trust Center认证之后才能进行其他的网络相关的操作。一个安全的网络中，认证是由Trust Center（Trust center）授权。所有的设备加入网络时是临时的，直到联系上Trust Center，并Trust Center决定是否允许新的设备加入到网络中。新设备的父节点在Trust Center和新加入节点之间，作为中转的角色。直到新设备完全加入并且已经被认证，才意味着成功加入到安全的网络，之后只有经认证的消息能发送到该设备。<br>在一个新设备加入网络时，Trust Center完成以下三件事情：</p>
+<p>1） 发送当前Network Key的备份， 由新设备的父节点转发给该新设备。</p>
+<p>2）    当不允许新设备加入网络时，发送一个命令给新设备的父节点，从网络中移除该新设备。</p>
+<p>3） 忽略父节点的请求。如果父节点在2秒之内没有接收到Trust Center发来的Network Key，父节点默默地从网络中移除该设备。</p>
+<p>一旦新设备拥有了Network Key，则表明它已经完全加入到网络，因此能跟网络中的其它设备进行通信。当要对新设备进行认证的时候，需要Trust Center进行操作。而两个正常的设备之间发送消息是不需要Trust Center参与。</p>
+<h4 id="1-5-Distributed-Trust-Center-Networks"><a href="#1-5-Distributed-Trust-Center-Networks" class="headerlink" title="1.5 Distributed Trust Center Networks"></a>1.5 Distributed Trust Center Networks</h4><p>Distributed Trust Center Networks 即Distributed security network，其由ZigBee router创建的网络，因此网络中没有Trust Center。每个新设备加入到网络时，是由其父节点认证。在这种网络中，任何路由可以批准和认证想加入网络的新设备。这提供一种简单的入网机制，但以较少的安全网络的代价。</p>
+<p>• 使用Distributed Trust Center network还是Trust Center network在网络形成时就已经确定，网络建立之后，无法进行更换。</p>
+<h4 id="1-6-ZigBee-Key的思维导图"><a href="#1-6-ZigBee-Key的思维导图" class="headerlink" title="1.6 ZigBee Key的思维导图"></a>1.6 ZigBee Key的思维导图</h4><p> <img src="https://gitee.com/psycho1900/miss-reddle/raw/master/zigbeesecurity/06.png"></p>
+<p>接下来根据例程讲述一下密钥具体在代码中的变量和函数</p>
+<h5 id="1-Network-Key"><a href="#1-Network-Key" class="headerlink" title="1. Network Key"></a>1. Network Key</h5><p>在Z-Stack中就是其实就是DEFAULT_KEY-128位，用来保证网络层的安全传输。</p>
+<p>所有ZigBee网络中的设备都会对Network Key进行备份。</p>
+<p>Trust Center可以周期性的更新Network Key，如果设置为0，那么将由Coordinator生成一个随机值，通过APSME_TransportKeyReq()传输给入网的设备，</p>
+<p>如果变量zgPreConfigKeys为false，那么传送的就是生成的随机值或者不为0的值，如果变量zgPreConfigKeys为true，DEFAULT_KEY必须不为0，否则Coordinator生成的值和其他设备的值不一样，导致不能通信，两个变量的组合：</p>
+<p>a、    DEFAULT_KEY为0，zgPreConfigKeys为false：Network Key由Coordinator生成并传送给入网的设备；</p>
+<p>b、    DEFAULT_KEY不为0，zgPreConfigKeys为true，每个设备的DEFAULT_KEY和zgPreConfigKeys都必须一样，那么入网时Coordinator传送的Network Key为0（流程不可缺，但传到设备端后被丢弃，因为已经有了默认的Network Key）。</p>
+<h5 id="2-Trust-Center-Link-Key"><a href="#2-Trust-Center-Link-Key" class="headerlink" title="2. Trust Center Link Key"></a>2. Trust Center Link Key</h5><p>Trust Center Link Key，默认值为：5A 69 67 42 65 65 41 6C 6C 69 61 6E 63 65 30 39 (ZigBeeAlliance09)，用于集中式网络的加密传输，在Z-Stack中，如果需要使用Trust Center Link Key 加密传输，那么需要添加TC_LINKKEY_JOIN这个宏，在以下情况下使用Trust Center Link Key：</p>
+<p>a、当节点初次加入网络时，需加密传输Network Key到加入节点。</p>
+<p>b、当Network Key更新时，有些节点因未接收到新的Network Key，因此需要Rejoin。此时，Trust Center使用Trust Center Link Key加密 Network Key发送给该重新入网节点。</p>
+<p>c、路由器发送给Trust Center，或从Trust Center接收APS安全消息时，需要使用Trust Center Link Key。比如路由器发送节点加入或Rejoin的更新给Trust Center时，或由Trust Center发送到路由器以执行一些安全功能的命令时， 需要使用Trust Center Link Key。</p>
+<p>d、启用APS加密的应用程序单播消息，其中发送或接收设备是Trust Center。<br>由Trust Center决定如何管理Trust Center Link Key的选项。它可以为每个设备选择唯一的密钥 (从设备的IEEE地址导出的密钥)，或者对于所有的设备采用相同的全局密钥。<br>如果不使用默认的Link Key   那么标准设备是加不进这个网络的。</p>
+<h5 id="3-Distributed-security-global-link-key"><a href="#3-Distributed-security-global-link-key" class="headerlink" title="3. Distributed security global link key"></a>3. Distributed security global link key</h5><p>和Trust Center Link Key一样，只不过不是用在集中式网络而是用在分布式网络。</p>
+<h5 id="4-Install-code-link-key"><a href="#4-Install-code-link-key" class="headerlink" title="4. Install code link key"></a>4. Install code link key</h5><p>所有终端设备的Install code link key(128位)可以不同，用于生成Link Key，这个生成的Link Key和Trust Center Link Key的全局性（所有设备）不一样，取决于Install code link key。</p>
+<p>所以如果采用不同的Install code link key，那么在设备端和Trust Center需要设置一样的Install code link key，现在能实现这种方式入网的最佳方法应该是扫码入网，出厂时给每个设备贴一个二维码，入网时通过手机扫码将获取的Install code link key传送到Trust Center。</p>
+<h5 id="5-Application-link-key"><a href="#5-Application-link-key" class="headerlink" title="5. Application link key"></a>5. Application link key</h5><p>用于两个设备之间的应用层加密。</p>
+<h5 id="6-Device-Specific-trust-center-link-key"><a href="#6-Device-Specific-trust-center-link-key" class="headerlink" title="6. Device Specific trust center link key"></a>6. Device Specific trust center link key</h5><p>设备专用trust center link key，只能用于Trust Center和某个设备，应该也可以将所有设备的Device Specific trust center link key设置为一样。</p>
+<p>注意：<br>ZigBee 3.0中，无论是使用 Preconfigured Trust Center Link Key还是Install code link key，设备入网后都需要更新 Trust center link key，而且这个新的Key是唯一的，在Z-Stack-3.0.2中这个Key生成的代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;Generate key from the seed, which would be the unique key</span><br><span class="line">ZDSecMgrGenerateKeyFromSeed(TCLKDevEntry.extAddr,TCLKDevEntry.SeedShift_IcIndex,req.key);</span><br></pre></td></tr></table></figure>
+
+<p>更新失败则退出网络，如下图所示：<br> <img src="https://gitee.com/psycho1900/miss-reddle/raw/master/zigbeesecurity/07.png"></p>
+<p>更新Key的流程如下图：<br> <img src="https://gitee.com/psycho1900/miss-reddle/raw/master/zigbeesecurity/08.png"></p>
+<h4 id="1-7例程的实现"><a href="#1-7例程的实现" class="headerlink" title="1.7例程的实现"></a>1.7例程的实现</h4><p>AES 是一个新的可以用于保护电子数据的加密算法。明确地说，AES 是一个迭代的、对称密钥分组的密码，它可以使用128、192 和 256 位密钥，并且用 128 位（16字节）分组加密和解密数据。与公共密钥密码使用密钥对不同，对称密钥密码使用相同的密钥加密和解密数据。通过分组密码返回的加密数据 的位数与输入数据相同。迭代加密使用一个循环结构，在该循环中重复置换（permutations ）和替换(substitutions）输入数据。</p>
+<ol>
+<li><p>   将f8wConfig.cfg文件中设置为-DSECURE=1，这句话的意思是SECURE=1，这个变量在协议栈中作为if语句的条件使用，条件为真的语句中就是开启加密算法的函数。所以要使用第一步是要将这个参数设置为1。</p>
+</li>
+<li><p>   将ZGlobals.c中的uint8 zgPreConfigKeys = FLASE;（记得结合上面的解释哦）<br>修改为uint8 zgPreConfigKeys = TRUE;</p>
+</li>
+<li><p>   准备一个key，这个可以在函数nwk_global.c中修改：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">CONST byte defaultKey[SEC_KEY_LEN] &#x3D;</span><br><span class="line">&#123;</span><br><span class="line">#if defined ( APP_TP ) || defined ( APP_TP2 )</span><br><span class="line">  &#x2F;&#x2F; Key for ZigBee Conformance Testing</span><br><span class="line">  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,</span><br><span class="line">  0x89, 0x67, 0x45, 0x23, 0x01, 0xEF, 0xCD, 0xAB</span><br><span class="line">#else</span><br><span class="line">  &#x2F;&#x2F; Key for In-House Testing</span><br><span class="line">  0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,</span><br><span class="line">  0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F</span><br><span class="line">#endif</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p>到这里整个加密过程已经结束了，值得注意的是，如果使用了加密算法后，网络中所有的设备都需要开启这个算法，而且各个设备中的key必须相同。否则后果是很严重的，这会导致你的网络不能正常通讯，因为没有加密的数据或者相同key加密，这些数据网络是不认识的，根本就不会传到网络层。</p>
+<p>加密算法开启以后，如果你需要修改代码，就必须改变你的key，或者是擦除一次你的flash，否则会出现不可逾期的错误，而且没有规律。通常的做法是擦除flash一次，这样可以保证和整个网络的key相同。</p>
+<p>好了，做个测试吧，分别对一个协调器和一个路由器加密，并构成网络，并使用协调器广播数据，如果顺利的话，他们可以正常通讯了，然后你改变一下key，然后在写一个路由器，会出现什么结果呢？你会发现，key不同的路由器根本接收不到协调器广播的数据，路由器发送的数据网络也无法接收。然后再用协议分析仪查看一下，发现监听的数据和发送的数据根本就不同，因为我们加了密。</p>
+<p>实际测量：</p>
+<p>问：现建立一个简单zigbee网络，有两种设备：协调器、终端。现需对网络进行加密，使我的终端不会连到别人的网络，且别人的终端不会连到我的协调器。<br>实际调试过程中发现一些问题，如下：（zgPreConfigKeys = TRUE，）</p>
+<p>（加密：SECURE=1 ，ZG_SECURE_DYNAMIC=1；  不加密：SECURE=0 ，ZG_SECURE_DYNAMIC=0）</p>
+<p>1、若对协调器和终端都进行加密，且DEFAULT_KEY相同，则能成功组网，数据通信亦没有问题（抓包发现，数据都已被加密）。</p>
+<p>2、若对协调器和终端都进行加密，但DEFAULT_KEY不同，则终端仍能加入网络，但大约8秒钟之后，终端会退出网络（调试发现，终端实际是进行了一次复位）。</p>
+<p>3、若对协调器加密、对终端不加密，则终端仍能加入网络，但相互间发送的数据，对方都不会接收（或者接手之后直接丢弃）。</p>
+<p>要怎样做才能使未加密、或者KEY不同的终端无法加入网络？<br>要怎样做才能是我经过加密的终端不会加入到那些未加密、或者KEY不同的网络？</p>
+<p>答：这个过程是正常的，整个入网过程中，beacon requets/beacon/associate request /associate response 都是基于MAC的数据帧，所以没有加密的，在这个时候，如果使能加密的话，就会有认证这个过程，如果认证没有通过的话，节点不会发出来device Announce，所以入网没有成功。</p>
+<p>所以说评判入网有没有成功是看最后的有没有发device Announce出来的。所以说未加密和key不同的终端，虽然可以分配到短地址，但是认证不会通过的，最后还是会退网。同样经过加密的终端也不会加入到密码不对的网络里面去。</p>
+<p>答：根据测试，与你所讲的基本一致。似乎zstack只能在网络层进行加密（SECURE=1时，抓包发现网络层sec字段为1），而MAC层是不能加密的（SECURE=1时，抓包发现MAC层sec字段为0）。而入网过程都是在MAC层进行的，所以即使SECURE=1，这个过程仍然能通过。</p>
+<p>若终端和协调器KEY不同，终端若一段时间未通过认证，会自动退出网络。（这样就能使我的终端不会连到别人的网络）</p>
+<p>不过有一点好像不对：若终端未加密、协调器加密，我发现终端不会自动退出网络，且协调器也不会强制令终端退出，不过我的协调器在给这个终端分配了地址之后不会对它进行device Announce，且它们之后也不会进行通信（因为我的协调器已加密）。</p>
+<h4 id="1-8讲解关于zigbee的整个安全问题和加密"><a href="#1-8讲解关于zigbee的整个安全问题和加密" class="headerlink" title="1.8讲解关于zigbee的整个安全问题和加密"></a>1.8讲解关于zigbee的整个安全问题和加密</h4><p>在ZigBee技术中，采用对称密钥的安全机制，密钥由网络层和应用层根据实际应用需要生成，并对其进行管理、存储、传送和更新等。</p>
+<p>安全机制由安全服务提供层提供。然而值得注意的是，系统的整体安全性是在模板级定义的，这意味着模板应该定义某一特定网络中应该实现何种类型的安全。</p>
+<p>每一层(MAC、网络或应用层)都能被保护，为了降低存储要求，它们可以分享安全钥匙。SSP是通过ZD0进行初始化和配置的，要求实现高级加密标准(AES)。ZigBee规范定义了信任中心的用途。信任中心是在网络中分配安全钥匙的一种令人信任的设备。</p>
+<p>如果开发人员选择使用一个公共的ZigBee类，那么就已经为其应用做出了安全决策，因为在该类中已经对安全性进行了预定义。即使开发人员打算创建一个专有类的应用，他仍可以在若干个ZigBee预定义的栈类中挑选一种安全模式。</p>
+<p>在这个层上（网络层），开发人员需要决定这样一些问题：</p>
+<p>是否需要对数据帧的载荷进行加密</p>
+<p>附着在数据帧末尾的认证码长度(8、16或64位，等等)。</p>
+<p>基本的应用也许不需要认证，因而可以受益于一个较小的数据包载荷。这些数据完整性方面的选项使得开发人员可以在消息保护和额外开销之间进行权衡。</p>
+<p>开发人员还必须决定在哪个层上施加安全机制：在MAC层、网络层还是应用层。</p>
+<p>如果应用需要尽可能强大的安全保护，那么就在应用层保护它。</p>
+<p>此处实施的安全措施采用了一个会话密钥，它只能被另一个拥有该钥匙的设备所认证和解密。这种方法既能防止内部攻击也能防止外部攻击，但需要更多的存储器来实现它。</p>
+<p>在MAC层和网络层的安全性实质上服务于相同的目的：确保单跳传输的安全。</p>
+<p>MAC层仲裁对共享媒介的访问并控制相邻设备之间的单跳传输。</p>
+<p>ZigBee联盟添加了一个网络层安全选项以便加入在MAC层无法实现的功能，包括拒绝不能被验证的数据帧的能力。</p>
+<p>这两个安全层采用的是该网络上所有ZigBee设备都共享的全局密钥。</p>
+<p>MAC层和网络层的安全性适合需要防止对特定基础设施攻击的应用，例如防止一个非法设备恶意侵入网络。如果开发人员需要在两个设备之间建立路由，而该网络层的框架又是不安全的，那么非法设备可能会截取数据包。</p>
+<p>设备在ZigBee安全模式下工作时，可能使用安全方案。</p>
+<p>安全方案由一组在MAC层的帧上所执行的操作组成，以提供安全服务。</p>
+<p>安全方案的名称表明对称加密算法、模式和完整性码的长度。</p>
+<p>对于ZigBee技术标准中的所有安全方案，将使用的是高级加密标准(AES)算法。</p>
+<p>每一个实现安全的设备都将支持AES-CCM-64安全方案，并且可附加或者不附加其它安全方案，第一个安全方案都由一个字节表示。</p>
+<p><strong>ZigBee技术规定的安全方案将使用以下几种方法：</strong></p>
+<p>位顺序、</p>
+<p>串接、</p>
+<p>整数编码和计时器增加、</p>
+<p>计数模式(CTR)加密、</p>
+<p>密码链块-信息鉴权码(CBC-MAC)验证、</p>
+<p>计数模式和密码链块-信息鉴权码(CCM)的加密和验证、</p>
+<p>高级加密标准(AES)加密、</p>
+<p>个域网信息库(PIB)的安全要素。</p>
+<h4 id="附录知识"><a href="#附录知识" class="headerlink" title="附录知识"></a>附录知识</h4><p>Skr about AES</p>
+<p>AES的全称是Advanced Encryption Standard，即高级加密标准。该项目由美国国家标准技术研究所(NIST)于1997年开始启动并征集算法，在2000年确定采用Rijndael作为其最终算法，并于2001年被美国商务部部长批准为新的联邦信息加密标准(FIPS PUB 197)。<br>FIPS PUB 197中说明该标准的正式生效日期是2002年5月26日。该标准将被NIST每5年重新评估一次。</p>
+<p>AES采用的Rijndael算法的设计者是Joan Daemen(Proton World Int.l)和Vincent Rijmen(Katholieke Universiteit Leuven, ESAT-COSIC)，算法的名字来自两人名字中字母的组合。Rijndael是一个对称的分组加密算法，分组长度和密钥长度都可变,可分别单独指定为128比特，192比特和256比特。但AES中的数据分组长度只采用了Rijndael中的128比特，而不使用192和256比特，密钥长度和Rijndael的一致,也分别为128比特,192比特和256比特，并分别被称为AES-128,AES-192,AES-256。</p>
+<p>AES和传统的分组密码算法不同的是它不采用Feistel结构(比如DES中采用的)，而是采用了三个不同的可逆一致变换层：线性混合层、非线性层、密钥加层。</p>
+<p>70年代的数据加密标准（DES）加密。在安全领域，一个协议的生命周期这样长一般来说是件好事。但是，在数据加密标准的案例中，由于其瑕疵将多次重复地显示出来，这样长的生命期并不是件好事。</p>
+<p>它的后续标准来得太晚了。这些瑕疵是各种类型的攻击利用的基本的安全漏洞，其较短的密码长度意味着蛮力攻击可以在很短的时间内奏效。</p>
+<p>高级加密标准算法从很多方面解决了这些令人担忧的问题。实际上，攻击数据加密标准的那些手段对于高级加密标准算法本身并没有效果。如果采用真正的128位加密技术甚至256位加密技术，蛮力攻击要取得成功需要耗费相当长的时间。</p>
+<p>虽然高级加密标准也有不足的一面，但是，它仍是一个相对新的协议。因此，安全研究人员还没有那么多的时间对这种加密方法进行破解试验。我们可能会随时发现一种全新的攻击手段会攻破这种高级加密标准。至少在理论上存在这种可能性。</p>
+<p>当你考虑性能需求的时候，高级加密标准具有理论上的优势，因为这种算法效率更高，特别是与3DES加密标准相比更是如此。然而，需要指出的是，在这种协议应用的早期阶段，在硬件中对这种加密算法的支持还没有像硬件支持老式的3DES算法那样成熟。因此，你可能会发现在某些平台上，3DES在数据吞吐量方面仍比AES-256速度快。在有些平台上，AES-256的速度快一些。正如你怀疑的那样，AES-128总是比AES-256速度快一些。在对各类厂商的市场营销材料进行了快速调查之后发现，数据吞吐量的差别通常在10%至30%之间。</p>
+<p>所以同以往一样，各个机构采用这个新标准的合适的时间都是不同的。一些机构认为，额外的安全功能值得牺牲一点性能。有些机构需要做好预算才能购买新的支持高级加密标准的硬件产品。要记住，升级将会提高性能。在任何情况下，你在选择一个产品之前都要做好充分的准备。</p>
+<p>具体AES加密了解：<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_28205153/article/details/55798628">https://blog.csdn.net/qq_28205153/article/details/55798628</a></p>
+<p>C#AES算法的实现：<a target="_blank" rel="noopener" href="https://blog.csdn.net/guo2777/article/details/1791399">https://blog.csdn.net/guo2777/article/details/1791399</a></p>
+<p>C#的DES算法实现：<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/zhoufoxcn/article/details/1497095?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-6.nonecase&amp;depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-6.nonecase">https://blog.csdn.net/zhoufoxcn/article/details/1497095?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-6.nonecase&amp;depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-6.nonecase</a></p>
+<p>以上的文章来自以上非常优秀的博客<br>我转载整理综合而成，如果有不合理欢迎伙伴们指正<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/lhf0921/article/details/4769087?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-3.nonecase&amp;depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-3.nonecase">https://blog.csdn.net/lhf0921/article/details/4769087?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-3.nonecase&amp;depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-3.nonecase</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/mm327596194/articles/7098009.html">https://www.cnblogs.com/mm327596194/articles/7098009.html</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_21352095/article/details/83215162">https://blog.csdn.net/qq_21352095/article/details/83215162</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/stonerme/article/details/53406530">https://blog.csdn.net/stonerme/article/details/53406530</a></p>
+<p><em><strong>以上就是全部内容，希望对你有所帮助！！！</strong></em></p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/CC2530/">CC2530</a>
+		  
+			<a href="/tags/%E5%8A%A0%E5%AF%86%E9%80%9A%E4%BF%A1/">加密通信</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2021/06/21/Zigbee%E8%B7%AF%E7%94%B1%E5%88%86%E6%9E%90/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">Zigbee路由分析</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2021/06/21/MD5-hash%E7%9A%84%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0/">
+        <span class="next-text nav-default">MD5_hash的原理与实现</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+      </footer>
+    
+  </article>
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2021
+    <span class="footer-author">Russshare.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

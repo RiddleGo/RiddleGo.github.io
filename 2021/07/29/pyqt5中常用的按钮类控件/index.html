@@ -1,37 +1,250 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
-{% block page_class %}page-post-detail{% endblock %}
 
 
-{% block content %}
+  <meta name="description" content="pyqt5中常用的按钮类控件"/>
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
-    </div>
+
+
+  <meta name="keywords" content="pyqt,python,QPushButton,QRadioButton,QCheckBox,QToolButton," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+
+
+
+<link rel="canonical" href="https://riddlego.github.io/2021/07/29/pyqt5中常用的按钮类控件/"/>
+
+
+<meta name="description" content="pyqt5中常用的按钮类控件有QPushButton、QRadioButton、QCheckBox、QToolButton等。这些按钮类的基类都是QAbstracButton类。所以这些类有部分方法是相同的。 为更好的阅读体验，原文链接 1、通用的方法有方法|                描述|:–:|—:isDown()|           判断按钮是否按下isChecked()|">
+<meta property="og:type" content="article">
+<meta property="og:title" content="pyqt5中常用的按钮类控件">
+<meta property="og:url" content="https://riddlego.github.io/2021/07/29/pyqt5%E4%B8%AD%E5%B8%B8%E7%94%A8%E7%9A%84%E6%8C%89%E9%92%AE%E7%B1%BB%E6%8E%A7%E4%BB%B6/index.html">
+<meta property="og:site_name" content="RiddleGo">
+<meta property="og:description" content="pyqt5中常用的按钮类控件有QPushButton、QRadioButton、QCheckBox、QToolButton等。这些按钮类的基类都是QAbstracButton类。所以这些类有部分方法是相同的。 为更好的阅读体验，原文链接 1、通用的方法有方法|                描述|:–:|—:isDown()|           判断按钮是否按下isChecked()|">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/QPushButton.png">
+<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/QRadIoButton.png">
+<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/QCheckBox.png">
+<meta property="article:published_time" content="2021-07-29T06:06:34.000Z">
+<meta property="article:modified_time" content="2021-07-29T06:17:37.049Z">
+<meta property="article:author" content="Russshare">
+<meta property="article:tag" content="pyqt">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="QPushButton">
+<meta property="article:tag" content="QRadioButton">
+<meta property="article:tag" content="QCheckBox">
+<meta property="article:tag" content="QToolButton">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/QPushButton.png">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> pyqt5中常用的按钮类控件 - RiddleGo </title>
+  <meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">RiddleGo</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          pyqt5中常用的按钮类控件
+        
+      </h1>
+
+      <time class="post-time">
+          7月 29 2021
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <p>pyqt5中常用的按钮类控件有QPushButton、QRadioButton、QCheckBox、QToolButton等。这些按钮类的基类都是QAbstracButton类。所以这些类有部分方法是相同的。</p>
+<p>为更好的阅读体验，<a target="_blank" rel="noopener" href="https://www.cnblogs.com/chuanxiaopang/p/10547908.html">原文链接</a></p>
+<h3 id="1、通用的方法有"><a href="#1、通用的方法有" class="headerlink" title="1、通用的方法有"></a>1、通用的方法有</h3><p>方法|                描述<br>|:–:|—:<br>isDown()|           判断按钮是否按下<br>isChecked()|          返回布尔值，判断按钮是否标记，该方法与setChecAble（）联合使用<br>isEnabled()|                   设置按钮是否禁用。禁用时按钮为灰色，参数为布尔值。注意这个单词的写法，网上有些教程错误的少写了一个d<br>isCheckAble()     |  设置按钮是否可标记，参数为布尔值<br>setAutoRepeat()    |  参数为True时，该按钮可以长时间被按钮，连续执行槽函数</p>
+<h3 id="2、QpushButton"><a href="#2、QpushButton" class="headerlink" title="2、QpushButton"></a>2、QpushButton</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line">1 import sys,os</span><br><span class="line"> 2 from PyQt5.QtWidgets import QWidget,QPushButton,QApplication,QVBoxLayout,QHBoxLayout</span><br><span class="line"> 3 from PyQt5.QtGui import QIcon,QPixmap</span><br><span class="line"> 4 </span><br><span class="line"> 5 path &#x3D; os.path.dirname(os.path.dirname(os.path.dirname(__file__)))</span><br><span class="line"> 6 </span><br><span class="line"> 7 class MyWindow(QWidget):</span><br><span class="line"> 8 </span><br><span class="line"> 9     def __init__(self):</span><br><span class="line">10         super().__init__()</span><br><span class="line">11         self.initUI()</span><br><span class="line">12 </span><br><span class="line">13     def initUI(self):</span><br><span class="line">14         self.setWindowTitle(&#39;PushButton示例&#39;)</span><br><span class="line">15         self.setWindowIcon(QIcon(r&#39;%s\4.图标素材\chuan.ico&#39; % path))</span><br><span class="line">16         self.setGeometry(600,300,450,300)</span><br><span class="line">17 </span><br><span class="line">18         self.btn1 &#x3D; QPushButton(&#39;按键一&#39;)</span><br><span class="line">19         self.btn1.setCheckable(True) #默认为False。这是为True时，按钮会保持按下状态</span><br><span class="line">20         self.btn1.clicked.connect(lambda:self.btnstate(self.btn1))</span><br><span class="line">21 </span><br><span class="line">22         self.btn2 &#x3D; QPushButton(&#39;按键二&#39;)</span><br><span class="line">23         self.btn2.setIcon(QIcon(QPixmap(r&#39;%s\4.图标素材\python.jpg&#39; % path)))  #设置按钮的图标</span><br><span class="line">24         self.btn2.clicked.connect(lambda:self.btnstate(self.btn2))</span><br><span class="line">25 </span><br><span class="line">26         self.btn3 &#x3D; QPushButton(&#39;Disabled&#39;)</span><br><span class="line">27         self.btn3.clicked.connect(lambda:self.btnsetdisabled(self.btn2))</span><br><span class="line">28         self.btn3.isEnabled()</span><br><span class="line">29         self.btn3.clicked.connect(lambda:self.btnstate(self.btn3))</span><br><span class="line">30 </span><br><span class="line">31         self.btn4 &#x3D; QPushButton(&#39;按键四&#39;)</span><br><span class="line">32         self.btn4.setCheckable(True)</span><br><span class="line">33         self.btn4.clicked.connect(lambda:self.btnstate(self.btn4))</span><br><span class="line">34 </span><br><span class="line">35         vbx &#x3D; QVBoxLayout()</span><br><span class="line">36         vbx.addWidget(self.btn1)</span><br><span class="line">37         vbx.addWidget(self.btn2)</span><br><span class="line">38         vbx.addWidget(self.btn3)</span><br><span class="line">39         vbx.addWidget(self.btn4)</span><br><span class="line">40 </span><br><span class="line">41         hbx &#x3D; QHBoxLayout()</span><br><span class="line">42         hbx.addStretch(1)</span><br><span class="line">43         hbx.addLayout(vbx)</span><br><span class="line">44         hbx.addStretch(1)</span><br><span class="line">45         self.setLayout(hbx)</span><br><span class="line">46 </span><br><span class="line">47     def btnstate(self,btn):</span><br><span class="line">48         if btn.isChecked():</span><br><span class="line">49             print(btn.text()+&#39;被按下&#39;)</span><br><span class="line">50         else:</span><br><span class="line">51             print(btn.text()+&#39;没有按下&#39;)</span><br><span class="line">52 </span><br><span class="line">53     def btnsetdisabled(self,btn):</span><br><span class="line">54         if btn.isEnabled():</span><br><span class="line">55             btn.setEnabled(False)</span><br><span class="line">56         else:</span><br><span class="line">57             btn.setEnabled(True)</span><br><span class="line">58 </span><br><span class="line">59 </span><br><span class="line">60 if __name__ &#x3D;&#x3D; &#39;__main__&#39;:</span><br><span class="line">61     app &#x3D; QApplication(sys.argv)</span><br><span class="line">62     win &#x3D; MyWindow()</span><br><span class="line">63     win.show()</span><br><span class="line">64     sys.exit(app.exec_())</span><br><span class="line"></span><br><span class="line">QPushButton示例</span><br></pre></td></tr></table></figure>
+
+<p>效果图如下：<br><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/QPushButton.png"></p>
+<h3 id="3、QRadIoButton"><a href="#3、QRadIoButton" class="headerlink" title="3、QRadIoButton"></a>3、QRadIoButton</h3><p>QRadIoButton是一种单选按钮，只有checked和unchecked两个状态，信号也是在切换单选按钮（开/关）时发射的。单选常用于“多选一”的场景，也就是说它默认是独占的。对于继承同一个弗雷QWidget的多个单选按钮，他们属于同一个按钮组合，用户最多只能选择其中一个。如果在同一个父组件下要用到多个独占的按钮组合，则需要将他们放在QGroupBox或QButtonBox中。而在实际中，一般只有状态改变时才会响应信号，所以常用于状态监控。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">1 import sys,os</span><br><span class="line"> 2 from PyQt5.QtWidgets import QWidget,QRadioButton,QApplication,QVBoxLayout,QHBoxLayout,QGroupBox,QLabel,QLineEdit</span><br><span class="line"> 3 from PyQt5.QtGui import QIcon,QPixmap</span><br><span class="line"> 4 </span><br><span class="line"> 5 path &#x3D; os.path.dirname(os.path.dirname(os.path.dirname(__file__)))</span><br><span class="line"> 6 </span><br><span class="line"> 7 class MyWindow(QWidget):</span><br><span class="line"> 8 </span><br><span class="line"> 9     def __init__(self):</span><br><span class="line">10         super().__init__()</span><br><span class="line">11         self.initUI()</span><br><span class="line">12 </span><br><span class="line">13     def initUI(self):</span><br><span class="line">14         self.setWindowTitle(&#39;QRadioButton示例&#39;)</span><br><span class="line">15         self.setWindowIcon(QIcon(r&#39;%s\4.图标素材\chuan.ico&#39; % path))</span><br><span class="line">16         self.setGeometry(600,300,400,150)</span><br><span class="line">17 </span><br><span class="line">18         rbtn1 &#x3D; QRadioButton(&#39;男&#39;,self)</span><br><span class="line">19         rbtn1.move(20,20)</span><br><span class="line">20         rbtn1.toggled.connect(lambda:self.getsex(rbtn1))</span><br><span class="line">21         rbtn2 &#x3D; QRadioButton(&#39;女&#39;,self)</span><br><span class="line">22         rbtn2.move(20,50)</span><br><span class="line">23         rbtn2.toggled.connect(lambda: self.getsex(rbtn2))</span><br><span class="line">24 </span><br><span class="line">25         lbl &#x3D; QLabel(&#39;您的性别是：&#39;,self)</span><br><span class="line">26         lbl.move(150,20)</span><br><span class="line">27         self.lineEdit &#x3D; QLineEdit(self)</span><br><span class="line">28         self.lineEdit.move(150,50)</span><br><span class="line">29 </span><br><span class="line">30     def getsex(self,rbtn):</span><br><span class="line">31         sender &#x3D; self.sender()</span><br><span class="line">32         self.lineEdit.setText(sender.text())</span><br><span class="line">33 </span><br><span class="line">34 </span><br><span class="line">35 if __name__ &#x3D;&#x3D; &#39;__main__&#39;:</span><br><span class="line">36     app &#x3D; QApplication(sys.argv)</span><br><span class="line">37     win &#x3D; MyWindow()</span><br><span class="line">38     win.show()</span><br><span class="line">39     sys.exit(app.exec_())</span><br><span class="line">QRadioButton示例</span><br></pre></td></tr></table></figure>
+
+<p>效果图如下：<br><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/QRadIoButton.png"></p>
+<h3 id="4、QCheckBox"><a href="#4、QCheckBox" class="headerlink" title="4、QCheckBox"></a>4、QCheckBox</h3><p>QCheckBox即带有标签的复选框，它同样具有两种状态的控件：开和关。复选框通常用于表示应用程序可以启用或禁用的功能，和单选框不同之处在于可以“多选”</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line">1 import sys,os</span><br><span class="line"> 2 from PyQt5.QtWidgets import QWidget,QCheckBox,QApplication,QGridLayout,QLabel,QLineEdit</span><br><span class="line"> 3 from PyQt5.QtGui import QIcon</span><br><span class="line"> 4 </span><br><span class="line"> 5 path &#x3D; os.path.dirname(os.path.dirname(os.path.dirname(__file__)))</span><br><span class="line"> 6 Items&#x3D;[]</span><br><span class="line"> 7 </span><br><span class="line"> 8 class MyWindow(QWidget):</span><br><span class="line"> 9 </span><br><span class="line">10     def __init__(self):</span><br><span class="line">11         super().__init__()</span><br><span class="line">12         self.initUI()</span><br><span class="line">13 </span><br><span class="line">14     def initUI(self):</span><br><span class="line">15         self.setWindowTitle(&#39;QCheckBox示例&#39;)</span><br><span class="line">16         self.setWindowIcon(QIcon(r&#39;%s\4.图标素材\chuan.ico&#39; % path))</span><br><span class="line">17         self.setGeometry(600,300,350,300)</span><br><span class="line">18 </span><br><span class="line">19         cb1 &#x3D; QCheckBox(&#39;挖掘机&#39;)</span><br><span class="line">20         cb2 &#x3D; QCheckBox(&#39;平地机&#39;)</span><br><span class="line">21         cb3 &#x3D; QCheckBox(&#39;装载机&#39;)</span><br><span class="line">22         cb4 &#x3D; QCheckBox(&#39;振动碾&#39;)</span><br><span class="line">23         lb1 &#x3D; QLabel(&#39;选择是：&#39;)</span><br><span class="line">24         self.lineEdit &#x3D; QLineEdit()</span><br><span class="line">25 </span><br><span class="line">26         grid &#x3D; QGridLayout()</span><br><span class="line">27         grid.addWidget(cb1,1,1,1,1)</span><br><span class="line">28         grid.addWidget(cb2,1,2,1,1)</span><br><span class="line">29         grid.addWidget(cb3,2,1,1,1)</span><br><span class="line">30         grid.addWidget(cb4,2,2,1,1)</span><br><span class="line">31         grid.addWidget(lb1,3,1,1,1)</span><br><span class="line">32         grid.addWidget(self.lineEdit,3,2,1,1)</span><br><span class="line">33         self.setLayout(grid)</span><br><span class="line">34 </span><br><span class="line">35         cb1.stateChanged.connect(lambda:self.chooseItem(cb1))</span><br><span class="line">36         cb2.stateChanged.connect(lambda: self.chooseItem(cb2))</span><br><span class="line">37         cb3.stateChanged.connect(lambda: self.chooseItem(cb3))</span><br><span class="line">38         cb4.stateChanged.connect(lambda: self.chooseItem(cb4))</span><br><span class="line">39 </span><br><span class="line">40     def chooseItem(self,cb):</span><br><span class="line">41         if cb.isChecked():</span><br><span class="line">42             if cb.text() not in Items:</span><br><span class="line">43                Items.append(cb.text())</span><br><span class="line">44             shop_cart &#x3D; &#39;,&#39;.join(Items)</span><br><span class="line">45             self.lineEdit.setText(shop_cart)</span><br><span class="line">46         else:</span><br><span class="line">47             if cb.text() in Items:</span><br><span class="line">48                Items.remove(cb.text())</span><br><span class="line">49             shop_cart &#x3D; &#39;,&#39;.join(Items)</span><br><span class="line">50             self.lineEdit.setText(shop_cart)</span><br><span class="line">51 </span><br><span class="line">52 if __name__ &#x3D;&#x3D; &#39;__main__&#39;:</span><br><span class="line">53     app &#x3D; QApplication(sys.argv)</span><br><span class="line">54     win &#x3D; MyWindow()</span><br><span class="line">55     win.show()</span><br><span class="line">56     sys.exit(app.exec_())</span><br><span class="line"></span><br><span class="line">QCheckBox示例</span><br></pre></td></tr></table></figure>
+<p>效果图如下</p>
+<p><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/QCheckBox.png"></p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/pyqt/">pyqt</a>
+		  
+			<a href="/tags/python/">python</a>
+		  
+			<a href="/tags/QPushButton/">QPushButton</a>
+		  
+			<a href="/tags/QRadioButton/">QRadioButton</a>
+		  
+			<a href="/tags/QCheckBox/">QCheckBox</a>
+		  
+			<a href="/tags/QToolButton/">QToolButton</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2021/07/29/PYQT%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E5%AE%9E%E6%88%98%E7%B3%BB%E5%88%97/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">PYQT从入门到实战系列</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2021/07/29/%E6%AF%8F%E5%A4%A9%E4%B8%80%E9%81%93%E7%AE%97%E6%B3%95%E9%A2%98%EF%BC%9A%E5%9C%A8%E6%97%8B%E8%BD%AC%E8%BF%87%E7%9A%84%E6%9C%89%E5%BA%8F%E6%95%B0%E7%BB%84%E4%B8%AD%E5%AF%BB%E6%89%BE%E7%9B%AE%E6%A0%87%E5%80%BC/">
+        <span class="next-text nav-default">每天一道算法题：在旋转过的有序数组中寻找目标值</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+      </footer>
+    
+  </article>
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2021
+    <span class="footer-author">Russshare.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

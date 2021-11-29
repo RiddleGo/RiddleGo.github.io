@@ -1,37 +1,234 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
-{% block page_class %}page-post-detail{% endblock %}
 
 
-{% block content %}
+  <meta name="description" content="二叉树的层序遍历"/>
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
-    </div>
+
+
+  <meta name="keywords" content="算法,面试题," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+
+
+
+<link rel="canonical" href="https://riddlego.github.io/2021/06/28/二叉树的层序遍历/"/>
+
+
+<meta name="description" content="前言我们对二叉树的遍历已经算是有个了解了（了解前面还不敢加修饰词，强烈推荐labuladong的公众号去看一下，绝绝子） 前序中序后序遍历就是将递归运用到底，层序倒是给我们蛮多的惊喜，我觉得层序的思想就是处理一个  把子结点加进去队列，然后处理完这一部分后  对应的每个节点的子结点又形成了一个的队列。我觉得只有代码能体现其精妙的思想，注释灰常详细了。enjoy啦。 二叉树前序中序后序遍历的本质是怎">
+<meta property="og:type" content="article">
+<meta property="og:title" content="二叉树的层序遍历">
+<meta property="og:url" content="https://riddlego.github.io/2021/06/28/%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E5%B1%82%E5%BA%8F%E9%81%8D%E5%8E%86/index.html">
+<meta property="og:site_name" content="RiddleGo">
+<meta property="og:description" content="前言我们对二叉树的遍历已经算是有个了解了（了解前面还不敢加修饰词，强烈推荐labuladong的公众号去看一下，绝绝子） 前序中序后序遍历就是将递归运用到底，层序倒是给我们蛮多的惊喜，我觉得层序的思想就是处理一个  把子结点加进去队列，然后处理完这一部分后  对应的每个节点的子结点又形成了一个的队列。我觉得只有代码能体现其精妙的思想，注释灰常详细了。enjoy啦。 二叉树前序中序后序遍历的本质是怎">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-06-28T08:41:10.000Z">
+<meta property="article:modified_time" content="2021-06-29T09:55:07.683Z">
+<meta property="article:author" content="Russshare">
+<meta property="article:tag" content="算法">
+<meta property="article:tag" content="面试题">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> 二叉树的层序遍历 - RiddleGo </title>
+  <meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">RiddleGo</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          二叉树的层序遍历
+        
+      </h1>
+
+      <time class="post-time">
+          6月 28 2021
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>我们对二叉树的遍历已经算是有个了解了（了解前面还不敢加修饰词，强烈推荐labuladong的公众号去看一下，绝绝子）</p>
+<p>前序中序后序遍历就是将递归运用到底，层序倒是给我们蛮多的惊喜，我觉得层序的思想就是处理一个  把子结点加进去队列，然后处理完这一部分后  对应的每个节点的子结点又形成了一个的队列。我觉得只有代码能体现其精妙的思想，注释灰常详细了。enjoy啦。</p>
+<p>二叉树前序中序后序遍历的本质是怎么样把一个二维结构变成一个一维的线性序列的过程</p>
+<p>二叉树的遍历其实是有很多的应用，大多时候 其实你自己可能使用了很多次，但是你自己都没有认识到。</p>
+<h3 id="1、二叉树遍历应用"><a href="#1、二叉树遍历应用" class="headerlink" title="1、二叉树遍历应用"></a>1、二叉树遍历应用</h3><h4 id="1-前序遍历：可以用来实现目录结构的显示。"><a href="#1-前序遍历：可以用来实现目录结构的显示。" class="headerlink" title="1 前序遍历：可以用来实现目录结构的显示。"></a>1 前序遍历：可以用来实现目录结构的显示。</h4><p>1.对于前序遍历，可以用来实现输出某个文件夹下所有文件名称(可以有子文件夹)，就是目录结构的显示。</p>
+<p>输出文件名称的过程如下：</p>
+<p>如果是文件夹，先输出文件夹名，然后再依次输出该文件夹下的所有文件(包括子文件夹)，如果有子文件夹，则再进入该子文件夹，输出该子文件夹下的所有文件名。这是一个典型的先序遍历过程。</p>
+<p>2.对于前序遍历，可以用来统计某个文件夹的大小（该文件夹下所有文件的大小）</p>
+<p>统计文件夹的大小过程如下：</p>
+<p>若要知道某文件夹的大小，必须先知道该文件夹下所有文件的大小，如果有子文件夹，若要知道该子文件夹大小，必须先知道子文件夹所有文件的大小。这是一个典型的后序遍历过程。</p>
+<h3 id="2-中序遍历："><a href="#2-中序遍历：" class="headerlink" title="2 中序遍历："></a>2 中序遍历：</h3><p>中序遍历可以用来做表达式树，在编译器底层实现的时候用户可以实现基本的加减乘除，比如 a*b+c。</p>
+<h3 id="3-后序遍历"><a href="#3-后序遍历" class="headerlink" title="3 后序遍历"></a>3 后序遍历</h3><p>后续遍历可以用来实现计算目录内的文件占用的数据大小非常有用。</p>
+<p>表达式求值也可以使用后缀表达式。</p>
+<p>后缀表达式求值比中缀表达式更方便，可以先把中缀表达式变成后缀表达式，然后再根据后缀表达式求值。</p>
+<h3 id="2、二叉树层序遍历代码"><a href="#2、二叉树层序遍历代码" class="headerlink" title="2、二叉树层序遍历代码"></a>2、二叉树层序遍历代码</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">package main</span><br><span class="line"></span><br><span class="line">import &quot;fmt&quot;</span><br><span class="line"></span><br><span class="line">type TreeNode struct &#123;</span><br><span class="line">	Val   int</span><br><span class="line">	Left  *TreeNode</span><br><span class="line">	Right *TreeNode</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func levelOrder(root *TreeNode) [][]int &#123;</span><br><span class="line">	res :&#x3D; [][]int&#123;&#125;</span><br><span class="line">	if root &#x3D;&#x3D; nil &#123;</span><br><span class="line">		return res</span><br><span class="line">	&#125;</span><br><span class="line">	&#x2F;&#x2F;队列放的就是每个根结点</span><br><span class="line">	var queue &#x3D; []*TreeNode&#123;root&#125;</span><br><span class="line">	var level int</span><br><span class="line">	&#x2F;&#x2F;只要队列里有元素</span><br><span class="line">	for len(queue) &gt; 0 &#123;</span><br><span class="line">		&#x2F;&#x2F;每次确定队列的长度</span><br><span class="line">		counter :&#x3D; len(queue)</span><br><span class="line">		&#x2F;&#x2F;用这个一维的数组保存每次的结果</span><br><span class="line">		res &#x3D; append(res, []int&#123;&#125;)</span><br><span class="line">		for counter &gt; 0 &#123;</span><br><span class="line">			&#x2F;&#x2F;把这个队列的元素取完</span><br><span class="line">			counter--</span><br><span class="line">			&#x2F;&#x2F;队列里的元素是节点，每次取一个元素都需要判断它的左右节点是否有元素</span><br><span class="line">			&#x2F;&#x2F;有的话就加入队列</span><br><span class="line">			if queue[0].Left !&#x3D; nil &#123;</span><br><span class="line">				queue &#x3D; append(queue, queue[0].Left)</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">			if queue[0].Right !&#x3D; nil &#123;</span><br><span class="line">				queue &#x3D; append(queue, queue[0].Right)</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">			res[level] &#x3D; append(res[level], queue[0].Val)</span><br><span class="line">			&#x2F;&#x2F;第一个已经处理了，所以采用这样的方式去除掉第0个元素</span><br><span class="line">			queue &#x3D; queue[1:]</span><br><span class="line">		&#125;</span><br><span class="line">		level++</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	return res</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line">	node1 :&#x3D; &amp;TreeNode&#123;3, nil, nil&#125;</span><br><span class="line">	node1.Left &#x3D; &amp;TreeNode&#123;9, nil, nil&#125;</span><br><span class="line">	node1.Right &#x3D; &amp;TreeNode&#123;20, nil, nil&#125;</span><br><span class="line">	node1.Right.Left &#x3D; &amp;TreeNode&#123;15, nil, nil&#125;</span><br><span class="line">	node1.Right.Right &#x3D; &amp;TreeNode&#123;7, nil, nil&#125;</span><br><span class="line"></span><br><span class="line">	res :&#x3D; levelOrder(node1)</span><br><span class="line"></span><br><span class="line">	fmt.Printf(&quot;res is :%v\n&quot;, res)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/%E7%AE%97%E6%B3%95/">算法</a>
+		  
+			<a href="/tags/%E9%9D%A2%E8%AF%95%E9%A2%98/">面试题</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2021/06/28/%E5%AF%BB%E6%89%BE%E7%AC%ACK%E5%A4%A7/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">寻找第K大</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2021/06/28/%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E9%81%8D%E5%8E%86/">
+        <span class="next-text nav-default">二叉树的遍历</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+      </footer>
+    
+  </article>
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2021
+    <span class="footer-author">Russshare.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

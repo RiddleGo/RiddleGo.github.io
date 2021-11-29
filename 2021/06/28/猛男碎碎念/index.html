@@ -1,37 +1,239 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
-{% block page_class %}page-post-detail{% endblock %}
 
 
-{% block content %}
+  <meta name="description" content="猛男碎碎念"/>
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
-    </div>
+
+
+  <meta name="keywords" content="猛男," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+
+
+
+<link rel="canonical" href="https://riddlego.github.io/2021/06/28/猛男碎碎念/"/>
+
+
+<meta name="description" content="乱七八糟的学习，倒也没有什么具体的计划，不时的翻着手机和B站学着闲散的技术，内心有点自我的满足和沉浸于这样的氛围。没有压力，天天的闲适我不知道这是不是我需要的。 人在一个环境是容易受到影响的，但是一个人如果与周围的人的差距过大，反而没了动力，因为感觉自己怎么也难以达到那样的位置。便开始自我的泄气，自我的放慢脚步，这不是很好的表现，也更加的不是正确的表现，跳出舒适圈，我想人生的不断前进就是不断地跳出">
+<meta property="og:type" content="article">
+<meta property="og:title" content="猛男碎碎念">
+<meta property="og:url" content="https://riddlego.github.io/2021/06/28/%E7%8C%9B%E7%94%B7%E7%A2%8E%E7%A2%8E%E5%BF%B5/index.html">
+<meta property="og:site_name" content="RiddleGo">
+<meta property="og:description" content="乱七八糟的学习，倒也没有什么具体的计划，不时的翻着手机和B站学着闲散的技术，内心有点自我的满足和沉浸于这样的氛围。没有压力，天天的闲适我不知道这是不是我需要的。 人在一个环境是容易受到影响的，但是一个人如果与周围的人的差距过大，反而没了动力，因为感觉自己怎么也难以达到那样的位置。便开始自我的泄气，自我的放慢脚步，这不是很好的表现，也更加的不是正确的表现，跳出舒适圈，我想人生的不断前进就是不断地跳出">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-06-28T08:19:06.000Z">
+<meta property="article:modified_time" content="2021-06-29T09:59:08.413Z">
+<meta property="article:author" content="Russshare">
+<meta property="article:tag" content="猛男">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> 猛男碎碎念 - RiddleGo </title>
+  <meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">RiddleGo</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          猛男碎碎念
+        
+      </h1>
+
+      <time class="post-time">
+          6月 28 2021
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <p>乱七八糟的学习，倒也没有什么具体的计划，不时的翻着手机和B站学着闲散的技术，内心有点自我的满足和沉浸于这样的氛围。没有压力，天天的闲适我不知道这是不是我需要的。</p>
+<p>人在一个环境是容易受到影响的，但是一个人如果与周围的人的差距过大，反而没了动力，因为感觉自己怎么也难以达到那样的位置。便开始自我的泄气，自我的放慢脚步，这不是很好的表现，也更加的不是正确的表现，跳出舒适圈，我想人生的不断前进就是不断地跳出舒适圈。</p>
+<p>不断前进的人生就是在每个阶段都不断地去跳出自己的舒适圈。</p>
+<p>所以我想从今天开始我应该在每个月给自己设置一个任务，完成。</p>
+<p>我不应该把闲散的心沉浸在自我的世界里满足又夹杂着不甘心。</p>
+<p>这样想来我的不甘心已经走丢了，仿佛那个年纪觉得自己有无限的可能性，总期待在未来还要去很多个地方，看很多的风景遇见很多的人。</p>
+<p>为什么现在就是期待稳定，我是怎么了，md很烦，我不年轻了吗？靠这倒是个实话。</p>
+<p>其实爷爷奶奶的离开让我真的感受到了太多的不舍得，害怕自己在这个年纪不能好好地关心家人，这个时候倒还是个长不大的孩子。优柔寡断真的是很差劲，一点也不男人。</p>
+<p>啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊  md我真的不想这个样子，老实说我真的喜欢这样的生活，但是我不想我自己喜欢这个样子，嗷呜。恶龙咆哮。</p>
+<p>记得前段时间想去子节的时候开始多么认真的准备，现在发现国企研究所等等各种内心是极度的想享受安逸，可是年纪轻轻的选择了安逸，那以后又该怎么办？其实内心还渴望着公务员的种种权利，想爬到一个位置，但是家里还需要我的照顾，毕竟我是个男人，父母一直很疼爱我。</p>
+<p>钱权、安逸和拼搏到底应该选择什么呢？</p>
+<p>我找不到答案，也没有一个让我可以两全其美的答案。</p>
+<p>想当兵，眼睛手术是肯定的不行的了，而且这个年纪去部队能干啥？</p>
+<p>想去银行，晋升无望算了算了，去了是做什么，唉，到时候还不一定能去？</p>
+<p>想去公务员吧，关系是肯定没有的，分配到县城怎么办？陌生的城市里，3、5000混吃等死？还得给家里，肯定是不行的了。指望像朋友一样单位上介绍家庭不错的对象，想啥呢，它们确实高高帅帅，唉md，不羡慕是假的，不应该羡慕倒是真的。</p>
+<p>就是可惜了我尼玛那么多学生工作经历，最近还刚刚拿了校级的优秀学生干部，哈哈，谁知道那么多人面前谈笑风生的人背后藏着这么多的无奈呢。想着不禁想到我尼玛没有关系，说不定去了还得讨好下面有关系的，md，那个时候还会出席更大的场合，还得站在更多观众的台子上谈笑风生，md，这尼玛我真的烦烦烦，我不想，我想我说的每句话，做的每件事都有底气，不只是一腔的热情。</p>
+<p>自我满足了，这两天真的是，自我的满足了。</p>
+<p>被一点点的成绩就开始自我的迷惑，才慢慢认识到自己的普通，自己的无能为力，舒服工资高的工作还尼玛要从高中学历查起，不断的爬向更高的地方，结果发现人生这条路啊，真尼玛难走。当然放弃是不能放弃的，也是永远不可能的。</p>
+<p>边骂着生活操蛋，还是一边忍不住想笑，哈哈哈。</p>
+<p>这个时候真的开始体会到认清生活的本质依旧热爱是真的勇气。</p>
+<p>带上耳机鼓点砸在脑袋里的时候觉得自己就是一个rapper，走路都比别人帅的那种。</p>
+<p>下一步要做的事情，昂，计划表。干啦干啦！！！</p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/%E7%8C%9B%E7%94%B7/">猛男</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2021/06/28/%E7%8C%9B%E7%94%B7%E7%A2%8E%E7%A2%8E%E5%BF%B501/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">猛男碎碎念01</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2021/06/28/5G-CPE/">
+        <span class="next-text nav-default">5G-CPE</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+      </footer>
+    
+  </article>
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2021
+    <span class="footer-author">Russshare.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

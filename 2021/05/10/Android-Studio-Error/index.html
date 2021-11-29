@@ -1,37 +1,231 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
-{% block page_class %}page-post-detail{% endblock %}
 
 
-{% block content %}
+  <meta name="description" content="Android Studio Error"/>
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
-    </div>
+
+
+  <meta name="keywords" content="Android Studio,Bug," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+
+
+
+<link rel="canonical" href="https://riddlego.github.io/2021/05/10/Android-Studio-Error/"/>
+
+
+<meta name="description" content="###Android Studio在启动时gradle的问题：Download https:&#x2F;&#x2F;services.gradle.org&#x2F;distributions&#x2F;gradle-4.6-all.z 1. 直接复制 后面那个链接 然后到浏览器去粘贴转到，就开始下载了 2. 现在你在下东西的时候，找到这里 把蓝色框框的两个删掉，把第一步下载好的文件放到这里。不要解压哈，直接把下载的文件放过来就行。 3">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android Studio Error">
+<meta property="og:url" content="https://riddlego.github.io/2021/05/10/Android-Studio-Error/index.html">
+<meta property="og:site_name" content="RiddleGo">
+<meta property="og:description" content="###Android Studio在启动时gradle的问题：Download https:&#x2F;&#x2F;services.gradle.org&#x2F;distributions&#x2F;gradle-4.6-all.z 1. 直接复制 后面那个链接 然后到浏览器去粘贴转到，就开始下载了 2. 现在你在下东西的时候，找到这里 把蓝色框框的两个删掉，把第一步下载好的文件放到这里。不要解压哈，直接把下载的文件放过来就行。 3">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/AS01.png">
+<meta property="article:published_time" content="2021-05-10T09:23:53.000Z">
+<meta property="article:modified_time" content="2021-05-10T09:26:02.000Z">
+<meta property="article:author" content="Russshare">
+<meta property="article:tag" content="Android Studio">
+<meta property="article:tag" content="Bug">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/AS01.png">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> Android Studio Error - RiddleGo </title>
+  <meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">RiddleGo</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          Android Studio Error
+        
+      </h1>
+
+      <time class="post-time">
+          5月 10 2021
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <p>###Android Studio在启动时gradle的问题：Download <a target="_blank" rel="noopener" href="https://services.gradle.org/distributions/gradle-4.6-all.z">https://services.gradle.org/distributions/gradle-4.6-all.z</a></p>
+<p><em><strong>1. 直接复制 后面那个链接 然后到浏览器去粘贴转到，就开始下载了</strong></em></p>
+<p><em><strong>2. 现在你在下东西的时候，找到这里</strong></em><br><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/AS01.png"></p>
+<p>把蓝色框框的两个删掉，把第一步下载好的文件放到这里。不要解压哈，直接把下载的文件放过来就行。</p>
+<p><em><strong>3. 重启Android Studio</strong></em></p>
+<p><em><strong>凡是遇到问题，基本上都有解释，先稳住，看一下错误提示，有些错误可能你根本连百度也不需要。</strong></em></p>
+<p><em><strong>以上就是这次的全部内容了，希望能对你有用！</strong></em></p>
+<pre><code>    大吉大利、今晚吃鸡
+</code></pre>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/Android-Studio/">Android Studio</a>
+		  
+			<a href="/tags/Bug/">Bug</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2021/05/10/FallTwiceNever/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">FallTwiceNever</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2021/05/10/hexo%E6%96%87%E7%AB%A0%E6%93%8D%E4%BD%9C/">
+        <span class="next-text nav-default">hexo文章操作</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+      </footer>
+    
+  </article>
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2021
+    <span class="footer-author">Russshare.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

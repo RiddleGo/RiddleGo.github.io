@@ -1,37 +1,246 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
-{% block page_class %}page-post-detail{% endblock %}
 
 
-{% block content %}
+  <meta name="description" content="剑指offer07"/>
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
-    </div>
+
+
+  <meta name="keywords" content="剑指offer," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+
+
+
+<link rel="canonical" href="https://riddlego.github.io/2021/08/03/剑指offer07/"/>
+
+
+<meta name="description" content="剑指 Offer 07. 重建二叉树输入某二叉树的前序遍历和中序遍历的结果，请构建该二叉树并返回其根节点。 假设输入的前序遍历和中序遍历的结果中都不含重复的数字。  https:&#x2F;&#x2F;leetcode-cn.com&#x2F;problems&#x2F;zhong-jian-er-cha-shu-lcof&#x2F; 输入某二叉树的前序遍历和中序遍历的结果，请构建该二叉树并返回其根节点。 假设输入的前序遍历和中序遍历的结果中都不">
+<meta property="og:type" content="article">
+<meta property="og:title" content="剑指offer07">
+<meta property="og:url" content="https://riddlego.github.io/2021/08/03/%E5%89%91%E6%8C%87offer07/index.html">
+<meta property="og:site_name" content="RiddleGo">
+<meta property="og:description" content="剑指 Offer 07. 重建二叉树输入某二叉树的前序遍历和中序遍历的结果，请构建该二叉树并返回其根节点。 假设输入的前序遍历和中序遍历的结果中都不含重复的数字。  https:&#x2F;&#x2F;leetcode-cn.com&#x2F;problems&#x2F;zhong-jian-er-cha-shu-lcof&#x2F; 输入某二叉树的前序遍历和中序遍历的结果，请构建该二叉树并返回其根节点。 假设输入的前序遍历和中序遍历的结果中都不">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/offer07.png">
+<meta property="article:published_time" content="2021-08-02T16:15:41.000Z">
+<meta property="article:modified_time" content="2021-08-05T14:30:38.868Z">
+<meta property="article:author" content="Russshare">
+<meta property="article:tag" content="剑指offer">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/offer07.png">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> 剑指offer07 - RiddleGo </title>
+  <meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">RiddleGo</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          剑指offer07
+        
+      </h1>
+
+      <time class="post-time">
+          8月 03 2021
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h2 id="剑指-Offer-07-重建二叉树"><a href="#剑指-Offer-07-重建二叉树" class="headerlink" title="剑指 Offer 07. 重建二叉树"></a>剑指 Offer 07. 重建二叉树</h2><p>输入某二叉树的前序遍历和中序遍历的结果，请构建该二叉树并返回其根节点。</p>
+<p>假设输入的前序遍历和中序遍历的结果中都不含重复的数字。</p>
+<p><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/offer07.png"></p>
+<p><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/zhong-jian-er-cha-shu-lcof/">https://leetcode-cn.com/problems/zhong-jian-er-cha-shu-lcof/</a></p>
+<p><strong>输入某二叉树的前序遍历和中序遍历的结</strong>果，请构建该二叉树并返回其根节点。</p>
+<p>假设输入的前序遍历和中序遍历的结果中<strong>都不含重复的数字</strong>。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Input: preorder &#x3D; [3,9,20,15,7], inorder &#x3D; [9,3,15,20,7]</span><br><span class="line">Output: [3,9,20,null,null,15,7]</span><br><span class="line">示例 2:</span><br><span class="line"></span><br><span class="line">Input: preorder &#x3D; [-1], inorder &#x3D; [-1]</span><br><span class="line">Output: [-1]</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><strong>解题思路：</strong><br>前序遍历性质： 节点按照 [ 根节点 | 左子树 | 右子树 ] 排序。<br>中序遍历性质： 节点按照 [ 左子树 | 根节点 | 右子树 ] 排序。</p>
+<p><strong>以题目示例为例：</strong></p>
+<p>前序遍历划分 [ 3 | 9 | 20 15 7 ]<br>中序遍历划分 [ 9 | 3 | 15 20 7 ]<br>根据以上性质，可得出以下推论：</p>
+<p>前序遍历的首元素 为 树的根节点 node 的值。<br>在中序遍历中搜索根节点 node 的索引 ，可将 中序遍历 划分为 [ 左子树 | 根节点 | 右子树 ] 。<br>根据中序遍历中的左 / 右子树的节点数量，可将 前序遍历 划分为 [ 根节点 | 左子树 | 右子树 ] 。</p>
+<p><strong>到这里应该你想到了对于子树，咱们可以继续的递归采用这样的方法，这就惯性思维，题做多了应该就是这样的。当然我我没有，惭愧，我是看的答案嘿嘿嘿。装完了继续。</strong></p>
+<p><strong>以上子树的递推性质是 分治算法 的体现，考虑通过递归对所有子树进行划分。</strong></p>
+<p><strong>分治算法解析：</strong></p>
+<p>使用递归函数一定要找到递归的参数，终止的条件，递推进去要做点啥</p>
+<p>这里我就不照搬了，前辈讲的真的好不错—&gt;<a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/zhong-jian-er-cha-shu-lcof/solution/mian-shi-ti-07-zhong-jian-er-cha-shu-di-gui-fa-qin/">剑指Offer07.重建二叉树</a></p>
+<p>所以这道题关键点就在于通过前序找到根节点，然后根据根节点在中序把东西分为左子树+根节点+右子树，将两个节点利用了起来。</p>
+<p>关键点就在于对于左子树和右子树的边界的确定。</p>
+<p>中序的左子树的左边界就是前序的根节点的紧挨着的，左子树的右节点就是中序遍历到等于前序根节点的时候的那个值的左边的第一个，然后后面就是右子树。</p>
+<p>到这里大概的思路有了就是实现代码的时候了。</p>
+<p>难受，刚刚去刷了会微博才回来继续写，真羡慕佩服那些行云流水的靓仔啊。</p>
+<p>自己写不出来，就在大佬的评论里翻啊翻，突然看到了一个性感的版本，必须背下来，万一面试可以秀一秀。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">class Solution(object):</span><br><span class="line">    def build(self, preorder, inorder)-&gt;TreeNode:</span><br><span class="line">        #把前序的第一个值取出来，然后通过这个值找到在中序中的索引，作为根节点的位置，切分中序</span><br><span class="line">        ind &#x3D; inorder.index(preorder.pop(0))</span><br><span class="line"></span><br><span class="line">        root &#x3D; TreeNode(inorder[ind])</span><br><span class="line">        root.left &#x3D; build(preorder,inorder[0:ind])</span><br><span class="line">        root.right &#x3D; build(preorder, inorder[ind+1:1])</span><br><span class="line">        return root</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<p>不过老实人就整咱们老实人的方法。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">class Solution:</span><br><span class="line">    def build(self, preorder,inorder):</span><br><span class="line">        def recur</span><br><span class="line">        ind &#x3D; preorder.pop(0)</span><br><span class="line">        root &#x3D; TreeNode(ind)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/%E5%89%91%E6%8C%87offer/">剑指offer</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2021/08/03/%E5%89%91%E6%8C%87offer09/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">剑指offer09</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2021/08/03/%E5%89%91%E6%8C%87offer06/">
+        <span class="next-text nav-default">剑指offer06</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+      </footer>
+    
+  </article>
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2021
+    <span class="footer-author">Russshare.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

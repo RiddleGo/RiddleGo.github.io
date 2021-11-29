@@ -1,37 +1,315 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
-{% block page_class %}page-post-detail{% endblock %}
 
 
-{% block content %}
+  <meta name="description" content="剑指offer19"/>
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
-    </div>
+
+
+  <meta name="keywords" content="剑指offer," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+
+
+
+<link rel="canonical" href="https://riddlego.github.io/2021/08/03/剑指offer19/"/>
+
+
+<meta name="description" content="剑指 Offer 19. 正则表达式匹配题目描述请实现一个函数用来匹配包含’. ‘和’*’的正则表达式。 模式中的字符’.’表示任意一个字符，而’*’表示它前面的字符可以出现任意次（含0次）。 在本题中，匹配是指字符串的所有字符匹配整个模式。 例如，字符串”aaa”与模式”a.a”和”abaca”匹配，但与”aa.a”和”ab*a”均不匹配。 示例 1: 输入:s &#x3D; “aa”p &#x3D; “a”输出:">
+<meta property="og:type" content="article">
+<meta property="og:title" content="剑指offer19">
+<meta property="og:url" content="https://riddlego.github.io/2021/08/03/%E5%89%91%E6%8C%87offer19/index.html">
+<meta property="og:site_name" content="RiddleGo">
+<meta property="og:description" content="剑指 Offer 19. 正则表达式匹配题目描述请实现一个函数用来匹配包含’. ‘和’*’的正则表达式。 模式中的字符’.’表示任意一个字符，而’*’表示它前面的字符可以出现任意次（含0次）。 在本题中，匹配是指字符串的所有字符匹配整个模式。 例如，字符串”aaa”与模式”a.a”和”abaca”匹配，但与”aa.a”和”ab*a”均不匹配。 示例 1: 输入:s &#x3D; “aa”p &#x3D; “a”输出:">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-08-02T16:25:18.000Z">
+<meta property="article:modified_time" content="2021-08-05T14:33:47.763Z">
+<meta property="article:author" content="Russshare">
+<meta property="article:tag" content="剑指offer">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> 剑指offer19 - RiddleGo </title>
+  <meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">RiddleGo</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          剑指offer19
+        
+      </h1>
+
+      <time class="post-time">
+          8月 03 2021
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h2 id="剑指-Offer-19-正则表达式匹配"><a href="#剑指-Offer-19-正则表达式匹配" class="headerlink" title="剑指 Offer 19. 正则表达式匹配"></a>剑指 Offer 19. 正则表达式匹配</h2><h3 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h3><p>请实现一个函数用来匹配包含’. ‘和’*’的正则表达式。</p>
+<p>模式中的字符’.’表示任意一个字符，而’*’表示它前面的字符可以出现任意次（含0次）。</p>
+<p>在本题中，匹配是指字符串的所有字符匹配整个模式。</p>
+<p>例如，字符串”aaa”与模式”a.a”和”ab<em>ac</em>a”匹配，但与”aa.a”和”ab*a”均不匹配。</p>
+<p>示例 1:</p>
+<p>输入:<br>s = “aa”<br>p = “a”<br>输出: false<br>解释: “a” 无法匹配 “aa” 整个字符串。<br>示例 2:</p>
+<p>输入:<br>s = “aa”<br>p = “a*”<br>输出: true<br>解释: 因为 ‘*’ 代表可以匹配零个或多个前面的那一个元素, 在这里前面的元素就是 ‘a’。因此，字符串 “aa” 可被视为 ‘a’ 重复了一次。<br>示例 3:</p>
+<p>输入:<br>s = “ab”<br>p = “.<em>“<br>输出: true<br>解释: “.</em>“ 表示可匹配零个或多个（’*’）任意字符（’.’）。</p>
+<h3 id="解题思路"><a href="#解题思路" class="headerlink" title="解题思路"></a>解题思路</h3><p>说实话 我特么的毫无思路 哈哈哈 ，要说的真的要表达一下自己的思路那就是我想到用循环，遍历字符串然后去匹配，不过这样还是蛮难的，</p>
+<p>看懂别人的代码也难，啊啊啊真难</p>
+<p>我觉得第一种是翻译  翻译出正则匹配 能对应上的，我先计算待匹配的长度，然后再翻译出能和目标一样的长度。</p>
+<p>我现在发现人的大脑真的是神奇啊。</p>
+<p>这个用到动态规划，大佬们真的是什么都能用动态规划解决，真的是离谱。</p>
+<p><strong>回归正文</strong><br>首先是</p>
+<p>dp[i][j]—定义状态：dp[i][j]用于表示s的前i个字符和p的前j个字符是否匹配</p>
+<p>base case: </p>
+<pre><code>dp[0][0]---true
+
+这个二维的矩阵是正则串和待比较串  那么
+
+当正则串为空的时候和，字符串不为空，那肯定为false
+
+当字符串为空的时候，正则串还是有可能匹配上的
+</code></pre>
+<p>转移方程：<br>    我们先来看情况：<br>    1、当B最后一个是正常字符，直接比较，相等  一人前进一个，不相等转换为子问题</p>
+<pre><code>2、当B最后一个是.，能匹配任意的数值，所以直接提前。
+
+3、如果最后一个数字是*，则B的倒数第二个可以重复0-n次，当做整体
+
+    当A最后一个不是C，则B后面两个不要了，从倒数第三个重新开始比较。
+
+    当A最后一个是C，那就继续倒序前进A，和B的倒数第二个进行比较
+
+
+于是转移方程
+f[0][0]=True
+
+f[i][j]=f[i-1][j-1]
+
+f[1][0]-----f[n][0]=false
+
+f[0][j]-----是未知的，因为当*出现在偶数还是可以的成立的
+
+f[i][j]=f[i][j-2]
+
+f[i][j]=f[i-1][j]
+</code></pre>
+<h3 id="开始整成代码吧"><a href="#开始整成代码吧" class="headerlink" title="开始整成代码吧"></a>开始整成代码吧</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">class Solution:</span><br><span class="line">    def reqx(self, A:str,B:str)--&gt;bool:</span><br><span class="line">        n&#x3D;len(A)</span><br><span class="line">        m&#x3D;len(B)</span><br><span class="line">    </span><br><span class="line">        for i in range(n):</span><br><span class="line">            for j in range(m):</span><br><span class="line">            #空正则</span><br><span class="line">                if j&#x3D;&#x3D;0:</span><br><span class="line">                    fa[i][j]&#x3D;&#x3D;0</span><br><span class="line">                else:</span><br><span class="line">                    if B[j-1]!&#x3D;&#39;*&#39;:</span><br><span class="line">                        if i &gt; 0 and A[i-1]&#x3D;&#x3D;B[j-1] or B[j-1]&#x3D;&#39;.&#39;:</span><br><span class="line">                            dp[i][j]&#x3D;dp[i-1][j-1]</span><br><span class="line">                    else:</span><br><span class="line">                        #分为看不看两种</span><br><span class="line">                        #不看</span><br><span class="line">                        if (j&gt;&#x3D;2):</span><br><span class="line">                            dp[i][j] &#x3D; dp[i][j] or dp[i][j-2]</span><br><span class="line">                        if (i&gt;&#x3D;1 &amp;&amp; j&gt;&#x3D;2&amp;&amp; dp[i-1]&#x3D;&#x3D;dp[j-2]||dp[j-2]&#x3D;&#x3D;&#39;.&#39;):</span><br><span class="line">                            dp[i][j] &#x3D; dp[i][j] or dp[i-1][j]   </span><br></pre></td></tr></table></figure>
+
+<p>这道题吧，我觉得难点就在于逻辑的推理，分好类，别遗漏就很关键。</p>
+<p><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/zheng-ze-biao-da-shi-pi-pei-lcof/solution/zhu-xing-xiang-xi-jiang-jie-you-qian-ru-shen-by-je/">答案来自这里，我翻译java的，也不知能不能用哈哈哈。</a></p>
+<pre><code class="去试了一下">
+
+找到了这个，我来膜拜一下[大佬](https://leetcode-cn.com/problems/zheng-ze-biao-da-shi-pi-pei-lcof/solution/jian-zhi-offer-19-zheng-ze-biao-da-shi-p-raet/)
+
+1、定义状态：dp[i][j]用于表示s的前i个字符和p的前j个字符是否匹配
+
+2、初始化dp数组：因为状态转移是从前面的状态转移到后面的状态，必须要初始化一些要被转移的状态，即dp数组的首行及首列
+
+dp[0][0] = True，意思就是两个空字符串是可以匹配的
+
+dp的首列除了dp[0][0]外全部为False，意思是当p为空时，s无论如何也不会匹配上（除了s也为空的情况）
+
+dp的首行就有点意思了，s为空的情况下，p的偶数位为&#39;*&#39;的话是可以匹配上的，因为可以让&#39;*&#39;之前的字符出现次数为0
+
+3、状态转移：因为已经初始化了首行和首列，s和p都从索引1开始匹配。下面开始分情况讨论
+
+p的第j个字符为&#39;*&#39;(p[j - 1] == &#39;*&#39;):
+
+i. dp[i][j - 2]为True时，dp[i][j]也为True
+如果s的前i个字符和p的前j - 2个字符匹配，这时p的第j个字符为&#39;*&#39;，那么无论p的第j-1个字符是什么，令它出现0次，dp[i][j]就可以为true
+
+ii. dp[i - 1][j] and s[i - 1] == p[j - 2]为True时，dp[i][j]也为True
+如果s的前i - 1个字符和p的前j个字符匹配，并且s的第i个字符和p的第j - 1个字符相等；那么让p的第j - 1个字符多出现一次，s的前i字符和p的前j的字符就可以匹配了
+
+iii. dp[i - 1][j] and p[j - 2] == &#39;.&#39;为True时，dp[i][j]也为True
+
+如果s的前i - 1个字符和p的前j个字符匹配，因为p的第j - 1个字符可以匹配任意字符；那么s的第i个字符可以匹配p的第j - 1个字符，令p的第j - 1个字符多出现一次即可
+
+
+p的第j个字符不为&#39;*&#39;(p[j - 1] != &#39;*&#39;)
+
+i. dp[i - 1][j - 1] and s[i - 1] == p[j - 1]为True时，dp[i][j]也为True
+s的前i - 1个字符和p的前j - 1个字符匹配，且s的第i个字符和p的第j个字符相等
+
+ii. dp[i - 1][j - 1] and p[j - 1] == &#39;.&#39;为True时，dp[i][j]也为True
+
+s的前i - 1个字符和p的前j - 1个字符匹配，且p的第j个字符可以和任意字符匹配；那么s的第i个字符可以和p的第j个字符匹配
+
+
+4、最后返回dp[-1][-1]，即s的前n个字符和p的前m个字符是否匹配
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">class Solution:</span><br><span class="line">    def isMatch(self, s: str, p: str) -&gt; bool:</span><br><span class="line">        m &#x3D; len(p) + 1</span><br><span class="line">        n &#x3D; len(s) + 1</span><br><span class="line">        dp &#x3D; [[False] * m for _ in range(n)]</span><br><span class="line">        dp[0][0] &#x3D; True</span><br><span class="line">        # 初始化首行</span><br><span class="line">        for j in range(2, m, 2):</span><br><span class="line">            dp[0][j] &#x3D; dp[0][j - 2] and p[j - 1] &#x3D;&#x3D; &#39;*&#39;</span><br><span class="line">        # 首列一定为False，也不用专门初始化了</span><br><span class="line">        </span><br><span class="line">        for i in range(1, n):</span><br><span class="line">            for j in range(1, m):</span><br><span class="line">                if p[j - 1] &#x3D;&#x3D; &#39;*&#39;: </span><br><span class="line">                    # 如果p的第j个字符为&#39;*&#39;</span><br><span class="line">                    if dp[i][j - 2]: </span><br><span class="line">                        # 如果s的前i个字符和p的前j - 2个字符匹配，这时p的第j个字符为&#39;*&#39;</span><br><span class="line">                        # 那么无论p的第j-1个字符是什么，令它出现0次，dp[i][j]就可以为true</span><br><span class="line">                        dp[i][j] &#x3D; True</span><br><span class="line">                    elif dp[i - 1][j] and s[i - 1] &#x3D;&#x3D; p[j - 2]:</span><br><span class="line">                        # 如果s的前i - 1个字符和p的前j个字符匹配，并且s的第i个字符和p的第j - 1个字符相等</span><br><span class="line">                        # 那么让p的第j - 1个字符多出现一次，s的前i字符和p的前j的字符就可以匹配了</span><br><span class="line">                        dp[i][j] &#x3D; True</span><br><span class="line">                    elif dp[i - 1][j] and p[j - 2] &#x3D;&#x3D; &#39;.&#39;:</span><br><span class="line">                        # 如果s的前i - 1个字符和p的前j个字符匹配，因为p的第j - 1个字符可以匹配任意字符</span><br><span class="line">                        # 那么s的第i个字符可以匹配p的第j - 1个字符，令p的第j - 1个字符多出现一次即可</span><br><span class="line">                        dp[i][j] &#x3D; True</span><br><span class="line">                else: # 如果p的第j个字符不是&#39;*&#39;</span><br><span class="line">                    if dp[i - 1][j - 1] and s[i - 1] &#x3D;&#x3D; p[j - 1]:</span><br><span class="line">                        # s的前i - 1个字符和p的前j - 1个字符匹配，且s的第i个字符和p的第j个字符相等</span><br><span class="line">                        dp[i][j] &#x3D; True</span><br><span class="line">                    elif dp[i - 1][j - 1] and p[j - 1] &#x3D;&#x3D; &#39;.&#39;:</span><br><span class="line">                        # s的前i - 1个字符和p的前j - 1个字符匹配，且p的第j个字符可以和任意字符匹配</span><br><span class="line">                        # 那么s的第i个字符可以和p的第j个字符匹配</span><br><span class="line">                        dp[i][j] &#x3D; True</span><br><span class="line">        return dp[-1][-1]</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">class Solution:</span><br><span class="line">    def isMatch(self, s: str, p: str) -&gt; bool:</span><br><span class="line">        m &#x3D; len(p) + 1</span><br><span class="line">        n &#x3D; len(s) + 1</span><br><span class="line">        dp &#x3D; [[False] * m for _ in range(n)]</span><br><span class="line">        dp[0][0] &#x3D; True</span><br><span class="line">        for j in range(2, m, 2):</span><br><span class="line">            dp[0][j] &#x3D; dp[0][j - 2] and p[j - 1] &#x3D;&#x3D; &#39;*&#39;</span><br><span class="line">        </span><br><span class="line">        for i in range(1, n):</span><br><span class="line">            for j in range(1, m):</span><br><span class="line">                if p[j - 1] &#x3D;&#x3D; &#39;*&#39;: </span><br><span class="line">                    dp[i][j] &#x3D; dp[i][j - 2] or dp[i - 1][j] and (s[i - 1] &#x3D;&#x3D; p[j - 2] or p[j - 2] &#x3D;&#x3D; &#39;.&#39;)</span><br><span class="line">                else: </span><br><span class="line">                    dp[i][j] &#x3D; dp[i - 1][j - 1] and (s[i - 1] &#x3D;&#x3D; p[j - 1] or p[j - 1] &#x3D;&#x3D; &#39;.&#39;)</span><br><span class="line">        return dp[-1][-1]</span><br><span class="line"></span><br><span class="line">作者：edelweisskoko</span><br><span class="line">链接：https:&#x2F;&#x2F;leetcode-cn.com&#x2F;problems&#x2F;zheng-ze-biao-da-shi-pi-pei-lcof&#x2F;solution&#x2F;jian-zhi-offer-19-zheng-ze-biao-da-shi-p-raet&#x2F;</span><br><span class="line">来源：力扣（LeetCode）</span><br><span class="line">著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</span><br></pre></td></tr></table></figure>
+## 剑指 Offer 19. 正则表达式匹配
+
+</code></pre>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/%E5%89%91%E6%8C%87offer/">剑指offer</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2021/08/03/%E5%89%91%E6%8C%87offer20/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">剑指offer20</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2021/08/03/%E5%89%91%E6%8C%87offer18/">
+        <span class="next-text nav-default">剑指offer18</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+      </footer>
+    
+  </article>
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2021
+    <span class="footer-author">Russshare.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

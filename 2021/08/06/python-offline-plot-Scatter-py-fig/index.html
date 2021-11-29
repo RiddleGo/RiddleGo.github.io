@@ -1,37 +1,228 @@
-{% extends '_layout.swig' %}
-{% import '_macro/post.swig' as post_template %}
-{% import '_macro/sidebar.swig' as sidebar_template %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
 
 
-{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 
-{% block page_class %}page-post-detail{% endblock %}
 
 
-{% block content %}
+  <meta name="description" content="python:offline.plot-Scatter-py_fig"/>
 
-  <div id="posts" class="posts-expand">
-    {{ post_template.render(page) }}
 
-    <div class="post-spread">
-      {% if theme.jiathis %}
-        {% include '_partials/share/jiathis.swig' %}
-      {% elseif theme.baidushare %}
-        {% include '_partials/share/baidushare.swig' %}
-      {% elseif theme.add_this_id %}
-        {% include '_partials/share/add-this.swig' %}
-      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
-        {% include '_partials/share/duoshuo_share.swig' %}
-      {% endif %}
-    </div>
+
+
+  <meta name="keywords" content="plotly,Scatter," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+
+
+
+<link rel="canonical" href="https://riddlego.github.io/2021/08/06/python-offline-plot-Scatter-py-fig/"/>
+
+
+<meta name="description" content="plotlyplotly使用指南 Python使用Plotly绘图工具，绘制甘特图 python Plotly绘图工具的简单使用 plotly线上绘图和离线绘图的区别 scatterpython绘图基础—scatter用法 plt.scatter() PYthon——plt.scatter各参数详解 Python篇：三维散点图scatter介绍">
+<meta property="og:type" content="article">
+<meta property="og:title" content="python:offline.plot-Scatter-py_fig">
+<meta property="og:url" content="https://riddlego.github.io/2021/08/06/python-offline-plot-Scatter-py-fig/index.html">
+<meta property="og:site_name" content="RiddleGo">
+<meta property="og:description" content="plotlyplotly使用指南 Python使用Plotly绘图工具，绘制甘特图 python Plotly绘图工具的简单使用 plotly线上绘图和离线绘图的区别 scatterpython绘图基础—scatter用法 plt.scatter() PYthon——plt.scatter各参数详解 Python篇：三维散点图scatter介绍">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-08-06T02:28:30.000Z">
+<meta property="article:modified_time" content="2021-08-06T07:56:25.321Z">
+<meta property="article:author" content="Russshare">
+<meta property="article:tag" content="plotly">
+<meta property="article:tag" content="Scatter">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> python:offline.plot-Scatter-py_fig - RiddleGo </title>
+  <meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">RiddleGo</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          python:offline.plot-Scatter-py_fig
+        
+      </h1>
+
+      <time class="post-time">
+          8月 06 2021
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h3 id="plotly"><a href="#plotly" class="headerlink" title="plotly"></a>plotly</h3><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/u012897374/article/details/77857980?utm_medium=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~default-13.control&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~default-13.control">plotly使用指南</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/u012798683/article/details/88852291?utm_medium=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~default-14.control&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~default-14.control">Python使用Plotly绘图工具，绘制甘特图</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/u012798683/article/details/88366216">python Plotly绘图工具的简单使用</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/komean/p/11182510.html">plotly线上绘图和离线绘图的区别</a></p>
+<h3 id="scatter"><a href="#scatter" class="headerlink" title="scatter"></a>scatter</h3><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/xiaobaicai4552/article/details/79065990">python绘图基础—scatter用法</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_37393514/article/details/81298503?utm_medium=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~default-6.base&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~default-6.base">plt.scatter()</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qiu931110/article/details/68130199?utm_medium=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~default-8.base&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~default-8.base">PYthon——plt.scatter各参数详解</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_41297324/article/details/83856832?utm_medium=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromMachineLearnPai2~default-14.base&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromMachineLearnPai2~default-14.base">Python篇：三维散点图scatter介绍</a></p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/plotly/">plotly</a>
+		  
+			<a href="/tags/Scatter/">Scatter</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2021/08/06/python-%E7%B1%BB%E4%B8%AD%E6%8F%8F%E8%BF%B0%E7%AC%A6/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">python:类中描述符</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2021/08/06/python-%E5%87%BD%E6%95%B0%E4%B8%AD%E7%9A%84self/">
+        <span class="next-text nav-default">python:函数中的self</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
   </div>
 
-{% endblock %}
 
-{% block sidebar %}
-  {{ sidebar_template.render(true) }}
-{% endblock %}
+      </footer>
+    
+  </article>
 
-{% block script_extra %}
-  {% include '_scripts/pages/post-details.swig' %}
-{% endblock %}
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2021
+    <span class="footer-author">Russshare.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>
