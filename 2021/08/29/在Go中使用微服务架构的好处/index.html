@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, shrink-to-fit=no">
+    <meta name="referrer" content="origin">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <title>在Go中使用微服务架构的好处</title>
+
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/LongCang.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Monda.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/NotoSansSC.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Playball.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/PTMono.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/RobotoSlab.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Rosario.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/UbuntuMono.css">
+
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/post.css">
+    
+        <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/normal.css">
+    
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/jquery-3.4.1.min.js"></script>
+
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+</head>
+<body>
+    <a id="cover"></a>
+    <div id="header">
+    <div class="header">
+        <div class="vertical">
+            <div class="inner">
+                <h1 class="header-subtitle">在Go中使用微服务架构的好处</h1>
+                <div class="header-subinfo">
+                    <p class="article-info-text">
+                        <span>
+                            <i class="iconfont icon-time"></i> 发表时间：2021-08-29
+                        </span>
+                        
+                            <span id="/2021/08/29/在Go中使用微服务架构的好处/" class="leancloud_visitors" data-flag-title="在Go中使用微服务架构的好处">
+                                <i class="iconfont icon-browse"></i> 阅读：<sapn class="leancloud-visitors-count"></span>
+                            </span>
+                        
+                        <span>
+                            <i class="iconfont icon-interactive"></i> 评论：<span class="valine-comment-count" data-xid="/2021/08/29/在Go中使用微服务架构的好处/"></span>
+                        </span>  
+                    </p>                 
+                </div>
+            </div>
+        </div>
+        <canvas id="articleHeaderCanvas"></canvas>
+    </div>
+</div>
+    <div id="container">
+    <div id="content">
+        <div id="article">
+    <div class="toc"></div>
+    <div class="article-body">
+        <p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/GLbh68cZ-jItcixcmKOmpA">点击原文链接，本文纯粹自己复制粘贴学习笔记无图</a></p>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>我们已经讨论“微服务架构”很长一段时间了。它是软件架构中最新的热门话题。那么什么是微服务呢？我们为什么要使用它？为什么要在 Golang 中使用微服务架构?它有哪些优点？</p>
+<p>本文中，我将会探讨一些相关的问题。废话不多说，让我们开始吧。</p>
+<p>本文是 Go语言中文网组织的 GCTT 翻译，发布在 Go语言中文网公众号，转载请联系我们授权。</p>
+<h2 id="什么是微服务？"><a href="#什么是微服务？" class="headerlink" title="什么是微服务？"></a>什么是微服务？</h2><p>微服务是一种软件开发技术，属于 SOA（面向服务的架构）的一种形式。它的作用是，<strong>将应用程序构建为许多松耦合的服务的集合</strong>。在这种架构中，服务的编码通常是细粒度的，服务的协议更轻量。目前还没有对微服务的准确定义，但它有一些显著的特征：<strong>自动化部署、业务功能、去中心化的数据管理和智能端点</strong>。（译者注：对于这个定义有兴趣的同学，不妨去看看 Martin 大神关于微服务的文章[1]</p>
+<h2 id="我们为什么使用微服务？"><a href="#我们为什么使用微服务？" class="headerlink" title="我们为什么使用微服务？"></a>我们为什么使用微服务？</h2><p><strong>这种架构有助于我们用各部分、小型模块描绘整个应用程序，使其更容易理解、开发和测试；有助于我们将各个服务视为独立且又清晰指明其用途的服务</strong>。更进一步地，它有助于保持项目架构的一致性(最初设计的架构和实际开发完成的架构差别不大)。它还可以通过建立不同的独立团队来进行服务的部署和扩展，<strong>从而各团队能够并行地开发</strong>。在这个架构中重构代码更容易。<strong>它也支持连续交付和部署流程</strong>（CI/CD)。</p>
+<h2 id="为什么使用-Go-构建微服务？"><a href="#为什么使用-Go-构建微服务？" class="headerlink" title="为什么使用 Go 构建微服务？"></a>为什么使用 Go 构建微服务？</h2><p>在深入研究这个问题之前。首先，我说一下 Golang 的优势。虽然 Golang 是一门新的语言，但是与其他语言相比，它有很多优势。用 Golang <strong>编写的程序更加健壮</strong>。<strong>它们能够承受程序使用运行的服务构建的繁重负载</strong>。<strong>Golang 更适合多处理器系统和 Web 应用程序</strong>。此外，它容易地与 GitHub 集成，管理非集中的代码包。<strong>微服务架构的用处大部分体现在当程序需要伸缩</strong>（scalable)时。如果有一种语言可以完全符合标准,那么它就是 Golang。原因是它继承自 C-family 编程语言，用 Golang 编写的组件更容易与同一家族中其他语言编写的组件相结合。</p>
+<p>尽管 Go 出身于 C-family，但它比 C / C ++ 更高效。它语法更简单，有点像 Python。<strong>它稳定语法, 自第一次公开发布以来，它没有太大变化，也就是说它是后向兼容的。</strong>与其他语言相比，这让 Golang 占了上风。除此之外，Golang 的性能比 python 和 java 高出不少。锦上添花的是，它又像 C/C++ 简单的同时又易于阅读和理解，使它成为开发微服务应用的绝佳选择。</p>
+<h2 id="Golang-中的微服务架构框架"><a href="#Golang-中的微服务架构框架" class="headerlink" title="Golang 中的微服务架构框架"></a>Golang 中的微服务架构框架</h2><p>下面，我们讨论一下可以用于微服务架构的框架。有以下些框架:</p>
+<h3 id="Go-Micro"><a href="#Go-Micro" class="headerlink" title="Go Micro"></a><strong>Go Micro</strong></h3><p>Go Micro 是目前为止我遇到的最流行的 RPC 框架。它是一个可插拔的 RPC 框架。Go Micro 为我们提供了以下功能:</p>
+<ul>
+<li><p>服务发现: 程序自动注册到服务发现系统</p>
+</li>
+<li><p>负载均衡: 它提供了客户端负载均衡，这有助于平衡服务实例之间的请求</p>
+</li>
+<li><p>同步通信: 提供 Request/Response 传输层</p>
+</li>
+<li><p>异步通信: 具有内置的发布和订阅功能</p>
+</li>
+<li><p>消息编码: 可以利用 header 中 Content-Type 进行编码和解码</p>
+</li>
+<li><p>RPC 客户端/服务器端: 利用上述功能并提供构建微服务需要的接口</p>
+</li>
+</ul>
+<p>Go Micro 架构由三层组成。第一层抽象为服务层。第二层为 client-server 模型层。serrver 用于编写服务的块组成，而 client 为我们提供接口，其唯一目的是向 server model 中编写的服务发出请求。</p>
+<p>第三层有以下类型的插件:</p>
+<ul>
+<li><p>Broker: 在异步通信中为 message broker(消息代理）提供接口</p>
+</li>
+<li><p>Codec: 用于加密或解密消息</p>
+</li>
+<li><p>Registry: 提供服务搜索功能</p>
+</li>
+<li><p>Selector: 在 register 上构建了负载均衡</p>
+</li>
+<li><p>Transport: Transport 是服务与服务之间同步请求/响应的通信接口</p>
+</li>
+</ul>
+<p>它还提供了一个名为 Sidecar 的功能。Sidecar 使您能够集成以 Go 以外的语言编写的服务。它还为我们提供了 gRPC 编码/解码、服务注册和 HTTP 请求处理</p>
+<h3 id="Go-Kit"><a href="#Go-Kit" class="headerlink" title="Go Kit"></a>Go Kit</h3><p>Go Kit 是一个用于构建微服务的编程工具包。与 Go Micro 不同，它是一个可以以二进制包导入的库。Go Kit 规则很简单。如下:</p>
+<ul>
+<li>没有全局变量</li>
+<li>声明式组合</li>
+<li>显式依赖</li>
+<li>Interface as Contracts (接口合约)</li>
+<li>领域驱动设计（DDD)</li>
+</ul>
+<p>Go Kit 提供以下代码包:</p>
+<ul>
+<li>Authentication 鉴权: BasicAuth 和 JWT</li>
+<li>Transport 协议: HTTP, gRPC 等</li>
+<li>Logging 日志: 服务中的结构化日志接口</li>
+<li>Metrics 度量: CloudWatch,Statsd, Graphite 等</li>
+<li>Tracing 分布式追踪: Zipkin and Opentracing</li>
+<li>Service discovery 服务发现: Consul, Etcd, Eureka 等</li>
+<li>Circuitbreaker 限流熔断: Hystrix 在 Go 语言的实现</li>
+</ul>
+<h2 id="Gizmo"><a href="#Gizmo" class="headerlink" title="Gizmo"></a>Gizmo</h2><p>Gizmo 是来自《纽约时报》的一个微服务工具包。它提供了将服务器守护进程和 pubsub 守护进程放在一起的包。它公开了以下包:</p>
+<p>Server: 提供两个服务器实现: SimpleServer(HTTP)和 RPCServer(gRPC)</p>
+<p>Server/kit: 基于 Go Kit 的实验代码包</p>
+<p>Config 配置: 包含来自 JSON 文件、Consul k/v 中的 JSON blob 或环境变量的配置功能</p>
+<p>Pubsub: 提供用于从队列中发布和使用数据的通用接口</p>
+<p>Pubsub/pubsubtest: 包含发布者和订阅者接口的测试实现</p>
+<p>Web: 用于从请求查询和有效负载解析类型的外部函数</p>
+<p><strong>Pubsub</strong> 包提供了处理以下队列的接口:</p>
+<p>pubsub/aws: 用于 Amazon SNS/SQS</p>
+<p>pubsub/gcp: 用于 Google Pubsub</p>
+<p>pubsub/kafka: 用于 Kafka topics</p>
+<p>pubsub/http: 用户 HTTP 推送</p>
+<p>所以，在我看来，Gizmo 介于 Go Micro 和 Go Kit 之间。它不像 Go Micro 那样是一个完全的黑盒。同时，它也不像 Go Kit 那么原始。它提供了更高级别的构建组件，比如配置和 pubsub 包</p>
+<h2 id="Kite"><a href="#Kite" class="headerlink" title="Kite"></a>Kite</h2><p>Kite 是一个在 Go 中开发微服务的框架。它公开 RPC client 和 Server 端代码包。创建的服务将自动注册到服务发现系统 Kontrol。Kontrol 是用 Kite 编写的，它本身就是一个 Kite service。这意味着 Kite 微服务在自身的环境中运行良好。如果需要将 Kite 微服务连接到另一个服务发现系统，则需要定制。这是我从列表中选择 Kite 并决定不介绍这个框架的重要原因之一</p>
+<p>因此，如果您觉得这个博客很有用，并且想知道如何在 Golang 中创建多功能的微服务，那么请从我们这里雇佣 Golang 开发者[2]，并学习利用顶级的专业知识。</p>
+<p>via: <a target="_blank" rel="noopener" href="https://medium.com/datadriveninvestor/benefits-of-using-microservice-architecture-in-go-4440e4fcd9c9">https://medium.com/datadriveninvestor/benefits-of-using-microservice-architecture-in-go-4440e4fcd9c9</a></p>
+<p>作者：Katy Slemon[3]译者：Alex1996a[4]校对：dingdingzhou[5]</p>
+<p>本文由 GCTT[6] 原创编译，Go 中文网[7] 荣誉推出，发布在 Go语言中文网公众号，转载请联系我们授权。</p>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzAxMTA4Njc0OQ==&mid=2651449186&idx=2&sn=7e1fd1c84cc7274ece05aee39664f256&chksm=80bb3990b7ccb0862b4b0bb002d7df2e840217207aef85a4c4f9df6b0057093756232fdb9702&scene=21#wechat_redirect">推荐阅读—图解 Go 微服务熔断器</a></p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p>[1]<br>关于微服务的文章: <a target="_blank" rel="noopener" href="https://martinfowler.com/articles/microservices.html">https://martinfowler.com/articles/microservices.html</a></p>
+<p>[2]<br>雇佣 Golang 开发者: <a target="_blank" rel="noopener" href="https://www.bacancytechnology.com/hire-golang-developer">https://www.bacancytechnology.com/hire-golang-developer</a></p>
+<p>[3]<br>Katy Slemon: <a target="_blank" rel="noopener" href="https://medium.com/@katyslemon">https://medium.com/@katyslemon</a></p>
+<p>[4]<br>Alex1996a: <a target="_blank" rel="noopener" href="https://github.com/Alex1996a">https://github.com/Alex1996a</a></p>
+<p>[5]<br>dingdingzhou: <a target="_blank" rel="noopener" href="https://github.com/zhoudingding">https://github.com/zhoudingding</a></p>
+<p>[6]<br>GCTT: <a target="_blank" rel="noopener" href="https://github.com/studygolang/GCTT">https://github.com/studygolang/GCTT</a></p>
+<p>[7]<br>Go 中文网: <a target="_blank" rel="noopener" href="https://studygolang.com/">https://studygolang.com/</a></p>
+
+        <p class="suffix-end">__END__</p>
+        <div class="suffix-box">
+            <div class="suffix-box-left">
+                <img src="https://gitee.com/psycho1900/miss-reddle/raw/master/profile.jpg" alt="Russshare">
+            </div>
+            <div class="suffix-box-right">
+                <span class="suffix-box-title">文章作者</span>：Russshare
+                <br>
+                <span class="suffix-box-title">文章出处</span>：<a href="/2021/08/29/%E5%9C%A8Go%E4%B8%AD%E4%BD%BF%E7%94%A8%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84%E7%9A%84%E5%A5%BD%E5%A4%84/" target="_blank">在Go中使用微服务架构的好处</a>
+                <br>
+                <span class="suffix-box-title">作者签名</span>：我们生死与共，勇往直前，永远都是坏小子.
+                <br>
+                <span class="suffix-box-title">关于主题</span>：<a href="https://github.com/first19326/Hexo-LiveForCode" target="_blank">Hexo - Russshare</a>
+                <br>
+                <span class="suffix-box-title">版权声明</span>：文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" title="BY-NC-SA" target="_blank">BY-NC-SA</a> 许可协议，转载请注明出处
+                <br>
+            </div>
+            <div style="clear: both;"></div>
+        </div>
+    </div>
+    <div class="article-footer">
+        
+            <div class="category">
+                分类：
+                
+                    <a href="/categories/golang%E5%BE%AE%E6%9C%8D%E5%8A%A1/">golang微服务</a>
+                
+            </div>
+        
+        
+            <div class="tag">
+                标签：
+                
+                    <a href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/">微服务</a>
+                
+            </div>
+        
+        <div class="article-prev-next">
+            
+                <a href="/2021/08/31/Go-%E5%A6%82%E4%BD%95%E5%88%A9%E7%94%A8-Linux-%E5%86%85%E6%A0%B8%E7%9A%84%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E8%83%BD%E5%8A%9B/" class="prev-prefix">« </a> 上一篇：    <a href="/2021/08/31/Go-%E5%A6%82%E4%BD%95%E5%88%A9%E7%94%A8-Linux-%E5%86%85%E6%A0%B8%E7%9A%84%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E8%83%BD%E5%8A%9B/" title="发布于 2021-08-31 09:44">Go-如何利用-Linux-内核的负载均衡能力</a>
+                <br>
+            
+            
+                <a href="/2021/08/29/Go%E8%B0%83%E7%94%A8Java-%E6%96%B9%E6%A1%88%E5%92%8C%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E5%88%86%E4%BA%AB/" class="next-prefix">» </a> 下一篇：    <a href="/2021/08/29/Go%E8%B0%83%E7%94%A8Java-%E6%96%B9%E6%A1%88%E5%92%8C%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E5%88%86%E4%BA%AB/" title="发布于 2021-08-29 04:01">Go调用Java-方案和性能优化分享</a>
+            
+        </div>
+    </div>
+    
+    <div class="article-comments">
+        <div class="comments-title">
+            评论列表
+        </div>
+        <div class="comments-content">
+        </div>
+    </div>
+
+</div>
+
+    </div>
+</div>
+    <div id="footer"></div>
+    <div id="sidebar">
+    <div class="menu-wrap" style="display:none;">
+        <nav class="menu">
+            <div class="menu-introduce"> 
+                <div class="introduce-avatar"></div> 
+                <div class="introduce-info"> 
+                    <div class="introduce-user"><span></span></div>        
+                </div> 
+            </div> 
+            <div class="menu-list">
+                <ul></ul> 
+            </div> 
+            <div class="menu-link"></div> 
+        </nav>
+        <button class="menu-button-close"></button>
+        <div class="morph-shape" id="morph-shape" data-morph-open="M-7.312,0H15c0,0,66,113.339,66,399.5C81,664.006,15,800,15,800H-7.312V0z;M-7.312,0H100c0,0,0,113.839,0,400c0,264.506,0,400,0,400H-7.312V0z">
+            <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 100 800" preserveAspectRatio="none">
+                <path d="M-7.312,0H0c0,0,0,113.839,0,400c0,264.506,0,400,0,400h-7.312V0z"/>
+            </svg>
+        </div>
+    </div>
+    <button class="menu-button-open">MENU</button>
+    <div class="menu-cover"></div>
+</div>
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/search.css">
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/iscroll.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/instantsearch.min.js"></script>
+<div class="search-window">
+    <div class="search-content">
+        <div class="search-content-icon">
+            <i class="iconfont icon-search"></i>
+        </div>
+        <div id="search-input" class="search-input"></div>
+    </div>
+
+    <div class="search-scroll">
+        <div class="search-result">
+            <div id="search-stats" class="search-stats"></div>
+            <div id="search-hits"></div>
+            <div id="search-pagination" class="search-pagination"></div>
+        </div>
+    </div>
+
+    <span class="search-close-icon">
+        <i class="iconfont icon-close"></i>
+    </span>
+</div>
+    <div id="tools">
+    <div class="progressbar-top"></div>
+
+    
+        <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/APlayer.css">
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/APlayer.min.js"></script>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/Meting.min.js"></script>
+        <meting-js id="3778678" lrcshow="false" server="netease" type="playlist" fixed="true" autoplay="false" loop="all" order="random" preload="auto" volume="0.67" mutex="true"></meting-js>
+    
+    
+    <div class="wrap-right"></div>
+    <div class="loading"></div>
+</div>
+    <script>
+    window.config = {
+        GitHubUserName     : 'Russshare',
+        GitHubRepositories : 'Russshare',
+
+        BlogUser      : 'Russshare',
+        BlogAvatar    : 'https://gitee.com/psycho1900/miss-reddle/raw/master/profile.jpg',
+        BlogStartDate : '2021-03-17',
+
+        WebsiteTitleBlur         : '(◍´꒳`◍) Hi, Miss Riddle',
+        WebsiteTitleBlurTimeOut  : 500,
+        WebsiteTitleFocus        : '(*´∇｀*) 欢迎回来!',
+        WebsiteTitleFocusTimeOut : 1000,
+        WebsiteFavicon           : 'https://gitee.com/psycho1900/miss-reddle/raw/master/beer.png',
+
+        ProgressBar: {
+            id       : 'topProgressBar',
+            color    : '#77B6FF',
+            height   : '2px',
+            duration : 0.2
+        },
+
+        Loading: {
+            rebound: {
+                tension  : 16,
+                friction : 5
+            },
+            spinner: {
+                id     : 'spinner',
+                radius : 90,
+                sides  : 3,
+                depth  : 4,
+                colors : {
+                    background : '#F0F0F0',
+                    stroke     : '#272633',
+                    base       : '',
+                    child      : '#272633'
+                },
+                alwaysForward : true,
+                restAt        : 0.5,
+                renderBase    : false
+            }
+        },
+
+        HomeHeaderAnimationRendered : true,
+        HomeHeaderAnimation         : {
+            radius      : 15,
+            density     : 0.2,
+            color       : 'rgba(255, 255, 255, .2)',
+            clearOffset : 0.3
+        },
+
+        ArticleHeaderAnimationRendered : false,
+        ArticleHeaderAnimation         : {
+            triW                  : 14,
+            triH                  : 20,
+            neighbours            : [
+                
+                    'side',
+                
+                    'top',
+                
+                    'bottom',
+                
+            ],
+            speedTrailAppear      : 0.1,
+            speedTrailDisappear   : 0.1,
+            speedTriOpen          : 1,
+            trailMaxLength        : 30,
+            trailIntervalCreation : 100,
+            delayBeforeDisappear  : 2,
+            colors                : [
+                
+                    '#96EDA6',
+                
+                    '#5BC6A9',
+                
+                    '#38668C',
+                
+                    '#374D84',
+                
+                    '#BED5CB',
+                
+                    '#62ADC6',
+                
+                    '#8EE5DE',
+                
+                    '#304E7B',
+                
+            ]
+        },
+
+        BackAnimationRendered          : true,
+        IEBrowserBackAnimationRendered : false,
+        BackAnimation                  : {
+            colorSaturation  : '60%',
+            colorBrightness  : '50%',
+            colorAlpha       : 0.5,
+            colorCycleSpeed  : 5,
+            verticalPosition : 'random',
+            horizontalSpeed  : 200,
+            ribbonCount      : 3,
+            strokeSize       : 0,
+            parallaxAmount   : -0.2,
+            animateSections  : true
+        },
+
+        HomeHeaderImage : [
+            
+                'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/image/header/home.jpg',
+            
+                'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/image/header/home.jpeg',
+            
+        ],
+        HomeBannerText  : '',
+
+        ArticleHeaderImage : [
+            
+                'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/image/header/article.jpg',
+            
+        ],
+
+        OtherBannerText : '',
+
+        MenuList : [
+            
+                {
+                    name   : '首页',
+                    href   : '/',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '标签',
+                    href   : '/tag',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '分类',
+                    href   : '/category',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '赞赏',
+                    href   : '/donate',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '关于',
+                    href   : '/about',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '搜索',
+                    href   : '',    
+                    target : '',
+                    class  : 'search'
+                },
+            
+                {
+                    name   : '留言板',
+                    href   : '/comment',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '友情链接',
+                    href   : '/friend',    
+                    target : '',
+                    class  : ''
+                },
+            
+        ],
+        MenuLink : [
+            
+                
+                    {
+                        icon : 'icon-weibo', 
+                        url  : ''
+                    },
+                
+                    {
+                        icon : 'icon-wechat', 
+                        url  : ''
+                    },
+                
+                    {
+                        icon : 'icon-qq', 
+                        url  : ''
+                    },
+                
+                    {
+                        icon : 'icon-github', 
+                        url  : 'https://github.com/RiddleGo'
+                    },
+                
+            
+        ],
+
+        FooterStyle : 2,
+        BottomText  : {
+            icon    : 'like-fill',
+            left    : '人生若只如初见',
+            right   : '何事秋风悲画扇'
+        },
+        ThemeInfo   : true,
+
+        ConsoleList : [
+            
+                
+                    [
+                        
+                            
+                                'Based on cnblogs theme SimpleMemory.',
+                            
+                                '',
+                            
+                        
+                    ],
+                
+                    [
+                        
+                            
+                                'SimpleMemory Author:',
+                            
+                                'BNDong',
+                            
+                        
+                    ],
+                
+                    [
+                        
+                            
+                                'Theme:',
+                            
+                                'LiveForCode',
+                            
+                        
+                    ],
+                
+            
+        ],
+
+        FontIconExtend : '',
+
+        Donate : {
+            paypal  : '',
+            bitcoin : '',
+            alipay  : '',
+            wechat  : ''
+        },
+
+        Code : {
+            style : 'normal'
+        },  
+
+        Search : {
+            applicationID : '010C3EANT8',
+            apiKey        : 'c7abab9f11b79102b9aff7fe6d41447d',
+            indexName     : 'Notes',
+            hits          : {
+                page : 10
+            },
+            labels        : {
+                placeholder : '搜索',
+                empty       : '未发现与 「${query}」 相关的内容',
+                stats       : '${hits} 条相关条目，使用了 ${time} 毫秒',
+            }
+        }, 
+
+        Valine : {
+            switch         : true,
+            el             : '.comments-content',
+            appId          : 'TKpiBidydKtx7apGCq7DM4Fw-gzGzoHsz',
+            appKey         : 'wsVqBbLWlLy4JRbi9I4XDBpH',
+            placeholder    : '你是我一生只会遇见一次的惊喜...',
+            avatar         : 'mm',
+            meta           : 'nick,mail,link',
+            requiredFields : 'nick,mail',
+            pageSize       : 5,
+            lang           : 'zh-cn',
+            visitor        : true,
+            enableQQ       : true
+        },
+
+        Tocbot : {
+            switch                : true,
+            tocSelector           : '.toc',
+            contentSelector       : '.article-body',
+            headingSelector       : 'h1, h2, h3, h4, h5',
+            headingsOffset        : 0,
+            scrollSmooth          : true,
+            scrollSmoothOffset    : -5,
+            positionFixedSelector : '.toc',
+            positionFixedClass    : 'toc-fixed',
+            fixedSidebarOffset    : '',
+        },
+
+        Require : {
+            baseUrl     : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/',
+            waitSeconds : 100
+        },
+
+        Music : {
+            type : 'Meting'
+        },
+        APlayer : {
+            container : '.aplayer',
+            fixed     : true,
+            autoplay  : false,
+            loop      : 'all',
+            order     : 'random',
+            preload   : 'auto',
+            volume    : 0.67,
+            mutex     : true,
+            lrcType   : 3,
+            audio     : [
+                
+                    {
+                        name   : 'aLIEz',
+                        artist : 'mizuki（瑞葵）',
+                        cover  : '/music/cover/aLIEz.jpg',
+                        url    : '/music/song/aLIEz.mp3',
+                        lrc    : '/music/lrc/aLIEz.lrc'
+                    },
+                
+                    {
+                        name   : 'Endless Tears',
+                        artist : 'CLIFF EDGE',
+                        cover  : '/music/cover/Endless Tears.jpg',
+                        url    : '/music/song/Endless Tears.mp3',
+                        lrc    : '/music/lrc/Endless Tears.lrc'
+                    },
+                
+                    {
+                        name   : 'Miracle',
+                        artist : 'Cascada',
+                        cover  : '/music/cover/Miracle.jpg',
+                        url    : '/music/song/Miracle.mp3',
+                        lrc    : '/music/lrc/Miracle.lrc'
+                    },
+                
+                    {
+                        name   : 'Roll The Dice',
+                        artist : '高珊',
+                        cover  : '/music/cover/Roll The Dice.jpg',
+                        url    : '/music/song/Roll The Dice.mp3',
+                        lrc    : '/music/lrc/Roll The Dice.lrc'
+                    },
+                
+                    {
+                        name   : 'See You Again',
+                        artist : 'Charlie Puth, Wiz Khalifa',
+                        cover  : '/music/cover/See You Again.jpg',
+                        url    : '/music/song/See You Again.mp3',
+                        lrc    : '/music/lrc/See You Again.lrc'
+                    },
+                
+                    {
+                        name   : 'Traveling Light',
+                        artist : 'Joel Hanson, Sara Groves',
+                        cover  : '/music/cover/Traveling Light.jpg',
+                        url    : '/music/song/Traveling Light.mp3',
+                        lrc    : '/music/lrc/Traveling Light.lrc'
+                    },
+                
+                    {
+                        name   : '痴心绝对',
+                        artist : '李圣杰',
+                        cover  : '/music/cover/痴心绝对.jpg',
+                        url    : '/music/song/痴心绝对.mp3',
+                        lrc    : '/music/lrc/痴心绝对.lrc'
+                    },
+                
+                    {
+                        name   : '好想大声说爱你',
+                        artist : 'BAAD（バード）',
+                        cover  : '/music/cover/好想大声说爱你.jpg',
+                        url    : '/music/song/好想大声说爱你.mp3',
+                        lrc    : '/music/lrc/好想大声说爱你.lrc'
+                    },
+                
+            ]
+        },
+        Meting : {
+            id       : '3778678', 
+            lrcshow  : false, 
+            server   : 'netease', 
+            type     : 'playlist', 
+            fixed    : true, 
+            autoplay : false, 
+            loop     : 'all', 
+            order    : 'random', 
+            preload  : 'auto', 
+            volume   : 0.67, 
+            mutex    : true
+        },
+
+        LazyLoad : {
+            default : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/image/website/lazyload.svg'
+        },
+  
+        Style : {
+            aplayer          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/APlayer.css',
+            archive          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/archive.css',
+            donate           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/donate.css',
+            fancybox         : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/jquery.fancybox.css',
+            footer           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/footer.css',
+            iconfont         : 'https://at.alicdn.com/t/font_1546312_l3yohatebw.css',
+            index            : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/index.css',
+            menuBubble       : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/menu-bubble.css',
+            page             : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/page.css',
+            post             : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/post.css',
+            search           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/search.css',
+            tocbot           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/tocbot.css',
+            normal           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/normal.css',
+            night            : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/night.css',
+            clipboard        : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/clipboard.css'
+        },
+
+        Script: {
+            aplayer          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/APlayer.min.js',
+            config           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/require.config.js',
+            index            : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/index.js',
+            instantSearch    : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/instantsearch.min.js',
+            jQuery           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/jquery-3.4.1.min.js',
+            loading          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/loading.js',
+            meting           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/Meting.min.js',
+            iscroll          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/iscroll.js',
+            require          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/require.min.js'
+        },
+
+        Font: {
+            LongCang   : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/LongCang.css',
+            Monda      : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Monda.css',
+            NotoSansSC : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/NotoSansSC.css',
+            Playball   : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Playball.css',
+            PTMono     : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/PTMono.css',
+            RobotoSlab : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/RobotoSlab.css',
+            Rosario    : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Rosario.css',
+            UbuntuMono : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/UbuntuMono.css'
+        },
+
+        Suffix : {
+            about : '我们生死与共，勇往直前，永远都是坏小子.'
+        },
+            
+        Theme : {
+            url  : 'https://github.com/first19326/Hexo-LiveForCode',
+            name : 'Hexo - Russshare'
+        }  
+    };
+</script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/index.js"></script>
+</body>
+</html>

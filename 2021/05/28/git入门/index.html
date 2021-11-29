@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, shrink-to-fit=no">
+    <meta name="referrer" content="origin">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <title>git入门</title>
+
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/LongCang.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Monda.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/NotoSansSC.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Playball.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/PTMono.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/RobotoSlab.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Rosario.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/UbuntuMono.css">
+
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/post.css">
+    
+        <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/normal.css">
+    
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/jquery-3.4.1.min.js"></script>
+
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+</head>
+<body>
+    <a id="cover"></a>
+    <div id="header">
+    <div class="header">
+        <div class="vertical">
+            <div class="inner">
+                <h1 class="header-subtitle">git入门</h1>
+                <div class="header-subinfo">
+                    <p class="article-info-text">
+                        <span>
+                            <i class="iconfont icon-time"></i> 发表时间：2021-05-28
+                        </span>
+                        
+                            <span id="/2021/05/28/git入门/" class="leancloud_visitors" data-flag-title="git入门">
+                                <i class="iconfont icon-browse"></i> 阅读：<sapn class="leancloud-visitors-count"></span>
+                            </span>
+                        
+                        <span>
+                            <i class="iconfont icon-interactive"></i> 评论：<span class="valine-comment-count" data-xid="/2021/05/28/git入门/"></span>
+                        </span>  
+                    </p>                 
+                </div>
+            </div>
+        </div>
+        <canvas id="articleHeaderCanvas"></canvas>
+    </div>
+</div>
+    <div id="container">
+    <div id="content">
+        <div id="article">
+    <div class="toc"></div>
+    <div class="article-body">
+        <h3 id="前言"><a href="#前言" class="headerlink" title="前言:"></a>前言:</h3><p>我们常常在做一个东西是一个团队在做，每个人负责的部分或者重叠或者不重叠。就需要对代码进行一个管理，这时git就上场了，作为一个程序员，这玩意算是必备技能之一了，现在我们一起跟着大佬的步伐进行学习。<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_42152081/article">内容来自</a></p>
+<h3 id="1-Git简介"><a href="#1-Git简介" class="headerlink" title="1.Git简介"></a>1.Git简介</h3><p>Git是目前世界上最先进的分布式版本控制系统，在处理各种项目时都十分高效，而且非常的高大上。</p>
+<p>SVN是集中式版本控制系统，版本库是集中放在中央服务器的，而干活的时候，用的都是自己的电脑，所以首先要从中央服务器哪里得到最新的版本，然后干活，干完后，需要把自己做完的活推送到中央服务器。<strong>而且集中式版本控制系统是必须联网才能工作。</strong></p>
+<p>Git是分布式版本控制系统，它就没有中央服务器的，每个人的电脑就是一个完整的版本库，这样，工作的时候就不需要联网了，因为版本都是在自己的电脑上。</p>
+<h3 id="2-Git安装（仅列出在Windows系统下的安装过程）"><a href="#2-Git安装（仅列出在Windows系统下的安装过程）" class="headerlink" title="2.Git安装（仅列出在Windows系统下的安装过程）"></a>2.Git安装（仅列出在Windows系统下的安装过程）</h3><p>打开Git官网下载安装程序，然后按照默认选项安装即可。</p>
+<p>安装完成后，打开Git bash软件，弹出一个类似cmd的命令行窗口，证明安装成功。</p>
+<p><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/01.png"></p>
+<p>安装完成后，需要进行设置，在命令行输入以下代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git config --global user.name &quot;Your Name&quot;</span><br><span class="line">$ git config --global user.email &quot;email@example.com&quot;</span><br></pre></td></tr></table></figure>
+<p>顾名思义，这是设置你的名字和Email地址。<br>(直接在bash 命令行窗口执行就行。)</p>
+<p>我们可以查看一下用户名和密码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git config user.name</span><br><span class="line">$ git config user.email</span><br></pre></td></tr></table></figure>
+
+<p>假如我们这时候报错，证明Git的用户名和密码没有配置成功，我们还可以这样做：</p>
+<p>在用户主目录下找到 .git 文件夹：<br><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/02.png"><br>然后打开 config 文件，这是专门用来配置和读取相应的工作环境变量的，在里面加上如图所示内容：</p>
+<p><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/03.png"></p>
+<p>这样也就完成了对Git用户名和邮箱的配置。</p>
+<h3 id="3-创建版本库"><a href="#3-创建版本库" class="headerlink" title="3.创建版本库"></a>3.创建版本库</h3><p>版本库(repository)也叫仓库，可以看做一个目录，这个目录里的所以文件都由Git进行管理，每个文件的修改、删除，Git都能跟踪。</p>
+<h4 id="1-选择一个合适的地方，创建一个空目录："><a href="#1-选择一个合适的地方，创建一个空目录：" class="headerlink" title="1.选择一个合适的地方，创建一个空目录："></a>1.选择一个合适的地方，创建一个空目录：</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ mkdir learngit &#x2F;&#x2F;创建一个名叫learngit的空目录</span><br><span class="line">$ cd learngit &#x2F;&#x2F;把learngit设置为当前目录</span><br><span class="line">$ pwd &#x2F;&#x2F;查看当前目录</span><br><span class="line">&#x2F;c&#x2F;Users&#x2F;Administrator&#x2F;learngit</span><br></pre></td></tr></table></figure>
+<p>如果使用Windows系统，要保证目录名不包含中文。</p>
+<h4 id="2-通过如下命令把这个目录变成Git可以管理的仓库："><a href="#2-通过如下命令把这个目录变成Git可以管理的仓库：" class="headerlink" title="2.通过如下命令把这个目录变成Git可以管理的仓库："></a>2.通过如下命令把这个目录变成Git可以管理的仓库：</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git init</span><br><span class="line">Initialized empty Git repository in &#x2F;Users&#x2F;Administrator&#x2F;learngit&#x2F;.git&#x2F;</span><br></pre></td></tr></table></figure>
+<p><strong>这样Git就把仓库建好啦，我们可以看到在当前目录下多了一个 .git 的目录，这个目录是Git来跟踪管理版本库的。</strong></p>
+<h4 id="3-把文件添加到版本库"><a href="#3-把文件添加到版本库" class="headerlink" title="3.把文件添加到版本库"></a>3.把文件添加到版本库</h4><p>我们在 learngit 目录下编写一个 readme.txt 文件，内容如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Git is a version control system.</span><br><span class="line">Git is free software.</span><br></pre></td></tr></table></figure>
+<p>(1) 用 git add 命令，把文件添加到仓库：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git add readme.txt</span><br></pre></td></tr></table></figure>
+<p>执行以上命令，没有任何显示。</p>
+<p>(2) 用 git commit 命令，把文件提交到仓库：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;-m后面输入的是本次提交的说明，可以输入任意内容。</span><br><span class="line">$ git commit -m &quot;wrote a readme file&quot; </span><br><span class="line"></span><br><span class="line"> &#x2F;&#x2F;1 file changed：1个文件被改动（新添加的readme.txt文件）；2 insertions：插入了两行内容（readme.txt内有两行内容）</span><br><span class="line">[master (root-commit) eaadf4e] wrote a readme file</span><br><span class="line"> 1 file changed, 2 insertions(+)</span><br><span class="line"> create mode 100644 readme.txt</span><br></pre></td></tr></table></figure>
+<h4 id="4-修改文件"><a href="#4-修改文件" class="headerlink" title="4.修改文件"></a>4.修改文件</h4><p>我们已经成功添加并提交了一个 readme.txt 文件，继续修改 readme.txt 文件，改成如下内容：</p>
+<p>Git is a distributed version control system.<br>Git is free software.<br>运行 git status 命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$ git status &#x2F;&#x2F;查看仓库当前的状态</span><br><span class="line"></span><br><span class="line">On branch master</span><br><span class="line">Changes not staged for commit: &#x2F;&#x2F;没有文件将要被提交</span><br><span class="line">  (use &quot;git add &lt;file&gt;...&quot; to update what will be committed)</span><br><span class="line">  (use &quot;git checkout -- &lt;file&gt;...&quot; to discard changes in working directory)</span><br><span class="line"> </span><br><span class="line">    modified:   readme.txt</span><br><span class="line"> </span><br><span class="line">no changes added to commit (use &quot;git add&quot; and&#x2F;or &quot;git commit -a&quot;)</span><br></pre></td></tr></table></figure>
+<p>上面的命令告诉我们，readme.txt 文件被修改过了，但还没有准备提交的修改。</p>
+<p>如果我们想知道上次是怎么修改readme.txt 文件的，需要用 git diff 命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">$ git diff readme.txt </span><br><span class="line"></span><br><span class="line">diff --git a&#x2F;readme.txt b&#x2F;readme.txt</span><br><span class="line">index 46d49bf..9247db6 100644</span><br><span class="line">--- a&#x2F;readme.txt</span><br><span class="line">+++ b&#x2F;readme.txt</span><br><span class="line">@@ -1,2 +1,2 @@</span><br><span class="line">(注意Git前面的符号)</span><br><span class="line"></span><br><span class="line">-Git is a version control system. &#x2F;&#x2F;这一句是被删掉的</span><br><span class="line">+Git is a distributed version control system. &#x2F;&#x2F;这一句是新添加的</span><br><span class="line"> Git is free software.</span><br></pre></td></tr></table></figure>
+
+<p><strong>接下来还是那两步：</strong></p>
+<p>(1) git add</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git add readme.txt</span><br></pre></td></tr></table></figure>
+<p>没有任何输出，这时候可以用 git status 查看一下当前仓库状态：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ git status</span><br><span class="line">On branch master</span><br><span class="line">Changes to be committed: &#x2F;&#x2F;将要被提交的文件包括 readme.txt</span><br><span class="line">  (use &quot;git reset HEAD &lt;file&gt;...&quot; to unstage)</span><br><span class="line"> </span><br><span class="line">    modified:   readme.txt</span><br></pre></td></tr></table></figure>
+
+<p>(2) git commit</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ git commit -m &quot;add distributed&quot;</span><br><span class="line">[master e475afc] add distributed</span><br><span class="line"> 1 file changed, 1 insertion(+), 1 deletion(-)</span><br></pre></td></tr></table></figure>
+
+<p>再用 git status 查看一下当前仓库状态：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ git status</span><br><span class="line">On branch master</span><br><span class="line">nothing to commit, working tree clean &#x2F;&#x2F;当前没有需要提交的修改，而且，工作目录是干净的。</span><br></pre></td></tr></table></figure>
+
+<h4 id="5-版本回退"><a href="#5-版本回退" class="headerlink" title="5.版本回退"></a>5.版本回退</h4><p>如果我们继续对 readme.txt 文件进行修改，改成如下内容：</p>
+<p>Git is a distributed version control system.<br>Git is free software distributed under the GPL.<br>然后添加并提交：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ git add readme.txt</span><br><span class="line">$ git commit -m &quot;append GPL&quot;</span><br><span class="line">[master 1094adb] append GPL</span><br><span class="line"> 1 file changed, 1 insertion(+), 1 deletion(-)</span><br></pre></td></tr></table></figure>
+<p>到目前为止，readme.txt 文件一共有三个版本被提交到了 Git 仓库里，我们可以用 git log 命令进行查看：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">$ git log &#x2F;&#x2F;查看历史记录</span><br><span class="line">commit 1094adb7b9b3807259d8cb349e7df1d4d6477073 (HEAD -&gt; master)</span><br><span class="line">Author: Michael Liao &lt;askxuefeng@gmail.com&gt;</span><br><span class="line">Date:   Fri May 18 21:06:15 2018 +0800</span><br><span class="line"> </span><br><span class="line">    append GPL</span><br><span class="line"> </span><br><span class="line">commit e475afc93c209a690c39c13a46716e8fa000c366</span><br><span class="line">Author: Michael Liao &lt;askxuefeng@gmail.com&gt;</span><br><span class="line">Date:   Fri May 18 21:03:36 2018 +0800</span><br><span class="line"> </span><br><span class="line">    add distributed</span><br><span class="line"> </span><br><span class="line">commit eaadf4e385e865d25c48e7ca9c8395c3f7dfaef0</span><br><span class="line">Author: Michael Liao &lt;askxuefeng@gmail.com&gt;</span><br><span class="line">Date:   Fri May 18 20:59:18 2018 +0800</span><br><span class="line"> </span><br><span class="line">    wrote a readme file</span><br></pre></td></tr></table></figure>
+<p>我们还可以加上 –pretty=oneline 参数：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ git log --pretty&#x3D;oneline</span><br><span class="line">1094adb7b9b3807259d8cb349e7df1d4d6477073 (HEAD -&gt; master) append GPL</span><br><span class="line">e475afc93c209a690c39c13a46716e8fa000c366 add distributed</span><br><span class="line">eaadf4e385e865d25c48e7ca9c8395c3f7dfaef0 wrote a readme file &#x2F;&#x2F;一大串数字是 commit id ，而且每个人的都不一样。</span><br><span class="line">好了，现在如果我们想把 readme.txt 文件退回到上一个版本，就可以使用 git reset 命令：</span><br></pre></td></tr></table></figure>
+<p>$ git reset –hard HEAD^ //HEAD表示当前版本，则HEAD^表示上一个版本，那么上上版本就是HEAD^^<br>HEAD is now at e475afc add distributed</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">这时候用 cat 命令查看一下 readme.txt 的内容：</span><br></pre></td></tr></table></figure>
+<p>$ cat readme.txt //查看 readme.txt 文件的内容<br>Git is a distributed version control system.<br>Git is free software.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">果然 readme.txt 文件返回到了上一个版本。</span><br><span class="line"></span><br><span class="line">我们现在想要回到最新的版本，还是使用 git reset 命令：</span><br></pre></td></tr></table></figure>
+<p>$ git reset –hard 1094a //这里不能用HEAD而必须使用 commit id ，因为最新版本在之前返回时已经被删除了，1094a就是最新版本的 commit id，可以在之前的代码中查到<br>HEAD is now at 83b0afe append GPL<br>这时再查看一下 readme.txt 文件内容：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">$ cat readme.txt</span><br><span class="line">Git is a distributed version control system.</span><br><span class="line">Git is free software distributed under the GPL.</span><br><span class="line">果然，又回到了最新的版本。</span><br></pre></td></tr></table></figure>
+
+<h4 id="6-工作区和暂存区"><a href="#6-工作区和暂存区" class="headerlink" title="6.工作区和暂存区"></a>6.工作区和暂存区</h4><p>工作区（Working Directory）</p>
+<p><strong>learngit 文件夹就是一个工作区。</strong></p>
+<p>版本库（Repository）</p>
+<p><strong>工作区有个隐藏目录 .git ，这个不算工作区，而是 Git 的版本库。</strong></p>
+<p><strong>版本库里面的 index(stage) 文件叫暂存区</strong>，还有Git为我们自动创建的第一个分支 master ，以及指向 master 的一个指针叫做 HEAD。<br><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/04.png"></p>
+<p>前面我们提到过，如果我们想把文件添加到Git里面时，需要分两步：</p>
+<p><strong>第一步是用 git add 把文件添加进去，实际上就是把文件修改添加到暂存区。</strong></p>
+<p><strong>第二步是用 git commit 提交更改，实际上就是把暂存区的所有内容提交到当前分支。（我们现在只有唯一一个分支 master，所以现在就是往 master 分支上提交更改）</strong></p>
+<p>我们可以实践一下：</p>
+<p>在 readme.txt 文件中加上一行内容：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Git is a distributed version control system.</span><br><span class="line">Git is free software distributed under the GPL.</span><br><span class="line">Git has a mutable index called stage.</span><br></pre></td></tr></table></figure>
+
+<p>然后在工作区新建一个 LICENSE 文本文档（任意内容）</p>
+<p>使用两次 git add 命令分别把 readme.txt 和 LICENSE 都添加后，可以用 git status 命令查看一下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ git status</span><br><span class="line">On branch master</span><br><span class="line">Changes to be committed:</span><br><span class="line">  (use &quot;git reset HEAD &lt;file&gt;...&quot; to unstage)</span><br><span class="line"> </span><br><span class="line">    new file:   LICENSE</span><br><span class="line">    modified:   readme.txt</span><br></pre></td></tr></table></figure>
+<p>现在，暂存区的状态就变成这样了：<br><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/05.png"></p>
+<p>再使用 git commit 命令把暂存区的所有修改提交到分支：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ git commit -m &quot;understand how stage works&quot;</span><br><span class="line">[master e43a48b] understand how stage works</span><br><span class="line"> 2 files changed, 2 insertions(+)</span><br><span class="line"> create mode 100644 LICENSE</span><br></pre></td></tr></table></figure>
+<p>这时候的工作区就是干净的：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ git status</span><br><span class="line">On branch master</span><br><span class="line">nothing to commit, working tree clean</span><br></pre></td></tr></table></figure>
+<p>这时候版本库就变成了这样：</p>
+<p><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/06.png"></p>
+<p>》》》》》》》<br>到这里我们可以大概总结一下这个流程</p>
+<p>工作区<br>（我们自己创造的文件夹）</p>
+<p>版本库<br>（文件夹下面的.git文件夹，是Git的版本库。这个里面有index(stage) 文件叫暂存区，还有Git为我们自动创建的第一个分支 master ，以及指向 master 的一个指针叫做 HEAD。）</p>
+<p>工作就是这两个库的交互，当add以后就到了版本库，剩下的就是版本库内部的操作了。</p>
+<p>在版本库内，当commit以后，我们就把文件提交给现在的分支上</p>
+<h4 id="7-管理修改"><a href="#7-管理修改" class="headerlink" title="7.管理修改"></a>7.管理修改</h4><p>Git 如此的优秀是因为，<strong>Git 跟踪并管理的不是文件，而是修改。</strong></p>
+<p>我们对 readme.txt 文件进行修改：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ cat readme.txt</span><br><span class="line">Git is a distributed version control system.</span><br><span class="line">Git is free software distributed under the GPL.</span><br><span class="line">Git has a mutable index called stage.</span><br><span class="line">Git tracks changes.</span><br></pre></td></tr></table></figure>
+<p>然后，添加：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ git add readme.txt</span><br><span class="line">$ git status</span><br><span class="line"># On branch master</span><br><span class="line"># Changes to be committed:</span><br><span class="line">#   (use &quot;git reset HEAD &lt;file&gt;...&quot; to unstage)</span><br><span class="line">#</span><br><span class="line">#       modified:   readme.txt</span><br><span class="line">#</span><br></pre></td></tr></table></figure>
+<p>然后再修改 readme.txt 文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ cat readme.txt </span><br><span class="line">Git is a distributed version control system.</span><br><span class="line">Git is free software distributed under the GPL.</span><br><span class="line">Git has a mutable index called stage.</span><br><span class="line">Git tracks changes of files.</span><br></pre></td></tr></table></figure>
+<p>提交：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ git commit -m &quot;git tracks changes&quot;</span><br><span class="line">[master 519219b] git tracks changes</span><br><span class="line"> 1 file changed, 1 insertion(+)</span><br></pre></td></tr></table></figure>
+
+<p>这时候我们查看一下状态：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ git status</span><br><span class="line">On branch master</span><br><span class="line">Changes not staged for commit:</span><br><span class="line">  (use &quot;git add &lt;file&gt;...&quot; to update what will be committed)</span><br><span class="line">  (use &quot;git checkout -- &lt;file&gt;...&quot; to discard changes in working directory)</span><br><span class="line"> </span><br><span class="line">    modified:   readme.txt</span><br><span class="line"> </span><br><span class="line">no changes added to commit (use &quot;git add&quot; and&#x2F;or &quot;git commit -a&quot;)</span><br></pre></td></tr></table></figure>
+
+<p>我们可以发现，第二次修改并没有被提交。</p>
+<p><strong>因为在工作区的第一次修改被放入暂存区，准备提交；而在工作区的第二次修改并没有被放入暂存区，所以， git commit 命令只负责把暂存区的修改提交了。</strong></p>
+<p>提交后，我们可以用 git diff HEAD – readme.txt <strong>命令去查看工作区和版本库里面最新版本的区别：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">$ git diff HEAD -- readme.txt </span><br><span class="line">diff --git a&#x2F;readme.txt b&#x2F;readme.txt</span><br><span class="line">index 76d770f..a9c5755 100644</span><br><span class="line">--- a&#x2F;readme.txt</span><br><span class="line">+++ b&#x2F;readme.txt</span><br><span class="line">@@ -1,4 +1,4 @@</span><br><span class="line"> Git is a distributed version control system.</span><br><span class="line"> Git is free software distributed under the GPL.</span><br><span class="line"> Git has a mutable index called stage.</span><br><span class="line">-Git tracks changes.</span><br><span class="line">+Git tracks changes of files.</span><br></pre></td></tr></table></figure>
+
+<h4 id="8-撤销修改"><a href="#8-撤销修改" class="headerlink" title="8.撤销修改"></a>8.撤销修改</h4><p>假如说你在 readme.txt 文件中添加了一行内容如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ cat readme.txt</span><br><span class="line">Git is a distributed version control system.</span><br><span class="line">Git is free software distributed under the GPL.</span><br><span class="line">Git has a mutable index called stage.</span><br><span class="line">Git tracks changes of files.</span><br><span class="line">My stupid boss still prefers SVN.</span><br></pre></td></tr></table></figure>
+<p>最后一行是万万不能让BOSS看到的，应该怎么撤销呢？</p>
+<h5 id="8-1-没有-git-add-之前"><a href="#8-1-没有-git-add-之前" class="headerlink" title="8.1  没有 git add 之前"></a>8.1  没有 git add 之前</h5><p>可以手动删除最后一行，手动把文件恢复到上一个版本的状态。<br>然后再用 git checkout – file 命令丢弃工作区的修改：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git checkout -- readme.txt &#x2F;&#x2F;把readme.txt文件在工作区的修改全部撤销。</span><br></pre></td></tr></table></figure>
+<p>现在看一下 readme.txt 文件内容：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ cat readme.txt</span><br><span class="line">Git is a distributed version control system.</span><br><span class="line">Git is free software distributed under the GPL.</span><br><span class="line">Git has a mutable index called stage.</span><br><span class="line">Git tracks changes of files.</span><br></pre></td></tr></table></figure>
+<p>果然复原了。</p>
+<h5 id="8-2-git-add了，但没有git-commit"><a href="#8-2-git-add了，但没有git-commit" class="headerlink" title="8.2 git add了，但没有git commit"></a>8.2 git add了，但没有git commit</h5><p>这时候的修改添加到了暂存区，但没有提交到分支，用 git status 查看一下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ git status</span><br><span class="line">On branch master</span><br><span class="line">Changes to be committed:</span><br><span class="line">  (use &quot;git reset HEAD &lt;file&gt;...&quot; to unstage)</span><br><span class="line"> </span><br><span class="line">    modified:   readme.txt</span><br></pre></td></tr></table></figure>
+<p>这时候我们可以使用 git reset HEAD file 命令把把暂存区的修改撤销掉，重新放回工作区：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ git reset HEAD readme.txt &#x2F;&#x2F;git reset命令既可以回退版本，也可以把暂存区的修改回退到工作区，HEAD表示最新版本。</span><br><span class="line">Unstaged changes after reset:</span><br><span class="line">M    readme.txt</span><br></pre></td></tr></table></figure>
+
+<p>现在再用 git status 查看一下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ git status</span><br><span class="line">On branch master</span><br><span class="line">Changes not staged for commit:</span><br><span class="line">  (use &quot;git add &lt;file&gt;...&quot; to update what will be committed)</span><br><span class="line">  (use &quot;git checkout -- &lt;file&gt;...&quot; to discard changes in working directory)</span><br><span class="line"> </span><br><span class="line">    modified:   readme.txt &#x2F;&#x2F;暂存区是干净的，工作区有修改。</span><br></pre></td></tr></table></figure>
+<p>这时候再丢弃工作区的修改就OK了：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ git checkout -- readme.txt &#x2F;&#x2F;丢弃工作区的修改。</span><br><span class="line"></span><br><span class="line">$ git status</span><br><span class="line">On branch master</span><br><span class="line">nothing to commit, working tree clean</span><br></pre></td></tr></table></figure>
+<p>终于大功告成了。</p>
+<h5 id="8-3-既-git-add-了，也-git-commit-了"><a href="#8-3-既-git-add-了，也-git-commit-了" class="headerlink" title="8.3 既 git add 了，也 git commit 了"></a>8.3 既 git add 了，也 git commit 了</h5><p>可以回退到上一个版本，见回退版本内容。</p>
+<h4 id="9-删除文件"><a href="#9-删除文件" class="headerlink" title="9.删除文件"></a>9.删除文件</h4><p>在工作区即 learngit 文件夹下新建一个 test.txt 文件，并添加和提交到Git：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ git add test.txt</span><br><span class="line"> </span><br><span class="line">$ git commit -m &quot;add test.txt&quot;</span><br><span class="line">[master b84166e] add test.txt</span><br><span class="line"> 1 file changed, 1 insertion(+)</span><br><span class="line"> create mode 100644 test.txt</span><br></pre></td></tr></table></figure>
+<p>这时候可用 rm 命令删除：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ rm test.txt</span><br></pre></td></tr></table></figure>
+
+<p>这时工作区和版本库就不一样了。</p>
+<p>现在又分两种情况：</p>
+<p>(1) 确实要从版本库中删除该文件，那就用 git rm 命令删除，并且 git commit：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ git rm test.txt</span><br><span class="line">rm &#39;test.txt&#39;</span><br><span class="line"> </span><br><span class="line">$ git commit -m &quot;remove test.txt&quot;</span><br><span class="line">[master d46f35e] remove test.txt</span><br><span class="line"> 1 file changed, 1 deletion(-)</span><br><span class="line"> delete mode 100644 test.txt</span><br></pre></td></tr></table></figure>
+
+<p>这时候文件就从版本库被删除了。<br>(2) 文件被删错了。因为版本库里有，所以很好恢复：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git checkout -- test.txt &#x2F;&#x2F;用版本库里的版本替换工作区的版本。</span><br></pre></td></tr></table></figure>
+
+<h4 id="10-远程仓库准备工作"><a href="#10-远程仓库准备工作" class="headerlink" title="10.远程仓库准备工作"></a>10.远程仓库准备工作</h4><p>在开始这部分之前，我们需要自行注册GitHub账号。而且，因为你的本地Git仓库和GitHub仓库之间的传输是通过SSH加密的，所以需要设置：</p>
+<h5 id="10-1-创建SSH-Key。在用户主目录下，看看有没有-ssh-目录，如果有的话，看此目录下有没有-id-rsa-和-id-rsa-pub-这两个文件，如果有，直接跳到下一步。如果没有，打开Git-Bash，创建SSH"><a href="#10-1-创建SSH-Key。在用户主目录下，看看有没有-ssh-目录，如果有的话，看此目录下有没有-id-rsa-和-id-rsa-pub-这两个文件，如果有，直接跳到下一步。如果没有，打开Git-Bash，创建SSH" class="headerlink" title="10.(1) 创建SSH Key。在用户主目录下，看看有没有.ssh 目录，如果有的话，看此目录下有没有 id_rsa 和 id_rsa.pub 这两个文件，如果有，直接跳到下一步。如果没有，打开Git Bash，创建SSH"></a>10.(1) 创建SSH Key。在用户主目录下，看看有没有.ssh 目录，如果有的话，看此目录下有没有 id_rsa 和 id_rsa.pub 这两个文件，如果有，直接跳到下一步。如果没有，打开Git Bash，创建SSH</h5><p>创建的详细过程：<br>进入.ssh文件夹. cd ~/.ssh/<br>如果提示 “ No such file or directory”，你可以手动的创建一个 .ssh文件夹即可.<br>命令mkdir ~/.ssh创建.ssh文件夹.<br>配置全局的name和email. git config –global user.name “NAME” git config –global user.email “<a href="mailto:&#x4e;&#x41;&#77;&#69;&#x40;&#69;&#x58;&#65;&#77;&#80;&#x4c;&#69;&#46;&#x63;&#111;&#109;">&#x4e;&#x41;&#77;&#69;&#x40;&#69;&#x58;&#65;&#77;&#80;&#x4c;&#69;&#46;&#x63;&#111;&#109;</a>“ </p>
+<p>ssh-keygen -t rsa -C “<a href="mailto:&#78;&#x41;&#77;&#69;&#64;&#x45;&#x58;&#65;&#x4d;&#80;&#76;&#69;&#46;&#x63;&#111;&#x6d;">&#78;&#x41;&#77;&#69;&#64;&#x45;&#x58;&#65;&#x4d;&#80;&#76;&#69;&#46;&#x63;&#111;&#x6d;</a>” 连续按三次回车，这里设置的密码就为空了，并且创建了key. </p>
+<p>最后得到了两个文件：id_rsa和id_rsa.pub即为密匙.</p>
+<p>(2) 登陆GitHub，打开”Account settings”</p>
+<p><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/07.png"></p>
+<p>然后点击”Add SSH and GPG Keys”，再点击”New SSH Key”进行SSH Key 的创建，填上任意 Title ，把 id_rsa.pub 中的内容复制到Key文本框内：</p>
+<p><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/08.png"></p>
+<h4 id="11-添加远程库"><a href="#11-添加远程库" class="headerlink" title="11.添加远程库"></a>11.添加远程库</h4><p>现在我们已经在本地创建了一个Git仓库了，又想在GitHub上创建一个Git仓库，然后让这两个仓库进行远程同步，这样，<strong>GitHub上的仓库既可以作为备份，又可以让其他人通过该仓库来协作。</strong>那么我们应该怎么做呢？</p>
+<p>首先，登陆GitHub，在右上角找到“Create a new repo”按钮，创建一个新的仓库：<br><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/09.png"></p>
+<p>在Repository name填入 learngit （因为我已经创建完成了，所以提示此用户名存在）其他保持默认设置，点击“Create repository”按钮，就成功地创建了一个新的Git仓库：</p>
+<p><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/10.png"></p>
+<p>如上图所示我已经把本地仓库的内容推送到了GitHub上了，大家创建完以后应该是一个空的仓库。</p>
+<p><strong>这时候我们可以在本地learngit仓库下运行命令：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;“RFHzhj”是我的GitHub的账户名，你需要填写你自己的账户名</span><br><span class="line">添加后，远程库的名字就是 origin ，这是Git默认的叫法。</span><br><span class="line">$ git remote add origin git@github.com:RFHzhj&#x2F;learngit.git </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>然后，我们就可以把本地库的所有内容推送到远程库上：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$ git push -u origin master </span><br><span class="line">Counting objects: 20, done.</span><br><span class="line">Delta compression using up to 4 threads.</span><br><span class="line">Compressing objects: 100% (15&#x2F;15), done.</span><br><span class="line">Writing objects: 100% (20&#x2F;20), 1.64 KiB | 560.00 KiB&#x2F;s, done.</span><br><span class="line">Total 20 (delta 5), reused 0 (delta 0)</span><br><span class="line">remote: Resolving deltas: 100% (5&#x2F;5), done.</span><br><span class="line">To github.com:RFHzhj&#x2F;learngit.git</span><br><span class="line"> * [new branch]      master -&gt; master</span><br><span class="line">Branch &#39;master&#39; set up to track remote branch &#39;master&#39; from &#39;origin&#39;.</span><br></pre></td></tr></table></figure>
+<p><strong>使用 git push 命令，就是把当前分支 master 推送到远程。</strong></p>
+<p>因为远程库是空的，所以我们在第一次推送 master 分支时，<strong>要加上 -u 参数，Git不但会把本地的 master 分支内容推送的远程新的 master 分支，还会把本地的 master 分支和远程的 master 分支关联起来，在以后的推送或者拉取时就可以简化命令。</strong></p>
+<p>推送成功后，可以立刻在GitHub页面中看到远程库的内容已经和本地一模一样：</p>
+<p><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/11.png"></p>
+<p>从现在起，只要本地作了提交，就可以通过命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git push origin master</span><br></pre></td></tr></table></figure>
+<p>把本地 master 分支的最新修改推送至GitHub。现在，我们拥有了真正的分布式版本库。</p>
+<h4 id="12-从远程库克隆"><a href="#12-从远程库克隆" class="headerlink" title="12.从远程库克隆"></a>12.从远程库克隆</h4><p>我们的学习过程是先有了本地库，后有了远程库，然后再对远程库进行关联。</p>
+<p>其实，我们大部分时候是先创建远程库，然后再从远程库克隆。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git clone （你要克隆的地址）</span><br></pre></td></tr></table></figure>
+
+<p><em><strong>以上就是本次的全部内容啦，希望能对你有所帮助！！！</strong></em></p>
+
+        <p class="suffix-end">__END__</p>
+        <div class="suffix-box">
+            <div class="suffix-box-left">
+                <img src="https://gitee.com/psycho1900/miss-reddle/raw/master/profile.jpg" alt="Russshare">
+            </div>
+            <div class="suffix-box-right">
+                <span class="suffix-box-title">文章作者</span>：Russshare
+                <br>
+                <span class="suffix-box-title">文章出处</span>：<a href="/2021/05/28/git%E5%85%A5%E9%97%A8/" target="_blank">git入门</a>
+                <br>
+                <span class="suffix-box-title">作者签名</span>：我们生死与共，勇往直前，永远都是坏小子.
+                <br>
+                <span class="suffix-box-title">关于主题</span>：<a href="https://github.com/first19326/Hexo-LiveForCode" target="_blank">Hexo - Russshare</a>
+                <br>
+                <span class="suffix-box-title">版权声明</span>：文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" title="BY-NC-SA" target="_blank">BY-NC-SA</a> 许可协议，转载请注明出处
+                <br>
+            </div>
+            <div style="clear: both;"></div>
+        </div>
+    </div>
+    <div class="article-footer">
+        
+            <div class="category">
+                分类：
+                
+                    <a href="/categories/Tools/">Tools</a>
+                
+            </div>
+        
+        
+            <div class="tag">
+                标签：
+                
+                    <a href="/tags/github/">github</a>
+                
+            </div>
+        
+        <div class="article-prev-next">
+            
+                <a href="/2021/05/31/OTP/" class="prev-prefix">« </a> 上一篇：    <a href="/2021/05/31/OTP/" title="发布于 2021-05-31 09:15">OTP</a>
+                <br>
+            
+            
+                <a href="/2021/05/28/golang%E4%B8%8E%E5%85%83%E7%BB%84/" class="next-prefix">» </a> 下一篇：    <a href="/2021/05/28/golang%E4%B8%8E%E5%85%83%E7%BB%84/" title="发布于 2021-05-28 09:51">golang与元组</a>
+            
+        </div>
+    </div>
+    
+    <div class="article-comments">
+        <div class="comments-title">
+            评论列表
+        </div>
+        <div class="comments-content">
+        </div>
+    </div>
+
+</div>
+
+    </div>
+</div>
+    <div id="footer"></div>
+    <div id="sidebar">
+    <div class="menu-wrap" style="display:none;">
+        <nav class="menu">
+            <div class="menu-introduce"> 
+                <div class="introduce-avatar"></div> 
+                <div class="introduce-info"> 
+                    <div class="introduce-user"><span></span></div>        
+                </div> 
+            </div> 
+            <div class="menu-list">
+                <ul></ul> 
+            </div> 
+            <div class="menu-link"></div> 
+        </nav>
+        <button class="menu-button-close"></button>
+        <div class="morph-shape" id="morph-shape" data-morph-open="M-7.312,0H15c0,0,66,113.339,66,399.5C81,664.006,15,800,15,800H-7.312V0z;M-7.312,0H100c0,0,0,113.839,0,400c0,264.506,0,400,0,400H-7.312V0z">
+            <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 100 800" preserveAspectRatio="none">
+                <path d="M-7.312,0H0c0,0,0,113.839,0,400c0,264.506,0,400,0,400h-7.312V0z"/>
+            </svg>
+        </div>
+    </div>
+    <button class="menu-button-open">MENU</button>
+    <div class="menu-cover"></div>
+</div>
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/search.css">
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/iscroll.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/instantsearch.min.js"></script>
+<div class="search-window">
+    <div class="search-content">
+        <div class="search-content-icon">
+            <i class="iconfont icon-search"></i>
+        </div>
+        <div id="search-input" class="search-input"></div>
+    </div>
+
+    <div class="search-scroll">
+        <div class="search-result">
+            <div id="search-stats" class="search-stats"></div>
+            <div id="search-hits"></div>
+            <div id="search-pagination" class="search-pagination"></div>
+        </div>
+    </div>
+
+    <span class="search-close-icon">
+        <i class="iconfont icon-close"></i>
+    </span>
+</div>
+    <div id="tools">
+    <div class="progressbar-top"></div>
+
+    
+        <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/APlayer.css">
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/APlayer.min.js"></script>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/Meting.min.js"></script>
+        <meting-js id="3778678" lrcshow="false" server="netease" type="playlist" fixed="true" autoplay="false" loop="all" order="random" preload="auto" volume="0.67" mutex="true"></meting-js>
+    
+    
+    <div class="wrap-right"></div>
+    <div class="loading"></div>
+</div>
+    <script>
+    window.config = {
+        GitHubUserName     : 'Russshare',
+        GitHubRepositories : 'Russshare',
+
+        BlogUser      : 'Russshare',
+        BlogAvatar    : 'https://gitee.com/psycho1900/miss-reddle/raw/master/profile.jpg',
+        BlogStartDate : '2021-03-17',
+
+        WebsiteTitleBlur         : '(◍´꒳`◍) Hi, Miss Riddle',
+        WebsiteTitleBlurTimeOut  : 500,
+        WebsiteTitleFocus        : '(*´∇｀*) 欢迎回来!',
+        WebsiteTitleFocusTimeOut : 1000,
+        WebsiteFavicon           : 'https://gitee.com/psycho1900/miss-reddle/raw/master/beer.png',
+
+        ProgressBar: {
+            id       : 'topProgressBar',
+            color    : '#77B6FF',
+            height   : '2px',
+            duration : 0.2
+        },
+
+        Loading: {
+            rebound: {
+                tension  : 16,
+                friction : 5
+            },
+            spinner: {
+                id     : 'spinner',
+                radius : 90,
+                sides  : 3,
+                depth  : 4,
+                colors : {
+                    background : '#F0F0F0',
+                    stroke     : '#272633',
+                    base       : '',
+                    child      : '#272633'
+                },
+                alwaysForward : true,
+                restAt        : 0.5,
+                renderBase    : false
+            }
+        },
+
+        HomeHeaderAnimationRendered : true,
+        HomeHeaderAnimation         : {
+            radius      : 15,
+            density     : 0.2,
+            color       : 'rgba(255, 255, 255, .2)',
+            clearOffset : 0.3
+        },
+
+        ArticleHeaderAnimationRendered : false,
+        ArticleHeaderAnimation         : {
+            triW                  : 14,
+            triH                  : 20,
+            neighbours            : [
+                
+                    'side',
+                
+                    'top',
+                
+                    'bottom',
+                
+            ],
+            speedTrailAppear      : 0.1,
+            speedTrailDisappear   : 0.1,
+            speedTriOpen          : 1,
+            trailMaxLength        : 30,
+            trailIntervalCreation : 100,
+            delayBeforeDisappear  : 2,
+            colors                : [
+                
+                    '#96EDA6',
+                
+                    '#5BC6A9',
+                
+                    '#38668C',
+                
+                    '#374D84',
+                
+                    '#BED5CB',
+                
+                    '#62ADC6',
+                
+                    '#8EE5DE',
+                
+                    '#304E7B',
+                
+            ]
+        },
+
+        BackAnimationRendered          : true,
+        IEBrowserBackAnimationRendered : false,
+        BackAnimation                  : {
+            colorSaturation  : '60%',
+            colorBrightness  : '50%',
+            colorAlpha       : 0.5,
+            colorCycleSpeed  : 5,
+            verticalPosition : 'random',
+            horizontalSpeed  : 200,
+            ribbonCount      : 3,
+            strokeSize       : 0,
+            parallaxAmount   : -0.2,
+            animateSections  : true
+        },
+
+        HomeHeaderImage : [
+            
+                'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/image/header/home.jpg',
+            
+                'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/image/header/home.jpeg',
+            
+        ],
+        HomeBannerText  : '',
+
+        ArticleHeaderImage : [
+            
+                'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/image/header/article.jpg',
+            
+        ],
+
+        OtherBannerText : '',
+
+        MenuList : [
+            
+                {
+                    name   : '首页',
+                    href   : '/',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '标签',
+                    href   : '/tag',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '分类',
+                    href   : '/category',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '赞赏',
+                    href   : '/donate',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '关于',
+                    href   : '/about',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '搜索',
+                    href   : '',    
+                    target : '',
+                    class  : 'search'
+                },
+            
+                {
+                    name   : '留言板',
+                    href   : '/comment',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '友情链接',
+                    href   : '/friend',    
+                    target : '',
+                    class  : ''
+                },
+            
+        ],
+        MenuLink : [
+            
+                
+                    {
+                        icon : 'icon-weibo', 
+                        url  : ''
+                    },
+                
+                    {
+                        icon : 'icon-wechat', 
+                        url  : ''
+                    },
+                
+                    {
+                        icon : 'icon-qq', 
+                        url  : ''
+                    },
+                
+                    {
+                        icon : 'icon-github', 
+                        url  : 'https://github.com/RiddleGo'
+                    },
+                
+            
+        ],
+
+        FooterStyle : 2,
+        BottomText  : {
+            icon    : 'like-fill',
+            left    : '人生若只如初见',
+            right   : '何事秋风悲画扇'
+        },
+        ThemeInfo   : true,
+
+        ConsoleList : [
+            
+                
+                    [
+                        
+                            
+                                'Based on cnblogs theme SimpleMemory.',
+                            
+                                '',
+                            
+                        
+                    ],
+                
+                    [
+                        
+                            
+                                'SimpleMemory Author:',
+                            
+                                'BNDong',
+                            
+                        
+                    ],
+                
+                    [
+                        
+                            
+                                'Theme:',
+                            
+                                'LiveForCode',
+                            
+                        
+                    ],
+                
+            
+        ],
+
+        FontIconExtend : '',
+
+        Donate : {
+            paypal  : '',
+            bitcoin : '',
+            alipay  : '',
+            wechat  : ''
+        },
+
+        Code : {
+            style : 'normal'
+        },  
+
+        Search : {
+            applicationID : '010C3EANT8',
+            apiKey        : 'c7abab9f11b79102b9aff7fe6d41447d',
+            indexName     : 'Notes',
+            hits          : {
+                page : 10
+            },
+            labels        : {
+                placeholder : '搜索',
+                empty       : '未发现与 「${query}」 相关的内容',
+                stats       : '${hits} 条相关条目，使用了 ${time} 毫秒',
+            }
+        }, 
+
+        Valine : {
+            switch         : true,
+            el             : '.comments-content',
+            appId          : 'TKpiBidydKtx7apGCq7DM4Fw-gzGzoHsz',
+            appKey         : 'wsVqBbLWlLy4JRbi9I4XDBpH',
+            placeholder    : '你是我一生只会遇见一次的惊喜...',
+            avatar         : 'mm',
+            meta           : 'nick,mail,link',
+            requiredFields : 'nick,mail',
+            pageSize       : 5,
+            lang           : 'zh-cn',
+            visitor        : true,
+            enableQQ       : true
+        },
+
+        Tocbot : {
+            switch                : true,
+            tocSelector           : '.toc',
+            contentSelector       : '.article-body',
+            headingSelector       : 'h1, h2, h3, h4, h5',
+            headingsOffset        : 0,
+            scrollSmooth          : true,
+            scrollSmoothOffset    : -5,
+            positionFixedSelector : '.toc',
+            positionFixedClass    : 'toc-fixed',
+            fixedSidebarOffset    : '',
+        },
+
+        Require : {
+            baseUrl     : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/',
+            waitSeconds : 100
+        },
+
+        Music : {
+            type : 'Meting'
+        },
+        APlayer : {
+            container : '.aplayer',
+            fixed     : true,
+            autoplay  : false,
+            loop      : 'all',
+            order     : 'random',
+            preload   : 'auto',
+            volume    : 0.67,
+            mutex     : true,
+            lrcType   : 3,
+            audio     : [
+                
+                    {
+                        name   : 'aLIEz',
+                        artist : 'mizuki（瑞葵）',
+                        cover  : '/music/cover/aLIEz.jpg',
+                        url    : '/music/song/aLIEz.mp3',
+                        lrc    : '/music/lrc/aLIEz.lrc'
+                    },
+                
+                    {
+                        name   : 'Endless Tears',
+                        artist : 'CLIFF EDGE',
+                        cover  : '/music/cover/Endless Tears.jpg',
+                        url    : '/music/song/Endless Tears.mp3',
+                        lrc    : '/music/lrc/Endless Tears.lrc'
+                    },
+                
+                    {
+                        name   : 'Miracle',
+                        artist : 'Cascada',
+                        cover  : '/music/cover/Miracle.jpg',
+                        url    : '/music/song/Miracle.mp3',
+                        lrc    : '/music/lrc/Miracle.lrc'
+                    },
+                
+                    {
+                        name   : 'Roll The Dice',
+                        artist : '高珊',
+                        cover  : '/music/cover/Roll The Dice.jpg',
+                        url    : '/music/song/Roll The Dice.mp3',
+                        lrc    : '/music/lrc/Roll The Dice.lrc'
+                    },
+                
+                    {
+                        name   : 'See You Again',
+                        artist : 'Charlie Puth, Wiz Khalifa',
+                        cover  : '/music/cover/See You Again.jpg',
+                        url    : '/music/song/See You Again.mp3',
+                        lrc    : '/music/lrc/See You Again.lrc'
+                    },
+                
+                    {
+                        name   : 'Traveling Light',
+                        artist : 'Joel Hanson, Sara Groves',
+                        cover  : '/music/cover/Traveling Light.jpg',
+                        url    : '/music/song/Traveling Light.mp3',
+                        lrc    : '/music/lrc/Traveling Light.lrc'
+                    },
+                
+                    {
+                        name   : '痴心绝对',
+                        artist : '李圣杰',
+                        cover  : '/music/cover/痴心绝对.jpg',
+                        url    : '/music/song/痴心绝对.mp3',
+                        lrc    : '/music/lrc/痴心绝对.lrc'
+                    },
+                
+                    {
+                        name   : '好想大声说爱你',
+                        artist : 'BAAD（バード）',
+                        cover  : '/music/cover/好想大声说爱你.jpg',
+                        url    : '/music/song/好想大声说爱你.mp3',
+                        lrc    : '/music/lrc/好想大声说爱你.lrc'
+                    },
+                
+            ]
+        },
+        Meting : {
+            id       : '3778678', 
+            lrcshow  : false, 
+            server   : 'netease', 
+            type     : 'playlist', 
+            fixed    : true, 
+            autoplay : false, 
+            loop     : 'all', 
+            order    : 'random', 
+            preload  : 'auto', 
+            volume   : 0.67, 
+            mutex    : true
+        },
+
+        LazyLoad : {
+            default : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/image/website/lazyload.svg'
+        },
+  
+        Style : {
+            aplayer          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/APlayer.css',
+            archive          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/archive.css',
+            donate           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/donate.css',
+            fancybox         : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/jquery.fancybox.css',
+            footer           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/footer.css',
+            iconfont         : 'https://at.alicdn.com/t/font_1546312_l3yohatebw.css',
+            index            : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/index.css',
+            menuBubble       : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/menu-bubble.css',
+            page             : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/page.css',
+            post             : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/post.css',
+            search           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/search.css',
+            tocbot           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/tocbot.css',
+            normal           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/normal.css',
+            night            : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/night.css',
+            clipboard        : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/clipboard.css'
+        },
+
+        Script: {
+            aplayer          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/APlayer.min.js',
+            config           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/require.config.js',
+            index            : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/index.js',
+            instantSearch    : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/instantsearch.min.js',
+            jQuery           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/jquery-3.4.1.min.js',
+            loading          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/loading.js',
+            meting           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/Meting.min.js',
+            iscroll          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/iscroll.js',
+            require          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/require.min.js'
+        },
+
+        Font: {
+            LongCang   : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/LongCang.css',
+            Monda      : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Monda.css',
+            NotoSansSC : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/NotoSansSC.css',
+            Playball   : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Playball.css',
+            PTMono     : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/PTMono.css',
+            RobotoSlab : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/RobotoSlab.css',
+            Rosario    : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Rosario.css',
+            UbuntuMono : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/UbuntuMono.css'
+        },
+
+        Suffix : {
+            about : '我们生死与共，勇往直前，永远都是坏小子.'
+        },
+            
+        Theme : {
+            url  : 'https://github.com/first19326/Hexo-LiveForCode',
+            name : 'Hexo - Russshare'
+        }  
+    };
+</script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/index.js"></script>
+</body>
+</html>

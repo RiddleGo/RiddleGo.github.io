@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, shrink-to-fit=no">
+    <meta name="referrer" content="origin">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <title>Go语言微服务框架-2.实现加载静态配置文件</title>
+
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/LongCang.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Monda.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/NotoSansSC.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Playball.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/PTMono.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/RobotoSlab.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Rosario.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/UbuntuMono.css">
+
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/post.css">
+    
+        <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/normal.css">
+    
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/jquery-3.4.1.min.js"></script>
+
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+</head>
+<body>
+    <a id="cover"></a>
+    <div id="header">
+    <div class="header">
+        <div class="vertical">
+            <div class="inner">
+                <h1 class="header-subtitle">Go语言微服务框架-2.实现加载静态配置文件</h1>
+                <div class="header-subinfo">
+                    <p class="article-info-text">
+                        <span>
+                            <i class="iconfont icon-time"></i> 发表时间：2021-08-25
+                        </span>
+                        
+                            <span id="/2021/08/25/Go语言微服务框架-2-实现加载静态配置文件/" class="leancloud_visitors" data-flag-title="Go语言微服务框架-2.实现加载静态配置文件">
+                                <i class="iconfont icon-browse"></i> 阅读：<sapn class="leancloud-visitors-count"></span>
+                            </span>
+                        
+                        <span>
+                            <i class="iconfont icon-interactive"></i> 评论：<span class="valine-comment-count" data-xid="/2021/08/25/Go语言微服务框架-2-实现加载静态配置文件/"></span>
+                        </span>  
+                    </p>                 
+                </div>
+            </div>
+        </div>
+        <canvas id="articleHeaderCanvas"></canvas>
+    </div>
+</div>
+    <div id="container">
+    <div id="content">
+        <div id="article">
+    <div class="toc"></div>
+    <div class="article-body">
+        <p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/D6bilg6DTZ6ZwTndihDCRQ">前辈的原文链接–点击这里进入原文阅读体验更加</a></p>
+<p>(前辈的文章站在一个工程师高度输出了很多有意义的考量，太值得好好阅读，我是在bilibili上追到blog，推荐大家关注哦！)</p>
+<p>我们的基础RPC服务已经正常运行，我们再来看下一个特性：配置文件的加载。</p>
+<p>首先，我们要正确地认识到配置文件的重要性：<strong>在程序交付后，变更代码的成本很大；相对而言，变更配置文件的成本就比较小。****但有的同学又走了另一个极端，也就是将大量的逻辑放入到配置文件中，导致配置文件膨胀，本质上就是将部分本应在代码中维护的内容转移到了配置文件，导致配置文件也很难维护。</strong></p>
+<p>今天，我们先将重点放到加载配置文件库的技术选型，顺便分享一些常见的问题。</p>
+<h2 id="一个基础的加载配置文件示例"><a href="#一个基础的加载配置文件示例" class="headerlink" title="一个基础的加载配置文件示例"></a>一个基础的加载配置文件示例</h2><p>在Go语言中，用官方库就能快速实现配置文件的加载，下面就是一个简单的代码实现：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">b, err :&#x3D; ioutil.ReadFile(&quot;config.json&quot;)</span><br><span class="line">if err !&#x3D; nil &#123;</span><br><span class="line">  panic(err)</span><br><span class="line">&#125;</span><br><span class="line">var config MyConfig</span><br><span class="line">err &#x3D; json.Unmarshal(b, &amp;config)</span><br><span class="line">if err !&#x3D; nil &#123;</span><br><span class="line">  panic(err)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里MyConfig结构应该是对应json文件设置的结构体(<strong>猜的</strong>)</p>
+<p>关键的实现分为两块：</p>
+<ul>
+<li><p>读取文件中的数据</p>
+</li>
+<li><p><strong>将数据解析到Go程序的对象中</strong>，作为可识别的数据结构，这里指定了数据类型为json</p>
+</li>
+</ul>
+<h2 id="v0-2-0：实现加载静态配置文件"><a href="#v0-2-0：实现加载静态配置文件" class="headerlink" title="v0.2.0：实现加载静态配置文件"></a>v0.2.0：实现加载静态配置文件</h2><p>项目链接 <a target="_blank" rel="noopener" href="https://github.com/Junedayday/micro_web_service/tree/v0.2.0">https://github.com/Junedayday/micro_web_service/tree/v0.2.0</a></p>
+<h3 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h3><p>从配置文件中解析数据到程序中，并具备更高的可读性和扩展性。</p>
+<h3 id="关键技术点"><a href="#关键技术点" class="headerlink" title="关键技术点"></a>关键技术点</h3><ul>
+<li><p>命令行参数与配置文件的差异</p>
+</li>
+<li><p>github.com/spf13/viper的介绍</p>
+</li>
+<li><p>使用viper库的推荐方式</p>
+</li>
+</ul>
+<h3 id="目录构造"><a href="#目录构造" class="headerlink" title="目录构造"></a>目录构造</h3><p><strong>github.com/spf13/viper</strong>中存在一个全局变量**var v *Viper**（点击查看），如果我们调用默认的viper包，其实就是将参数解析到这个全局变量中。</p>
+<p>在具体的项目中，更推荐的方式是将这个变量保存到内部项目中，作为一个项目中的全局变量，所以我们会新建一个viper.New()。配置参数会被全局调用，<strong>为了保证不会发生循环依赖，我们就需要一个专门的package来保存这个全局变量，这里对应项目中的internal/config/viper.go。</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">--- micro_web_service            项目目录</span><br><span class="line"> |-- gen                            从idl文件夹中生成的文件，不可手动修改</span><br><span class="line">    |-- idl                             对应idl文件夹</span><br><span class="line">       |-- demo                             对应idl&#x2F;demo服务</span><br><span class="line">          |-- demo.pb.go                        demo.proto的基础结构</span><br><span class="line">          |-- demo.pb.gw.go                     demo.proto的HTTP接口，对应gRPC-Gateway</span><br><span class="line">          |-- demo_grpc.pb.go                   demo.proto的gRPC接口代码</span><br><span class="line"> |-- idl                            原始的idl定义</span><br><span class="line">    |-- demo                            业务package定义</span><br><span class="line">       |-- demo.proto                       protobuffer的原始定义</span><br><span class="line"> |-- internal                       项目的内部代码，不对外暴露</span><br><span class="line">    |-- server                          服务器的实现</span><br><span class="line">       |-- demo.go                          server中对demo这个服务的接口实现</span><br><span class="line">       |-- server.go                        server的定义，须实现对应服务的方法</span><br><span class="line">    |-- config                          新增：配置相关的文件夹</span><br><span class="line">       |-- viper.go                         新增：viper的相关加载逻辑</span><br><span class="line"> |-- buf.gen.yaml                   buf生成代码的定义</span><br><span class="line"> |-- buf.yaml                       buf工具安装所需的工具</span><br><span class="line"> |-- gen.sh                         buf生成的shell脚本</span><br><span class="line"> |-- go.mod                         Go Module文件</span><br><span class="line"> |-- main.go                        项目启动的main函数</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-命令行参数与配置文件的差异"><a href="#1-命令行参数与配置文件的差异" class="headerlink" title="1.命令行参数与配置文件的差异"></a>1.命令行参数与配置文件的差异</h3><p>命令行参数类似于   ./demo –config=a.yaml –http_port=8080 –grpc_port=8081   ，Go语言中自带flag包可供解析，开源的有pflag和相关的扩展工具，如cobra。</p>
+<p>而配置文件则是<strong>将参数从文件解析到内存中</strong>，一般用读取文件+反序列化工具来使用。</p>
+<p>同样是解析参数到程序里，我们该选择哪种方案呢？我们从可读性和可维护性来对比下：</p>
+<ul>
+<li><p>可读性：命令行参数是扁平化的，可读性远不如格式化后的配置文件</p>
+</li>
+<li><p>可维护性：配置文件增加了一个维护项，但成本不高</p>
+</li>
+</ul>
+<p>所以，我个人倾向于的方案是：</p>
+<ul>
+<li><p>命令行参数：用于维护极少量关键性的参数，如配置文件的路径</p>
+</li>
+<li><p>配置文件：维护绝大多数的参数</p>
+</li>
+</ul>
+<p>在某些极端的场景中，比如提供一个纯二进制文件作为工具，那不得不把所有配置参数都放入到命令行参数中。这并不是我们微服务框架要讨论的场景。所以，接下来我们重点讨论配置文件的加载。</p>
+<p>···<br>关于pflag相关的内容，在后续程序复杂到一定阶段后会引入。<br>···</p>
+<h3 id="2-github-com-spf13-viper的介绍"><a href="#2-github-com-spf13-viper的介绍" class="headerlink" title="2.github.com/spf13/viper的介绍"></a>2.github.com/spf13/viper的介绍</h3><p>对比上面的方案，我们来看一个业内使用最广的Go语言配置加载库github.com/spf13/viper的实现，对应的代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">viper.SetConfigName(&quot;config&quot;)        &#x2F;&#x2F; config file name without file type</span><br><span class="line">viper.SetConfigType(&quot;yaml&quot;)          &#x2F;&#x2F; config file type</span><br><span class="line">viper.AddConfigPath(&quot;.&#x2F;&quot;)            &#x2F;&#x2F; config file path</span><br><span class="line">if err :&#x3D; viper.ReadInConfig(); err !&#x3D; nil &#123;</span><br><span class="line">  panic(err)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>而在获取配置文件时，又采用key-value形式的语法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">viper.GetInt(&quot;server.grpc.port&quot;)</span><br></pre></td></tr></table></figure>
+
+<p>详细的特性我会在Go语言技巧系列里说明，今天我们聚焦于工程侧的宏观特性，来聊聊这个库的优劣势：</p>
+<h3 id="可选的参数序列化"><a href="#可选的参数序列化" class="headerlink" title="可选的参数序列化"></a>可选的参数序列化</h3><p>从viper库的源码中(点击跳转)，我们可以看到它支持多种本地文件类型与远程k-v数据库：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; SupportedExts are universally supported extensions.</span><br><span class="line">var SupportedExts &#x3D; []string&#123;&quot;json&quot;, &quot;toml&quot;, &quot;yaml&quot;, &quot;yml&quot;, &quot;properties&quot;, &quot;props&quot;, &quot;prop&quot;, &quot;hcl&quot;, &quot;dotenv&quot;, &quot;env&quot;, &quot;ini&quot;&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; SupportedRemoteProviders are universally supported remote providers.</span><br><span class="line">var SupportedRemoteProviders &#x3D; []string&#123;&quot;etcd&quot;, &quot;consul&quot;, &quot;firestore&quot;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们先忽略远程的存储，先看一下最常用的几个序列化的库：</p>
+<p>JSON: 官方自带的encoding/json</p>
+<p>TOML: 开源的github.com/pelletier/go-toml</p>
+<p>YAML: 官方推荐的gopkg.in/yaml.v2</p>
+<p>INI：官方推荐的gopkg.in/ini.v1</p>
+<p>在这四种技术选型时，我个人倾向于选择JSON和YAML。进一步斟酌时，<strong>虽然JSON的适用范围最广，但当配置文件复杂到一定程度时，JSON格式的配置文件很难通过换行来约束，当存在大量的嵌套时，可读性很差。</strong>所以，我个人比较推荐<strong>使用YAML格式的配置文件，一方面通过强制的换行约束，可读性很棒；另一方面云原生相关技术大量使用了YAML作为配置文件，尤其是Kubernetes中各种定义。</strong></p>
+<p>例如，我们将服务的端口改造到配置文件里，就成了：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">server:</span><br><span class="line">  http:</span><br><span class="line">    port: 8081</span><br><span class="line">  grpc:</span><br><span class="line">    port: 8082</span><br></pre></td></tr></table></figure>
+<p>对应的Go语言代码为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">viper.GetInt(&quot;server.http.port&quot;)</span><br><span class="line">viper.GetInt(&quot;server.grpc.port&quot;)</span><br></pre></td></tr></table></figure>
+
+<h3 id="可扩展的获取参数方法"><a href="#可扩展的获取参数方法" class="headerlink" title="可扩展的获取参数方法"></a>可扩展的获取参数方法</h3><p>viper库提供的获取参数方式为**viper.Get{type}(“{level1}.{level2}.{level3}…”)**的格式。随着配置文件的扩大，也只需新增Get方法即可。</p>
+<p>从获取参数的方法来看，它的设计分为3种：</p>
+<ul>
+<li><p>基本类型，直接提供Get{具体类型}的方法，如GetInt，GetString；</p>
+</li>
+<li><p>任意类型，提供Get(key string) interface{}，自行转化</p>
+</li>
+<li><p>复杂类型的反序列化，提供UnmarshalKey等方法，更方便地获取复杂结构</p>
+</li>
+</ul>
+<p>我个人建议各位只使用第一类的方法，将配置文件这个模块做到最简化。<strong>毕竟，配置文件的复杂化很容易引入各种问题，占用大量的排查故障的时间。</strong>如果你的系统必须引入一套非常复杂的配置，那么我更建议将它独立成一个专门的服务，用来维护这套配置。</p>
+<h3 id="3-使用viper库的推荐方式"><a href="#3-使用viper库的推荐方式" class="headerlink" title="3.使用viper库的推荐方式"></a>3.使用viper库的推荐方式</h3><p>如果你仔细地阅读viper相关的代码，你会发现它有很多超酷的特性。但今天，我想告诉各位：<strong>请克制地使用进阶的特性，最棒的特性往往是简洁的。</strong></p>
+<p>我们对照着官方的README文件中介绍的特性进行讲解。</p>
+<h4 id="尽量避免手动设置的参数值"><a href="#尽量避免手动设置的参数值" class="headerlink" title="尽量避免手动设置的参数值"></a>尽量避免手动设置的参数值</h4><p>原文链接</p>
+<p>用viper.SetDefault函数可以给某些参数设置默认值，如果只是少数的几个参数还是很容易维护的。但如果设置的值过多了，就会给阅读代码的人带来困扰：这个参数是来自配置文件，还是在代码某处手动设置的？也就是存在二义性，增加了排查问题的复杂度。</p>
+<h4 id="明确配置文件的来源"><a href="#明确配置文件的来源" class="headerlink" title="明确配置文件的来源"></a>明确配置文件的来源</h4><p>原文链接</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">viper.AddConfigPath(&quot;&#x2F;etc&#x2F;appname&#x2F;&quot;)   &#x2F;&#x2F; path to look for the config file in</span><br><span class="line">viper.AddConfigPath(&quot;$HOME&#x2F;.appname&quot;)  &#x2F;&#x2F; call multiple times to add many search paths</span><br><span class="line">viper.AddConfigPath(&quot;.&quot;)               &#x2F;&#x2F; optionally look for config in the working directory</span><br></pre></td></tr></table></figure>
+
+<p>viper支持多个配置文件的路径，这虽然带来了便利性，但如果多个文件路径中都存在配置文件，那究竟以哪个为准？这也是一个二义性的问题，所以我个人更建议只设置一个，而这个路径由flag传入。</p>
+<h4 id="静态配置与动态配置的分离"><a href="#静态配置与动态配置的分离" class="headerlink" title="静态配置与动态配置的分离"></a>静态配置与动态配置的分离</h4><p>原文链接</p>
+<p>viper提供了接口viper.WatchConfig()，可以监听文件的变化，然后做相应的调整。这个特性很酷，我们可以用它<strong>实现热加载</strong>。<strong>但这个特性很容易让人产生混淆：例如发生了某个BUG，如何确定当时的配置文件情况？</strong>其实，这就需要引入一定的版本管理机制。</p>
+<p>我更建议采用<strong>静态配置和动态配置分离的方案</strong>，也就是配置文件负责静态的、固定的配置，一旦启动后只加载一次；而动态的配置放在带版本管理的配置中心里，具备热加载的特性。</p>
+<p>所以，我不太建议在配置文件这里引入监听文件变化的特性。</p>
+<h4 id="核心代码示例"><a href="#核心代码示例" class="headerlink" title="核心代码示例"></a>核心代码示例</h4><p><strong>main.go</strong><br>从flag中解析出配置文件路径，传到config包中用于解析。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">var configFilePath &#x3D; flag.String(&quot;c&quot;, &quot;.&#x2F;&quot;, &quot;config file path&quot;)</span><br><span class="line">flag.Parse()</span><br><span class="line"></span><br><span class="line">if err :&#x3D; config.Load(*configFilePath); err !&#x3D; nil &#123;</span><br><span class="line">  panic(err)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>internal/config/viper.go</strong><br>加载的代码并不多，尽量保证配置信息的简洁易懂。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 全局Viper变量</span><br><span class="line">var Viper &#x3D; viper.New()</span><br><span class="line"></span><br><span class="line">func Load(configFilePath string) error &#123;</span><br><span class="line"> Viper.SetConfigName(&quot;config&quot;)       &#x2F;&#x2F; config file name without file type</span><br><span class="line"> Viper.SetConfigType(&quot;yaml&quot;)         &#x2F;&#x2F; config file type</span><br><span class="line"> Viper.AddConfigPath(configFilePath) &#x2F;&#x2F; config file path</span><br><span class="line"> return Viper.ReadInConfig()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="配置使用方"><a href="#配置使用方" class="headerlink" title="配置使用方"></a>配置使用方</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">config.Viper.GetInt(&quot;server.grpc.port&quot;)</span><br></pre></td></tr></table></figure>
+
+<h3 id="使用viper库的注意事项"><a href="#使用viper库的注意事项" class="headerlink" title="使用viper库的注意事项"></a>使用viper库的注意事项</h3><p>在使用viper获取配置时，我们需要手动组装key，也就是   “{level1}.{level2}.{level3}…”    这种形式。这时，我们只能对照着原始配置文件逐个填充字段，一不小心填错、就会发生奇怪的问题。</p>
+<p><strong>而如果采用的是将配置文件解析到结构体的方法，就能很容易地避免这个问题。</strong></p>
+<p><strong>考虑到扩展性，官方库推荐的是手动组装key的方式，所以需要大家在认真查看这个key是否有效。</strong></p>
+<p>（因为当需要新的配置的时候，你还得修改对应的结构体，这可能也是考虑的一方面。）</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>加载静态配置文件是一个很常见的功能，viper提供了一套完整方案，兼具简洁和扩展性；</p>
+<p>与此同时，我们要学会克制，不要看到了viper中提供的各种特性、就想着应用到实际项目中，也就是常说的：<strong>手里拿了个锤子，看啥都是钉子。</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Github: https:&#x2F;&#x2F;github.com&#x2F;Junedayday&#x2F;code_reading</span><br><span class="line"></span><br><span class="line">Blog: http:&#x2F;&#x2F;junes.tech&#x2F;</span><br><span class="line"></span><br><span class="line">Bilibili: https:&#x2F;&#x2F;space.bilibili.com&#x2F;293775192</span><br><span class="line"></span><br><span class="line">公众号: golangcoding</span><br></pre></td></tr></table></figure>
+        <p class="suffix-end">__END__</p>
+        <div class="suffix-box">
+            <div class="suffix-box-left">
+                <img src="https://gitee.com/psycho1900/miss-reddle/raw/master/profile.jpg" alt="Russshare">
+            </div>
+            <div class="suffix-box-right">
+                <span class="suffix-box-title">文章作者</span>：Russshare
+                <br>
+                <span class="suffix-box-title">文章出处</span>：<a href="/2021/08/25/Go%E8%AF%AD%E8%A8%80%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-2-%E5%AE%9E%E7%8E%B0%E5%8A%A0%E8%BD%BD%E9%9D%99%E6%80%81%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/" target="_blank">Go语言微服务框架-2.实现加载静态配置文件</a>
+                <br>
+                <span class="suffix-box-title">作者签名</span>：我们生死与共，勇往直前，永远都是坏小子.
+                <br>
+                <span class="suffix-box-title">关于主题</span>：<a href="https://github.com/first19326/Hexo-LiveForCode" target="_blank">Hexo - Russshare</a>
+                <br>
+                <span class="suffix-box-title">版权声明</span>：文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" title="BY-NC-SA" target="_blank">BY-NC-SA</a> 许可协议，转载请注明出处
+                <br>
+            </div>
+            <div style="clear: both;"></div>
+        </div>
+    </div>
+    <div class="article-footer">
+        
+            <div class="category">
+                分类：
+                
+                    <a href="/categories/golang%E5%BE%AE%E6%9C%8D%E5%8A%A1/">golang微服务</a>
+                
+            </div>
+        
+        
+            <div class="tag">
+                标签：
+                
+                    <a href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/">微服务</a>
+                
+                    <a href="/tags/viper/">viper</a>
+                
+            </div>
+        
+        <div class="article-prev-next">
+            
+                <a href="/2021/08/25/Go%E8%AF%AD%E8%A8%80%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-3-%E6%97%A5%E5%BF%97%E5%BA%93%E7%9A%84%E9%80%89%E5%9E%8B%E4%B8%8E%E5%BC%95%E5%85%A5/" class="prev-prefix">« </a> 上一篇：    <a href="/2021/08/25/Go%E8%AF%AD%E8%A8%80%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-3-%E6%97%A5%E5%BF%97%E5%BA%93%E7%9A%84%E9%80%89%E5%9E%8B%E4%B8%8E%E5%BC%95%E5%85%A5/" title="发布于 2021-08-25 11:27">Go语言微服务框架-3.日志库的选型与引入</a>
+                <br>
+            
+            
+                <a href="/2021/08/23/%E5%A4%A7%E7%96%86%E9%9D%A2%E8%AF%95%E6%B5%8B%E8%AF%95%EF%BC%88%E4%BA%8C%EF%BC%89/" class="next-prefix">» </a> 下一篇：    <a href="/2021/08/23/%E5%A4%A7%E7%96%86%E9%9D%A2%E8%AF%95%E6%B5%8B%E8%AF%95%EF%BC%88%E4%BA%8C%EF%BC%89/" title="发布于 2021-08-23 11:20">大疆面试测试（二）</a>
+            
+        </div>
+    </div>
+    
+    <div class="article-comments">
+        <div class="comments-title">
+            评论列表
+        </div>
+        <div class="comments-content">
+        </div>
+    </div>
+
+</div>
+
+    </div>
+</div>
+    <div id="footer"></div>
+    <div id="sidebar">
+    <div class="menu-wrap" style="display:none;">
+        <nav class="menu">
+            <div class="menu-introduce"> 
+                <div class="introduce-avatar"></div> 
+                <div class="introduce-info"> 
+                    <div class="introduce-user"><span></span></div>        
+                </div> 
+            </div> 
+            <div class="menu-list">
+                <ul></ul> 
+            </div> 
+            <div class="menu-link"></div> 
+        </nav>
+        <button class="menu-button-close"></button>
+        <div class="morph-shape" id="morph-shape" data-morph-open="M-7.312,0H15c0,0,66,113.339,66,399.5C81,664.006,15,800,15,800H-7.312V0z;M-7.312,0H100c0,0,0,113.839,0,400c0,264.506,0,400,0,400H-7.312V0z">
+            <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 100 800" preserveAspectRatio="none">
+                <path d="M-7.312,0H0c0,0,0,113.839,0,400c0,264.506,0,400,0,400h-7.312V0z"/>
+            </svg>
+        </div>
+    </div>
+    <button class="menu-button-open">MENU</button>
+    <div class="menu-cover"></div>
+</div>
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/search.css">
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/iscroll.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/instantsearch.min.js"></script>
+<div class="search-window">
+    <div class="search-content">
+        <div class="search-content-icon">
+            <i class="iconfont icon-search"></i>
+        </div>
+        <div id="search-input" class="search-input"></div>
+    </div>
+
+    <div class="search-scroll">
+        <div class="search-result">
+            <div id="search-stats" class="search-stats"></div>
+            <div id="search-hits"></div>
+            <div id="search-pagination" class="search-pagination"></div>
+        </div>
+    </div>
+
+    <span class="search-close-icon">
+        <i class="iconfont icon-close"></i>
+    </span>
+</div>
+    <div id="tools">
+    <div class="progressbar-top"></div>
+
+    
+        <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/APlayer.css">
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/APlayer.min.js"></script>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/Meting.min.js"></script>
+        <meting-js id="3778678" lrcshow="false" server="netease" type="playlist" fixed="true" autoplay="false" loop="all" order="random" preload="auto" volume="0.67" mutex="true"></meting-js>
+    
+    
+    <div class="wrap-right"></div>
+    <div class="loading"></div>
+</div>
+    <script>
+    window.config = {
+        GitHubUserName     : 'Russshare',
+        GitHubRepositories : 'Russshare',
+
+        BlogUser      : 'Russshare',
+        BlogAvatar    : 'https://gitee.com/psycho1900/miss-reddle/raw/master/profile.jpg',
+        BlogStartDate : '2021-03-17',
+
+        WebsiteTitleBlur         : '(◍´꒳`◍) Hi, Miss Riddle',
+        WebsiteTitleBlurTimeOut  : 500,
+        WebsiteTitleFocus        : '(*´∇｀*) 欢迎回来!',
+        WebsiteTitleFocusTimeOut : 1000,
+        WebsiteFavicon           : 'https://gitee.com/psycho1900/miss-reddle/raw/master/beer.png',
+
+        ProgressBar: {
+            id       : 'topProgressBar',
+            color    : '#77B6FF',
+            height   : '2px',
+            duration : 0.2
+        },
+
+        Loading: {
+            rebound: {
+                tension  : 16,
+                friction : 5
+            },
+            spinner: {
+                id     : 'spinner',
+                radius : 90,
+                sides  : 3,
+                depth  : 4,
+                colors : {
+                    background : '#F0F0F0',
+                    stroke     : '#272633',
+                    base       : '',
+                    child      : '#272633'
+                },
+                alwaysForward : true,
+                restAt        : 0.5,
+                renderBase    : false
+            }
+        },
+
+        HomeHeaderAnimationRendered : true,
+        HomeHeaderAnimation         : {
+            radius      : 15,
+            density     : 0.2,
+            color       : 'rgba(255, 255, 255, .2)',
+            clearOffset : 0.3
+        },
+
+        ArticleHeaderAnimationRendered : false,
+        ArticleHeaderAnimation         : {
+            triW                  : 14,
+            triH                  : 20,
+            neighbours            : [
+                
+                    'side',
+                
+                    'top',
+                
+                    'bottom',
+                
+            ],
+            speedTrailAppear      : 0.1,
+            speedTrailDisappear   : 0.1,
+            speedTriOpen          : 1,
+            trailMaxLength        : 30,
+            trailIntervalCreation : 100,
+            delayBeforeDisappear  : 2,
+            colors                : [
+                
+                    '#96EDA6',
+                
+                    '#5BC6A9',
+                
+                    '#38668C',
+                
+                    '#374D84',
+                
+                    '#BED5CB',
+                
+                    '#62ADC6',
+                
+                    '#8EE5DE',
+                
+                    '#304E7B',
+                
+            ]
+        },
+
+        BackAnimationRendered          : true,
+        IEBrowserBackAnimationRendered : false,
+        BackAnimation                  : {
+            colorSaturation  : '60%',
+            colorBrightness  : '50%',
+            colorAlpha       : 0.5,
+            colorCycleSpeed  : 5,
+            verticalPosition : 'random',
+            horizontalSpeed  : 200,
+            ribbonCount      : 3,
+            strokeSize       : 0,
+            parallaxAmount   : -0.2,
+            animateSections  : true
+        },
+
+        HomeHeaderImage : [
+            
+                'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/image/header/home.jpg',
+            
+                'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/image/header/home.jpeg',
+            
+        ],
+        HomeBannerText  : '',
+
+        ArticleHeaderImage : [
+            
+                'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/image/header/article.jpg',
+            
+        ],
+
+        OtherBannerText : '',
+
+        MenuList : [
+            
+                {
+                    name   : '首页',
+                    href   : '/',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '标签',
+                    href   : '/tag',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '分类',
+                    href   : '/category',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '赞赏',
+                    href   : '/donate',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '关于',
+                    href   : '/about',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '搜索',
+                    href   : '',    
+                    target : '',
+                    class  : 'search'
+                },
+            
+                {
+                    name   : '留言板',
+                    href   : '/comment',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '友情链接',
+                    href   : '/friend',    
+                    target : '',
+                    class  : ''
+                },
+            
+        ],
+        MenuLink : [
+            
+                
+                    {
+                        icon : 'icon-weibo', 
+                        url  : ''
+                    },
+                
+                    {
+                        icon : 'icon-wechat', 
+                        url  : ''
+                    },
+                
+                    {
+                        icon : 'icon-qq', 
+                        url  : ''
+                    },
+                
+                    {
+                        icon : 'icon-github', 
+                        url  : 'https://github.com/RiddleGo'
+                    },
+                
+            
+        ],
+
+        FooterStyle : 2,
+        BottomText  : {
+            icon    : 'like-fill',
+            left    : '人生若只如初见',
+            right   : '何事秋风悲画扇'
+        },
+        ThemeInfo   : true,
+
+        ConsoleList : [
+            
+                
+                    [
+                        
+                            
+                                'Based on cnblogs theme SimpleMemory.',
+                            
+                                '',
+                            
+                        
+                    ],
+                
+                    [
+                        
+                            
+                                'SimpleMemory Author:',
+                            
+                                'BNDong',
+                            
+                        
+                    ],
+                
+                    [
+                        
+                            
+                                'Theme:',
+                            
+                                'LiveForCode',
+                            
+                        
+                    ],
+                
+            
+        ],
+
+        FontIconExtend : '',
+
+        Donate : {
+            paypal  : '',
+            bitcoin : '',
+            alipay  : '',
+            wechat  : ''
+        },
+
+        Code : {
+            style : 'normal'
+        },  
+
+        Search : {
+            applicationID : '010C3EANT8',
+            apiKey        : 'c7abab9f11b79102b9aff7fe6d41447d',
+            indexName     : 'Notes',
+            hits          : {
+                page : 10
+            },
+            labels        : {
+                placeholder : '搜索',
+                empty       : '未发现与 「${query}」 相关的内容',
+                stats       : '${hits} 条相关条目，使用了 ${time} 毫秒',
+            }
+        }, 
+
+        Valine : {
+            switch         : true,
+            el             : '.comments-content',
+            appId          : 'TKpiBidydKtx7apGCq7DM4Fw-gzGzoHsz',
+            appKey         : 'wsVqBbLWlLy4JRbi9I4XDBpH',
+            placeholder    : '你是我一生只会遇见一次的惊喜...',
+            avatar         : 'mm',
+            meta           : 'nick,mail,link',
+            requiredFields : 'nick,mail',
+            pageSize       : 5,
+            lang           : 'zh-cn',
+            visitor        : true,
+            enableQQ       : true
+        },
+
+        Tocbot : {
+            switch                : true,
+            tocSelector           : '.toc',
+            contentSelector       : '.article-body',
+            headingSelector       : 'h1, h2, h3, h4, h5',
+            headingsOffset        : 0,
+            scrollSmooth          : true,
+            scrollSmoothOffset    : -5,
+            positionFixedSelector : '.toc',
+            positionFixedClass    : 'toc-fixed',
+            fixedSidebarOffset    : '',
+        },
+
+        Require : {
+            baseUrl     : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/',
+            waitSeconds : 100
+        },
+
+        Music : {
+            type : 'Meting'
+        },
+        APlayer : {
+            container : '.aplayer',
+            fixed     : true,
+            autoplay  : false,
+            loop      : 'all',
+            order     : 'random',
+            preload   : 'auto',
+            volume    : 0.67,
+            mutex     : true,
+            lrcType   : 3,
+            audio     : [
+                
+                    {
+                        name   : 'aLIEz',
+                        artist : 'mizuki（瑞葵）',
+                        cover  : '/music/cover/aLIEz.jpg',
+                        url    : '/music/song/aLIEz.mp3',
+                        lrc    : '/music/lrc/aLIEz.lrc'
+                    },
+                
+                    {
+                        name   : 'Endless Tears',
+                        artist : 'CLIFF EDGE',
+                        cover  : '/music/cover/Endless Tears.jpg',
+                        url    : '/music/song/Endless Tears.mp3',
+                        lrc    : '/music/lrc/Endless Tears.lrc'
+                    },
+                
+                    {
+                        name   : 'Miracle',
+                        artist : 'Cascada',
+                        cover  : '/music/cover/Miracle.jpg',
+                        url    : '/music/song/Miracle.mp3',
+                        lrc    : '/music/lrc/Miracle.lrc'
+                    },
+                
+                    {
+                        name   : 'Roll The Dice',
+                        artist : '高珊',
+                        cover  : '/music/cover/Roll The Dice.jpg',
+                        url    : '/music/song/Roll The Dice.mp3',
+                        lrc    : '/music/lrc/Roll The Dice.lrc'
+                    },
+                
+                    {
+                        name   : 'See You Again',
+                        artist : 'Charlie Puth, Wiz Khalifa',
+                        cover  : '/music/cover/See You Again.jpg',
+                        url    : '/music/song/See You Again.mp3',
+                        lrc    : '/music/lrc/See You Again.lrc'
+                    },
+                
+                    {
+                        name   : 'Traveling Light',
+                        artist : 'Joel Hanson, Sara Groves',
+                        cover  : '/music/cover/Traveling Light.jpg',
+                        url    : '/music/song/Traveling Light.mp3',
+                        lrc    : '/music/lrc/Traveling Light.lrc'
+                    },
+                
+                    {
+                        name   : '痴心绝对',
+                        artist : '李圣杰',
+                        cover  : '/music/cover/痴心绝对.jpg',
+                        url    : '/music/song/痴心绝对.mp3',
+                        lrc    : '/music/lrc/痴心绝对.lrc'
+                    },
+                
+                    {
+                        name   : '好想大声说爱你',
+                        artist : 'BAAD（バード）',
+                        cover  : '/music/cover/好想大声说爱你.jpg',
+                        url    : '/music/song/好想大声说爱你.mp3',
+                        lrc    : '/music/lrc/好想大声说爱你.lrc'
+                    },
+                
+            ]
+        },
+        Meting : {
+            id       : '3778678', 
+            lrcshow  : false, 
+            server   : 'netease', 
+            type     : 'playlist', 
+            fixed    : true, 
+            autoplay : false, 
+            loop     : 'all', 
+            order    : 'random', 
+            preload  : 'auto', 
+            volume   : 0.67, 
+            mutex    : true
+        },
+
+        LazyLoad : {
+            default : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/image/website/lazyload.svg'
+        },
+  
+        Style : {
+            aplayer          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/APlayer.css',
+            archive          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/archive.css',
+            donate           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/donate.css',
+            fancybox         : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/jquery.fancybox.css',
+            footer           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/footer.css',
+            iconfont         : 'https://at.alicdn.com/t/font_1546312_l3yohatebw.css',
+            index            : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/index.css',
+            menuBubble       : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/menu-bubble.css',
+            page             : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/page.css',
+            post             : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/post.css',
+            search           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/search.css',
+            tocbot           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/tocbot.css',
+            normal           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/normal.css',
+            night            : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/night.css',
+            clipboard        : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/clipboard.css'
+        },
+
+        Script: {
+            aplayer          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/APlayer.min.js',
+            config           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/require.config.js',
+            index            : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/index.js',
+            instantSearch    : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/instantsearch.min.js',
+            jQuery           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/jquery-3.4.1.min.js',
+            loading          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/loading.js',
+            meting           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/Meting.min.js',
+            iscroll          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/iscroll.js',
+            require          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/require.min.js'
+        },
+
+        Font: {
+            LongCang   : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/LongCang.css',
+            Monda      : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Monda.css',
+            NotoSansSC : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/NotoSansSC.css',
+            Playball   : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Playball.css',
+            PTMono     : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/PTMono.css',
+            RobotoSlab : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/RobotoSlab.css',
+            Rosario    : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Rosario.css',
+            UbuntuMono : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/UbuntuMono.css'
+        },
+
+        Suffix : {
+            about : '我们生死与共，勇往直前，永远都是坏小子.'
+        },
+            
+        Theme : {
+            url  : 'https://github.com/first19326/Hexo-LiveForCode',
+            name : 'Hexo - Russshare'
+        }  
+    };
+</script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/index.js"></script>
+</body>
+</html>

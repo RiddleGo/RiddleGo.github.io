@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, shrink-to-fit=no">
+    <meta name="referrer" content="origin">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <title>面试：Docker</title>
+
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/LongCang.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Monda.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/NotoSansSC.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Playball.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/PTMono.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/RobotoSlab.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Rosario.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/UbuntuMono.css">
+
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/post.css">
+    
+        <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/normal.css">
+    
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/jquery-3.4.1.min.js"></script>
+
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+</head>
+<body>
+    <a id="cover"></a>
+    <div id="header">
+    <div class="header">
+        <div class="vertical">
+            <div class="inner">
+                <h1 class="header-subtitle">面试：Docker</h1>
+                <div class="header-subinfo">
+                    <p class="article-info-text">
+                        <span>
+                            <i class="iconfont icon-time"></i> 发表时间：2021-08-06
+                        </span>
+                        
+                            <span id="/2021/08/06/面试：Docker/" class="leancloud_visitors" data-flag-title="面试：Docker">
+                                <i class="iconfont icon-browse"></i> 阅读：<sapn class="leancloud-visitors-count"></span>
+                            </span>
+                        
+                        <span>
+                            <i class="iconfont icon-interactive"></i> 评论：<span class="valine-comment-count" data-xid="/2021/08/06/面试：Docker/"></span>
+                        </span>  
+                    </p>                 
+                </div>
+            </div>
+        </div>
+        <canvas id="articleHeaderCanvas"></canvas>
+    </div>
+</div>
+    <div id="container">
+    <div id="content">
+        <div id="article">
+    <div class="toc"></div>
+    <div class="article-body">
+        <h3 id="1、docker"><a href="#1、docker" class="headerlink" title="1、docker"></a>1、docker</h3><p>常见面试题如下 每一点可根据回答进行适当深入</p>
+<h4 id="1-1-什么是docker"><a href="#1-1-什么是docker" class="headerlink" title="1.1 什么是docker"></a>1.1 什么是docker</h4><p>Docker是一个可以把开发的应用程序自动部署到容器的开源引擎。</p>
+<h4 id="1-2-docker和传统linux的差异？"><a href="#1-2-docker和传统linux的差异？" class="headerlink" title="1.2 docker和传统linux的差异？"></a>1.2 docker和传统linux的差异？</h4><p>docker是一个应用层的抽象，容器之间通过网络命名空间进行隔离，多个容器共享同一个操作系统内核。VM是对物理硬件层的抽象，每个VM都包含独立的操作系统，重且启动缓慢。VM主要为了提供系统环境，容器主要是为了提供应用环境。</p>
+<h4 id="1-3-容器和镜像的区别？"><a href="#1-3-容器和镜像的区别？" class="headerlink" title="1.3 容器和镜像的区别？"></a>1.3 容器和镜像的区别？</h4><p>见docker镜像的文章</p>
+<p>镜像是一个只读模板，包括运行容器所需的数据，其内容在构建之后就不会被改变，可以用来创建新的容器。 镜像由多个只读层组成，容器在只读层的基础上多了一个读写层。</p>
+<h4 id="1-4-如何理解docker的缓存机制？"><a href="#1-4-如何理解docker的缓存机制？" class="headerlink" title="1.4 如何理解docker的缓存机制？"></a>1.4 如何理解docker的缓存机制？</h4><p>在构建映像的过程中，Docker将按照指定的顺序逐步执行您的Dockerfile中的指令。随着每条指令的检查，Docker将在其缓存中查找可重用的现有映像，而不是创建一个新的（重复）映像。</p>
+<h4 id="1-5-docker的架构"><a href="#1-5-docker的架构" class="headerlink" title="1.5 docker的架构"></a>1.5 docker的架构</h4><p>Docker 使用客户端-服务器 (C/S) 架构模式，使用远程API来管理和创建Docker容器。</p>
+<h3 id="1-2-docker-网络模型"><a href="#1-2-docker-网络模型" class="headerlink" title="1.2 docker 网络模型"></a>1.2 docker 网络模型</h3><h4 id="1-2-1-docker的网络基础是什么？"><a href="#1-2-1-docker的网络基础是什么？" class="headerlink" title="1.2.1 docker的网络基础是什么？"></a>1.2.1 docker的网络基础是什么？</h4><p><strong>Docker 使用到的与Linux网络有关的主要技术包括：网络命名空间(network namespace)、Veth设备对、网桥(bridge)、iptables和路由。</strong></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/meltsnow/article/details/94490994?utm_medium=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromMachineLearnPai2~default-1.base&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromMachineLearnPai2~default-1.base">Docker网络详解——原理篇</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/kkbill/p/12885029.html">Docker网络基础</a></p>
+<h4 id="1-2-2-docker的网络模型是？有什么局限？"><a href="#1-2-2-docker的网络模型是？有什么局限？" class="headerlink" title="1.2.2 docker的网络模型是？有什么局限？"></a>1.2.2 docker的网络模型是？有什么局限？</h4><p>我们在使用docker run创建Docker容器时，可以用–net选项指定容器的网络模式，Docker有以下4种网络模式：</p>
+<p>· host模式，使用–net=host指定。</p>
+<p>· container模式，使用–net=container:NAME_or_ID指定。</p>
+<p>· none模式，使用–net=none指定。</p>
+<p>· bridge模式，使用–net=bridge指定，默认设置。<br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/yyxianren/p/10727736.html">docker的4种网络模型</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/zjysource/article/details/52055820?utm_medium=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~default-5.base&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~default-5.base">Docker的网络模型</a></p>
+<h4 id="1-2-3-docker如何实现容器间通信的？"><a href="#1-2-3-docker如何实现容器间通信的？" class="headerlink" title="1.2.3 docker如何实现容器间通信的？"></a>1.2.3 docker如何实现容器间通信的？</h4><p>建议<strong>使用自定义的网桥来控制哪些容器可以相互通信</strong>，还<strong>可以自动DNS解析容器名称到IP地址</strong>。<strong>Docker提供了创建这些网络的默认网络驱动程序，你可以创建一个新的Bridge网络</strong>，<strong>Overlay或Macvlan网络</strong>。<strong>你还可以创建一个网络插件或远程网络进行完整的自定义和控制。</strong></p>
+<p>你<strong>可以根据需要创建任意数量的网络，并且可以在任何给定时间将容器连接到这些网络中的零个或多个网络。</strong>此外，您可以连接并断开网络中的运行容器，而无需重新启动容器。当容器连接到多个网络时，其外部连接通过第一个非内部网络以词法顺序提供。</p>
+<p>bridge模式是docker默认的，也是开发者最常使用的网络模式。在这种模式下，<strong>docker为容器创建独立的网络栈，保证容器内的进程使用独立的网络环境</strong>，实<strong>现容器之间、容器与宿主机之间的网络栈隔离</strong>。同时，<strong>通过宿主机上的docker0网桥，容器可以与宿主机乃至外界进行网络通信。</strong></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/meltsnow/article/details/94548066?utm_medium=distribute.pc_relevant.none-task-blog-2~default~baidujs_title~default-0.base&spm=1001.2101.3001.4242">Docker网络——实现容器间通信、容器与外网通信以及容器的跨主机访问</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/even160941/article/details/98523034">Docker网络——实现容器间通信、容器与外网通信以及容器的跨主机访问—实例</a></p>
+<h3 id="1-3-docker-基础命令"><a href="#1-3-docker-基础命令" class="headerlink" title="1.3 docker 基础命令"></a>1.3 docker 基础命令</h3><p>docker info </p>
+<p>docker run</p>
+<p>docker logs</p>
+<p>docker help </p>
+<p>docker stop</p>
+<p>docker restart </p>
+<p>docker commit</p>
+<p>docker images </p>
+<p>docker search </p>
+<p>docker history</p>
+<p>docker push</p>
+<h4 id="1-3-1-cmd和entryPoint差异？"><a href="#1-3-1-cmd和entryPoint差异？" class="headerlink" title="1.3.1 cmd和entryPoint差异？"></a>1.3.1 cmd和entryPoint差异？</h4><p>CMD &amp; ENTRYPONIT</p>
+<p>都是容器操作指令：<br>CMD 用于指定容器启动时候默认执行的命令。可以被docker run指定的启动命令覆盖。ENTRYPONIT 指令可让容器以应用程序或者服务的形式运行。一般不会被docker run指定的启动命令覆盖。dockerfile中的多个CMD &amp; ENTRYPONIT只有最后一个会生效。</p>
+<p>注意区别docker run 和RUN 一个是容器启动命令，一个是镜像构建时候所用。</p>
+<p>我们可以看到有两个共同点：</p>
+<p>都可以指定shell或exec函数调用的方式执行命令；<br>当存在多个CMD指令或ENTRYPOINT指令时，只有最后一个生效；</p>
+<p>而它们有如下差异：</p>
+<p>差异1：<strong>CMD指令指定的容器启动时命令可以被docker run指定的命令覆盖，而ENTRYPOINT指令指定的命令不能被覆盖，而是将docker run指定的参数当做ENTRYPOINT指定命令的参数。</strong></p>
+<p>差异2：<strong>CMD指令可以为ENTRYPOINT指令设置默认参数，而且可以被docker run指定的参数覆盖；</strong></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/liukuan73/article/details/60880137">Dockerfile文件中的CMD和ENTRYPOINT指令差异对比</a></p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/30555962">ENTRYPOINT还是CMD?</a><br><a target="_blank" rel="noopener" href="https://www.ctl.io/developers/blog/post/dockerfile-add-vs-copy/">Dockerfile: ADD vs COPY</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/fclbky/p/11338738.html">docker CMD 和 ENTRYPOINT 区别</a></p>
+<h4 id="1-3-2-copy和add的差异？"><a href="#1-3-2-copy和add的差异？" class="headerlink" title="1.3.2 copy和add的差异？"></a>1.3.2 copy和add的差异？</h4><p>1、COPY命令</p>
+<p>COPY命令用于将于Dockerfile所在目录中的文件在镜像构建阶段从宿主机拷贝到镜像中，对于文件而言可以直接将文件复制到镜像中.</p>
+<p>2、ADD命令</p>
+<p>ADD命令相对于COPY命令，<strong>可以解压缩文件并把它们添加到镜像中的功能，</strong>如果我们有一个压缩文件包，并且需要把这个压缩包中的文件添加到镜像中。需不需要先解开压缩包然后执行 COPY 命令呢？当然不需要！</p>
+<p>同时ADD还可以从 url 拷贝文件到镜像中，但官方不推荐这样使用，官方建议我们当需要从远程复制文件时，最好使用 curl 或 wget 命令来代替 ADD 命令。原因是，当使用 ADD 命令时，会创建更多的镜像层，当然镜像的 size 也会更大，</p>
+<p>copy &amp; add</p>
+<p>ADD &amp; COPY 选取目标文件复制到镜像当中。是针对镜像的指令，唯一差别在于add源文件可以支持url且可以对压缩文件进行解压操作。而copy针对的是当前构建环境。</p>
+<p><a target="_blank" rel="noopener" href="https://vegetable-chicken.blog.csdn.net/article/details/107200482">Dockerfile 中的 COPY 与 ADD 区别</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/taiyangdao/article/details/73222601">Dockerfile中的COPY和ADD指令详解与比较</a></p>
+<h4 id="1-3-3-简单讲下swam-compose？"><a href="#1-3-3-简单讲下swam-compose？" class="headerlink" title="1.3.3 简单讲下swam/compose？"></a>1.3.3 简单讲下swam/compose？</h4><p>使用Docker compose可以用YAML文件来定义一组需要启动的容器，以及容器运行时的属性。docker-compose用来对这一组容器进行操作。<br>docker swarm 原生的Docker集群管理工具，依赖docker本身，很多重要功能依赖团队二次开发。且社区不够活跃，一般公司生产环境会选择k8s，个人项目或者容器数量较少可选swarm,只需要docker即可完成，相对较轻。</p>
+<p>Docker 可以看做集装箱把杂乱的货物一个个整理归类， </p>
+<p>Compose 则是用于编排这些集装箱，最后 Swarm 就是多提供几条船，挂掉一两条还能继续走，提高稳定性。</p>
+<p>Docker 可以极为方便地部署单个服务，但这时候我们需要一个工具来整合 Docker 的功能，<strong>使之能够更便捷地去管理整个微服务集群的部署和迁移，Docker Compose 正是应此而生。</strong>他是由 Python 编写的程序，能够根据指令结合配置文件转换成对应的 Docker API 的操作，并直接体现到 Docker Daemon 中，这就代替我们完成了重复输入复杂指令的过程，主要功能可分为以下两点:</p>
+<p><strong>Service：代表的是运行同种应用程序的一个或多个相同容器的抽象定义，也是我们在Docker Compose 中配置的主要对象。在</strong>每个 Docker Compose 的配置文件中，我们可以定义多个服务，并定义服务的配置，以及服务于服务之间的以来关系。</p>
+<p>Project：代表的是由多个服务所组成的一个相对完整的业务单元。</p>
+<p><strong>Docker Compose</strong>：是用来组装多容器应用的工具，可以在 warm集群中部署分布式应用。</p>
+<p><strong>Docker Machine</strong>：是支持多平台安装Docker的工具，可以很方便地在笔记本、云平台及数据中心里安装Docker。</p>
+<p><strong>Docker Swarm</strong>：是Docker社区原生提供的容器集群管理工具。</p>
+<p><a target="_blank" rel="noopener" href="https://www.pianshen.com/article/17091298675/">Docker官方三剑客：Compose、Machine和Swarm</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_43286578/article/details/105160725">Docker面试题库</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/xiaoyangjia/p/11388806.html">docker面试题和解答(一)</a></p>
+<p><a target="_blank" rel="noopener" href="http://www.bjpowernode.com/hot/608.html">Docker面试题总结附答案</a></p>
+
+        <p class="suffix-end">__END__</p>
+        <div class="suffix-box">
+            <div class="suffix-box-left">
+                <img src="https://gitee.com/psycho1900/miss-reddle/raw/master/profile.jpg" alt="Russshare">
+            </div>
+            <div class="suffix-box-right">
+                <span class="suffix-box-title">文章作者</span>：Russshare
+                <br>
+                <span class="suffix-box-title">文章出处</span>：<a href="/2021/08/06/%E9%9D%A2%E8%AF%95%EF%BC%9ADocker/" target="_blank">面试：Docker</a>
+                <br>
+                <span class="suffix-box-title">作者签名</span>：我们生死与共，勇往直前，永远都是坏小子.
+                <br>
+                <span class="suffix-box-title">关于主题</span>：<a href="https://github.com/first19326/Hexo-LiveForCode" target="_blank">Hexo - Russshare</a>
+                <br>
+                <span class="suffix-box-title">版权声明</span>：文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" title="BY-NC-SA" target="_blank">BY-NC-SA</a> 许可协议，转载请注明出处
+                <br>
+            </div>
+            <div style="clear: both;"></div>
+        </div>
+    </div>
+    <div class="article-footer">
+        
+            <div class="category">
+                分类：
+                
+                    <a href="/categories/%E9%9D%A2%E8%AF%95%E5%90%88%E9%9B%86/">面试合集</a>
+                
+            </div>
+        
+        
+            <div class="tag">
+                标签：
+                
+                    <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">云计算</a>
+                
+                    <a href="/tags/docker/">docker</a>
+                
+            </div>
+        
+        <div class="article-prev-next">
+            
+                <a href="/2021/08/06/%E9%9D%A2%E8%AF%95%EF%BC%9AK8s/" class="prev-prefix">« </a> 上一篇：    <a href="/2021/08/06/%E9%9D%A2%E8%AF%95%EF%BC%9AK8s/" title="发布于 2021-08-06 04:26">面试：K8s</a>
+                <br>
+            
+            
+                <a href="/2021/08/06/python-%E7%B1%BB%E4%B8%AD%E6%8F%8F%E8%BF%B0%E7%AC%A6/" class="next-prefix">» </a> 下一篇：    <a href="/2021/08/06/python-%E7%B1%BB%E4%B8%AD%E6%8F%8F%E8%BF%B0%E7%AC%A6/" title="发布于 2021-08-06 02:43">python:类中描述符</a>
+            
+        </div>
+    </div>
+    
+    <div class="article-comments">
+        <div class="comments-title">
+            评论列表
+        </div>
+        <div class="comments-content">
+        </div>
+    </div>
+
+</div>
+
+    </div>
+</div>
+    <div id="footer"></div>
+    <div id="sidebar">
+    <div class="menu-wrap" style="display:none;">
+        <nav class="menu">
+            <div class="menu-introduce"> 
+                <div class="introduce-avatar"></div> 
+                <div class="introduce-info"> 
+                    <div class="introduce-user"><span></span></div>        
+                </div> 
+            </div> 
+            <div class="menu-list">
+                <ul></ul> 
+            </div> 
+            <div class="menu-link"></div> 
+        </nav>
+        <button class="menu-button-close"></button>
+        <div class="morph-shape" id="morph-shape" data-morph-open="M-7.312,0H15c0,0,66,113.339,66,399.5C81,664.006,15,800,15,800H-7.312V0z;M-7.312,0H100c0,0,0,113.839,0,400c0,264.506,0,400,0,400H-7.312V0z">
+            <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 100 800" preserveAspectRatio="none">
+                <path d="M-7.312,0H0c0,0,0,113.839,0,400c0,264.506,0,400,0,400h-7.312V0z"/>
+            </svg>
+        </div>
+    </div>
+    <button class="menu-button-open">MENU</button>
+    <div class="menu-cover"></div>
+</div>
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/search.css">
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/iscroll.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/instantsearch.min.js"></script>
+<div class="search-window">
+    <div class="search-content">
+        <div class="search-content-icon">
+            <i class="iconfont icon-search"></i>
+        </div>
+        <div id="search-input" class="search-input"></div>
+    </div>
+
+    <div class="search-scroll">
+        <div class="search-result">
+            <div id="search-stats" class="search-stats"></div>
+            <div id="search-hits"></div>
+            <div id="search-pagination" class="search-pagination"></div>
+        </div>
+    </div>
+
+    <span class="search-close-icon">
+        <i class="iconfont icon-close"></i>
+    </span>
+</div>
+    <div id="tools">
+    <div class="progressbar-top"></div>
+
+    
+        <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/APlayer.css">
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/APlayer.min.js"></script>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/Meting.min.js"></script>
+        <meting-js id="3778678" lrcshow="false" server="netease" type="playlist" fixed="true" autoplay="false" loop="all" order="random" preload="auto" volume="0.67" mutex="true"></meting-js>
+    
+    
+    <div class="wrap-right"></div>
+    <div class="loading"></div>
+</div>
+    <script>
+    window.config = {
+        GitHubUserName     : 'Russshare',
+        GitHubRepositories : 'Russshare',
+
+        BlogUser      : 'Russshare',
+        BlogAvatar    : 'https://gitee.com/psycho1900/miss-reddle/raw/master/profile.jpg',
+        BlogStartDate : '2021-03-17',
+
+        WebsiteTitleBlur         : '(◍´꒳`◍) Hi, Miss Riddle',
+        WebsiteTitleBlurTimeOut  : 500,
+        WebsiteTitleFocus        : '(*´∇｀*) 欢迎回来!',
+        WebsiteTitleFocusTimeOut : 1000,
+        WebsiteFavicon           : 'https://gitee.com/psycho1900/miss-reddle/raw/master/beer.png',
+
+        ProgressBar: {
+            id       : 'topProgressBar',
+            color    : '#77B6FF',
+            height   : '2px',
+            duration : 0.2
+        },
+
+        Loading: {
+            rebound: {
+                tension  : 16,
+                friction : 5
+            },
+            spinner: {
+                id     : 'spinner',
+                radius : 90,
+                sides  : 3,
+                depth  : 4,
+                colors : {
+                    background : '#F0F0F0',
+                    stroke     : '#272633',
+                    base       : '',
+                    child      : '#272633'
+                },
+                alwaysForward : true,
+                restAt        : 0.5,
+                renderBase    : false
+            }
+        },
+
+        HomeHeaderAnimationRendered : true,
+        HomeHeaderAnimation         : {
+            radius      : 15,
+            density     : 0.2,
+            color       : 'rgba(255, 255, 255, .2)',
+            clearOffset : 0.3
+        },
+
+        ArticleHeaderAnimationRendered : false,
+        ArticleHeaderAnimation         : {
+            triW                  : 14,
+            triH                  : 20,
+            neighbours            : [
+                
+                    'side',
+                
+                    'top',
+                
+                    'bottom',
+                
+            ],
+            speedTrailAppear      : 0.1,
+            speedTrailDisappear   : 0.1,
+            speedTriOpen          : 1,
+            trailMaxLength        : 30,
+            trailIntervalCreation : 100,
+            delayBeforeDisappear  : 2,
+            colors                : [
+                
+                    '#96EDA6',
+                
+                    '#5BC6A9',
+                
+                    '#38668C',
+                
+                    '#374D84',
+                
+                    '#BED5CB',
+                
+                    '#62ADC6',
+                
+                    '#8EE5DE',
+                
+                    '#304E7B',
+                
+            ]
+        },
+
+        BackAnimationRendered          : true,
+        IEBrowserBackAnimationRendered : false,
+        BackAnimation                  : {
+            colorSaturation  : '60%',
+            colorBrightness  : '50%',
+            colorAlpha       : 0.5,
+            colorCycleSpeed  : 5,
+            verticalPosition : 'random',
+            horizontalSpeed  : 200,
+            ribbonCount      : 3,
+            strokeSize       : 0,
+            parallaxAmount   : -0.2,
+            animateSections  : true
+        },
+
+        HomeHeaderImage : [
+            
+                'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/image/header/home.jpg',
+            
+                'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/image/header/home.jpeg',
+            
+        ],
+        HomeBannerText  : '',
+
+        ArticleHeaderImage : [
+            
+                'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/image/header/article.jpg',
+            
+        ],
+
+        OtherBannerText : '',
+
+        MenuList : [
+            
+                {
+                    name   : '首页',
+                    href   : '/',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '标签',
+                    href   : '/tag',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '分类',
+                    href   : '/category',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '赞赏',
+                    href   : '/donate',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '关于',
+                    href   : '/about',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '搜索',
+                    href   : '',    
+                    target : '',
+                    class  : 'search'
+                },
+            
+                {
+                    name   : '留言板',
+                    href   : '/comment',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '友情链接',
+                    href   : '/friend',    
+                    target : '',
+                    class  : ''
+                },
+            
+        ],
+        MenuLink : [
+            
+                
+                    {
+                        icon : 'icon-weibo', 
+                        url  : ''
+                    },
+                
+                    {
+                        icon : 'icon-wechat', 
+                        url  : ''
+                    },
+                
+                    {
+                        icon : 'icon-qq', 
+                        url  : ''
+                    },
+                
+                    {
+                        icon : 'icon-github', 
+                        url  : 'https://github.com/RiddleGo'
+                    },
+                
+            
+        ],
+
+        FooterStyle : 2,
+        BottomText  : {
+            icon    : 'like-fill',
+            left    : '人生若只如初见',
+            right   : '何事秋风悲画扇'
+        },
+        ThemeInfo   : true,
+
+        ConsoleList : [
+            
+                
+                    [
+                        
+                            
+                                'Based on cnblogs theme SimpleMemory.',
+                            
+                                '',
+                            
+                        
+                    ],
+                
+                    [
+                        
+                            
+                                'SimpleMemory Author:',
+                            
+                                'BNDong',
+                            
+                        
+                    ],
+                
+                    [
+                        
+                            
+                                'Theme:',
+                            
+                                'LiveForCode',
+                            
+                        
+                    ],
+                
+            
+        ],
+
+        FontIconExtend : '',
+
+        Donate : {
+            paypal  : '',
+            bitcoin : '',
+            alipay  : '',
+            wechat  : ''
+        },
+
+        Code : {
+            style : 'normal'
+        },  
+
+        Search : {
+            applicationID : '010C3EANT8',
+            apiKey        : 'c7abab9f11b79102b9aff7fe6d41447d',
+            indexName     : 'Notes',
+            hits          : {
+                page : 10
+            },
+            labels        : {
+                placeholder : '搜索',
+                empty       : '未发现与 「${query}」 相关的内容',
+                stats       : '${hits} 条相关条目，使用了 ${time} 毫秒',
+            }
+        }, 
+
+        Valine : {
+            switch         : true,
+            el             : '.comments-content',
+            appId          : 'TKpiBidydKtx7apGCq7DM4Fw-gzGzoHsz',
+            appKey         : 'wsVqBbLWlLy4JRbi9I4XDBpH',
+            placeholder    : '你是我一生只会遇见一次的惊喜...',
+            avatar         : 'mm',
+            meta           : 'nick,mail,link',
+            requiredFields : 'nick,mail',
+            pageSize       : 5,
+            lang           : 'zh-cn',
+            visitor        : true,
+            enableQQ       : true
+        },
+
+        Tocbot : {
+            switch                : true,
+            tocSelector           : '.toc',
+            contentSelector       : '.article-body',
+            headingSelector       : 'h1, h2, h3, h4, h5',
+            headingsOffset        : 0,
+            scrollSmooth          : true,
+            scrollSmoothOffset    : -5,
+            positionFixedSelector : '.toc',
+            positionFixedClass    : 'toc-fixed',
+            fixedSidebarOffset    : '',
+        },
+
+        Require : {
+            baseUrl     : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/',
+            waitSeconds : 100
+        },
+
+        Music : {
+            type : 'Meting'
+        },
+        APlayer : {
+            container : '.aplayer',
+            fixed     : true,
+            autoplay  : false,
+            loop      : 'all',
+            order     : 'random',
+            preload   : 'auto',
+            volume    : 0.67,
+            mutex     : true,
+            lrcType   : 3,
+            audio     : [
+                
+                    {
+                        name   : 'aLIEz',
+                        artist : 'mizuki（瑞葵）',
+                        cover  : '/music/cover/aLIEz.jpg',
+                        url    : '/music/song/aLIEz.mp3',
+                        lrc    : '/music/lrc/aLIEz.lrc'
+                    },
+                
+                    {
+                        name   : 'Endless Tears',
+                        artist : 'CLIFF EDGE',
+                        cover  : '/music/cover/Endless Tears.jpg',
+                        url    : '/music/song/Endless Tears.mp3',
+                        lrc    : '/music/lrc/Endless Tears.lrc'
+                    },
+                
+                    {
+                        name   : 'Miracle',
+                        artist : 'Cascada',
+                        cover  : '/music/cover/Miracle.jpg',
+                        url    : '/music/song/Miracle.mp3',
+                        lrc    : '/music/lrc/Miracle.lrc'
+                    },
+                
+                    {
+                        name   : 'Roll The Dice',
+                        artist : '高珊',
+                        cover  : '/music/cover/Roll The Dice.jpg',
+                        url    : '/music/song/Roll The Dice.mp3',
+                        lrc    : '/music/lrc/Roll The Dice.lrc'
+                    },
+                
+                    {
+                        name   : 'See You Again',
+                        artist : 'Charlie Puth, Wiz Khalifa',
+                        cover  : '/music/cover/See You Again.jpg',
+                        url    : '/music/song/See You Again.mp3',
+                        lrc    : '/music/lrc/See You Again.lrc'
+                    },
+                
+                    {
+                        name   : 'Traveling Light',
+                        artist : 'Joel Hanson, Sara Groves',
+                        cover  : '/music/cover/Traveling Light.jpg',
+                        url    : '/music/song/Traveling Light.mp3',
+                        lrc    : '/music/lrc/Traveling Light.lrc'
+                    },
+                
+                    {
+                        name   : '痴心绝对',
+                        artist : '李圣杰',
+                        cover  : '/music/cover/痴心绝对.jpg',
+                        url    : '/music/song/痴心绝对.mp3',
+                        lrc    : '/music/lrc/痴心绝对.lrc'
+                    },
+                
+                    {
+                        name   : '好想大声说爱你',
+                        artist : 'BAAD（バード）',
+                        cover  : '/music/cover/好想大声说爱你.jpg',
+                        url    : '/music/song/好想大声说爱你.mp3',
+                        lrc    : '/music/lrc/好想大声说爱你.lrc'
+                    },
+                
+            ]
+        },
+        Meting : {
+            id       : '3778678', 
+            lrcshow  : false, 
+            server   : 'netease', 
+            type     : 'playlist', 
+            fixed    : true, 
+            autoplay : false, 
+            loop     : 'all', 
+            order    : 'random', 
+            preload  : 'auto', 
+            volume   : 0.67, 
+            mutex    : true
+        },
+
+        LazyLoad : {
+            default : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/image/website/lazyload.svg'
+        },
+  
+        Style : {
+            aplayer          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/APlayer.css',
+            archive          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/archive.css',
+            donate           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/donate.css',
+            fancybox         : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/jquery.fancybox.css',
+            footer           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/footer.css',
+            iconfont         : 'https://at.alicdn.com/t/font_1546312_l3yohatebw.css',
+            index            : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/index.css',
+            menuBubble       : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/menu-bubble.css',
+            page             : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/page.css',
+            post             : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/post.css',
+            search           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/search.css',
+            tocbot           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/tocbot.css',
+            normal           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/normal.css',
+            night            : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/night.css',
+            clipboard        : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/clipboard.css'
+        },
+
+        Script: {
+            aplayer          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/APlayer.min.js',
+            config           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/require.config.js',
+            index            : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/index.js',
+            instantSearch    : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/instantsearch.min.js',
+            jQuery           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/jquery-3.4.1.min.js',
+            loading          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/loading.js',
+            meting           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/Meting.min.js',
+            iscroll          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/iscroll.js',
+            require          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/require.min.js'
+        },
+
+        Font: {
+            LongCang   : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/LongCang.css',
+            Monda      : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Monda.css',
+            NotoSansSC : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/NotoSansSC.css',
+            Playball   : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Playball.css',
+            PTMono     : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/PTMono.css',
+            RobotoSlab : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/RobotoSlab.css',
+            Rosario    : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Rosario.css',
+            UbuntuMono : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/UbuntuMono.css'
+        },
+
+        Suffix : {
+            about : '我们生死与共，勇往直前，永远都是坏小子.'
+        },
+            
+        Theme : {
+            url  : 'https://github.com/first19326/Hexo-LiveForCode',
+            name : 'Hexo - Russshare'
+        }  
+    };
+</script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/index.js"></script>
+</body>
+</html>

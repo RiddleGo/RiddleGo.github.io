@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, shrink-to-fit=no">
+    <meta name="referrer" content="origin">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <title>剑指offer19</title>
+
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/LongCang.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Monda.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/NotoSansSC.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Playball.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/PTMono.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/RobotoSlab.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Rosario.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/UbuntuMono.css">
+
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/post.css">
+    
+        <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/normal.css">
+    
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/jquery-3.4.1.min.js"></script>
+
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+</head>
+<body>
+    <a id="cover"></a>
+    <div id="header">
+    <div class="header">
+        <div class="vertical">
+            <div class="inner">
+                <h1 class="header-subtitle">剑指offer19</h1>
+                <div class="header-subinfo">
+                    <p class="article-info-text">
+                        <span>
+                            <i class="iconfont icon-time"></i> 发表时间：2021-08-03
+                        </span>
+                        
+                            <span id="/2021/08/03/剑指offer19/" class="leancloud_visitors" data-flag-title="剑指offer19">
+                                <i class="iconfont icon-browse"></i> 阅读：<sapn class="leancloud-visitors-count"></span>
+                            </span>
+                        
+                        <span>
+                            <i class="iconfont icon-interactive"></i> 评论：<span class="valine-comment-count" data-xid="/2021/08/03/剑指offer19/"></span>
+                        </span>  
+                    </p>                 
+                </div>
+            </div>
+        </div>
+        <canvas id="articleHeaderCanvas"></canvas>
+    </div>
+</div>
+    <div id="container">
+    <div id="content">
+        <div id="article">
+    <div class="toc"></div>
+    <div class="article-body">
+        <h2 id="剑指-Offer-19-正则表达式匹配"><a href="#剑指-Offer-19-正则表达式匹配" class="headerlink" title="剑指 Offer 19. 正则表达式匹配"></a>剑指 Offer 19. 正则表达式匹配</h2><h3 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h3><p>请实现一个函数用来匹配包含’. ‘和’*’的正则表达式。</p>
+<p>模式中的字符’.’表示任意一个字符，而’*’表示它前面的字符可以出现任意次（含0次）。</p>
+<p>在本题中，匹配是指字符串的所有字符匹配整个模式。</p>
+<p>例如，字符串”aaa”与模式”a.a”和”ab<em>ac</em>a”匹配，但与”aa.a”和”ab*a”均不匹配。</p>
+<p>示例 1:</p>
+<p>输入:<br>s = “aa”<br>p = “a”<br>输出: false<br>解释: “a” 无法匹配 “aa” 整个字符串。<br>示例 2:</p>
+<p>输入:<br>s = “aa”<br>p = “a*”<br>输出: true<br>解释: 因为 ‘*’ 代表可以匹配零个或多个前面的那一个元素, 在这里前面的元素就是 ‘a’。因此，字符串 “aa” 可被视为 ‘a’ 重复了一次。<br>示例 3:</p>
+<p>输入:<br>s = “ab”<br>p = “.<em>“<br>输出: true<br>解释: “.</em>“ 表示可匹配零个或多个（’*’）任意字符（’.’）。</p>
+<h3 id="解题思路"><a href="#解题思路" class="headerlink" title="解题思路"></a>解题思路</h3><p>说实话 我特么的毫无思路 哈哈哈 ，要说的真的要表达一下自己的思路那就是我想到用循环，遍历字符串然后去匹配，不过这样还是蛮难的，</p>
+<p>看懂别人的代码也难，啊啊啊真难</p>
+<p>我觉得第一种是翻译  翻译出正则匹配 能对应上的，我先计算待匹配的长度，然后再翻译出能和目标一样的长度。</p>
+<p>我现在发现人的大脑真的是神奇啊。</p>
+<p>这个用到动态规划，大佬们真的是什么都能用动态规划解决，真的是离谱。</p>
+<p><strong>回归正文</strong><br>首先是</p>
+<p>dp[i][j]—定义状态：dp[i][j]用于表示s的前i个字符和p的前j个字符是否匹配</p>
+<p>base case: </p>
+<pre><code>dp[0][0]---true
+
+这个二维的矩阵是正则串和待比较串  那么
+
+当正则串为空的时候和，字符串不为空，那肯定为false
+
+当字符串为空的时候，正则串还是有可能匹配上的
+</code></pre>
+<p>转移方程：<br>    我们先来看情况：<br>    1、当B最后一个是正常字符，直接比较，相等  一人前进一个，不相等转换为子问题</p>
+<pre><code>2、当B最后一个是.，能匹配任意的数值，所以直接提前。
+
+3、如果最后一个数字是*，则B的倒数第二个可以重复0-n次，当做整体
+
+    当A最后一个不是C，则B后面两个不要了，从倒数第三个重新开始比较。
+
+    当A最后一个是C，那就继续倒序前进A，和B的倒数第二个进行比较
+
+
+于是转移方程
+f[0][0]=True
+
+f[i][j]=f[i-1][j-1]
+
+f[1][0]-----f[n][0]=false
+
+f[0][j]-----是未知的，因为当*出现在偶数还是可以的成立的
+
+f[i][j]=f[i][j-2]
+
+f[i][j]=f[i-1][j]
+</code></pre>
+<h3 id="开始整成代码吧"><a href="#开始整成代码吧" class="headerlink" title="开始整成代码吧"></a>开始整成代码吧</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">class Solution:</span><br><span class="line">    def reqx(self, A:str,B:str)--&gt;bool:</span><br><span class="line">        n&#x3D;len(A)</span><br><span class="line">        m&#x3D;len(B)</span><br><span class="line">    </span><br><span class="line">        for i in range(n):</span><br><span class="line">            for j in range(m):</span><br><span class="line">            #空正则</span><br><span class="line">                if j&#x3D;&#x3D;0:</span><br><span class="line">                    fa[i][j]&#x3D;&#x3D;0</span><br><span class="line">                else:</span><br><span class="line">                    if B[j-1]!&#x3D;&#39;*&#39;:</span><br><span class="line">                        if i &gt; 0 and A[i-1]&#x3D;&#x3D;B[j-1] or B[j-1]&#x3D;&#39;.&#39;:</span><br><span class="line">                            dp[i][j]&#x3D;dp[i-1][j-1]</span><br><span class="line">                    else:</span><br><span class="line">                        #分为看不看两种</span><br><span class="line">                        #不看</span><br><span class="line">                        if (j&gt;&#x3D;2):</span><br><span class="line">                            dp[i][j] &#x3D; dp[i][j] or dp[i][j-2]</span><br><span class="line">                        if (i&gt;&#x3D;1 &amp;&amp; j&gt;&#x3D;2&amp;&amp; dp[i-1]&#x3D;&#x3D;dp[j-2]||dp[j-2]&#x3D;&#x3D;&#39;.&#39;):</span><br><span class="line">                            dp[i][j] &#x3D; dp[i][j] or dp[i-1][j]   </span><br></pre></td></tr></table></figure>
+
+<p>这道题吧，我觉得难点就在于逻辑的推理，分好类，别遗漏就很关键。</p>
+<p><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/zheng-ze-biao-da-shi-pi-pei-lcof/solution/zhu-xing-xiang-xi-jiang-jie-you-qian-ru-shen-by-je/">答案来自这里，我翻译java的，也不知能不能用哈哈哈。</a></p>
+<pre><code class="去试了一下">
+
+找到了这个，我来膜拜一下[大佬](https://leetcode-cn.com/problems/zheng-ze-biao-da-shi-pi-pei-lcof/solution/jian-zhi-offer-19-zheng-ze-biao-da-shi-p-raet/)
+
+1、定义状态：dp[i][j]用于表示s的前i个字符和p的前j个字符是否匹配
+
+2、初始化dp数组：因为状态转移是从前面的状态转移到后面的状态，必须要初始化一些要被转移的状态，即dp数组的首行及首列
+
+dp[0][0] = True，意思就是两个空字符串是可以匹配的
+
+dp的首列除了dp[0][0]外全部为False，意思是当p为空时，s无论如何也不会匹配上（除了s也为空的情况）
+
+dp的首行就有点意思了，s为空的情况下，p的偶数位为&#39;*&#39;的话是可以匹配上的，因为可以让&#39;*&#39;之前的字符出现次数为0
+
+3、状态转移：因为已经初始化了首行和首列，s和p都从索引1开始匹配。下面开始分情况讨论
+
+p的第j个字符为&#39;*&#39;(p[j - 1] == &#39;*&#39;):
+
+i. dp[i][j - 2]为True时，dp[i][j]也为True
+如果s的前i个字符和p的前j - 2个字符匹配，这时p的第j个字符为&#39;*&#39;，那么无论p的第j-1个字符是什么，令它出现0次，dp[i][j]就可以为true
+
+ii. dp[i - 1][j] and s[i - 1] == p[j - 2]为True时，dp[i][j]也为True
+如果s的前i - 1个字符和p的前j个字符匹配，并且s的第i个字符和p的第j - 1个字符相等；那么让p的第j - 1个字符多出现一次，s的前i字符和p的前j的字符就可以匹配了
+
+iii. dp[i - 1][j] and p[j - 2] == &#39;.&#39;为True时，dp[i][j]也为True
+
+如果s的前i - 1个字符和p的前j个字符匹配，因为p的第j - 1个字符可以匹配任意字符；那么s的第i个字符可以匹配p的第j - 1个字符，令p的第j - 1个字符多出现一次即可
+
+
+p的第j个字符不为&#39;*&#39;(p[j - 1] != &#39;*&#39;)
+
+i. dp[i - 1][j - 1] and s[i - 1] == p[j - 1]为True时，dp[i][j]也为True
+s的前i - 1个字符和p的前j - 1个字符匹配，且s的第i个字符和p的第j个字符相等
+
+ii. dp[i - 1][j - 1] and p[j - 1] == &#39;.&#39;为True时，dp[i][j]也为True
+
+s的前i - 1个字符和p的前j - 1个字符匹配，且p的第j个字符可以和任意字符匹配；那么s的第i个字符可以和p的第j个字符匹配
+
+
+4、最后返回dp[-1][-1]，即s的前n个字符和p的前m个字符是否匹配
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">class Solution:</span><br><span class="line">    def isMatch(self, s: str, p: str) -&gt; bool:</span><br><span class="line">        m &#x3D; len(p) + 1</span><br><span class="line">        n &#x3D; len(s) + 1</span><br><span class="line">        dp &#x3D; [[False] * m for _ in range(n)]</span><br><span class="line">        dp[0][0] &#x3D; True</span><br><span class="line">        # 初始化首行</span><br><span class="line">        for j in range(2, m, 2):</span><br><span class="line">            dp[0][j] &#x3D; dp[0][j - 2] and p[j - 1] &#x3D;&#x3D; &#39;*&#39;</span><br><span class="line">        # 首列一定为False，也不用专门初始化了</span><br><span class="line">        </span><br><span class="line">        for i in range(1, n):</span><br><span class="line">            for j in range(1, m):</span><br><span class="line">                if p[j - 1] &#x3D;&#x3D; &#39;*&#39;: </span><br><span class="line">                    # 如果p的第j个字符为&#39;*&#39;</span><br><span class="line">                    if dp[i][j - 2]: </span><br><span class="line">                        # 如果s的前i个字符和p的前j - 2个字符匹配，这时p的第j个字符为&#39;*&#39;</span><br><span class="line">                        # 那么无论p的第j-1个字符是什么，令它出现0次，dp[i][j]就可以为true</span><br><span class="line">                        dp[i][j] &#x3D; True</span><br><span class="line">                    elif dp[i - 1][j] and s[i - 1] &#x3D;&#x3D; p[j - 2]:</span><br><span class="line">                        # 如果s的前i - 1个字符和p的前j个字符匹配，并且s的第i个字符和p的第j - 1个字符相等</span><br><span class="line">                        # 那么让p的第j - 1个字符多出现一次，s的前i字符和p的前j的字符就可以匹配了</span><br><span class="line">                        dp[i][j] &#x3D; True</span><br><span class="line">                    elif dp[i - 1][j] and p[j - 2] &#x3D;&#x3D; &#39;.&#39;:</span><br><span class="line">                        # 如果s的前i - 1个字符和p的前j个字符匹配，因为p的第j - 1个字符可以匹配任意字符</span><br><span class="line">                        # 那么s的第i个字符可以匹配p的第j - 1个字符，令p的第j - 1个字符多出现一次即可</span><br><span class="line">                        dp[i][j] &#x3D; True</span><br><span class="line">                else: # 如果p的第j个字符不是&#39;*&#39;</span><br><span class="line">                    if dp[i - 1][j - 1] and s[i - 1] &#x3D;&#x3D; p[j - 1]:</span><br><span class="line">                        # s的前i - 1个字符和p的前j - 1个字符匹配，且s的第i个字符和p的第j个字符相等</span><br><span class="line">                        dp[i][j] &#x3D; True</span><br><span class="line">                    elif dp[i - 1][j - 1] and p[j - 1] &#x3D;&#x3D; &#39;.&#39;:</span><br><span class="line">                        # s的前i - 1个字符和p的前j - 1个字符匹配，且p的第j个字符可以和任意字符匹配</span><br><span class="line">                        # 那么s的第i个字符可以和p的第j个字符匹配</span><br><span class="line">                        dp[i][j] &#x3D; True</span><br><span class="line">        return dp[-1][-1]</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">class Solution:</span><br><span class="line">    def isMatch(self, s: str, p: str) -&gt; bool:</span><br><span class="line">        m &#x3D; len(p) + 1</span><br><span class="line">        n &#x3D; len(s) + 1</span><br><span class="line">        dp &#x3D; [[False] * m for _ in range(n)]</span><br><span class="line">        dp[0][0] &#x3D; True</span><br><span class="line">        for j in range(2, m, 2):</span><br><span class="line">            dp[0][j] &#x3D; dp[0][j - 2] and p[j - 1] &#x3D;&#x3D; &#39;*&#39;</span><br><span class="line">        </span><br><span class="line">        for i in range(1, n):</span><br><span class="line">            for j in range(1, m):</span><br><span class="line">                if p[j - 1] &#x3D;&#x3D; &#39;*&#39;: </span><br><span class="line">                    dp[i][j] &#x3D; dp[i][j - 2] or dp[i - 1][j] and (s[i - 1] &#x3D;&#x3D; p[j - 2] or p[j - 2] &#x3D;&#x3D; &#39;.&#39;)</span><br><span class="line">                else: </span><br><span class="line">                    dp[i][j] &#x3D; dp[i - 1][j - 1] and (s[i - 1] &#x3D;&#x3D; p[j - 1] or p[j - 1] &#x3D;&#x3D; &#39;.&#39;)</span><br><span class="line">        return dp[-1][-1]</span><br><span class="line"></span><br><span class="line">作者：edelweisskoko</span><br><span class="line">链接：https:&#x2F;&#x2F;leetcode-cn.com&#x2F;problems&#x2F;zheng-ze-biao-da-shi-pi-pei-lcof&#x2F;solution&#x2F;jian-zhi-offer-19-zheng-ze-biao-da-shi-p-raet&#x2F;</span><br><span class="line">来源：力扣（LeetCode）</span><br><span class="line">著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</span><br></pre></td></tr></table></figure>
+## 剑指 Offer 19. 正则表达式匹配
+
+</code></pre>
+
+        <p class="suffix-end">__END__</p>
+        <div class="suffix-box">
+            <div class="suffix-box-left">
+                <img src="https://gitee.com/psycho1900/miss-reddle/raw/master/profile.jpg" alt="Russshare">
+            </div>
+            <div class="suffix-box-right">
+                <span class="suffix-box-title">文章作者</span>：Russshare
+                <br>
+                <span class="suffix-box-title">文章出处</span>：<a href="/2021/08/03/%E5%89%91%E6%8C%87offer19/" target="_blank">剑指offer19</a>
+                <br>
+                <span class="suffix-box-title">作者签名</span>：我们生死与共，勇往直前，永远都是坏小子.
+                <br>
+                <span class="suffix-box-title">关于主题</span>：<a href="https://github.com/first19326/Hexo-LiveForCode" target="_blank">Hexo - Russshare</a>
+                <br>
+                <span class="suffix-box-title">版权声明</span>：文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" title="BY-NC-SA" target="_blank">BY-NC-SA</a> 许可协议，转载请注明出处
+                <br>
+            </div>
+            <div style="clear: both;"></div>
+        </div>
+    </div>
+    <div class="article-footer">
+        
+            <div class="category">
+                分类：
+                
+                    <a href="/categories/%E5%89%91%E6%8C%87offer/">剑指offer</a>
+                
+            </div>
+        
+        
+            <div class="tag">
+                标签：
+                
+                    <a href="/tags/%E5%89%91%E6%8C%87offer/">剑指offer</a>
+                
+            </div>
+        
+        <div class="article-prev-next">
+            
+                <a href="/2021/08/03/%E5%89%91%E6%8C%87offer20/" class="prev-prefix">« </a> 上一篇：    <a href="/2021/08/03/%E5%89%91%E6%8C%87offer20/" title="发布于 2021-08-03 12:25">剑指offer20</a>
+                <br>
+            
+            
+                <a href="/2021/08/03/%E5%89%91%E6%8C%87offer18/" class="next-prefix">» </a> 下一篇：    <a href="/2021/08/03/%E5%89%91%E6%8C%87offer18/" title="发布于 2021-08-03 12:25">剑指offer18</a>
+            
+        </div>
+    </div>
+    
+    <div class="article-comments">
+        <div class="comments-title">
+            评论列表
+        </div>
+        <div class="comments-content">
+        </div>
+    </div>
+
+</div>
+
+    </div>
+</div>
+    <div id="footer"></div>
+    <div id="sidebar">
+    <div class="menu-wrap" style="display:none;">
+        <nav class="menu">
+            <div class="menu-introduce"> 
+                <div class="introduce-avatar"></div> 
+                <div class="introduce-info"> 
+                    <div class="introduce-user"><span></span></div>        
+                </div> 
+            </div> 
+            <div class="menu-list">
+                <ul></ul> 
+            </div> 
+            <div class="menu-link"></div> 
+        </nav>
+        <button class="menu-button-close"></button>
+        <div class="morph-shape" id="morph-shape" data-morph-open="M-7.312,0H15c0,0,66,113.339,66,399.5C81,664.006,15,800,15,800H-7.312V0z;M-7.312,0H100c0,0,0,113.839,0,400c0,264.506,0,400,0,400H-7.312V0z">
+            <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 100 800" preserveAspectRatio="none">
+                <path d="M-7.312,0H0c0,0,0,113.839,0,400c0,264.506,0,400,0,400h-7.312V0z"/>
+            </svg>
+        </div>
+    </div>
+    <button class="menu-button-open">MENU</button>
+    <div class="menu-cover"></div>
+</div>
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/search.css">
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/iscroll.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/instantsearch.min.js"></script>
+<div class="search-window">
+    <div class="search-content">
+        <div class="search-content-icon">
+            <i class="iconfont icon-search"></i>
+        </div>
+        <div id="search-input" class="search-input"></div>
+    </div>
+
+    <div class="search-scroll">
+        <div class="search-result">
+            <div id="search-stats" class="search-stats"></div>
+            <div id="search-hits"></div>
+            <div id="search-pagination" class="search-pagination"></div>
+        </div>
+    </div>
+
+    <span class="search-close-icon">
+        <i class="iconfont icon-close"></i>
+    </span>
+</div>
+    <div id="tools">
+    <div class="progressbar-top"></div>
+
+    
+        <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/APlayer.css">
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/APlayer.min.js"></script>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/Meting.min.js"></script>
+        <meting-js id="3778678" lrcshow="false" server="netease" type="playlist" fixed="true" autoplay="false" loop="all" order="random" preload="auto" volume="0.67" mutex="true"></meting-js>
+    
+    
+    <div class="wrap-right"></div>
+    <div class="loading"></div>
+</div>
+    <script>
+    window.config = {
+        GitHubUserName     : 'Russshare',
+        GitHubRepositories : 'Russshare',
+
+        BlogUser      : 'Russshare',
+        BlogAvatar    : 'https://gitee.com/psycho1900/miss-reddle/raw/master/profile.jpg',
+        BlogStartDate : '2021-03-17',
+
+        WebsiteTitleBlur         : '(◍´꒳`◍) Hi, Miss Riddle',
+        WebsiteTitleBlurTimeOut  : 500,
+        WebsiteTitleFocus        : '(*´∇｀*) 欢迎回来!',
+        WebsiteTitleFocusTimeOut : 1000,
+        WebsiteFavicon           : 'https://gitee.com/psycho1900/miss-reddle/raw/master/beer.png',
+
+        ProgressBar: {
+            id       : 'topProgressBar',
+            color    : '#77B6FF',
+            height   : '2px',
+            duration : 0.2
+        },
+
+        Loading: {
+            rebound: {
+                tension  : 16,
+                friction : 5
+            },
+            spinner: {
+                id     : 'spinner',
+                radius : 90,
+                sides  : 3,
+                depth  : 4,
+                colors : {
+                    background : '#F0F0F0',
+                    stroke     : '#272633',
+                    base       : '',
+                    child      : '#272633'
+                },
+                alwaysForward : true,
+                restAt        : 0.5,
+                renderBase    : false
+            }
+        },
+
+        HomeHeaderAnimationRendered : true,
+        HomeHeaderAnimation         : {
+            radius      : 15,
+            density     : 0.2,
+            color       : 'rgba(255, 255, 255, .2)',
+            clearOffset : 0.3
+        },
+
+        ArticleHeaderAnimationRendered : false,
+        ArticleHeaderAnimation         : {
+            triW                  : 14,
+            triH                  : 20,
+            neighbours            : [
+                
+                    'side',
+                
+                    'top',
+                
+                    'bottom',
+                
+            ],
+            speedTrailAppear      : 0.1,
+            speedTrailDisappear   : 0.1,
+            speedTriOpen          : 1,
+            trailMaxLength        : 30,
+            trailIntervalCreation : 100,
+            delayBeforeDisappear  : 2,
+            colors                : [
+                
+                    '#96EDA6',
+                
+                    '#5BC6A9',
+                
+                    '#38668C',
+                
+                    '#374D84',
+                
+                    '#BED5CB',
+                
+                    '#62ADC6',
+                
+                    '#8EE5DE',
+                
+                    '#304E7B',
+                
+            ]
+        },
+
+        BackAnimationRendered          : true,
+        IEBrowserBackAnimationRendered : false,
+        BackAnimation                  : {
+            colorSaturation  : '60%',
+            colorBrightness  : '50%',
+            colorAlpha       : 0.5,
+            colorCycleSpeed  : 5,
+            verticalPosition : 'random',
+            horizontalSpeed  : 200,
+            ribbonCount      : 3,
+            strokeSize       : 0,
+            parallaxAmount   : -0.2,
+            animateSections  : true
+        },
+
+        HomeHeaderImage : [
+            
+                'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/image/header/home.jpg',
+            
+                'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/image/header/home.jpeg',
+            
+        ],
+        HomeBannerText  : '',
+
+        ArticleHeaderImage : [
+            
+                'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/image/header/article.jpg',
+            
+        ],
+
+        OtherBannerText : '',
+
+        MenuList : [
+            
+                {
+                    name   : '首页',
+                    href   : '/',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '标签',
+                    href   : '/tag',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '分类',
+                    href   : '/category',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '赞赏',
+                    href   : '/donate',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '关于',
+                    href   : '/about',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '搜索',
+                    href   : '',    
+                    target : '',
+                    class  : 'search'
+                },
+            
+                {
+                    name   : '留言板',
+                    href   : '/comment',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '友情链接',
+                    href   : '/friend',    
+                    target : '',
+                    class  : ''
+                },
+            
+        ],
+        MenuLink : [
+            
+                
+                    {
+                        icon : 'icon-weibo', 
+                        url  : ''
+                    },
+                
+                    {
+                        icon : 'icon-wechat', 
+                        url  : ''
+                    },
+                
+                    {
+                        icon : 'icon-qq', 
+                        url  : ''
+                    },
+                
+                    {
+                        icon : 'icon-github', 
+                        url  : 'https://github.com/RiddleGo'
+                    },
+                
+            
+        ],
+
+        FooterStyle : 2,
+        BottomText  : {
+            icon    : 'like-fill',
+            left    : '人生若只如初见',
+            right   : '何事秋风悲画扇'
+        },
+        ThemeInfo   : true,
+
+        ConsoleList : [
+            
+                
+                    [
+                        
+                            
+                                'Based on cnblogs theme SimpleMemory.',
+                            
+                                '',
+                            
+                        
+                    ],
+                
+                    [
+                        
+                            
+                                'SimpleMemory Author:',
+                            
+                                'BNDong',
+                            
+                        
+                    ],
+                
+                    [
+                        
+                            
+                                'Theme:',
+                            
+                                'LiveForCode',
+                            
+                        
+                    ],
+                
+            
+        ],
+
+        FontIconExtend : '',
+
+        Donate : {
+            paypal  : '',
+            bitcoin : '',
+            alipay  : '',
+            wechat  : ''
+        },
+
+        Code : {
+            style : 'normal'
+        },  
+
+        Search : {
+            applicationID : '010C3EANT8',
+            apiKey        : 'c7abab9f11b79102b9aff7fe6d41447d',
+            indexName     : 'Notes',
+            hits          : {
+                page : 10
+            },
+            labels        : {
+                placeholder : '搜索',
+                empty       : '未发现与 「${query}」 相关的内容',
+                stats       : '${hits} 条相关条目，使用了 ${time} 毫秒',
+            }
+        }, 
+
+        Valine : {
+            switch         : true,
+            el             : '.comments-content',
+            appId          : 'TKpiBidydKtx7apGCq7DM4Fw-gzGzoHsz',
+            appKey         : 'wsVqBbLWlLy4JRbi9I4XDBpH',
+            placeholder    : '你是我一生只会遇见一次的惊喜...',
+            avatar         : 'mm',
+            meta           : 'nick,mail,link',
+            requiredFields : 'nick,mail',
+            pageSize       : 5,
+            lang           : 'zh-cn',
+            visitor        : true,
+            enableQQ       : true
+        },
+
+        Tocbot : {
+            switch                : true,
+            tocSelector           : '.toc',
+            contentSelector       : '.article-body',
+            headingSelector       : 'h1, h2, h3, h4, h5',
+            headingsOffset        : 0,
+            scrollSmooth          : true,
+            scrollSmoothOffset    : -5,
+            positionFixedSelector : '.toc',
+            positionFixedClass    : 'toc-fixed',
+            fixedSidebarOffset    : '',
+        },
+
+        Require : {
+            baseUrl     : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/',
+            waitSeconds : 100
+        },
+
+        Music : {
+            type : 'Meting'
+        },
+        APlayer : {
+            container : '.aplayer',
+            fixed     : true,
+            autoplay  : false,
+            loop      : 'all',
+            order     : 'random',
+            preload   : 'auto',
+            volume    : 0.67,
+            mutex     : true,
+            lrcType   : 3,
+            audio     : [
+                
+                    {
+                        name   : 'aLIEz',
+                        artist : 'mizuki（瑞葵）',
+                        cover  : '/music/cover/aLIEz.jpg',
+                        url    : '/music/song/aLIEz.mp3',
+                        lrc    : '/music/lrc/aLIEz.lrc'
+                    },
+                
+                    {
+                        name   : 'Endless Tears',
+                        artist : 'CLIFF EDGE',
+                        cover  : '/music/cover/Endless Tears.jpg',
+                        url    : '/music/song/Endless Tears.mp3',
+                        lrc    : '/music/lrc/Endless Tears.lrc'
+                    },
+                
+                    {
+                        name   : 'Miracle',
+                        artist : 'Cascada',
+                        cover  : '/music/cover/Miracle.jpg',
+                        url    : '/music/song/Miracle.mp3',
+                        lrc    : '/music/lrc/Miracle.lrc'
+                    },
+                
+                    {
+                        name   : 'Roll The Dice',
+                        artist : '高珊',
+                        cover  : '/music/cover/Roll The Dice.jpg',
+                        url    : '/music/song/Roll The Dice.mp3',
+                        lrc    : '/music/lrc/Roll The Dice.lrc'
+                    },
+                
+                    {
+                        name   : 'See You Again',
+                        artist : 'Charlie Puth, Wiz Khalifa',
+                        cover  : '/music/cover/See You Again.jpg',
+                        url    : '/music/song/See You Again.mp3',
+                        lrc    : '/music/lrc/See You Again.lrc'
+                    },
+                
+                    {
+                        name   : 'Traveling Light',
+                        artist : 'Joel Hanson, Sara Groves',
+                        cover  : '/music/cover/Traveling Light.jpg',
+                        url    : '/music/song/Traveling Light.mp3',
+                        lrc    : '/music/lrc/Traveling Light.lrc'
+                    },
+                
+                    {
+                        name   : '痴心绝对',
+                        artist : '李圣杰',
+                        cover  : '/music/cover/痴心绝对.jpg',
+                        url    : '/music/song/痴心绝对.mp3',
+                        lrc    : '/music/lrc/痴心绝对.lrc'
+                    },
+                
+                    {
+                        name   : '好想大声说爱你',
+                        artist : 'BAAD（バード）',
+                        cover  : '/music/cover/好想大声说爱你.jpg',
+                        url    : '/music/song/好想大声说爱你.mp3',
+                        lrc    : '/music/lrc/好想大声说爱你.lrc'
+                    },
+                
+            ]
+        },
+        Meting : {
+            id       : '3778678', 
+            lrcshow  : false, 
+            server   : 'netease', 
+            type     : 'playlist', 
+            fixed    : true, 
+            autoplay : false, 
+            loop     : 'all', 
+            order    : 'random', 
+            preload  : 'auto', 
+            volume   : 0.67, 
+            mutex    : true
+        },
+
+        LazyLoad : {
+            default : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/image/website/lazyload.svg'
+        },
+  
+        Style : {
+            aplayer          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/APlayer.css',
+            archive          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/archive.css',
+            donate           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/donate.css',
+            fancybox         : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/jquery.fancybox.css',
+            footer           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/footer.css',
+            iconfont         : 'https://at.alicdn.com/t/font_1546312_l3yohatebw.css',
+            index            : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/index.css',
+            menuBubble       : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/menu-bubble.css',
+            page             : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/page.css',
+            post             : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/post.css',
+            search           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/search.css',
+            tocbot           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/tocbot.css',
+            normal           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/normal.css',
+            night            : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/night.css',
+            clipboard        : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/clipboard.css'
+        },
+
+        Script: {
+            aplayer          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/APlayer.min.js',
+            config           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/require.config.js',
+            index            : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/index.js',
+            instantSearch    : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/instantsearch.min.js',
+            jQuery           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/jquery-3.4.1.min.js',
+            loading          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/loading.js',
+            meting           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/Meting.min.js',
+            iscroll          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/iscroll.js',
+            require          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/require.min.js'
+        },
+
+        Font: {
+            LongCang   : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/LongCang.css',
+            Monda      : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Monda.css',
+            NotoSansSC : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/NotoSansSC.css',
+            Playball   : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Playball.css',
+            PTMono     : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/PTMono.css',
+            RobotoSlab : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/RobotoSlab.css',
+            Rosario    : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Rosario.css',
+            UbuntuMono : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/UbuntuMono.css'
+        },
+
+        Suffix : {
+            about : '我们生死与共，勇往直前，永远都是坏小子.'
+        },
+            
+        Theme : {
+            url  : 'https://github.com/first19326/Hexo-LiveForCode',
+            name : 'Hexo - Russshare'
+        }  
+    };
+</script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/index.js"></script>
+</body>
+</html>

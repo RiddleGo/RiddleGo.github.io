@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, shrink-to-fit=no">
+    <meta name="referrer" content="origin">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <title>学会这些shell小技巧_我就爱上Linux了</title>
+
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/LongCang.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Monda.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/NotoSansSC.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Playball.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/PTMono.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/RobotoSlab.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Rosario.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/UbuntuMono.css">
+
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/post.css">
+    
+        <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/normal.css">
+    
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/jquery-3.4.1.min.js"></script>
+
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+</head>
+<body>
+    <a id="cover"></a>
+    <div id="header">
+    <div class="header">
+        <div class="vertical">
+            <div class="inner">
+                <h1 class="header-subtitle">学会这些shell小技巧_我就爱上Linux了</h1>
+                <div class="header-subinfo">
+                    <p class="article-info-text">
+                        <span>
+                            <i class="iconfont icon-time"></i> 发表时间：2021-06-24
+                        </span>
+                        
+                            <span id="/2021/06/24/学会这些shell小技巧-我就爱上Linux了/" class="leancloud_visitors" data-flag-title="学会这些shell小技巧_我就爱上Linux了">
+                                <i class="iconfont icon-browse"></i> 阅读：<sapn class="leancloud-visitors-count"></span>
+                            </span>
+                        
+                        <span>
+                            <i class="iconfont icon-interactive"></i> 评论：<span class="valine-comment-count" data-xid="/2021/06/24/学会这些shell小技巧-我就爱上Linux了/"></span>
+                        </span>  
+                    </p>                 
+                </div>
+            </div>
+        </div>
+        <canvas id="articleHeaderCanvas"></canvas>
+    </div>
+</div>
+    <div id="container">
+    <div id="content">
+        <div id="article">
+    <div class="toc"></div>
+    <div class="article-body">
+        <p><strong>内容来自labuladong公众号</strong></p>
+<p>前几篇关于 Linux 的文章很受欢迎，很多读者都希望我多写写这方面的文章。我以后会定期分享一些 Linux 的实用小技巧，你用习惯之后可能就会和我一样，使用 Windows 就头疼。。。</p>
+<p>先说句题外话，大家总是问能不能装双系统，装什么 Linux 发行版比较好。这里统一回答一下，装双系统很简单的，网上很多教程；<strong>至于发行版，推荐 Ubuntu</strong>，不要迷恋那些看起来牛逼的小众发行版，我们的评判标准是是否稳定，是否拥有完善的社区支持，这两点 Ubuntu 桌面版无疑是最好的。我之前遇到蓝牙键盘的适配问题，Ubuntu 社区上竟然有大佬直接写了个驱动，完美解决，真是意料之外。</p>
+<p>当然，你要是有时间爱折腾，可以随意。或者你有钱，你也不需要纠结 Linux 发行版，玩 MacBook 吧，它继承了 Linux 的优点，逼格还高，就是贵……</p>
+<p>回归主题，我认为 Linux 的迷人之处在于完善的社区和许多小而美的工具，加之管道符、重定向等等漂亮的设计理念，可以将很多复杂的工作自动化。本文就介绍一些基本的 Linux shell 技巧，相信可以帮你提高生产力！</p>
+<h3 id="输入相似文件名太麻烦"><a href="#输入相似文件名太麻烦" class="headerlink" title="输入相似文件名太麻烦"></a>输入相似文件名太麻烦</h3><p>用花括号括起来的字符串用逗号连接，可以自动扩展，非常有用，直接看例子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ echo &#123;one,two,three&#125;file</span><br><span class="line">onefile twofile threefile</span><br><span class="line"></span><br><span class="line">$ echo &#123;one,two,three&#125;&#123;1,2,3&#125;</span><br><span class="line">one1 one2 one3 two1 two2 two3 three1 three2 three3</span><br></pre></td></tr></table></figure>
+
+<p>你看，花括号中的每个字符都可以和之后（或之前）的字符串进行组合拼接，注意花括号和其中的逗号不可以用空格分隔，否则会被认为是普通的字符串对待。</p>
+<p>这个技巧有什么实际用处呢？最简单实用的就是给cp,mv,rm等命令扩展参数：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ cp &#x2F;very&#x2F;long&#x2F;path&#x2F;file&#123;,.bak&#125;</span><br><span class="line"># 给 file 复制一个叫做 file.bak 的副本</span><br><span class="line"></span><br><span class="line">$ rm file&#123;1,3,5&#125;.txt</span><br><span class="line"># 删除 file1.txt file3.txt file5.txt</span><br><span class="line"></span><br><span class="line">$ mv *.&#123;c,cpp&#125; src&#x2F;</span><br><span class="line"># 将所有 .c 和 .cpp 为后缀的文件移入 src 文件夹</span><br></pre></td></tr></table></figure>
+
+<h3 id="输入路径名称太麻烦"><a href="#输入路径名称太麻烦" class="headerlink" title="输入路径名称太麻烦"></a>输入路径名称太麻烦</h3><p><strong>用cd -返回刚才待的目录，</strong>直接看例子吧：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ pwd</span><br><span class="line">&#x2F;very&#x2F;long&#x2F;path</span><br><span class="line">$ cd # 回到家目录瞅瞅</span><br><span class="line">$ pwd</span><br><span class="line">&#x2F;home&#x2F;labuladong</span><br><span class="line">$ cd - # 再返回刚才那个目录</span><br><span class="line">$ pwd</span><br><span class="line">&#x2F;very&#x2F;long&#x2F;path</span><br></pre></td></tr></table></figure>
+<p><strong>特殊命令!$会替换成上一次命令最后的路径</strong>，直接看例子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># 没有加可执行权限</span><br><span class="line">$ &#x2F;usr&#x2F;bin&#x2F;script.sh</span><br><span class="line">zsh: permission denied: &#x2F;usr&#x2F;bin&#x2F;script.sh</span><br><span class="line"></span><br><span class="line">$ chmod +x !$</span><br><span class="line">chmod +x &#x2F;usr&#x2F;bin&#x2F;script.sh</span><br></pre></td></tr></table></figure>
+
+<p>*<em>特殊命令!<em>会替换成上一次命令输入的所有文件路径，直接看例子：</em></em></p>
+<h1 id="创建了三个脚本文件"><a href="#创建了三个脚本文件" class="headerlink" title="创建了三个脚本文件"></a>创建了三个脚本文件</h1><p>$ file script1.sh script2.sh script3.sh</p>
+<h1 id="给它们全部加上可执行权限"><a href="#给它们全部加上可执行权限" class="headerlink" title="给它们全部加上可执行权限"></a>给它们全部加上可执行权限</h1><p>$ chmod +x !*<br>chmod +x script1.sh script2.sh script3.sh</p>
+<p><strong>可以在环境变量CDPATH中加入你常用的工作目录</strong>，当cd命令在当前目录中找不到你指定的文件/目录时，会自动到CDPATH中的目录中寻找。</p>
+<p>比如说我常去家目录，也常去/var/log目录找日志，可以执行如下命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">$ export CDPATH&#x3D;&#39;~:&#x2F;var&#x2F;log&#39;</span><br><span class="line"># cd 命令将会在 ~ 目录和 &#x2F;var&#x2F;log 目录扩展搜索</span><br><span class="line"></span><br><span class="line">$ pwd</span><br><span class="line">&#x2F;home&#x2F;labuladong&#x2F;musics</span><br><span class="line">$ cd mysql</span><br><span class="line">cd &#x2F;var&#x2F;log&#x2F;mysql</span><br><span class="line">$ pwd</span><br><span class="line">&#x2F;var&#x2F;log&#x2F;mysql</span><br><span class="line">$ cd my_pictures</span><br><span class="line">cd &#x2F;home&#x2F;labuladong&#x2F;my_pictures</span><br></pre></td></tr></table></figure>
+<p>这个技巧是十分好用的，这样就免了经常写完整的路径名称，节约不少时间。</p>
+<p>需要注意的是，以上操作是 bash 支持的，其他主流 shell 解释器当然都支持扩展cd命令的搜索目录，但可能不是修改CDPATH这个变量，具体的设置方法可以自行搜索。</p>
+<h3 id="输入重复命令太麻烦"><a href="#输入重复命令太麻烦" class="headerlink" title="输入重复命令太麻烦"></a>输入重复命令太麻烦</h3><p><strong>使用特殊命令!!，可以自动替换成上一次使用的命令：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ apt install net-tools</span><br><span class="line">E: Could not open lock file - open (13: Permission denied)</span><br><span class="line"></span><br><span class="line">$ sudo !!</span><br><span class="line">sudo apt install net-tools</span><br><span class="line">[sudo] password for labuladong:</span><br></pre></td></tr></table></figure>
+
+<p>有的命令很长，一时间想不起来具体参数了怎么办？</p>
+<p><strong>对于 bash 终端，可以使用Ctrl+R快捷键反向搜索历史命令，</strong>之所以说是反向搜索，就是搜索最近一次输入的命令。</p>
+<p>比如按下Ctrl+R之后，输入sudo，bash 就会搜索出最近一次包含sudo的命令，你回车之后就可以运行该命令了：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(reverse-i-search)&#96;sudo&#39;: sudo apt install git</span><br></pre></td></tr></table></figure>
+
+<p>但是这个方法有缺点：首先，该功能似乎只有 bash 支持，我用的 zsh 作为 shell 终端，就用不了；第二，只能查找出一个（最近的）命令，如果我想找以前的某个命令，就没办法了。</p>
+<p>对于这种情况，我们最常用的方法是使用history命令配合管道符和grep命令来寻找某个历史命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># 过滤出所有包含 config 字段的历史命令</span><br><span class="line">$ history | grep &#39;config&#39;</span><br><span class="line"> 7352  .&#x2F;configure</span><br><span class="line"> 7434  git config --global --unset https.proxy</span><br><span class="line"> 9609  ifconfig</span><br><span class="line"> 9985  clip -o | sed -z &#39;s&#x2F;\n&#x2F;,\n&#x2F;g&#39; | clip</span><br><span class="line">10433  cd ~&#x2F;.config</span><br></pre></td></tr></table></figure>
+<p>你使用的所有 shell 命令都会被记录，前面的数字就表示这是第几个命令，找到你想重复使用的命令后，也不需要复制粘贴该命令，只要使用!+ 你想重用的命令编号即可运行该命令。</p>
+<p>拿上面的例子，我想重新运行git config那条命令，就可以这样：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ !7434</span><br><span class="line">git config --global --unset https.proxy</span><br><span class="line"># 运行完成</span><br></pre></td></tr></table></figure>
+
+<p>我觉得history加管道加grep这样打的字还是太多，可以在你的 shell 配置文件中（.bashrc，.zshrc等） 中写这样一个函数：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">his()</span><br><span class="line">&#123;</span><br><span class="line">    history | grep &quot;$@&quot;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>这样就不需要写那么多，只需要his ‘some_keyword’即可搜索历史命令。</p>
+<p>我一般不使用 bash 作为终端，我给大家推荐一款很好用的 shell 终端叫做 zsh，这也是我自己使用的 shell。这款终端还可以扩展各种插件，非常好用，具体配置方法可自行搜索。</p>
+<h3 id="其他小技巧"><a href="#其他小技巧" class="headerlink" title="其他小技巧"></a>其他小技巧</h3><p><strong>1、yes命令自动输入字符y进行确认：</strong></p>
+<p>我们安装某些软件的时候，可能有交互式的提问：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt install XXX</span><br><span class="line">...</span><br><span class="line">XXX will use 996 MB disk space, continue? [y&#x2F;n]</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>一般情况下我们都是一路 y 到底，但如果我们想自动化一些软件的安装就很烦，遇到这种交互式提问就卡住了，还得手动处理。</p>
+<p>yes命令可以帮助我们：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ yes | your_cmd</span><br></pre></td></tr></table></figure>
+<p>这样就会一路自动y下去，不会停下让我们输入了。</p>
+<p>如果你读过前文 Linux 进程、线程、文件描述符的底层原理，就知道其原理很简单：</p>
+<p>你单独运行一下yes命令，发现它就是打印出一大堆字符 y，通过管道把输出和your_cmd的标准输入相连接，如果your_cmd又提出无聊的问题，就会从标准输入读取数据，也就会读取到一个 y 和换行符，和你手动输入 y 确认是一个效果。</p>
+<p><strong>2、特殊变量$?记录上一次命令的返回值。</strong></p>
+<p>在 Linux shell 中，遵循 C 语言的习惯，返回值为 0 的话就是程序正常退出，非 0 值就是异常退出。读取上一次命令的返回值在平时使用命令行时感觉没什么用，但是如果你想编写一些 shell 脚本，知道返回值非常有用。</p>
+<p>举个实际的例子，比如我的 Github 仓库 fucking-algorithm ，我需要给其中所有 markdown 文件最下方添加上一篇、下一篇、目录三个页脚链接，有的文章已经有了页脚，大部分都没有。</p>
+<p>为了防止重复添加，我必须知道一个 md 文件末尾是否已添加，这时候就可以使用$?变量配合grep命令做到：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">#!&#x2F;bin&#x2F;bash</span><br><span class="line">filename&#x3D;$1</span><br><span class="line"># 查看文件尾部是否包含关键词</span><br><span class="line">tail | grep &#39;下一篇&#39; $filename</span><br><span class="line"># grep 查找到匹配会返回 0，找不到则返回非 0 值</span><br><span class="line">[ $? -ne 0 ] &amp;&amp; &#123; 添加页脚; &#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>3、特殊变量$$记录当前进程的 PID。</strong></p>
+<p>这个功能可能在平时使用时也不怎么用，但是在写 shell 脚本时也非常有用，比如说你要在/tmp创建临时文件，给文件起名字一直都是非常让人费脑子的，这时候可以使用$$变量扩展出当前进程的 PID 作为临时文件名，PID 在计算机中都是唯一的，所以绝不会重复，也不需要你记住临时文件的名字。</p>
+<p>好了，今天就分享这些技巧吧，如果大家对 Linux 有兴趣，可以点在看分享，数据不错的话下次再写点。</p>
+
+        <p class="suffix-end">__END__</p>
+        <div class="suffix-box">
+            <div class="suffix-box-left">
+                <img src="https://gitee.com/psycho1900/miss-reddle/raw/master/profile.jpg" alt="Russshare">
+            </div>
+            <div class="suffix-box-right">
+                <span class="suffix-box-title">文章作者</span>：Russshare
+                <br>
+                <span class="suffix-box-title">文章出处</span>：<a href="/2021/06/24/%E5%AD%A6%E4%BC%9A%E8%BF%99%E4%BA%9Bshell%E5%B0%8F%E6%8A%80%E5%B7%A7-%E6%88%91%E5%B0%B1%E7%88%B1%E4%B8%8ALinux%E4%BA%86/" target="_blank">学会这些shell小技巧_我就爱上Linux了</a>
+                <br>
+                <span class="suffix-box-title">作者签名</span>：我们生死与共，勇往直前，永远都是坏小子.
+                <br>
+                <span class="suffix-box-title">关于主题</span>：<a href="https://github.com/first19326/Hexo-LiveForCode" target="_blank">Hexo - Russshare</a>
+                <br>
+                <span class="suffix-box-title">版权声明</span>：文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" title="BY-NC-SA" target="_blank">BY-NC-SA</a> 许可协议，转载请注明出处
+                <br>
+            </div>
+            <div style="clear: both;"></div>
+        </div>
+    </div>
+    <div class="article-footer">
+        
+            <div class="category">
+                分类：
+                
+                    <a href="/categories/%E8%84%9A%E6%9C%AC%E8%AF%AD%E8%A8%80-shell/">脚本语言-shell</a>
+                
+            </div>
+        
+        
+            <div class="tag">
+                标签：
+                
+                    <a href="/tags/linux/">linux</a>
+                
+                    <a href="/tags/shell/">shell</a>
+                
+            </div>
+        
+        <div class="article-prev-next">
+            
+                <a href="/2021/06/24/cookie%E5%92%8Csession%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88/" class="prev-prefix">« </a> 上一篇：    <a href="/2021/06/24/cookie%E5%92%8Csession%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88/" title="发布于 2021-06-24 09:59">cookie和session到底是什么</a>
+                <br>
+            
+            
+                <a href="/2021/06/24/%E6%AF%8F%E5%A4%A9%E4%B8%80%E9%81%93%E7%AE%97%E6%B3%95%E9%A2%98%EF%BC%9A%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95%E7%9A%84%E5%89%8D%E4%B8%96%E4%BB%8A%E7%94%9F/" class="next-prefix">» </a> 下一篇：    <a href="/2021/06/24/%E6%AF%8F%E5%A4%A9%E4%B8%80%E9%81%93%E7%AE%97%E6%B3%95%E9%A2%98%EF%BC%9A%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95%E7%9A%84%E5%89%8D%E4%B8%96%E4%BB%8A%E7%94%9F/" title="发布于 2021-06-24 09:56">加密算法的前世今生</a>
+            
+        </div>
+    </div>
+    
+    <div class="article-comments">
+        <div class="comments-title">
+            评论列表
+        </div>
+        <div class="comments-content">
+        </div>
+    </div>
+
+</div>
+
+    </div>
+</div>
+    <div id="footer"></div>
+    <div id="sidebar">
+    <div class="menu-wrap" style="display:none;">
+        <nav class="menu">
+            <div class="menu-introduce"> 
+                <div class="introduce-avatar"></div> 
+                <div class="introduce-info"> 
+                    <div class="introduce-user"><span></span></div>        
+                </div> 
+            </div> 
+            <div class="menu-list">
+                <ul></ul> 
+            </div> 
+            <div class="menu-link"></div> 
+        </nav>
+        <button class="menu-button-close"></button>
+        <div class="morph-shape" id="morph-shape" data-morph-open="M-7.312,0H15c0,0,66,113.339,66,399.5C81,664.006,15,800,15,800H-7.312V0z;M-7.312,0H100c0,0,0,113.839,0,400c0,264.506,0,400,0,400H-7.312V0z">
+            <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 100 800" preserveAspectRatio="none">
+                <path d="M-7.312,0H0c0,0,0,113.839,0,400c0,264.506,0,400,0,400h-7.312V0z"/>
+            </svg>
+        </div>
+    </div>
+    <button class="menu-button-open">MENU</button>
+    <div class="menu-cover"></div>
+</div>
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/search.css">
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/iscroll.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/instantsearch.min.js"></script>
+<div class="search-window">
+    <div class="search-content">
+        <div class="search-content-icon">
+            <i class="iconfont icon-search"></i>
+        </div>
+        <div id="search-input" class="search-input"></div>
+    </div>
+
+    <div class="search-scroll">
+        <div class="search-result">
+            <div id="search-stats" class="search-stats"></div>
+            <div id="search-hits"></div>
+            <div id="search-pagination" class="search-pagination"></div>
+        </div>
+    </div>
+
+    <span class="search-close-icon">
+        <i class="iconfont icon-close"></i>
+    </span>
+</div>
+    <div id="tools">
+    <div class="progressbar-top"></div>
+
+    
+        <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/APlayer.css">
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/APlayer.min.js"></script>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/Meting.min.js"></script>
+        <meting-js id="3778678" lrcshow="false" server="netease" type="playlist" fixed="true" autoplay="false" loop="all" order="random" preload="auto" volume="0.67" mutex="true"></meting-js>
+    
+    
+    <div class="wrap-right"></div>
+    <div class="loading"></div>
+</div>
+    <script>
+    window.config = {
+        GitHubUserName     : 'Russshare',
+        GitHubRepositories : 'Russshare',
+
+        BlogUser      : 'Russshare',
+        BlogAvatar    : 'https://gitee.com/psycho1900/miss-reddle/raw/master/profile.jpg',
+        BlogStartDate : '2021-03-17',
+
+        WebsiteTitleBlur         : '(◍´꒳`◍) Hi, Miss Riddle',
+        WebsiteTitleBlurTimeOut  : 500,
+        WebsiteTitleFocus        : '(*´∇｀*) 欢迎回来!',
+        WebsiteTitleFocusTimeOut : 1000,
+        WebsiteFavicon           : 'https://gitee.com/psycho1900/miss-reddle/raw/master/beer.png',
+
+        ProgressBar: {
+            id       : 'topProgressBar',
+            color    : '#77B6FF',
+            height   : '2px',
+            duration : 0.2
+        },
+
+        Loading: {
+            rebound: {
+                tension  : 16,
+                friction : 5
+            },
+            spinner: {
+                id     : 'spinner',
+                radius : 90,
+                sides  : 3,
+                depth  : 4,
+                colors : {
+                    background : '#F0F0F0',
+                    stroke     : '#272633',
+                    base       : '',
+                    child      : '#272633'
+                },
+                alwaysForward : true,
+                restAt        : 0.5,
+                renderBase    : false
+            }
+        },
+
+        HomeHeaderAnimationRendered : true,
+        HomeHeaderAnimation         : {
+            radius      : 15,
+            density     : 0.2,
+            color       : 'rgba(255, 255, 255, .2)',
+            clearOffset : 0.3
+        },
+
+        ArticleHeaderAnimationRendered : false,
+        ArticleHeaderAnimation         : {
+            triW                  : 14,
+            triH                  : 20,
+            neighbours            : [
+                
+                    'side',
+                
+                    'top',
+                
+                    'bottom',
+                
+            ],
+            speedTrailAppear      : 0.1,
+            speedTrailDisappear   : 0.1,
+            speedTriOpen          : 1,
+            trailMaxLength        : 30,
+            trailIntervalCreation : 100,
+            delayBeforeDisappear  : 2,
+            colors                : [
+                
+                    '#96EDA6',
+                
+                    '#5BC6A9',
+                
+                    '#38668C',
+                
+                    '#374D84',
+                
+                    '#BED5CB',
+                
+                    '#62ADC6',
+                
+                    '#8EE5DE',
+                
+                    '#304E7B',
+                
+            ]
+        },
+
+        BackAnimationRendered          : true,
+        IEBrowserBackAnimationRendered : false,
+        BackAnimation                  : {
+            colorSaturation  : '60%',
+            colorBrightness  : '50%',
+            colorAlpha       : 0.5,
+            colorCycleSpeed  : 5,
+            verticalPosition : 'random',
+            horizontalSpeed  : 200,
+            ribbonCount      : 3,
+            strokeSize       : 0,
+            parallaxAmount   : -0.2,
+            animateSections  : true
+        },
+
+        HomeHeaderImage : [
+            
+                'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/image/header/home.jpg',
+            
+                'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/image/header/home.jpeg',
+            
+        ],
+        HomeBannerText  : '',
+
+        ArticleHeaderImage : [
+            
+                'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/image/header/article.jpg',
+            
+        ],
+
+        OtherBannerText : '',
+
+        MenuList : [
+            
+                {
+                    name   : '首页',
+                    href   : '/',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '标签',
+                    href   : '/tag',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '分类',
+                    href   : '/category',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '赞赏',
+                    href   : '/donate',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '关于',
+                    href   : '/about',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '搜索',
+                    href   : '',    
+                    target : '',
+                    class  : 'search'
+                },
+            
+                {
+                    name   : '留言板',
+                    href   : '/comment',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '友情链接',
+                    href   : '/friend',    
+                    target : '',
+                    class  : ''
+                },
+            
+        ],
+        MenuLink : [
+            
+                
+                    {
+                        icon : 'icon-weibo', 
+                        url  : ''
+                    },
+                
+                    {
+                        icon : 'icon-wechat', 
+                        url  : ''
+                    },
+                
+                    {
+                        icon : 'icon-qq', 
+                        url  : ''
+                    },
+                
+                    {
+                        icon : 'icon-github', 
+                        url  : 'https://github.com/RiddleGo'
+                    },
+                
+            
+        ],
+
+        FooterStyle : 2,
+        BottomText  : {
+            icon    : 'like-fill',
+            left    : '人生若只如初见',
+            right   : '何事秋风悲画扇'
+        },
+        ThemeInfo   : true,
+
+        ConsoleList : [
+            
+                
+                    [
+                        
+                            
+                                'Based on cnblogs theme SimpleMemory.',
+                            
+                                '',
+                            
+                        
+                    ],
+                
+                    [
+                        
+                            
+                                'SimpleMemory Author:',
+                            
+                                'BNDong',
+                            
+                        
+                    ],
+                
+                    [
+                        
+                            
+                                'Theme:',
+                            
+                                'LiveForCode',
+                            
+                        
+                    ],
+                
+            
+        ],
+
+        FontIconExtend : '',
+
+        Donate : {
+            paypal  : '',
+            bitcoin : '',
+            alipay  : '',
+            wechat  : ''
+        },
+
+        Code : {
+            style : 'normal'
+        },  
+
+        Search : {
+            applicationID : '010C3EANT8',
+            apiKey        : 'c7abab9f11b79102b9aff7fe6d41447d',
+            indexName     : 'Notes',
+            hits          : {
+                page : 10
+            },
+            labels        : {
+                placeholder : '搜索',
+                empty       : '未发现与 「${query}」 相关的内容',
+                stats       : '${hits} 条相关条目，使用了 ${time} 毫秒',
+            }
+        }, 
+
+        Valine : {
+            switch         : true,
+            el             : '.comments-content',
+            appId          : 'TKpiBidydKtx7apGCq7DM4Fw-gzGzoHsz',
+            appKey         : 'wsVqBbLWlLy4JRbi9I4XDBpH',
+            placeholder    : '你是我一生只会遇见一次的惊喜...',
+            avatar         : 'mm',
+            meta           : 'nick,mail,link',
+            requiredFields : 'nick,mail',
+            pageSize       : 5,
+            lang           : 'zh-cn',
+            visitor        : true,
+            enableQQ       : true
+        },
+
+        Tocbot : {
+            switch                : true,
+            tocSelector           : '.toc',
+            contentSelector       : '.article-body',
+            headingSelector       : 'h1, h2, h3, h4, h5',
+            headingsOffset        : 0,
+            scrollSmooth          : true,
+            scrollSmoothOffset    : -5,
+            positionFixedSelector : '.toc',
+            positionFixedClass    : 'toc-fixed',
+            fixedSidebarOffset    : '',
+        },
+
+        Require : {
+            baseUrl     : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/',
+            waitSeconds : 100
+        },
+
+        Music : {
+            type : 'Meting'
+        },
+        APlayer : {
+            container : '.aplayer',
+            fixed     : true,
+            autoplay  : false,
+            loop      : 'all',
+            order     : 'random',
+            preload   : 'auto',
+            volume    : 0.67,
+            mutex     : true,
+            lrcType   : 3,
+            audio     : [
+                
+                    {
+                        name   : 'aLIEz',
+                        artist : 'mizuki（瑞葵）',
+                        cover  : '/music/cover/aLIEz.jpg',
+                        url    : '/music/song/aLIEz.mp3',
+                        lrc    : '/music/lrc/aLIEz.lrc'
+                    },
+                
+                    {
+                        name   : 'Endless Tears',
+                        artist : 'CLIFF EDGE',
+                        cover  : '/music/cover/Endless Tears.jpg',
+                        url    : '/music/song/Endless Tears.mp3',
+                        lrc    : '/music/lrc/Endless Tears.lrc'
+                    },
+                
+                    {
+                        name   : 'Miracle',
+                        artist : 'Cascada',
+                        cover  : '/music/cover/Miracle.jpg',
+                        url    : '/music/song/Miracle.mp3',
+                        lrc    : '/music/lrc/Miracle.lrc'
+                    },
+                
+                    {
+                        name   : 'Roll The Dice',
+                        artist : '高珊',
+                        cover  : '/music/cover/Roll The Dice.jpg',
+                        url    : '/music/song/Roll The Dice.mp3',
+                        lrc    : '/music/lrc/Roll The Dice.lrc'
+                    },
+                
+                    {
+                        name   : 'See You Again',
+                        artist : 'Charlie Puth, Wiz Khalifa',
+                        cover  : '/music/cover/See You Again.jpg',
+                        url    : '/music/song/See You Again.mp3',
+                        lrc    : '/music/lrc/See You Again.lrc'
+                    },
+                
+                    {
+                        name   : 'Traveling Light',
+                        artist : 'Joel Hanson, Sara Groves',
+                        cover  : '/music/cover/Traveling Light.jpg',
+                        url    : '/music/song/Traveling Light.mp3',
+                        lrc    : '/music/lrc/Traveling Light.lrc'
+                    },
+                
+                    {
+                        name   : '痴心绝对',
+                        artist : '李圣杰',
+                        cover  : '/music/cover/痴心绝对.jpg',
+                        url    : '/music/song/痴心绝对.mp3',
+                        lrc    : '/music/lrc/痴心绝对.lrc'
+                    },
+                
+                    {
+                        name   : '好想大声说爱你',
+                        artist : 'BAAD（バード）',
+                        cover  : '/music/cover/好想大声说爱你.jpg',
+                        url    : '/music/song/好想大声说爱你.mp3',
+                        lrc    : '/music/lrc/好想大声说爱你.lrc'
+                    },
+                
+            ]
+        },
+        Meting : {
+            id       : '3778678', 
+            lrcshow  : false, 
+            server   : 'netease', 
+            type     : 'playlist', 
+            fixed    : true, 
+            autoplay : false, 
+            loop     : 'all', 
+            order    : 'random', 
+            preload  : 'auto', 
+            volume   : 0.67, 
+            mutex    : true
+        },
+
+        LazyLoad : {
+            default : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/image/website/lazyload.svg'
+        },
+  
+        Style : {
+            aplayer          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/APlayer.css',
+            archive          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/archive.css',
+            donate           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/donate.css',
+            fancybox         : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/jquery.fancybox.css',
+            footer           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/footer.css',
+            iconfont         : 'https://at.alicdn.com/t/font_1546312_l3yohatebw.css',
+            index            : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/index.css',
+            menuBubble       : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/menu-bubble.css',
+            page             : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/page.css',
+            post             : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/post.css',
+            search           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/search.css',
+            tocbot           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/tocbot.css',
+            normal           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/normal.css',
+            night            : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/night.css',
+            clipboard        : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/clipboard.css'
+        },
+
+        Script: {
+            aplayer          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/APlayer.min.js',
+            config           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/require.config.js',
+            index            : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/index.js',
+            instantSearch    : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/instantsearch.min.js',
+            jQuery           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/jquery-3.4.1.min.js',
+            loading          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/loading.js',
+            meting           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/Meting.min.js',
+            iscroll          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/iscroll.js',
+            require          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/require.min.js'
+        },
+
+        Font: {
+            LongCang   : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/LongCang.css',
+            Monda      : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Monda.css',
+            NotoSansSC : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/NotoSansSC.css',
+            Playball   : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Playball.css',
+            PTMono     : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/PTMono.css',
+            RobotoSlab : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/RobotoSlab.css',
+            Rosario    : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Rosario.css',
+            UbuntuMono : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/UbuntuMono.css'
+        },
+
+        Suffix : {
+            about : '我们生死与共，勇往直前，永远都是坏小子.'
+        },
+            
+        Theme : {
+            url  : 'https://github.com/first19326/Hexo-LiveForCode',
+            name : 'Hexo - Russshare'
+        }  
+    };
+</script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/index.js"></script>
+</body>
+</html>

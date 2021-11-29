@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, shrink-to-fit=no">
+    <meta name="referrer" content="origin">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <title>HTTP问问答答</title>
+
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/LongCang.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Monda.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/NotoSansSC.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Playball.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/PTMono.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/RobotoSlab.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Rosario.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/UbuntuMono.css">
+
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/post.css">
+    
+        <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/normal.css">
+    
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/jquery-3.4.1.min.js"></script>
+
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+</head>
+<body>
+    <a id="cover"></a>
+    <div id="header">
+    <div class="header">
+        <div class="vertical">
+            <div class="inner">
+                <h1 class="header-subtitle">HTTP问问答答</h1>
+                <div class="header-subinfo">
+                    <p class="article-info-text">
+                        <span>
+                            <i class="iconfont icon-time"></i> 发表时间：2021-07-18
+                        </span>
+                        
+                            <span id="/2021/07/18/HTTP问问答答/" class="leancloud_visitors" data-flag-title="HTTP问问答答">
+                                <i class="iconfont icon-browse"></i> 阅读：<sapn class="leancloud-visitors-count"></span>
+                            </span>
+                        
+                        <span>
+                            <i class="iconfont icon-interactive"></i> 评论：<span class="valine-comment-count" data-xid="/2021/07/18/HTTP问问答答/"></span>
+                        </span>  
+                    </p>                 
+                </div>
+            </div>
+        </div>
+        <canvas id="articleHeaderCanvas"></canvas>
+    </div>
+</div>
+    <div id="container">
+    <div id="content">
+        <div id="article">
+    <div class="toc"></div>
+    <div class="article-body">
+        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>最近如果有机会的话可能要面试，如果没有，那当我没说。<br>但是一直学习的就是偏应用型的，就是用的时候去查，很多基础的理论知识倒是不求甚解。<br>于是就在这里做个总结blablabla</p>
+<h3 id="1、HTTP有哪些方法？"><a href="#1、HTTP有哪些方法？" class="headerlink" title="1、HTTP有哪些方法？"></a>1、HTTP有哪些方法？</h3><h4 id="1-1-HTTP1-0定义了三种请求方法：-GET-POST-和-HEAD方法"><a href="#1-1-HTTP1-0定义了三种请求方法：-GET-POST-和-HEAD方法" class="headerlink" title="1.1 HTTP1.0定义了三种请求方法： GET, POST 和 HEAD方法"></a>1.1 HTTP1.0定义了三种请求方法： GET, POST 和 HEAD方法</h4><p>GET: 通常用于请求服务器发送某些资源</p>
+<p>POST: 发送数据给服务器</p>
+<p>HEAD: 请求资源的头部信息, 并且这些头部与 HTTP GET 方法请求时返回的一致. 该请求方法的一个使用场景是在下载一个大文件前先获取其大小再决定是否要下载, 以此可以节约带宽资源</p>
+<h4 id="1-2-HTTP1-1新增了五种请求方法：OPTIONS-PUT-DELETE-TRACE-和-CONNECT"><a href="#1-2-HTTP1-1新增了五种请求方法：OPTIONS-PUT-DELETE-TRACE-和-CONNECT" class="headerlink" title="1.2 HTTP1.1新增了五种请求方法：OPTIONS, PUT, DELETE, TRACE 和 CONNECT"></a>1.2 HTTP1.1新增了五种请求方法：OPTIONS, PUT, DELETE, TRACE 和 CONNECT</h4><p>OPTIONS: 用于获取目的资源所支持的通信选项</p>
+<p>PUT: 用于新增资源或者使用请求中的有效负载替换目标资源的表现形式</p>
+<p>DELETE: 用于删除指定的资源</p>
+<p>PATCH: 用于对资源进行部分修改</p>
+<p>CONNECT: HTTP/1.1协议中预留给能够将连接改为管道方式的代理服务器</p>
+<p>TRACE: 回显服务器收到的请求，主要用于测试或诊断</p>
+<h3 id="2、GET和POST有什么区别？"><a href="#2、GET和POST有什么区别？" class="headerlink" title="2、GET和POST有什么区别？"></a>2、GET和POST有什么区别？</h3><p>数据传输方式不同：GET请求通过URL传输数据，而POST的数据通过请求体传输。</p>
+<p>安全性不同：POST的数据因为在请求主体内，所以有一定的安全性保证，而GET的数据在URL中，通过历史记录，缓存很容易查到数据信息。</p>
+<p>数据类型不同：GET只允许 ASCII 字符，而POST无限制</p>
+<p>GET无害： 刷新、后退等浏览器操作GET请求是无害的，POST可能重复提交表单</p>
+<p>特性不同：GET是安全（这里的安全是指只读特性，就是使用这个方法不会引起服务器状态变化）且幂等（幂等的概念是指同一个请求方法执行多次和仅执行一次的效果完全相同），而POST是非安全非幂等</p>
+<h3 id="3、PUT和POST都是给服务器发送新增资源，有什么区别？"><a href="#3、PUT和POST都是给服务器发送新增资源，有什么区别？" class="headerlink" title="3、PUT和POST都是给服务器发送新增资源，有什么区别？"></a>3、PUT和POST都是给服务器发送新增资源，有什么区别？</h3><p>PUT 和POST方法的区别是,PUT方法是幂等的：连续调用一次或者多次的效果相同（无副作用），而POST方法是非幂等的。（根据句意理解幂等）</p>
+<p>除此之外还有一个区别，通常情况下，<strong>PUT的URI指向是具体单一资源</strong>，<strong>而POST可以指向资源集合</strong>。</p>
+<p><strong>举个例子，我们在开发一个博客系统，当我们要创建一篇文章的时候往往用POST <a target="_blank" rel="noopener" href="https://www.jianshu.com/articles%EF%BC%8C%E8%BF%99%E4%B8%AA%E8%AF%B7%E6%B1%82%E7%9A%84%E8%AF%AD%E4%B9%89%E6%98%AF%EF%BC%8C%E5%9C%A8articles%E7%9A%84%E8%B5%84%E6%BA%90%E9%9B%86%E5%90%88%E4%B8%8B%E5%88%9B%E5%BB%BA%E4%B8%80%E7%AF%87%E6%96%B0%E7%9A%84%E6%96%87%E7%AB%A0%EF%BC%8C%E5%A6%82%E6%9E%9C%E6%88%91%E4%BB%AC%E5%A4%9A%E6%AC%A1%E6%8F%90%E4%BA%A4%E8%BF%99%E4%B8%AA%E8%AF%B7%E6%B1%82%E4%BC%9A%E5%88%9B%E5%BB%BA%E5%A4%9A%E4%B8%AA%E6%96%87%E7%AB%A0%EF%BC%8C%E8%BF%99%E6%98%AF%E9%9D%9E%E5%B9%82%E7%AD%89%E7%9A%84%E3%80%82">https://www.jianshu.com/articles，这个请求的语义是，在articles的资源集合下创建一篇新的文章，如果我们多次提交这个请求会创建多个文章，这是非幂等的。</a></strong></p>
+<p><strong>而PUT <a target="_blank" rel="noopener" href="https://www.jianshu.com/articles/820357430%E7%9A%84%E8%AF%AD%E4%B9%89%E6%98%AF%E6%9B%B4%E6%96%B0%E5%AF%B9%E5%BA%94%E6%96%87%E7%AB%A0%E4%B8%8B%E7%9A%84%E8%B5%84%E6%BA%90%EF%BC%88%E6%AF%94%E5%A6%82%E4%BF%AE%E6%94%B9%E4%BD%9C%E8%80%85%E5%90%8D%E7%A7%B0%E7%AD%89%EF%BC%89%EF%BC%8C%E8%BF%99%E4%B8%AAURI%E6%8C%87%E5%90%91%E7%9A%84%E5%B0%B1%E6%98%AF%E5%8D%95%E4%B8%80%E8%B5%84%E6%BA%90%EF%BC%8C%E8%80%8C%E4%B8%94%E6%98%AF%E5%B9%82%E7%AD%89%E7%9A%84%EF%BC%8C%E6%AF%94%E5%A6%82%E4%BD%A0%E6%8A%8A%E3%80%8E%E5%88%98%E5%BE%B7%E5%8D%8E%E3%80%8F%E4%BF%AE%E6%94%B9%E6%88%90%E3%80%8E%E8%94%A1%E5%BE%90%E5%9D%A4%E3%80%8F%EF%BC%8C%E6%8F%90%E4%BA%A4%E5%A4%9A%E5%B0%91%E6%AC%A1%E9%83%BD%E6%98%AF%E4%BF%AE%E6%94%B9%E6%88%90%E3%80%8E%E8%94%A1%E5%BE%90%E5%9D%A4%E3%80%8F">https://www.jianshu.com/articles/820357430的语义是更新对应文章下的资源（比如修改作者名称等），这个URI指向的就是单一资源，而且是幂等的，比如你把『刘德华』修改成『蔡徐坤』，提交多少次都是修改成『蔡徐坤』</a></strong></p>
+<h3 id="4、PUT和PATCH都是给服务器发送修改资源，有什么区别？"><a href="#4、PUT和PATCH都是给服务器发送修改资源，有什么区别？" class="headerlink" title="4、PUT和PATCH都是给服务器发送修改资源，有什么区别？"></a>4、PUT和PATCH都是给服务器发送修改资源，有什么区别？</h3><p>PUT和PATCH都是更新资源，而PATCH用来对已知资源进行局部更新。</p>
+<p>比如我们有一篇文章的地址<a target="_blank" rel="noopener" href="https://www.jianshu.com/articles/820357430,%E8%BF%99%E7%AF%87%E6%96%87%E7%AB%A0%E7%9A%84%E5%8F%AF%E4%BB%A5%E8%A1%A8%E7%A4%BA%E4%B8%BA%EF%BC%9A">https://www.jianshu.com/articles/820357430,这篇文章的可以表示为：</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">article &#x3D; &#123;</span><br><span class="line">    author: &#39;dxy&#39;,</span><br><span class="line">    creationDate: &#39;2019-6-12&#39;,</span><br><span class="line">    content: &#39;我写文章像蔡徐坤&#39;,</span><br><span class="line">    id: 820357430</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当我们要修改文章的作者时，我们可以直接发送PUT <a target="_blank" rel="noopener" href="https://www.jianshu.com/articles/820357430%EF%BC%8C%E8%BF%99%E4%B8%AA%E6%97%B6%E5%80%99%E7%9A%84%E6%95%B0%E6%8D%AE%E5%BA%94%E8%AF%A5%E6%98%AF">https://www.jianshu.com/articles/820357430，这个时候的数据应该是</a>:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    author:&#39;蔡徐坤&#39;,</span><br><span class="line">    creationDate: &#39;2019-6-12&#39;,</span><br><span class="line">    content: &#39;我写文章像蔡徐坤&#39;,</span><br><span class="line">    id: 820357430</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这种直接覆盖资源的修改方式应该用put，但是你觉得每次都带有这么多无用的信息，那么可以发送PATCH <a target="_blank" rel="noopener" href="https://www.jianshu.com/articles/820357430%EF%BC%8C%E8%BF%99%E4%B8%AA%E6%97%B6%E5%80%99%E5%8F%AA%E9%9C%80%E8%A6%81">https://www.jianshu.com/articles/820357430，这个时候只需要</a>:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    author:&#39;蔡徐坤&#39;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="5、http的请求报文是什么样的？"><a href="#5、http的请求报文是什么样的？" class="headerlink" title="5、http的请求报文是什么样的？"></a>5、http的请求报文是什么样的？</h3><p>请求报文有4部分组成:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">请求行</span><br><span class="line"></span><br><span class="line">请求头部</span><br><span class="line"></span><br><span class="line">空行</span><br><span class="line"></span><br><span class="line">请求体</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/http01.png"></p>
+<ul>
+<li>请求行包括：请求方法字段、URL字段、HTTP协议版本字段。它们用空格分隔。例如，GET /index.html HTTP/1.1。</li>
+<li>请求头部:请求头部由关键字/值对组成，每行一对，关键字和值用英文冒号“:”分隔<ul>
+<li>User-Agent：产生请求的浏览器类型。</li>
+<li>Accept：客户端可识别的内容类型列表。</li>
+<li>Host：请求的主机名，允许多个域名同处一个IP地址，即虚拟主机。</li>
+</ul>
+</li>
+<li>请求体: post put等请求携带的数据</li>
+</ul>
+<p><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/http02.png"><br><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/http023.png"></p>
+<h3 id="6、http的响应报文是什么样的？"><a href="#6、http的响应报文是什么样的？" class="headerlink" title="6、http的响应报文是什么样的？"></a>6、http的响应报文是什么样的？</h3><p>响应报文有4部分组成:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">响应行</span><br><span class="line"></span><br><span class="line">响应头</span><br><span class="line"></span><br><span class="line">空行</span><br><span class="line"></span><br><span class="line">响应体</span><br></pre></td></tr></table></figure>
+<p><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/http03.png"></p>
+<ul>
+<li>响应行： 由协议版本，状态码和状态码的原因短语组成，例如HTTP/1.1 200 OK。</li>
+<li>响应头：响应部首组成</li>
+<li>响应体：服务器响应的数据</li>
+</ul>
+<h3 id="7、聊一聊HTTP的部首有哪些？"><a href="#7、聊一聊HTTP的部首有哪些？" class="headerlink" title="7、聊一聊HTTP的部首有哪些？"></a>7、聊一聊HTTP的部首有哪些？</h3><p><strong>通用首部字段</strong>（General Header Fields）：请求报文和响应报文两方都会使用的首部</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">Cache-Control  控制缓存 ✨</span><br><span class="line"></span><br><span class="line">Connection 连接管理、逐条首部 ✨</span><br><span class="line"></span><br><span class="line">Upgrade  升级为其他协议</span><br><span class="line"></span><br><span class="line">via 代理服务器的相关信息</span><br><span class="line"></span><br><span class="line">Wraning 错误和警告通知</span><br><span class="line"></span><br><span class="line">Transfor-Encoding 报文主体的传输编码格式 ✨</span><br><span class="line"></span><br><span class="line">Trailer 报文末端的首部一览</span><br><span class="line"></span><br><span class="line">Pragma 报文指令</span><br><span class="line"></span><br><span class="line">Date 创建报文的日期</span><br></pre></td></tr></table></figure>
+<p><strong>请求首部字段</strong>（Reauest Header Fields）:客户端向服务器发送请求的报文时使用的首部</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">Accept 客户端或者代理能够处理的媒体类型 ✨</span><br><span class="line"></span><br><span class="line">Accept-Encoding 优先可处理的编码格式</span><br><span class="line"></span><br><span class="line">Accept-Language 优先可处理的自然语言</span><br><span class="line"></span><br><span class="line">Accept-Charset 优先可以处理的字符集</span><br><span class="line"></span><br><span class="line">If-Match 比较实体标记（ETage） ✨</span><br><span class="line"></span><br><span class="line">If-None-Match 比较实体标记（ETage）与 If-Match相反 ✨</span><br><span class="line"></span><br><span class="line">If-Modified-Since 比较资源更新时间（Last-Modified）✨</span><br><span class="line"></span><br><span class="line">If-Unmodified-Since比较资源更新时间（Last-Modified），与 If-Modified-Since相反 ✨</span><br><span class="line"></span><br><span class="line">If-Rnages 资源未更新时发送实体byte的范围请求</span><br><span class="line"></span><br><span class="line">Range 实体的字节范围请求 ✨</span><br><span class="line"></span><br><span class="line">Authorization web的认证信息 ✨</span><br><span class="line"></span><br><span class="line">Proxy-Authorization 代理服务器要求web认证信息</span><br><span class="line"></span><br><span class="line">Host 请求资源所在服务器 ✨</span><br><span class="line"></span><br><span class="line">From 用户的邮箱地址</span><br><span class="line"></span><br><span class="line">User-Agent 客户端程序信息 ✨</span><br><span class="line"></span><br><span class="line">Max-Forwrads 最大的逐跳次数</span><br><span class="line"></span><br><span class="line">TE 传输编码的优先级</span><br><span class="line"></span><br><span class="line">Referer 请求原始放的url</span><br><span class="line"></span><br><span class="line">Expect 期待服务器的特定行为</span><br></pre></td></tr></table></figure>
+<p><strong>响应首部字段</strong>（Response Header Fields）:从服务器向客户端响应时使用的字段</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">Accept-Ranges 能接受的字节范围</span><br><span class="line"></span><br><span class="line">Age 推算资源创建经过时间</span><br><span class="line"></span><br><span class="line">Location 令客户端重定向的URI ✨</span><br><span class="line"></span><br><span class="line">vary  代理服务器的缓存信息</span><br><span class="line"></span><br><span class="line">ETag 能够表示资源唯一资源的字符串 ✨</span><br><span class="line"></span><br><span class="line">WWW-Authenticate 服务器要求客户端的验证信息</span><br><span class="line"></span><br><span class="line">Proxy-Authenticate 代理服务器要求客户端的验证信息</span><br><span class="line"></span><br><span class="line">Server 服务器的信息 ✨</span><br><span class="line"></span><br><span class="line">Retry-After 和状态码503 一起使用的首部字段，表示下次请求服务器的时间</span><br></pre></td></tr></table></figure>
+<p><strong>实体首部字段</strong>（Entiy Header Fields）:针对请求报文和响应报文的实体部分使用首部(我觉的这个就是主体里面的)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">Allow 资源可支持http请求的方法 ✨</span><br><span class="line"></span><br><span class="line">Content-Language 实体的资源语言</span><br><span class="line"></span><br><span class="line">Content-Encoding 实体的编码格式</span><br><span class="line"></span><br><span class="line">Content-Length 实体的大小（字节）</span><br><span class="line"></span><br><span class="line">Content-Type 实体媒体类型</span><br><span class="line"></span><br><span class="line">Content-MD5 实体报文的摘要</span><br><span class="line"></span><br><span class="line">Content-Location 代替资源的yri</span><br><span class="line"></span><br><span class="line">Content-Rnages 实体主体的位置返回</span><br><span class="line"></span><br><span class="line">Last-Modified 资源最后的修改资源 ✨</span><br><span class="line"></span><br><span class="line">Expires 实体主体的过期资源 ✨</span><br></pre></td></tr></table></figure>
+<h3 id="8、聊一聊HTTP的状态码有哪些？"><a href="#8、聊一聊HTTP的状态码有哪些？" class="headerlink" title="8、聊一聊HTTP的状态码有哪些？"></a>8、聊一聊HTTP的状态码有哪些？</h3><p><strong>2XX 成功</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">200 OK，表示从客户端发来的请求在服务器端被正确处理 ✨</span><br><span class="line"></span><br><span class="line">201 Created 请求已经被实现，而且有一个新的资源已经依据请求的需要而建立</span><br><span class="line"></span><br><span class="line">202 Accepted 请求已接受，但是还没执行，不保证完成请求</span><br><span class="line"></span><br><span class="line">204 No content，表示请求成功，但响应报文不含实体的主体部分</span><br><span class="line"></span><br><span class="line">206 Partial Content，进行范围请求 ✨</span><br></pre></td></tr></table></figure>
+
+<p><strong>3XX 重定向</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">301 moved permanently，永久性重定向，表示资源已被分配了新的 URL</span><br><span class="line"></span><br><span class="line">302 found，临时性重定向，表示资源临时被分配了新的 URL ✨</span><br><span class="line"></span><br><span class="line">303 see other，表示资源存在着另一个 URL，应使用 GET 方法定向获取资源</span><br><span class="line"></span><br><span class="line">304 not modified，表示服务器允许访问资源，但因发生请求未满足条件的情况</span><br><span class="line"></span><br><span class="line">307 temporary redirect，临时重定向，和302含义相同</span><br></pre></td></tr></table></figure>
+
+<p><strong>4XX 客户端错误</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">400 bad request，请求报文存在语法错误 ✨</span><br><span class="line"></span><br><span class="line">401 unauthorized，表示发送的请求需要有通过 HTTP 认证的认证信息 ✨</span><br><span class="line"></span><br><span class="line">403 forbidden，表示对请求资源的访问被服务器拒绝 ✨</span><br><span class="line"></span><br><span class="line">404 not found，表示在服务器上没有找到请求的资源 ✨</span><br><span class="line"></span><br><span class="line">408 Request timeout, 客户端请求超时</span><br><span class="line"></span><br><span class="line">409 Confict, 请求的资源可能引起冲突</span><br></pre></td></tr></table></figure>
+<p><strong>5XX 服务器错误</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">500 internal sever error，表示服务器端在执行请求时发生了错误 ✨</span><br><span class="line"></span><br><span class="line">501 Not Implemented 请求超出服务器能力范围，例如服务器不支持当前请求所需要的某个功能，或者请求是服务器不支持的某个方法</span><br><span class="line"></span><br><span class="line">503 service unavailable，表明服务器暂时处于超负载或正在停机维护，无法处理请求</span><br><span class="line"></span><br><span class="line">505 http version not supported 服务器不支持，或者拒绝支持在请求中使用的 HTTP 版本</span><br></pre></td></tr></table></figure>
+
+<h3 id="9、同样是重定向307，303，302的区别？"><a href="#9、同样是重定向307，303，302的区别？" class="headerlink" title="9、同样是重定向307，303，302的区别？"></a>9、同样是重定向307，303，302的区别？</h3><p>302是http1.0的协议状态码，在http1.1版本的时候为了细化302状态码又出来了两个303和307。</p>
+<p>303明确表示客户端应当采用get方法获取资源，他会把POST请求变为GET请求进行重定向。 307会遵照浏览器标准，不会从post变为get。</p>
+<h3 id="10、HTTP的keep-alive是干什么的？"><a href="#10、HTTP的keep-alive是干什么的？" class="headerlink" title="10、HTTP的keep-alive是干什么的？"></a>10、HTTP的keep-alive是干什么的？</h3><p>在早期的HTTP/1.0中，每次http请求都要创建一个连接，而创建连接的过程需要消耗资源和时间，为了减少资源消耗，缩短响应时间，就需要重用连接。在后来的HTTP/1.0中以及HTTP/1.1中，引入了重用连接的机制，就是在http请求头中加入Connection: keep-alive来告诉对方这个请求响应完成后不要关闭，下一次咱们还用这个请求继续交流。协议规定HTTP/1.0如果想要保持长连接，需要在请求头中加上Connection: keep-alive。</p>
+<p>keep-alive的优点：</p>
+<ul>
+<li>较少的CPU和内存的使用（由于同时打开的连接的减少了）</li>
+<li>允许请求和应答的HTTP管线化</li>
+<li>降低拥塞控制 （TCP连接减少了）</li>
+<li>减少了后续请求的延迟（无需再进行握手）</li>
+<li>报告错误无需关闭TCP连</li>
+</ul>
+<h3 id="11、为什么有了HTTP为什么还要HTTPS？"><a href="#11、为什么有了HTTP为什么还要HTTPS？" class="headerlink" title="11、为什么有了HTTP为什么还要HTTPS？"></a>11、为什么有了HTTP为什么还要HTTPS？</h3><p>https是安全版的http，因为http协议的数据都是明文进行传输的，所以对于一些敏感信息的传输就很不安全，HTTPS就是为了解决HTTP的不安全而生的。</p>
+<h3 id="12、HTTPS是如何保证安全的？"><a href="#12、HTTPS是如何保证安全的？" class="headerlink" title="12、HTTPS是如何保证安全的？"></a>12、HTTPS是如何保证安全的？</h3><p>过程比较复杂，我们得先理解两个概念</p>
+<p><strong>对称加密</strong>：即通信的双方都使用同一个秘钥进行加解密，比如特务接头的暗号，就属于对称加密</p>
+<p><strong>对称加密虽然很简单性能也好，但是无法解决首次把秘钥发给对方的问题，很容易被hacker拦截秘钥。</strong></p>
+<p>非对称加密：</p>
+<p>私钥 + 公钥= 密钥对<br>即用私钥加密的数据,只有对应的公钥才能解密,用公钥加密的数据,只有对应的私钥才能解密<br>因为通信双方的手里都有一套自己的密钥对,通信之前双方会先把自己的公钥都先发给对方<br>然后对方再拿着这个公钥来加密数据响应给对方,等到到了对方那里,对方再用自己的私钥进行解密<br><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/HTTP05.png"><br><strong>非对称加密虽然安全性更高，但是带来的问题就是速度很慢，影响性能。</strong></p>
+<p>解决方案：</p>
+<p><strong>那么结合两种加密方式，将对称加密的密钥使用非对称加密的公钥进行加密，然后发送出去，接收方使用私钥进行解密得到对称加密的密钥，然后双方可以使用对称加密来进行沟通。</strong></p>
+<p>此时又带来一个问题，中间人问题：</p>
+<p>如果此时在客户端和服务器之间存在一个中间人,这个中间人只需要把原本双方通信互发的公钥,换成自己的公钥,这样中间人就可以轻松解密通信双方所发送的所有数据。</p>
+<p><strong>所以这个时候需要一个安全的第三方颁发证书（CA），证明身份的身份，防止被中间人攻击。</strong></p>
+<p>证书中包括：签发者、证书用途、使用者公钥、使用者私钥、使用者的HASH算法、证书到期时间等</p>
+<p><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/http04.png"></p>
+<p><strong>但是问题来了，如果中间人篡改了证书，那么身份证明是不是就无效了？这个证明就白买了，这个时候需要一个新的技术，数字签名。</strong></p>
+<p><strong>数字签名就是用CA自带的HASH算法对证书的内容进行HASH得到一个摘要，再用CA的私钥加密，最终组成数字签名。</strong><br>（数字签名在一定的程度上保证了证书的可靠性）</p>
+<p>当别人把他的证书发过来的时候,我再用同样的Hash算法,再次生成消息摘要，然后用CA的公钥对数字签名解密,得到CA创建的消息摘要,两者一比,就知道中间有没有被人篡改了。</p>
+<p><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/http06.png"></p>
+<p>这个时候就能最大程度保证通信的安全了。</p>
+<h3 id="13、HTTP2相对于HTTP1-x有什么优势和特点？"><a href="#13、HTTP2相对于HTTP1-x有什么优势和特点？" class="headerlink" title="13、HTTP2相对于HTTP1.x有什么优势和特点？"></a>13、HTTP2相对于HTTP1.x有什么优势和特点？</h3><h4 id="13-1-二进制分帧"><a href="#13-1-二进制分帧" class="headerlink" title="13.1 二进制分帧"></a>13.1 二进制分帧</h4><p>帧：HTTP/2 数据通信的最小单位消息：指 HTTP/2 中逻辑上的 HTTP 消息。例如请求和响应等，消息由一个或多个帧组成。</p>
+<p>流：存在于连接中的一个虚拟通道。流可以承载双向消息，每个流都有一个唯一的整数ID</p>
+<p>HTTP/2 采用二进制格式传输数据，而非 HTTP 1.x 的文本格式，二进制协议解析起来更高效。</p>
+<h4 id="13-2-服务器推送"><a href="#13-2-服务器推送" class="headerlink" title="13.2 服务器推送"></a>13.2 服务器推送</h4><p>服务端可以在发送页面HTML时主动推送其它资源，而不用等到浏览器解析到相应位置，发起请求再响应。例如服务端可以主动把JS和CSS文件推送给客户端，而不需要客户端解析HTML时再发送这些请求。</p>
+<p>服务端可以主动推送，客户端也有权利选择是否接收。如果服务端推送的资源已经被浏览器缓存过，浏览器可以通过发送RST_STREAM帧来拒收。主动推送也遵守同源策略，服务器不会随便推送第三方资源给客户端。</p>
+<h4 id="13-3-头部压缩"><a href="#13-3-头部压缩" class="headerlink" title="13.3 头部压缩"></a>13.3 头部压缩</h4><p>HTTP/1.x会在请求和响应中中重复地携带不常改变的、冗长的头部数据，给网络带来额外的负担。</p>
+<ul>
+<li><p>HTTP/2在客户端和服务器端使用“首部表”来跟踪和存储之前发送的键－值对，对于相同的数据，不再通过每次请求和响应发送</p>
+</li>
+<li><p>首部表在HTTP/2的连接存续期内始终存在，由客户端和服务器共同渐进地更新;</p>
+</li>
+<li><p>每个新的首部键－值对要么被追加到当前表的末尾，要么替换表中之前的值。</p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">你可以理解为只发送差异数据，而不是全部发送，从而减少头部的信息量</span><br></pre></td></tr></table></figure>
+<p><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/http07.png"></p>
+<h4 id="13-4-多路复用"><a href="#13-4-多路复用" class="headerlink" title="13.4 多路复用"></a>13.4 多路复用</h4><p>HTTP 1.x 中，如果想并发多个请求，必须使用多个 TCP 链接，且浏览器为了控制资源，还会对单个域名有 6-8个的TCP链接请求限制。</p>
+<p>HTTP2中：</p>
+<ul>
+<li>同域名下所有通信都在单个连接上完成。</li>
+<li>单个连接可以承载任意数量的双向数据流。</li>
+<li>数据流以消息的形式发送，而消息又由一个或多个帧组成，多个帧之间可以乱序发送，因为根据帧首部的流标识可以重新组装</li>
+</ul>
+<p><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/http08.png"></p>
+
+        <p class="suffix-end">__END__</p>
+        <div class="suffix-box">
+            <div class="suffix-box-left">
+                <img src="https://gitee.com/psycho1900/miss-reddle/raw/master/profile.jpg" alt="Russshare">
+            </div>
+            <div class="suffix-box-right">
+                <span class="suffix-box-title">文章作者</span>：Russshare
+                <br>
+                <span class="suffix-box-title">文章出处</span>：<a href="/2021/07/18/HTTP%E9%97%AE%E9%97%AE%E7%AD%94%E7%AD%94/" target="_blank">HTTP问问答答</a>
+                <br>
+                <span class="suffix-box-title">作者签名</span>：我们生死与共，勇往直前，永远都是坏小子.
+                <br>
+                <span class="suffix-box-title">关于主题</span>：<a href="https://github.com/first19326/Hexo-LiveForCode" target="_blank">Hexo - Russshare</a>
+                <br>
+                <span class="suffix-box-title">版权声明</span>：文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" title="BY-NC-SA" target="_blank">BY-NC-SA</a> 许可协议，转载请注明出处
+                <br>
+            </div>
+            <div style="clear: both;"></div>
+        </div>
+    </div>
+    <div class="article-footer">
+        
+            <div class="category">
+                分类：
+                
+                    <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
+                
+            </div>
+        
+        
+            <div class="tag">
+                标签：
+                
+                    <a href="/tags/HTTP/">HTTP</a>
+                
+                    <a href="/tags/%E9%9D%A2%E8%AF%95/">面试</a>
+                
+            </div>
+        
+        <div class="article-prev-next">
+            
+                <a href="/2021/07/18/Web%E8%B5%84%E6%BA%90%E4%BB%8B%E7%BB%8D%E3%80%81%E9%9D%99%E6%80%81%E8%B5%84%E6%BA%90%E5%92%8C%E5%8A%A8%E6%80%81%E8%B5%84%E6%BA%90%E7%9A%84%E5%8C%BA%E5%88%AB%E3%80%81Web%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%A7%8D%E7%B1%BB%E6%B1%87%E6%80%BB/" class="prev-prefix">« </a> 上一篇：    <a href="/2021/07/18/Web%E8%B5%84%E6%BA%90%E4%BB%8B%E7%BB%8D%E3%80%81%E9%9D%99%E6%80%81%E8%B5%84%E6%BA%90%E5%92%8C%E5%8A%A8%E6%80%81%E8%B5%84%E6%BA%90%E7%9A%84%E5%8C%BA%E5%88%AB%E3%80%81Web%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%A7%8D%E7%B1%BB%E6%B1%87%E6%80%BB/" title="发布于 2021-07-18 05:32">Web资源介绍、静态资源和动态资源的区别、Web服务器种类汇总</a>
+                <br>
+            
+            
+                <a href="/2021/07/18/http%E8%AF%B7%E6%B1%82%E5%A4%B4%E4%B8%ADReferer%E7%9A%84%E5%90%AB%E4%B9%89%E5%92%8C%E4%BD%9C%E7%94%A8/" class="next-prefix">» </a> 下一篇：    <a href="/2021/07/18/http%E8%AF%B7%E6%B1%82%E5%A4%B4%E4%B8%ADReferer%E7%9A%84%E5%90%AB%E4%B9%89%E5%92%8C%E4%BD%9C%E7%94%A8/" title="发布于 2021-07-18 05:31">http请求头中Referer的含义和作用</a>
+            
+        </div>
+    </div>
+    
+    <div class="article-comments">
+        <div class="comments-title">
+            评论列表
+        </div>
+        <div class="comments-content">
+        </div>
+    </div>
+
+</div>
+
+    </div>
+</div>
+    <div id="footer"></div>
+    <div id="sidebar">
+    <div class="menu-wrap" style="display:none;">
+        <nav class="menu">
+            <div class="menu-introduce"> 
+                <div class="introduce-avatar"></div> 
+                <div class="introduce-info"> 
+                    <div class="introduce-user"><span></span></div>        
+                </div> 
+            </div> 
+            <div class="menu-list">
+                <ul></ul> 
+            </div> 
+            <div class="menu-link"></div> 
+        </nav>
+        <button class="menu-button-close"></button>
+        <div class="morph-shape" id="morph-shape" data-morph-open="M-7.312,0H15c0,0,66,113.339,66,399.5C81,664.006,15,800,15,800H-7.312V0z;M-7.312,0H100c0,0,0,113.839,0,400c0,264.506,0,400,0,400H-7.312V0z">
+            <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 100 800" preserveAspectRatio="none">
+                <path d="M-7.312,0H0c0,0,0,113.839,0,400c0,264.506,0,400,0,400h-7.312V0z"/>
+            </svg>
+        </div>
+    </div>
+    <button class="menu-button-open">MENU</button>
+    <div class="menu-cover"></div>
+</div>
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/search.css">
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/iscroll.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/instantsearch.min.js"></script>
+<div class="search-window">
+    <div class="search-content">
+        <div class="search-content-icon">
+            <i class="iconfont icon-search"></i>
+        </div>
+        <div id="search-input" class="search-input"></div>
+    </div>
+
+    <div class="search-scroll">
+        <div class="search-result">
+            <div id="search-stats" class="search-stats"></div>
+            <div id="search-hits"></div>
+            <div id="search-pagination" class="search-pagination"></div>
+        </div>
+    </div>
+
+    <span class="search-close-icon">
+        <i class="iconfont icon-close"></i>
+    </span>
+</div>
+    <div id="tools">
+    <div class="progressbar-top"></div>
+
+    
+        <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/APlayer.css">
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/APlayer.min.js"></script>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/Meting.min.js"></script>
+        <meting-js id="3778678" lrcshow="false" server="netease" type="playlist" fixed="true" autoplay="false" loop="all" order="random" preload="auto" volume="0.67" mutex="true"></meting-js>
+    
+    
+    <div class="wrap-right"></div>
+    <div class="loading"></div>
+</div>
+    <script>
+    window.config = {
+        GitHubUserName     : 'Russshare',
+        GitHubRepositories : 'Russshare',
+
+        BlogUser      : 'Russshare',
+        BlogAvatar    : 'https://gitee.com/psycho1900/miss-reddle/raw/master/profile.jpg',
+        BlogStartDate : '2021-03-17',
+
+        WebsiteTitleBlur         : '(◍´꒳`◍) Hi, Miss Riddle',
+        WebsiteTitleBlurTimeOut  : 500,
+        WebsiteTitleFocus        : '(*´∇｀*) 欢迎回来!',
+        WebsiteTitleFocusTimeOut : 1000,
+        WebsiteFavicon           : 'https://gitee.com/psycho1900/miss-reddle/raw/master/beer.png',
+
+        ProgressBar: {
+            id       : 'topProgressBar',
+            color    : '#77B6FF',
+            height   : '2px',
+            duration : 0.2
+        },
+
+        Loading: {
+            rebound: {
+                tension  : 16,
+                friction : 5
+            },
+            spinner: {
+                id     : 'spinner',
+                radius : 90,
+                sides  : 3,
+                depth  : 4,
+                colors : {
+                    background : '#F0F0F0',
+                    stroke     : '#272633',
+                    base       : '',
+                    child      : '#272633'
+                },
+                alwaysForward : true,
+                restAt        : 0.5,
+                renderBase    : false
+            }
+        },
+
+        HomeHeaderAnimationRendered : true,
+        HomeHeaderAnimation         : {
+            radius      : 15,
+            density     : 0.2,
+            color       : 'rgba(255, 255, 255, .2)',
+            clearOffset : 0.3
+        },
+
+        ArticleHeaderAnimationRendered : false,
+        ArticleHeaderAnimation         : {
+            triW                  : 14,
+            triH                  : 20,
+            neighbours            : [
+                
+                    'side',
+                
+                    'top',
+                
+                    'bottom',
+                
+            ],
+            speedTrailAppear      : 0.1,
+            speedTrailDisappear   : 0.1,
+            speedTriOpen          : 1,
+            trailMaxLength        : 30,
+            trailIntervalCreation : 100,
+            delayBeforeDisappear  : 2,
+            colors                : [
+                
+                    '#96EDA6',
+                
+                    '#5BC6A9',
+                
+                    '#38668C',
+                
+                    '#374D84',
+                
+                    '#BED5CB',
+                
+                    '#62ADC6',
+                
+                    '#8EE5DE',
+                
+                    '#304E7B',
+                
+            ]
+        },
+
+        BackAnimationRendered          : true,
+        IEBrowserBackAnimationRendered : false,
+        BackAnimation                  : {
+            colorSaturation  : '60%',
+            colorBrightness  : '50%',
+            colorAlpha       : 0.5,
+            colorCycleSpeed  : 5,
+            verticalPosition : 'random',
+            horizontalSpeed  : 200,
+            ribbonCount      : 3,
+            strokeSize       : 0,
+            parallaxAmount   : -0.2,
+            animateSections  : true
+        },
+
+        HomeHeaderImage : [
+            
+                'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/image/header/home.jpg',
+            
+                'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/image/header/home.jpeg',
+            
+        ],
+        HomeBannerText  : '',
+
+        ArticleHeaderImage : [
+            
+                'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/image/header/article.jpg',
+            
+        ],
+
+        OtherBannerText : '',
+
+        MenuList : [
+            
+                {
+                    name   : '首页',
+                    href   : '/',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '标签',
+                    href   : '/tag',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '分类',
+                    href   : '/category',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '赞赏',
+                    href   : '/donate',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '关于',
+                    href   : '/about',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '搜索',
+                    href   : '',    
+                    target : '',
+                    class  : 'search'
+                },
+            
+                {
+                    name   : '留言板',
+                    href   : '/comment',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '友情链接',
+                    href   : '/friend',    
+                    target : '',
+                    class  : ''
+                },
+            
+        ],
+        MenuLink : [
+            
+                
+                    {
+                        icon : 'icon-weibo', 
+                        url  : ''
+                    },
+                
+                    {
+                        icon : 'icon-wechat', 
+                        url  : ''
+                    },
+                
+                    {
+                        icon : 'icon-qq', 
+                        url  : ''
+                    },
+                
+                    {
+                        icon : 'icon-github', 
+                        url  : 'https://github.com/RiddleGo'
+                    },
+                
+            
+        ],
+
+        FooterStyle : 2,
+        BottomText  : {
+            icon    : 'like-fill',
+            left    : '人生若只如初见',
+            right   : '何事秋风悲画扇'
+        },
+        ThemeInfo   : true,
+
+        ConsoleList : [
+            
+                
+                    [
+                        
+                            
+                                'Based on cnblogs theme SimpleMemory.',
+                            
+                                '',
+                            
+                        
+                    ],
+                
+                    [
+                        
+                            
+                                'SimpleMemory Author:',
+                            
+                                'BNDong',
+                            
+                        
+                    ],
+                
+                    [
+                        
+                            
+                                'Theme:',
+                            
+                                'LiveForCode',
+                            
+                        
+                    ],
+                
+            
+        ],
+
+        FontIconExtend : '',
+
+        Donate : {
+            paypal  : '',
+            bitcoin : '',
+            alipay  : '',
+            wechat  : ''
+        },
+
+        Code : {
+            style : 'normal'
+        },  
+
+        Search : {
+            applicationID : '010C3EANT8',
+            apiKey        : 'c7abab9f11b79102b9aff7fe6d41447d',
+            indexName     : 'Notes',
+            hits          : {
+                page : 10
+            },
+            labels        : {
+                placeholder : '搜索',
+                empty       : '未发现与 「${query}」 相关的内容',
+                stats       : '${hits} 条相关条目，使用了 ${time} 毫秒',
+            }
+        }, 
+
+        Valine : {
+            switch         : true,
+            el             : '.comments-content',
+            appId          : 'TKpiBidydKtx7apGCq7DM4Fw-gzGzoHsz',
+            appKey         : 'wsVqBbLWlLy4JRbi9I4XDBpH',
+            placeholder    : '你是我一生只会遇见一次的惊喜...',
+            avatar         : 'mm',
+            meta           : 'nick,mail,link',
+            requiredFields : 'nick,mail',
+            pageSize       : 5,
+            lang           : 'zh-cn',
+            visitor        : true,
+            enableQQ       : true
+        },
+
+        Tocbot : {
+            switch                : true,
+            tocSelector           : '.toc',
+            contentSelector       : '.article-body',
+            headingSelector       : 'h1, h2, h3, h4, h5',
+            headingsOffset        : 0,
+            scrollSmooth          : true,
+            scrollSmoothOffset    : -5,
+            positionFixedSelector : '.toc',
+            positionFixedClass    : 'toc-fixed',
+            fixedSidebarOffset    : '',
+        },
+
+        Require : {
+            baseUrl     : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/',
+            waitSeconds : 100
+        },
+
+        Music : {
+            type : 'Meting'
+        },
+        APlayer : {
+            container : '.aplayer',
+            fixed     : true,
+            autoplay  : false,
+            loop      : 'all',
+            order     : 'random',
+            preload   : 'auto',
+            volume    : 0.67,
+            mutex     : true,
+            lrcType   : 3,
+            audio     : [
+                
+                    {
+                        name   : 'aLIEz',
+                        artist : 'mizuki（瑞葵）',
+                        cover  : '/music/cover/aLIEz.jpg',
+                        url    : '/music/song/aLIEz.mp3',
+                        lrc    : '/music/lrc/aLIEz.lrc'
+                    },
+                
+                    {
+                        name   : 'Endless Tears',
+                        artist : 'CLIFF EDGE',
+                        cover  : '/music/cover/Endless Tears.jpg',
+                        url    : '/music/song/Endless Tears.mp3',
+                        lrc    : '/music/lrc/Endless Tears.lrc'
+                    },
+                
+                    {
+                        name   : 'Miracle',
+                        artist : 'Cascada',
+                        cover  : '/music/cover/Miracle.jpg',
+                        url    : '/music/song/Miracle.mp3',
+                        lrc    : '/music/lrc/Miracle.lrc'
+                    },
+                
+                    {
+                        name   : 'Roll The Dice',
+                        artist : '高珊',
+                        cover  : '/music/cover/Roll The Dice.jpg',
+                        url    : '/music/song/Roll The Dice.mp3',
+                        lrc    : '/music/lrc/Roll The Dice.lrc'
+                    },
+                
+                    {
+                        name   : 'See You Again',
+                        artist : 'Charlie Puth, Wiz Khalifa',
+                        cover  : '/music/cover/See You Again.jpg',
+                        url    : '/music/song/See You Again.mp3',
+                        lrc    : '/music/lrc/See You Again.lrc'
+                    },
+                
+                    {
+                        name   : 'Traveling Light',
+                        artist : 'Joel Hanson, Sara Groves',
+                        cover  : '/music/cover/Traveling Light.jpg',
+                        url    : '/music/song/Traveling Light.mp3',
+                        lrc    : '/music/lrc/Traveling Light.lrc'
+                    },
+                
+                    {
+                        name   : '痴心绝对',
+                        artist : '李圣杰',
+                        cover  : '/music/cover/痴心绝对.jpg',
+                        url    : '/music/song/痴心绝对.mp3',
+                        lrc    : '/music/lrc/痴心绝对.lrc'
+                    },
+                
+                    {
+                        name   : '好想大声说爱你',
+                        artist : 'BAAD（バード）',
+                        cover  : '/music/cover/好想大声说爱你.jpg',
+                        url    : '/music/song/好想大声说爱你.mp3',
+                        lrc    : '/music/lrc/好想大声说爱你.lrc'
+                    },
+                
+            ]
+        },
+        Meting : {
+            id       : '3778678', 
+            lrcshow  : false, 
+            server   : 'netease', 
+            type     : 'playlist', 
+            fixed    : true, 
+            autoplay : false, 
+            loop     : 'all', 
+            order    : 'random', 
+            preload  : 'auto', 
+            volume   : 0.67, 
+            mutex    : true
+        },
+
+        LazyLoad : {
+            default : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/image/website/lazyload.svg'
+        },
+  
+        Style : {
+            aplayer          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/APlayer.css',
+            archive          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/archive.css',
+            donate           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/donate.css',
+            fancybox         : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/jquery.fancybox.css',
+            footer           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/footer.css',
+            iconfont         : 'https://at.alicdn.com/t/font_1546312_l3yohatebw.css',
+            index            : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/index.css',
+            menuBubble       : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/menu-bubble.css',
+            page             : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/page.css',
+            post             : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/post.css',
+            search           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/search.css',
+            tocbot           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/tocbot.css',
+            normal           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/normal.css',
+            night            : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/night.css',
+            clipboard        : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/clipboard.css'
+        },
+
+        Script: {
+            aplayer          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/APlayer.min.js',
+            config           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/require.config.js',
+            index            : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/index.js',
+            instantSearch    : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/instantsearch.min.js',
+            jQuery           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/jquery-3.4.1.min.js',
+            loading          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/loading.js',
+            meting           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/Meting.min.js',
+            iscroll          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/iscroll.js',
+            require          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/require.min.js'
+        },
+
+        Font: {
+            LongCang   : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/LongCang.css',
+            Monda      : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Monda.css',
+            NotoSansSC : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/NotoSansSC.css',
+            Playball   : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Playball.css',
+            PTMono     : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/PTMono.css',
+            RobotoSlab : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/RobotoSlab.css',
+            Rosario    : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Rosario.css',
+            UbuntuMono : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/UbuntuMono.css'
+        },
+
+        Suffix : {
+            about : '我们生死与共，勇往直前，永远都是坏小子.'
+        },
+            
+        Theme : {
+            url  : 'https://github.com/first19326/Hexo-LiveForCode',
+            name : 'Hexo - Russshare'
+        }  
+    };
+</script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/index.js"></script>
+</body>
+</html>

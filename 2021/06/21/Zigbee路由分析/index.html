@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, shrink-to-fit=no">
+    <meta name="referrer" content="origin">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <title>Zigbee路由分析</title>
+
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/LongCang.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Monda.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/NotoSansSC.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Playball.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/PTMono.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/RobotoSlab.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Rosario.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/UbuntuMono.css">
+
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/post.css">
+    
+        <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/normal.css">
+    
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/jquery-3.4.1.min.js"></script>
+
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+</head>
+<body>
+    <a id="cover"></a>
+    <div id="header">
+    <div class="header">
+        <div class="vertical">
+            <div class="inner">
+                <h1 class="header-subtitle">Zigbee路由分析</h1>
+                <div class="header-subinfo">
+                    <p class="article-info-text">
+                        <span>
+                            <i class="iconfont icon-time"></i> 发表时间：2021-06-21
+                        </span>
+                        
+                            <span id="/2021/06/21/Zigbee路由分析/" class="leancloud_visitors" data-flag-title="Zigbee路由分析">
+                                <i class="iconfont icon-browse"></i> 阅读：<sapn class="leancloud-visitors-count"></span>
+                            </span>
+                        
+                        <span>
+                            <i class="iconfont icon-interactive"></i> 评论：<span class="valine-comment-count" data-xid="/2021/06/21/Zigbee路由分析/"></span>
+                        </span>  
+                    </p>                 
+                </div>
+            </div>
+        </div>
+        <canvas id="articleHeaderCanvas"></canvas>
+    </div>
+</div>
+    <div id="container">
+    <div id="content">
+        <div id="article">
+    <div class="toc"></div>
+    <div class="article-body">
+        <h3 id="一、ZigBee网络层次结构与地址分配机制"><a href="#一、ZigBee网络层次结构与地址分配机制" class="headerlink" title="一、ZigBee网络层次结构与地址分配机制"></a>一、ZigBee网络层次结构与地址分配机制</h3><p>ZigBee网络中的所有节点都有两个地址：<br>一个16位网络短地址和一个64位IEEE扩展地址。其中16位网络地址仅仅在网络内部使用，用于路由机制和数据传输。这个地址是在节点加入网络时由</p>
+<p>其父节点动态分配的。当网络中的节点允许一个新节点通过它加入网络时，它们之间就形成了父子关系。所有加入ZigBee网络的节点一同组成一棵逻辑树，逻辑树中的每一个节点都拥有以下两个参量：</p>
+<p><strong>1)16-bit的网络地址。只负责节点之间数据传输</strong></p>
+<p><strong>2)网络深度。即从该节点到根节点协调器的最短跳数，标识了该节点在网络拓扑图中的层次位置。</strong></p>
+<p>当协调器(coordinator)建立了一个新的网络后，它首先将自己的16位网络地址初始化为O，同时初始化自己的网络深度Deptg=0。</p>
+<p>以下通过一个具体的实例来说明ZigBee网络父节点为子节点分配16位地址的规范。</p>
+<p>假设一个节点Node(n)想要加入网络。Node(n)首先发起网络发现过程，获取信道上的信标并进行信道选择后，决定连接到已经在网络中的节点Node(k)。随后Node(n)向Node(k)发起入网的关联请求。</p>
+<p>关联请求获得批准后，Node(n)式加入网络。Node(k)称为Node(n)的父节点。<br>可以假设已经存在在网络中的父节点Node(k)的地址为 Depthk=Depthk+1。</p>
+<p>如图是ZigBee树状结构视图。  </p>
+<p><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/zigbee/00.png"><br><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/zigbee/01.jpg"></p>
+<p>这里引入三个辅助参数：</p>
+<p><strong>参数表示每个深度可以容纳的最大子节点个数（Max Children）</strong></p>
+<p><strong>表示每个深度可以容纳的最大路由器个数（Max Router）表示整个网络的最大深度。</strong></p>
+<p><strong>整个网络的最大深度</strong></p>
+<p>根据以上说明，ZigBee网络父节点为网络深度d，子节点进行地址分配的规则如下：</p>
+<p><em>（1）假设节点Node(n)是接入其父节点的第n个简化功能设备节点(RED)，即没有路由能力的节点，则它的父节点Node(n)将会为它分配如F的地址：</em></p>
+<p><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/zigbee/02.png"></p>
+<p><em>（2）设节点Node(n)是接入其父节点的第n个全功能设备节点(FFD)，即具各路由能力的节点，则它的父节点Node(n)将会为它分配如下的地址：</em></p>
+<p>当一个路由节点的为0时，它就不再具备为子节点分配地址的能力，即该路由节点不能在接收新的节点加入网络。</p>
+<h3 id="二、ZigBee路由协议分析"><a href="#二、ZigBee路由协议分析" class="headerlink" title="二、ZigBee路由协议分析"></a>二、ZigBee路由协议分析</h3><ol>
+<li><p>   树簇型拓扑的WSN中，通常采用树簇算法与AODVjr算法相结合的路由算法，</p>
+</li>
+<li><p>   其中树簇算法指的是消息沿着树型拓扑进行传输的算法，它是静态的，不需要存储路由表。该算法适用于节点静止或者移动较少的场合。</p>
+</li>
+<li><p>   而AODVjr算法则是对Ad Hoc按需距离矢量路由算法的改进，考虑到节能、应用方便性留了等因素，对AODV的一些特点进行了简化，但是仍然保留了AODV的原始功能。</p>
+</li>
+</ol>
+<h4 id="2-2-这两种算法的结合使用确定了WSN路由的三种模式，即："><a href="#2-2-这两种算法的结合使用确定了WSN路由的三种模式，即：" class="headerlink" title="2.2 这两种算法的结合使用确定了WSN路由的三种模式，即："></a>2.2 这两种算法的结合使用确定了WSN路由的三种模式，即：</h4><p>禁止路由模式–禁止路由模式就是禁止对路径进行查找，因此处于该模式的网络只能使用树簇算法沿着树型拓扑进行路由。如果发现网络路由器存在，数据包路由指向该路由器。否则，数据包沿着树形推进。</p>
+<p>使能路由模式–使能路由模式是将树簇算法与AODVjr算法相结合，视具体情况来决定到底采用哪种路由算法。如果发现网络路由器存在，数据包路由指向该路由器。如果网络路由器不能确定，路由器可以启动一个路由发现过程，当发现完成，数据包将沿着计算出来的路由传送。如果该路由器没有路由发现能力，数据包将沿着树形推进。</p>
+<p>强制路由模式–强制路由模式完全使用了AODVjr算法，只要设备具有路径查找能力，不管消息传输的路径是否已经存在，都要启动一个路径查找过程，当查找完成，数据包将沿着计算出来的路径传送。如果路由器有路由发现能力，不管路由是否已经存在，都将启动一个路由发现过程。发现完成，数据包将沿着计算出来的路由传送。如果这个路由器没有路由发现能力，数据包将沿着树形推进。这个选择必须小心使用，因为它会产生较大的网络冗余。它的主要用途是修复破坏了的路由。</p>
+<p>对于树形拓扑结构设备间的数据转发，通常将源地址简化为上行路由（route up）或下行路由（route down）。</p>
+<p><strong>如果LocalAddr &lt; DestAddr &lt; LocalAddr + CSkip(d-1) 为下行路由，否则为上行路由。通常网络的协调器或路由器都含有一个邻接设备表，该表记录了一定区域内与其具有邻接关系的设备。若想使用邻接表进行路由，只要目标设备在物理区域内可见，即可直接发送信息。</strong></p>
+<p><strong>而对于网状拓扑结构，则要使用路由表来进行路由。通常协调器或路由器都拥有自己的路由表，如果目标设备在路由表中有相关的记录，则信息就可以根据路由表中的记录进行发送，否则就要沿着树形拓扑来传输数据。</strong></p>
+<h4 id="2-3-路由过程"><a href="#2-3-路由过程" class="headerlink" title="2.3 路由过程"></a>2.3 路由过程</h4><p>　　路由过程主要为以下几个步骤：<br>　　(1)一个设备发出路由请求命令帧启动路由发现过程;</p>
+<p>　　(2)对应的接收设备收到该命令后，回复应答命令帧;</p>
+<p>　　<strong>(3)对潜在的各条路径花费（跳转次数、延迟时间）进行评估比较;</strong></p>
+<p>　　(4)最佳路由记录添加到此路径上各个设备的路由表中</p>
+<h4 id="2-4-最短最优路径的判定方式"><a href="#2-4-最短最优路径的判定方式" class="headerlink" title="2.4 最短最优路径的判定方式"></a>2.4 最短最优路径的判定方式</h4><p>　　<strong>通常路径请求与路径应答都是由路由器或协调器创建的，</strong>当路由器广播发送路径请求时，通常不会只发一次，而是间隔一段时间重复进行发送，而且对于广播寻址来说，它拥有两大特点：一个是凡有无线RF收发使能的设备皆能接收到该帧；</p>
+<p>另外就是广播发送采用一种被动应答模式，即当某一设备广播发送消息时，它还要监听所有的邻居设备是否对该帧进行广播转发，若没有则设备还要再次广播发送该帧。</p>
+<p>这样就会出现网络中的设备可能多次收到同一个路径请求，目的设备也有可能在一段时间内多次收到同一个路径请求。目的设备究竟应该响应哪个路径请求呢？</p>
+<p>在路径算法的实现中笔者采用首接为最优的思想，即第一个收到的有效路径请求即为目的设备要响应的请求，在该请求中记录的路径即为消息传输的路径，<strong>应答命令将沿着收到的第一个路径请求命令帧中记录的上一级地址发送回去。</strong></p>
+<p><strong>路由技术主要作用是为数据以最佳路径通过通信子网到达目的节点提供服务。在传统的OSI参考模型中，网络层实现路由功能。路由协议是自组网体系结构中不可或缺的重要组成部分，其主要作用是发现和维护路由。</strong></p>
+<p>具体的说主要有以下几个方面：</p>
+<ol>
+<li><p>   监控网络拓扑结构的变化</p>
+</li>
+<li><p>   交换路由信息</p>
+</li>
+<li><p>   确定目的节点的位置</p>
+</li>
+<li><p>   产生、维护以及取消路由</p>
+</li>
+<li><p>   选择路由并转发数据。</p>
+</li>
+</ol>
+<p>为了达到低成本，低功耗，可靠性高的设计目标，ZigBee协议采用以下两种算法的结合体作为自身的路由算法。</p>
+<p><strong>AODV：Ad-Hoc On-Demand Distance Vector（按需距离矢量路由）</strong></p>
+<p>其中AODV路由协议是一种按需路由协议，利用扩展环搜索的办法来限制搜索发现过的目的节点的范围，支持组播，可以实现在ZigBee节点间动态的，自发的路由，使节点很快的获得通向所需目的的的路由。这也是ZigBee路由协议的核心。针对自身的特点，ZigBee网络中使用一种简化版本的AODV协议（AODV Junior，AODVjr[3]）。</p>
+<p><strong>Cluster-Tree algorithm（树型网络结构路由）</strong><br>Cluster-Tree算法包括地址的分配（configuration of addresses）与寻址路由两部分（addresses routing）。包括子节点的16位网络短地址的分配，以及根据目的节点的网络地址来计算下一跳的算法。</p>
+<p>作为两种算法的结合体，ZigBee网络中，节点可以按照网络树状结构的父子关系使用Cluster-Tree算法选择路径。即每一个节点都会试图将收到的信息包转发给自己的后代节点，如果通过计算发现目的地址不是自己的一个后代节点，则将这个数据包转发给自身上一级的父节点，由父节点进行类似的判断处理，直到找到目的节点。</p>
+<p>Cluster-Tree算法的特点在于使不具有路由功能的节点间通过与各自的父节点间的通信仍然可以发送数据分组和控制分组，但它的缺点是效率不高。为了提高效率，ZigBee中允许具有路由功能的节点使用AODVjr算法去发现路由，让具有路由功能的节点可以不按照父子关系而直接发送信息到其通信范围内的其他节点。</p>
+<h3 id="三、Cluster-Tree路由算法"><a href="#三、Cluster-Tree路由算法" class="headerlink" title="三、Cluster-Tree路由算法"></a>三、Cluster-Tree路由算法</h3><p>Cluster-Tree路由算法的描述如下：</p>
+<p>当一个网络地址为A，网络深度为d的路由节点（FFD）收到目的地址为D的转发数据包时，路由节点首先要判断目的地址D是否为自身的一个子节点，然后根据判断的结果采取不同的方式来处理这个数据。若地址D满足一下判别式，则可以判断D地址节点是A地址节点的一个后代节点：</p>
+<p>如果D不在这个范围之内则D地址节点是A地址节点的父节点。</p>
+<p>判断后采取的数据包转发措施如下：</p>
+<p>1）  目的节点是自身的一个后代节点，则下一跳（next hop）的节点地址为</p>
+<p>2）  目的节点不是自身的一个后代节点，路由节点将把该包送交自己的父节点处理。这一点与TCP/IP协议中路由器将路由表项中不存在的数据包自己的网关处理类似。</p>
+<h3 id="四、AODVjr路由算法"><a href="#四、AODVjr路由算法" class="headerlink" title="四、AODVjr路由算法"></a>四、AODVjr路由算法</h3><p>AODVjr路由时一种按需分配的路由协议，只有在路由节点接收到网络数据包，并且网络数据包的目的地址不在节点的路由表中时才会进行路由发现过程。也就是说，路由表的内容是按照需要建立的，而且她可能仅仅是整个网络拓扑结构的一部分。</p>
+<p>AODVjr的优点是，相对于有限网络的路由协议而言，它不需要周期性的路由信息广播，节省了一定的网络资源，并降低了网络功耗。缺点是在需要时才发起路由寻找过程，会增加数据到达目的地址的时间。</p>
+<p>由于ZigBee网络中对数据的实时性要求不大，而更重视对网络能量的节省，因此AODVjr非常适合应用在ZigBee网络中。</p>
+<p><strong>一次路由建立由以下三个步骤组成：</strong></p>
+<p>1）  路由发现</p>
+<p>2）  反向路由建立</p>
+<p>3）  正向路由的建立</p>
+<p><strong>经过这三个步骤，即可建立起一条路由节点到目的节点的有效传输路径。在这个路由建立过程中，AODVjr使用3种消息作为控制信息：</strong></p>
+<p>1)Route Request(RREQ)，路由请求</p>
+<p>2)Route Replies(RREP)，路由回复</p>
+<p>3)Route Error(RERR)，路由错误</p>
+<p><strong>以下将对路由建立的三个过程进行详细描述。</strong><br>(1)路由发现过程</p>
+<p>对于一个具有路由能力的节点，当接收到一个从网络层的更高层发出的发送数据帧的请求，且路由表中没有和目的节点对应的条目时，它就会发起路由发现过程。源节点首先创建一个路由请求分组(RREQ)，并使用多播(Multi．Broadcast)的方式向周围节点进行广播。</p>
+<p>如果一个节点发起了路由发现过程，它就应该建立相应的路由表条目和路由发现表条目，状态设置为路由发现中。</p>
+<p>任何一个节点都可能从不同的邻居节点处接收到广播的RREQ。<br>接收到后节点将进行如下分析：</p>
+<ol>
+<li><p>   如果是第一次接收到这个RREQ消息，且消息的目的地址不是自己，则节点会保留这个RREQ分组的信息用于建立反向路径，然后将这个RREQ消息广播出去。</p>
+</li>
+<li><p>   如果之前已经接受过这个RREQ消息，表明这是由于网络内多个节点频繁广播产生的多余消息，对路由建立过程没有任何作用，则节点将丢弃这个消息。</p>
+</li>
+</ol>
+<p>(2)反向路由建立过程</p>
+<ol>
+<li><p>   当RREQ消息从一个源节点转发到不同的目的地时，沿途所经过的节点都要自动建立到源节点的反向路由。也就是记录当前接收到的RREQ消息是由哪一个节点转发而来的的。</p>
+</li>
+<li><p>   通过记录收到的第一个RREQ消息的邻居地址来建立反向路由，这些反向路由将会维持一定时间，该段时间足够RREQ消息在网内转发以及产生的RREP消息返回源节点。</p>
+</li>
+<li><p>   当RREQ消息最终到达了目的节点，节点验证RREQ中的目的地址为自己的地址之后，目的节点就会产生RREP消息，作为一个对RREQ消息的应答。</p>
+</li>
+<li><p>   由于之前已经建立了明确的反向路由，因此RREP无需进行广播，只需按照反向路由的指导，采取单播的方式即可把RREP消息传送给源节点。</p>
+</li>
+</ol>
+<p>(3)正向路由建立过程</p>
+<p>在RREP以单播方式转发回源节点的过程中，沿着这条路径上的每一个节点都会根据PREP的指导建立到目的节点的路由，也就是说确定到目的地址节点的下一跳(next-hop)。</p>
+<p>方法就是记录RREP是从哪一个节点传播而来．然后将该邻居节点写入路由表中的路由表项。</p>
+<p>一直到RREP传送到源节点。至此，一次路由建立过程完毕。源节点与目标节点之间可以开始数据传输。</p>
+<p>可以看出，AODV是按照需求驱动的、使用RREQ．RREP控制实现的、先广播，后单播的路由的路由建立过程。 </p>
+<p><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/zigbee/03.png"></p>
+<p>以下来实验实际操作一下下啦</p>
+<p>控制器通过SPI总线与RF收发器芯片CC2530相连。控制器充当SPI主器件而CC2530充当从器件。</p>
+<p>控制器实现了IEEE 802.15.4 MAC 层和ZigBee协议层。它还包含了特定的应用逻辑，并使SPI总线与RF收发器交互。</p>
+<p>Microchip协议栈提供了完全集成的驱动程序，免除了主应用程序管理RF收发器功能的任务。</p>
+<p>如果需要，可以将某些非SPI控制信号重新分配到其他端口引脚以适合应用的硬件。在这种情况下，必须修改物理层接口定义，包括正确的引脚分配。</p>
+<p>　　相关源码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">　　case NLME_START_ROUTER_confirm:</span><br><span class="line">　　　　if (!params.NLME_START_ROUTER_confirm.Status)</span><br><span class="line">　　　　　　&#123;</span><br><span class="line">　　　　　　 ConsolePutROMString( (ROM char *)&quot;Router Started!</span><br><span class="line">　　　　　　　　　　Enabling joins...rn&quot; );</span><br><span class="line">　　　　　　 params.NLME_PERMIT_JOINING_request.PermitDura-</span><br><span class="line">　　　　　　　　　　tion&#x3D;0xFF;</span><br><span class="line">　　　　　　　currentPrimitive&#x3D;NLME_PERMIT_JOINING_request;</span><br><span class="line">　　　　　　 &#125;</span><br><span class="line">　　　　else</span><br><span class="line">　　　　　　&#123;</span><br><span class="line">　　　　　　　　PrintChar( params.NLME_JOIN_confirm.Status );</span><br><span class="line">　　　　　　　　ConsolePutROMString( (ROM char *)&quot; Router start</span><br><span class="line">　　　　　　　　unsuccessful. We cannot route frames.rn&quot; );</span><br><span class="line">　　　　　　　　currentPrimitive &#x3D; NO_PRIMITIVE;</span><br><span class="line">　　　　　　&#125;</span><br><span class="line">　　　　break;</span><br><span class="line"></span><br><span class="line">　　相关源码如下：</span><br><span class="line">　　case NLME_PERMIT_JOINING_confirm:</span><br><span class="line">　　　　if (!params.NLME_PERMIT_JOINING_confirm.Status)</span><br><span class="line">　　　　　　&#123;</span><br><span class="line">　　　　　　　　ConsolePutROMString( (ROM char *)&quot;Joining permitted.rn&quot; );</span><br><span class="line">　　　　　　　　currentPrimitive &#x3D; NO_PRIMITIVE;</span><br><span class="line">　　　　　　&#125;</span><br><span class="line">　　　　else</span><br><span class="line">　　　　　　&#123;</span><br><span class="line">　　　　　　　　PrintChar( params.NLME_PERMIT_JOINING_confirm.Status );</span><br><span class="line">　　　　　　　　ConsolePutROMString( (ROM char *)&quot; Join permission unsuccessful. We cannot allow joins.rn&quot; );</span><br><span class="line">　　　　　　　　currentPrimitive &#x3D; NO_PRIMITIVE;</span><br><span class="line">　　　　　　&#125;</span><br><span class="line">　　　　break;</span><br></pre></td></tr></table></figure>
+
+<p>　　实验中，路由器与终端设备组建了小型星形网络，这个星形网络是以路由器为中心，以终端设备为子节点的。与标准星形网络不同的是，在以路由器为中心的小型星形网络中，路由器不会向终端设备发出任何控制命令，它只起中继的作用，实际的控制命令是由协调器发出的。这样通过路由器的连接中继作用，协调器可以控制超出它的能量覆盖范围的终端设备。路由器没有组建树簇网络的功能，但它可以接收终端设备形成星形网络，也可以加入协调器参与到树簇网络中。
+　　</p>
+
+        <p class="suffix-end">__END__</p>
+        <div class="suffix-box">
+            <div class="suffix-box-left">
+                <img src="https://gitee.com/psycho1900/miss-reddle/raw/master/profile.jpg" alt="Russshare">
+            </div>
+            <div class="suffix-box-right">
+                <span class="suffix-box-title">文章作者</span>：Russshare
+                <br>
+                <span class="suffix-box-title">文章出处</span>：<a href="/2021/06/21/Zigbee%E8%B7%AF%E7%94%B1%E5%88%86%E6%9E%90/" target="_blank">Zigbee路由分析</a>
+                <br>
+                <span class="suffix-box-title">作者签名</span>：我们生死与共，勇往直前，永远都是坏小子.
+                <br>
+                <span class="suffix-box-title">关于主题</span>：<a href="https://github.com/first19326/Hexo-LiveForCode" target="_blank">Hexo - Russshare</a>
+                <br>
+                <span class="suffix-box-title">版权声明</span>：文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" title="BY-NC-SA" target="_blank">BY-NC-SA</a> 许可协议，转载请注明出处
+                <br>
+            </div>
+            <div style="clear: both;"></div>
+        </div>
+    </div>
+    <div class="article-footer">
+        
+            <div class="category">
+                分类：
+                
+                    <a href="/categories/Zigbee-ZStack-CC2530/">Zigbee-ZStack-CC2530</a>
+                
+            </div>
+        
+        
+            <div class="tag">
+                标签：
+                
+                    <a href="/tags/zigbee/">zigbee</a>
+                
+                    <a href="/tags/WSN/">WSN</a>
+                
+            </div>
+        
+        <div class="article-prev-next">
+            
+                <a href="/2021/06/24/CC2530%E7%9A%84%E5%86%85%E5%AD%98%E4%BD%BF%E7%94%A8/" class="prev-prefix">« </a> 上一篇：    <a href="/2021/06/24/CC2530%E7%9A%84%E5%86%85%E5%AD%98%E4%BD%BF%E7%94%A8/" title="发布于 2021-06-24 09:14">CC2530的内存使用</a>
+                <br>
+            
+            
+                <a href="/2021/06/21/Zigbee%20Security/" class="next-prefix">» </a> 下一篇：    <a href="/2021/06/21/Zigbee%20Security/" title="发布于 2021-06-21 06:41">Zigbee Security</a>
+            
+        </div>
+    </div>
+    
+    <div class="article-comments">
+        <div class="comments-title">
+            评论列表
+        </div>
+        <div class="comments-content">
+        </div>
+    </div>
+
+</div>
+
+    </div>
+</div>
+    <div id="footer"></div>
+    <div id="sidebar">
+    <div class="menu-wrap" style="display:none;">
+        <nav class="menu">
+            <div class="menu-introduce"> 
+                <div class="introduce-avatar"></div> 
+                <div class="introduce-info"> 
+                    <div class="introduce-user"><span></span></div>        
+                </div> 
+            </div> 
+            <div class="menu-list">
+                <ul></ul> 
+            </div> 
+            <div class="menu-link"></div> 
+        </nav>
+        <button class="menu-button-close"></button>
+        <div class="morph-shape" id="morph-shape" data-morph-open="M-7.312,0H15c0,0,66,113.339,66,399.5C81,664.006,15,800,15,800H-7.312V0z;M-7.312,0H100c0,0,0,113.839,0,400c0,264.506,0,400,0,400H-7.312V0z">
+            <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 100 800" preserveAspectRatio="none">
+                <path d="M-7.312,0H0c0,0,0,113.839,0,400c0,264.506,0,400,0,400h-7.312V0z"/>
+            </svg>
+        </div>
+    </div>
+    <button class="menu-button-open">MENU</button>
+    <div class="menu-cover"></div>
+</div>
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/search.css">
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/iscroll.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/instantsearch.min.js"></script>
+<div class="search-window">
+    <div class="search-content">
+        <div class="search-content-icon">
+            <i class="iconfont icon-search"></i>
+        </div>
+        <div id="search-input" class="search-input"></div>
+    </div>
+
+    <div class="search-scroll">
+        <div class="search-result">
+            <div id="search-stats" class="search-stats"></div>
+            <div id="search-hits"></div>
+            <div id="search-pagination" class="search-pagination"></div>
+        </div>
+    </div>
+
+    <span class="search-close-icon">
+        <i class="iconfont icon-close"></i>
+    </span>
+</div>
+    <div id="tools">
+    <div class="progressbar-top"></div>
+
+    
+        <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/APlayer.css">
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/APlayer.min.js"></script>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/Meting.min.js"></script>
+        <meting-js id="3778678" lrcshow="false" server="netease" type="playlist" fixed="true" autoplay="false" loop="all" order="random" preload="auto" volume="0.67" mutex="true"></meting-js>
+    
+    
+    <div class="wrap-right"></div>
+    <div class="loading"></div>
+</div>
+    <script>
+    window.config = {
+        GitHubUserName     : 'Russshare',
+        GitHubRepositories : 'Russshare',
+
+        BlogUser      : 'Russshare',
+        BlogAvatar    : 'https://gitee.com/psycho1900/miss-reddle/raw/master/profile.jpg',
+        BlogStartDate : '2021-03-17',
+
+        WebsiteTitleBlur         : '(◍´꒳`◍) Hi, Miss Riddle',
+        WebsiteTitleBlurTimeOut  : 500,
+        WebsiteTitleFocus        : '(*´∇｀*) 欢迎回来!',
+        WebsiteTitleFocusTimeOut : 1000,
+        WebsiteFavicon           : 'https://gitee.com/psycho1900/miss-reddle/raw/master/beer.png',
+
+        ProgressBar: {
+            id       : 'topProgressBar',
+            color    : '#77B6FF',
+            height   : '2px',
+            duration : 0.2
+        },
+
+        Loading: {
+            rebound: {
+                tension  : 16,
+                friction : 5
+            },
+            spinner: {
+                id     : 'spinner',
+                radius : 90,
+                sides  : 3,
+                depth  : 4,
+                colors : {
+                    background : '#F0F0F0',
+                    stroke     : '#272633',
+                    base       : '',
+                    child      : '#272633'
+                },
+                alwaysForward : true,
+                restAt        : 0.5,
+                renderBase    : false
+            }
+        },
+
+        HomeHeaderAnimationRendered : true,
+        HomeHeaderAnimation         : {
+            radius      : 15,
+            density     : 0.2,
+            color       : 'rgba(255, 255, 255, .2)',
+            clearOffset : 0.3
+        },
+
+        ArticleHeaderAnimationRendered : false,
+        ArticleHeaderAnimation         : {
+            triW                  : 14,
+            triH                  : 20,
+            neighbours            : [
+                
+                    'side',
+                
+                    'top',
+                
+                    'bottom',
+                
+            ],
+            speedTrailAppear      : 0.1,
+            speedTrailDisappear   : 0.1,
+            speedTriOpen          : 1,
+            trailMaxLength        : 30,
+            trailIntervalCreation : 100,
+            delayBeforeDisappear  : 2,
+            colors                : [
+                
+                    '#96EDA6',
+                
+                    '#5BC6A9',
+                
+                    '#38668C',
+                
+                    '#374D84',
+                
+                    '#BED5CB',
+                
+                    '#62ADC6',
+                
+                    '#8EE5DE',
+                
+                    '#304E7B',
+                
+            ]
+        },
+
+        BackAnimationRendered          : true,
+        IEBrowserBackAnimationRendered : false,
+        BackAnimation                  : {
+            colorSaturation  : '60%',
+            colorBrightness  : '50%',
+            colorAlpha       : 0.5,
+            colorCycleSpeed  : 5,
+            verticalPosition : 'random',
+            horizontalSpeed  : 200,
+            ribbonCount      : 3,
+            strokeSize       : 0,
+            parallaxAmount   : -0.2,
+            animateSections  : true
+        },
+
+        HomeHeaderImage : [
+            
+                'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/image/header/home.jpg',
+            
+                'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/image/header/home.jpeg',
+            
+        ],
+        HomeBannerText  : '',
+
+        ArticleHeaderImage : [
+            
+                'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/image/header/article.jpg',
+            
+        ],
+
+        OtherBannerText : '',
+
+        MenuList : [
+            
+                {
+                    name   : '首页',
+                    href   : '/',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '标签',
+                    href   : '/tag',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '分类',
+                    href   : '/category',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '赞赏',
+                    href   : '/donate',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '关于',
+                    href   : '/about',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '搜索',
+                    href   : '',    
+                    target : '',
+                    class  : 'search'
+                },
+            
+                {
+                    name   : '留言板',
+                    href   : '/comment',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '友情链接',
+                    href   : '/friend',    
+                    target : '',
+                    class  : ''
+                },
+            
+        ],
+        MenuLink : [
+            
+                
+                    {
+                        icon : 'icon-weibo', 
+                        url  : ''
+                    },
+                
+                    {
+                        icon : 'icon-wechat', 
+                        url  : ''
+                    },
+                
+                    {
+                        icon : 'icon-qq', 
+                        url  : ''
+                    },
+                
+                    {
+                        icon : 'icon-github', 
+                        url  : 'https://github.com/RiddleGo'
+                    },
+                
+            
+        ],
+
+        FooterStyle : 2,
+        BottomText  : {
+            icon    : 'like-fill',
+            left    : '人生若只如初见',
+            right   : '何事秋风悲画扇'
+        },
+        ThemeInfo   : true,
+
+        ConsoleList : [
+            
+                
+                    [
+                        
+                            
+                                'Based on cnblogs theme SimpleMemory.',
+                            
+                                '',
+                            
+                        
+                    ],
+                
+                    [
+                        
+                            
+                                'SimpleMemory Author:',
+                            
+                                'BNDong',
+                            
+                        
+                    ],
+                
+                    [
+                        
+                            
+                                'Theme:',
+                            
+                                'LiveForCode',
+                            
+                        
+                    ],
+                
+            
+        ],
+
+        FontIconExtend : '',
+
+        Donate : {
+            paypal  : '',
+            bitcoin : '',
+            alipay  : '',
+            wechat  : ''
+        },
+
+        Code : {
+            style : 'normal'
+        },  
+
+        Search : {
+            applicationID : '010C3EANT8',
+            apiKey        : 'c7abab9f11b79102b9aff7fe6d41447d',
+            indexName     : 'Notes',
+            hits          : {
+                page : 10
+            },
+            labels        : {
+                placeholder : '搜索',
+                empty       : '未发现与 「${query}」 相关的内容',
+                stats       : '${hits} 条相关条目，使用了 ${time} 毫秒',
+            }
+        }, 
+
+        Valine : {
+            switch         : true,
+            el             : '.comments-content',
+            appId          : 'TKpiBidydKtx7apGCq7DM4Fw-gzGzoHsz',
+            appKey         : 'wsVqBbLWlLy4JRbi9I4XDBpH',
+            placeholder    : '你是我一生只会遇见一次的惊喜...',
+            avatar         : 'mm',
+            meta           : 'nick,mail,link',
+            requiredFields : 'nick,mail',
+            pageSize       : 5,
+            lang           : 'zh-cn',
+            visitor        : true,
+            enableQQ       : true
+        },
+
+        Tocbot : {
+            switch                : true,
+            tocSelector           : '.toc',
+            contentSelector       : '.article-body',
+            headingSelector       : 'h1, h2, h3, h4, h5',
+            headingsOffset        : 0,
+            scrollSmooth          : true,
+            scrollSmoothOffset    : -5,
+            positionFixedSelector : '.toc',
+            positionFixedClass    : 'toc-fixed',
+            fixedSidebarOffset    : '',
+        },
+
+        Require : {
+            baseUrl     : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/',
+            waitSeconds : 100
+        },
+
+        Music : {
+            type : 'Meting'
+        },
+        APlayer : {
+            container : '.aplayer',
+            fixed     : true,
+            autoplay  : false,
+            loop      : 'all',
+            order     : 'random',
+            preload   : 'auto',
+            volume    : 0.67,
+            mutex     : true,
+            lrcType   : 3,
+            audio     : [
+                
+                    {
+                        name   : 'aLIEz',
+                        artist : 'mizuki（瑞葵）',
+                        cover  : '/music/cover/aLIEz.jpg',
+                        url    : '/music/song/aLIEz.mp3',
+                        lrc    : '/music/lrc/aLIEz.lrc'
+                    },
+                
+                    {
+                        name   : 'Endless Tears',
+                        artist : 'CLIFF EDGE',
+                        cover  : '/music/cover/Endless Tears.jpg',
+                        url    : '/music/song/Endless Tears.mp3',
+                        lrc    : '/music/lrc/Endless Tears.lrc'
+                    },
+                
+                    {
+                        name   : 'Miracle',
+                        artist : 'Cascada',
+                        cover  : '/music/cover/Miracle.jpg',
+                        url    : '/music/song/Miracle.mp3',
+                        lrc    : '/music/lrc/Miracle.lrc'
+                    },
+                
+                    {
+                        name   : 'Roll The Dice',
+                        artist : '高珊',
+                        cover  : '/music/cover/Roll The Dice.jpg',
+                        url    : '/music/song/Roll The Dice.mp3',
+                        lrc    : '/music/lrc/Roll The Dice.lrc'
+                    },
+                
+                    {
+                        name   : 'See You Again',
+                        artist : 'Charlie Puth, Wiz Khalifa',
+                        cover  : '/music/cover/See You Again.jpg',
+                        url    : '/music/song/See You Again.mp3',
+                        lrc    : '/music/lrc/See You Again.lrc'
+                    },
+                
+                    {
+                        name   : 'Traveling Light',
+                        artist : 'Joel Hanson, Sara Groves',
+                        cover  : '/music/cover/Traveling Light.jpg',
+                        url    : '/music/song/Traveling Light.mp3',
+                        lrc    : '/music/lrc/Traveling Light.lrc'
+                    },
+                
+                    {
+                        name   : '痴心绝对',
+                        artist : '李圣杰',
+                        cover  : '/music/cover/痴心绝对.jpg',
+                        url    : '/music/song/痴心绝对.mp3',
+                        lrc    : '/music/lrc/痴心绝对.lrc'
+                    },
+                
+                    {
+                        name   : '好想大声说爱你',
+                        artist : 'BAAD（バード）',
+                        cover  : '/music/cover/好想大声说爱你.jpg',
+                        url    : '/music/song/好想大声说爱你.mp3',
+                        lrc    : '/music/lrc/好想大声说爱你.lrc'
+                    },
+                
+            ]
+        },
+        Meting : {
+            id       : '3778678', 
+            lrcshow  : false, 
+            server   : 'netease', 
+            type     : 'playlist', 
+            fixed    : true, 
+            autoplay : false, 
+            loop     : 'all', 
+            order    : 'random', 
+            preload  : 'auto', 
+            volume   : 0.67, 
+            mutex    : true
+        },
+
+        LazyLoad : {
+            default : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/image/website/lazyload.svg'
+        },
+  
+        Style : {
+            aplayer          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/APlayer.css',
+            archive          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/archive.css',
+            donate           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/donate.css',
+            fancybox         : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/jquery.fancybox.css',
+            footer           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/footer.css',
+            iconfont         : 'https://at.alicdn.com/t/font_1546312_l3yohatebw.css',
+            index            : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/index.css',
+            menuBubble       : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/menu-bubble.css',
+            page             : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/page.css',
+            post             : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/post.css',
+            search           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/search.css',
+            tocbot           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/tocbot.css',
+            normal           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/normal.css',
+            night            : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/night.css',
+            clipboard        : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/clipboard.css'
+        },
+
+        Script: {
+            aplayer          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/APlayer.min.js',
+            config           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/require.config.js',
+            index            : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/index.js',
+            instantSearch    : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/instantsearch.min.js',
+            jQuery           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/jquery-3.4.1.min.js',
+            loading          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/loading.js',
+            meting           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/Meting.min.js',
+            iscroll          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/iscroll.js',
+            require          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/require.min.js'
+        },
+
+        Font: {
+            LongCang   : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/LongCang.css',
+            Monda      : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Monda.css',
+            NotoSansSC : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/NotoSansSC.css',
+            Playball   : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Playball.css',
+            PTMono     : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/PTMono.css',
+            RobotoSlab : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/RobotoSlab.css',
+            Rosario    : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Rosario.css',
+            UbuntuMono : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/UbuntuMono.css'
+        },
+
+        Suffix : {
+            about : '我们生死与共，勇往直前，永远都是坏小子.'
+        },
+            
+        Theme : {
+            url  : 'https://github.com/first19326/Hexo-LiveForCode',
+            name : 'Hexo - Russshare'
+        }  
+    };
+</script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/index.js"></script>
+</body>
+</html>

@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, shrink-to-fit=no">
+    <meta name="referrer" content="origin">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <title>golang的调试测试（八）</title>
+
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/LongCang.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Monda.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/NotoSansSC.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Playball.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/PTMono.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/RobotoSlab.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Rosario.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/UbuntuMono.css">
+
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/post.css">
+    
+        <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/normal.css">
+    
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/jquery-3.4.1.min.js"></script>
+
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+</head>
+<body>
+    <a id="cover"></a>
+    <div id="header">
+    <div class="header">
+        <div class="vertical">
+            <div class="inner">
+                <h1 class="header-subtitle">golang的调试测试（八）</h1>
+                <div class="header-subinfo">
+                    <p class="article-info-text">
+                        <span>
+                            <i class="iconfont icon-time"></i> 发表时间：2021-07-13
+                        </span>
+                        
+                            <span id="/2021/07/13/golang的调试测试（八）/" class="leancloud_visitors" data-flag-title="golang的调试测试（八）">
+                                <i class="iconfont icon-browse"></i> 阅读：<sapn class="leancloud-visitors-count"></span>
+                            </span>
+                        
+                        <span>
+                            <i class="iconfont icon-interactive"></i> 评论：<span class="valine-comment-count" data-xid="/2021/07/13/golang的调试测试（八）/"></span>
+                        </span>  
+                    </p>                 
+                </div>
+            </div>
+        </div>
+        <canvas id="articleHeaderCanvas"></canvas>
+    </div>
+</div>
+    <div id="container">
+    <div id="content">
+        <div id="article">
+    <div class="toc"></div>
+    <div class="article-body">
+        <hr>
+<p>title: golang的调试测试（八）<br>auther: Russshare<br>toc: true<br>date: 2021-07-13 19:22:50<br>tags:<br>categories:</p>
+<hr>
+<h3 id="前言：文章转自李文周的blog"><a href="#前言：文章转自李文周的blog" class="headerlink" title="前言：文章转自李文周的blog"></a>前言：文章转自李文周的blog</h3><p>这位前辈的blog的干货太多了，真的大家一定要好好去研读一下blog<a target="_blank" rel="noopener" href="https://www.liwenzhou.com/posts/Go/deploy_go_app/">文章</a><br>(本文没有图片，原文有图片，只是相当于记笔记一样，边复制边实践，边阅读。)<br>(为了最好的阅读体验，移步<a target="_blank" rel="noopener" href="https://www.liwenzhou.com/posts/Go/deploy_go_app/">原文</a>)<br>(为了最好的阅读体验，移步<a target="_blank" rel="noopener" href="https://www.liwenzhou.com/posts/Go/deploy_go_app/">原文</a>)<br>(为了最好的阅读体验，移步<a target="_blank" rel="noopener" href="https://www.liwenzhou.com/posts/Go/deploy_go_app/">原文</a>)</p>
+<h2 id="Go性能调优"><a href="#Go性能调优" class="headerlink" title="Go性能调优"></a>Go性能调优</h2><p>在计算机性能调试领域里，profiling 是指对应用程序的画像，画像就是应用程序使用 CPU 和内存的情况。 </p>
+<p>Go语言是一个对性能特别看重的语言，因此语言中自带了 profiling 的库，这篇文章就要讲解怎么在 golang 中做 profiling。</p>
+<h3 id="Go性能优化"><a href="#Go性能优化" class="headerlink" title="Go性能优化"></a>Go性能优化</h3><p>Go语言项目中的性能优化主要有以下几个方面：</p>
+<p><strong>CPU profile：</strong><br>报告程序的 CPU 使用情况，按照一定频率去采集应用程序在 CPU 和寄存器上面的数据</p>
+<p><strong>Memory Profile（Heap Profile）：</strong><br>报告程序的内存使用情况</p>
+<p><strong>Block Profiling：</strong><br>报告 goroutines 不在运行状态的情况，可以用来分析和查找死锁等性能瓶颈</p>
+<p><strong>Goroutine Profiling：</strong>报告 goroutines 的使用情况，有哪些 goroutine，它们的调用关系是怎样的 </p>
+<h3 id="采集性能数据"><a href="#采集性能数据" class="headerlink" title="采集性能数据"></a>采集性能数据</h3><p>Go语言内置了获取程序的运行数据的工具，包括以下两个标准库：</p>
+<p><strong>runtime/pprof：采集工具型应用运行数据进行分析</strong></p>
+<p><strong>net/http/pprof：采集服务型应用运行时数据进行分析</strong></p>
+<p>pprof开启后，每隔一段时间（10ms）就会收集下当前的堆栈信息，获取各个函数占用的CPU以及内存资源；最后通过对这些采样数据进行分析，形成一个性能分析报告。</p>
+<p><strong>注意，我们只应该在性能测试的时候才在代码中引入pprof。</strong></p>
+<h3 id="工具型应用"><a href="#工具型应用" class="headerlink" title="工具型应用"></a>工具型应用</h3><p>如果你的应用程序是运行一段时间就结束退出类型。那么最好的办法是在应用退出的时候把 profiling 的报告保存到文件中，进行分析。对于这种情况，可以使用runtime/pprof库。 首先在代码中导入runtime/pprof工具：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import &quot;runtime&#x2F;pprof&quot;</span><br></pre></td></tr></table></figure>
+
+<h4 id="CPU性能分析"><a href="#CPU性能分析" class="headerlink" title="CPU性能分析"></a>CPU性能分析</h4><p>开启CPU性能分析：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pprof.StartCPUProfile(w io.Writer)</span><br></pre></td></tr></table></figure>
+
+<p>停止CPU性能分析：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pprof.StopCPUProfile()</span><br></pre></td></tr></table></figure>
+<p>应用执行结束后，就会生成一个文件，保存了我们的 CPU profiling 数据。得到采样数据之后，使用go tool pprof工具进行CPU性能分析。</p>
+<h4 id="内存性能优化"><a href="#内存性能优化" class="headerlink" title="内存性能优化"></a>内存性能优化</h4><p>记录程序的堆栈信息</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pprof.WriteHeapProfile(w io.Writer)</span><br></pre></td></tr></table></figure>
+<p>得到采样数据之后，使用go tool pprof工具进行内存性能分析。</p>
+<p>go tool pprof默认是使用-inuse_space进行统计，还可以使用-inuse-objects查看分配对象的数量。</p>
+<h3 id="服务型应用"><a href="#服务型应用" class="headerlink" title="服务型应用"></a>服务型应用</h3><p>如果你的应用程序是一直运行的，比如 web 应用，那么可以使用net/http/pprof库，它能够在提供 HTTP 服务进行分析。</p>
+<p>如果使用了默认的http.DefaultServeMux（通常是代码直接使用 http.ListenAndServe(“0.0.0.0:8000”, nil)），只需要在你的web server端代码中按如下方式导入net/http/pprof</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import _ &quot;net&#x2F;http&#x2F;pprof&quot;</span><br></pre></td></tr></table></figure>
+<p>如果你使用自定义的 Mux，则需要手动注册一些路由规则：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">r.HandleFunc(&quot;&#x2F;debug&#x2F;pprof&#x2F;&quot;, pprof.Index)</span><br><span class="line">r.HandleFunc(&quot;&#x2F;debug&#x2F;pprof&#x2F;cmdline&quot;, pprof.Cmdline)</span><br><span class="line">r.HandleFunc(&quot;&#x2F;debug&#x2F;pprof&#x2F;profile&quot;, pprof.Profile)</span><br><span class="line">r.HandleFunc(&quot;&#x2F;debug&#x2F;pprof&#x2F;symbol&quot;, pprof.Symbol)</span><br><span class="line">r.HandleFunc(&quot;&#x2F;debug&#x2F;pprof&#x2F;trace&quot;, pprof.Trace)</span><br></pre></td></tr></table></figure>
+<p>如果你使用的是gin框架，那么推荐使用github.com/gin-contrib/pprof，在代码中通过以下命令注册pprof相关路由。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pprof.Register(router)</span><br></pre></td></tr></table></figure>
+<p>不管哪种方式，你的 HTTP 服务都会多出/debug/pprof endpoint，访问它会得到类似下面的内容：debug/pprof这个路径下还有几个子页面：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;debug&#x2F;pprof&#x2F;profile：访问这个链接会自动进行 CPU profiling，持续 30s，并生成一个文件供下载</span><br><span class="line"></span><br><span class="line">&#x2F;debug&#x2F;pprof&#x2F;heap： Memory Profiling 的路径，访问这个链接会得到一个内存 Profiling 结果的文件</span><br><span class="line"></span><br><span class="line">&#x2F;debug&#x2F;pprof&#x2F;block：block Profiling 的路径</span><br><span class="line"></span><br><span class="line">&#x2F;debug&#x2F;pprof&#x2F;goroutines：运行的 goroutines 列表，以及调用关系</span><br><span class="line"></span><br><span class="line">go tool pprof命令</span><br></pre></td></tr></table></figure>
+<p>不管是工具型应用还是服务型应用，我们使用相应的pprof库获取数据之后，下一步的都要对这些数据进行分析，我们可以使用go tool pprof命令行工具。</p>
+<h3 id="go-tool-pprof最简单的使用方式为"><a href="#go-tool-pprof最简单的使用方式为" class="headerlink" title="go tool pprof最简单的使用方式为:"></a>go tool pprof最简单的使用方式为:</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go tool pprof [binary] [source]</span><br></pre></td></tr></table></figure>
+<p>其中：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">binary 是应用的二进制文件，用来解析各种符号；</span><br><span class="line"></span><br><span class="line">source 表示 profile 数据的来源，可以是本地的文件，也可以是 http 地址。</span><br></pre></td></tr></table></figure>
+<p>注意事项： 获取的 Profiling 数据是动态的，要想获得有效的数据，请保证应用处于较大的负载（比如正在生成中运行的服务，<strong>或者通过其他工具模拟访问压力</strong>）。否则如果应用处于空闲状态，得到的结果可能没有任何意义。</p>
+<h3 id="具体示例"><a href="#具体示例" class="headerlink" title="具体示例"></a>具体示例</h3><p>首先我们来写一段有问题的代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; runtime_pprof&#x2F;main.go</span><br><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">	&quot;flag&quot;</span><br><span class="line">	&quot;fmt&quot;</span><br><span class="line">	&quot;os&quot;</span><br><span class="line">	&quot;runtime&#x2F;pprof&quot;</span><br><span class="line">	&quot;time&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 一段有问题的代码</span><br><span class="line">func logicCode() &#123;</span><br><span class="line">	var c chan int</span><br><span class="line">	for &#123;</span><br><span class="line">		select &#123;</span><br><span class="line">		case v :&#x3D; &lt;-c:</span><br><span class="line">			fmt.Printf(&quot;recv from chan, value:%v\n&quot;, v)</span><br><span class="line">		default:</span><br><span class="line"></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line">	var isCPUPprof bool</span><br><span class="line">	var isMemPprof bool</span><br><span class="line"></span><br><span class="line">	flag.BoolVar(&amp;isCPUPprof, &quot;cpu&quot;, false, &quot;turn cpu pprof on&quot;)</span><br><span class="line">	flag.BoolVar(&amp;isMemPprof, &quot;mem&quot;, false, &quot;turn mem pprof on&quot;)</span><br><span class="line">	flag.Parse()</span><br><span class="line"></span><br><span class="line">	if isCPUPprof &#123;</span><br><span class="line">		file, err :&#x3D; os.Create(&quot;.&#x2F;cpu.pprof&quot;)</span><br><span class="line">		if err !&#x3D; nil &#123;</span><br><span class="line">			fmt.Printf(&quot;create cpu pprof failed, err:%v\n&quot;, err)</span><br><span class="line">			return</span><br><span class="line">		&#125;</span><br><span class="line">		pprof.StartCPUProfile(file)</span><br><span class="line">		defer pprof.StopCPUProfile()</span><br><span class="line">	&#125;</span><br><span class="line">	for i :&#x3D; 0; i &lt; 8; i++ &#123;</span><br><span class="line">		go logicCode()</span><br><span class="line">	&#125;</span><br><span class="line">	time.Sleep(20 * time.Second)</span><br><span class="line">	if isMemPprof &#123;</span><br><span class="line">		file, err :&#x3D; os.Create(&quot;.&#x2F;mem.pprof&quot;)</span><br><span class="line">		if err !&#x3D; nil &#123;</span><br><span class="line">			fmt.Printf(&quot;create mem pprof failed, err:%v\n&quot;, err)</span><br><span class="line">			return</span><br><span class="line">		&#125;</span><br><span class="line">		pprof.WriteHeapProfile(file)</span><br><span class="line">		file.Close()</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>通过flag我们可以在命令行控制是否开启CPU和Mem的性能分析</strong>。 将上面的代码保存并编译成runtime_pprof可执行文件，执行时加上-cpu命令行参数如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.&#x2F;runtime_pprof -cpu</span><br></pre></td></tr></table></figure>
+<p>等待30秒后会在当前目录下生成一个cpu.pprof文件。</p>
+<h4 id="命令行交互界面"><a href="#命令行交互界面" class="headerlink" title="命令行交互界面"></a>命令行交互界面</h4><p>我们使用go工具链里的pprof来分析一下。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go tool pprof cpu.pprof</span><br></pre></td></tr></table></figure>
+
+<p>执行上面的代码会进入交互界面如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">runtime_pprof $ go tool pprof cpu.pprof</span><br><span class="line">Type: cpu</span><br><span class="line">Time: Jun 28, 2019 at 11:28am (CST)</span><br><span class="line">Duration: 20.13s, Total samples &#x3D; 1.91mins (568.60%)</span><br><span class="line">Entering interactive mode (type &quot;help&quot; for commands, &quot;o&quot; for options)</span><br><span class="line">(pprof)  </span><br></pre></td></tr></table></figure>
+<p>我们可以在交互界面输入top3来查看程序中占用CPU前3位的函数：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">(pprof) top3</span><br><span class="line">Showing nodes accounting for 100.37s, 87.68% of 114.47s total</span><br><span class="line">Dropped 17 nodes (cum &lt;&#x3D; 0.57s)</span><br><span class="line">Showing top 3 nodes out of 4</span><br><span class="line">      flat  flat%   sum%        cum   cum%</span><br><span class="line">    42.52s 37.15% 37.15%     91.73s 80.13%  runtime.selectnbrecv</span><br><span class="line">    35.21s 30.76% 67.90%     39.49s 34.50%  runtime.chanrecv</span><br><span class="line">    22.64s 19.78% 87.68%    114.37s 99.91%  main.logicCode</span><br></pre></td></tr></table></figure>
+<p>其中：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">flat：当前函数占用CPU的耗时</span><br><span class="line">flat%：:当前函数占用CPU的耗时百分比</span><br><span class="line">sun%：函数占用CPU的耗时累计百分比</span><br><span class="line">cum：当前函数加上调用当前函数的函数占用CPU的总耗时</span><br><span class="line">cum%：当前函数加上调用当前函数的函数占用CPU的总耗时百分比</span><br><span class="line">最后一列：函数名称</span><br></pre></td></tr></table></figure>
+
+<p>在大多数的情况下，我们可以通过分析这五列得出一个应用程序的运行情况，并对程序进行优化。</p>
+<p>我们还可以使用list 函数名命令查看具体的函数分析，例如执行list logicCode查看我们编写的函数的详细分析。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">(pprof) list logicCode</span><br><span class="line">Total: 1.91mins</span><br><span class="line">ROUTINE &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; main.logicCode in ...&#x2F;runtime_pprof&#x2F;main.go</span><br><span class="line">    22.64s   1.91mins (flat, cum) 99.91% of Total</span><br><span class="line">         .          .     12:func logicCode() &#123;</span><br><span class="line">         .          .     13:   var c chan int</span><br><span class="line">         .          .     14:   for &#123;</span><br><span class="line">         .          .     15:           select &#123;</span><br><span class="line">         .          .     16:           case v :&#x3D; &lt;-c:</span><br><span class="line">    22.64s   1.91mins     17:                   fmt.Printf(&quot;recv from chan, value:%v\n&quot;, v)</span><br><span class="line">         .          .     18:           default:</span><br><span class="line">         .          .     19:</span><br><span class="line">         .          .     20:           &#125;</span><br><span class="line">         .          .     21:   &#125;</span><br><span class="line">         .          .     22:&#125;</span><br></pre></td></tr></table></figure>
+<p>通过分析发现大部分CPU资源被17行占用，我们分析出select语句中的default没有内容会导致上面的case v:=&lt;-c:一直执行。我们在default分支添加一行time.Sleep(time.Second)即可。</p>
+<h3 id="图形化"><a href="#图形化" class="headerlink" title="图形化"></a>图形化</h3><p>或者可以直接输入web，通过svg图的方式查看程序中详细的CPU占用情况。 想要查看图形化的界面首先需要安装graphviz图形化工具。</p>
+<p>Mac：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">brew install graphviz</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>Windows: </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">下载graphviz 将graphviz安装目录下的bin文件夹添加到Path环境变量中。 在终端输入dot -version查看是否安装成功。</span><br></pre></td></tr></table></figure>
+
+<p><strong>CPU占比图关于图形的说明</strong>： </p>
+<p>每个框代表一个函数，理论上框的越大表示占用的CPU资源越多。 </p>
+<p>方框之间的线条代表函数之间的调用关系。 </p>
+<p>线条上的数字表示函数调用的次数。 </p>
+<p>方框中的第一行数字表示当前函数占用CPU的百分比，第二行数字表示当前函数累计占用CPU的百分比。</p>
+<p>除了分析CPU性能数据，pprof也支持分析内存性能数据。比如，使用下面的命令分析http服务的heap性能数据，查看当前程序的内存占用以及热点内存对象使用的情况。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># 查看内存占用数据</span><br><span class="line">go tool pprof -inuse_space http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;debug&#x2F;pprof&#x2F;heap</span><br><span class="line">go tool pprof -inuse_objects http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;debug&#x2F;pprof&#x2F;heap</span><br><span class="line"># 查看临时内存分配数据</span><br><span class="line">go tool pprof -alloc_space http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;debug&#x2F;pprof&#x2F;heap</span><br><span class="line">go tool pprof -alloc_objects http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;debug&#x2F;pprof&#x2F;heap</span><br></pre></td></tr></table></figure>
+
+<h3 id="go-torch和火焰图"><a href="#go-torch和火焰图" class="headerlink" title="go-torch和火焰图"></a>go-torch和火焰图</h3><p>火焰图（Flame Graph）是 Bredan Gregg 创建的一种性能分析图表，因为它的样子近似 🔥而得名。</p>
+<p>上面的 profiling 结果也转换成火焰图，如果对火焰图比较了解可以手动来操作，不过这里我们要介绍一个工具：<strong>go-torch</strong>。这是 uber 开源的一个工具，可以直接读取 golang profiling 数据，并生成一个火焰图的 svg 文件。</p>
+<h4 id="安装go-torch"><a href="#安装go-torch" class="headerlink" title="安装go-torch"></a>安装go-torch</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go get -v github.com&#x2F;uber&#x2F;go-torch</span><br></pre></td></tr></table></figure>
+<p>火焰图 svg 文件可以通过浏览器打开，它对于调用图的最优点是它是动态的：可以通过点击每个方块来 zoom in 分析它上面的内容。</p>
+<p>火焰图的调用顺序从下到上，</p>
+<p>每个方块代表一个函数，</p>
+<p>它上面一层表示这个函数会调用哪些函数，</p>
+<p>方块的大小代表了占用 CPU 使用的长短。</p>
+<p>火焰图的配色并没有特殊的意义，默认的红、黄配色是为了更像火焰而已。</p>
+<p>go-torch 工具的使用非常简单，没有任何参数的话，它会尝试从<a target="_blank" rel="noopener" href="http://localhost:8080/debug/pprof/profile%E8%8E%B7%E5%8F%96">http://localhost:8080/debug/pprof/profile获取</a> profiling 数据。它有三个常用的参数可以调整：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">-u –url：要访问的 URL，这里只是主机和端口部分</span><br><span class="line"></span><br><span class="line">-s –suffix：pprof profile 的路径，默认为 &#x2F;debug&#x2F;pprof&#x2F;profile</span><br><span class="line"></span><br><span class="line">–seconds：要执行 profiling 的时间长度，默认为 30s</span><br></pre></td></tr></table></figure>
+<h4 id="安装-FlameGraph"><a href="#安装-FlameGraph" class="headerlink" title="安装 FlameGraph"></a>安装 FlameGraph</h4><p>要生成火焰图，需要事先安装 FlameGraph工具，这个工具的安装很简单（需要perl环境支持），只要把对应的可执行文件加入到环境变量中即可。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">下载安装perl：https:&#x2F;&#x2F;www.perl.org&#x2F;get.html</span><br><span class="line"></span><br><span class="line">下载FlameGraph：git clone https:&#x2F;&#x2F;github.com&#x2F;brendangregg&#x2F;FlameGraph.git</span><br><span class="line"></span><br><span class="line">将FlameGraph目录加入到操作系统的环境变量中。</span><br><span class="line"></span><br><span class="line">Windows平台的同学，需要把go-torch&#x2F;render&#x2F;flamegraph.go文件中的GenerateFlameGraph按如下方式修改，然后在go-torch目录下执行go install即可。</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; GenerateFlameGraph runs the flamegraph script to generate a flame graph SVG. func GenerateFlameGraph(graphInput []byte, args ...string) ([]byte, error) &#123;</span><br><span class="line">flameGraph :&#x3D; findInPath(flameGraphScripts)</span><br><span class="line">if flameGraph &#x3D;&#x3D; &quot;&quot; &#123;</span><br><span class="line">	return nil, errNoPerlScript</span><br><span class="line">&#125;</span><br><span class="line">if runtime.GOOS &#x3D;&#x3D; &quot;windows&quot; &#123;</span><br><span class="line">	return runScript(&quot;perl&quot;, append([]string&#123;flameGraph&#125;, args...), graphInput)</span><br><span class="line">&#125;</span><br><span class="line">  return runScript(flameGraph, args, graphInput)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="压测工具wrk"><a href="#压测工具wrk" class="headerlink" title="压测工具wrk"></a>压测工具wrk</h3><p>推荐使用<a target="_blank" rel="noopener" href="https://github.com/wg/wrk">https://github.com/wg/wrk</a> 或 <a target="_blank" rel="noopener" href="https://github.com/adjust/go-wrk">https://github.com/adjust/go-wrk</a></p>
+<h3 id="使用go-torch"><a href="#使用go-torch" class="headerlink" title="使用go-torch"></a>使用go-torch</h3><p>使用wrk进行压测:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go-wrk -n 50000 http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;book&#x2F;list</span><br></pre></td></tr></table></figure>
+
+<p>在上面压测进行的同时，打开另一个终端执行:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go-torch -u http:&#x2F;&#x2F;127.0.0.1:8080 -t 30</span><br></pre></td></tr></table></figure>
+
+<p>30秒之后终端会初夏如下提示：Writing svg to torch.svg</p>
+<p>然后我们使用浏览器打开torch.svg就能看到如下火焰图了。</p>
+<p>火焰图火焰图的y轴表示cpu调用方法的先后</p>
+<p>x轴表示在每个采样调用时间内，方法所占的时间百分比，越宽代表占据cpu时间越多。</p>
+<p>通过火焰图我们就可以更清楚的找出耗时长的函数调用，然后不断的修正代码，重新采样，不断优化。</p>
+<p>此外还可以借助火焰图分析内存性能数据：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">go-torch -inuse_space http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;debug&#x2F;pprof&#x2F;heap</span><br><span class="line"></span><br><span class="line">go-torch -inuse_objects http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;debug&#x2F;pprof&#x2F;heap</span><br><span class="line"></span><br><span class="line">go-torch -alloc_space http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;debug&#x2F;pprof&#x2F;heap</span><br><span class="line"></span><br><span class="line">go-torch -alloc_objects http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;debug&#x2F;pprof&#x2F;heap</span><br></pre></td></tr></table></figure>
+<h3 id="pprof与性能测试结合"><a href="#pprof与性能测试结合" class="headerlink" title="pprof与性能测试结合"></a>pprof与性能测试结合</h3><p>go test命令有两个参数和 pprof 相关，它们分别指定生成的 CPU 和 Memory profiling 保存的文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">-cpuprofile：cpu profiling 数据要保存的文件地址</span><br><span class="line"></span><br><span class="line">-memprofile：memory profiling 数据要报文的文件地址</span><br></pre></td></tr></table></figure>
+<p>我们还可以选择将pprof与性能测试相结合，比如：</p>
+<p>比如下面执行测试的同时，也会执行 CPU profiling，并把结果保存在 cpu.prof 文件中：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go test -bench . -cpuprofile&#x3D;cpu.prof</span><br></pre></td></tr></table></figure>
+
+<p>比如下面执行测试的同时，也会执行 Mem profiling，并把结果保存在 cpu.prof 文件中：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go test -bench . -memprofile&#x3D;.&#x2F;mem.prof</span><br></pre></td></tr></table></figure>
+
+<p>需要注意的是，Profiling 一般和性能测试一起使用，这个原因在前文也提到过，只有应用在负载高的情况下 Profiling 才有意义。</p>
+<h3 id="常用的HTTP服务压测工具介绍"><a href="#常用的HTTP服务压测工具介绍" class="headerlink" title="常用的HTTP服务压测工具介绍"></a>常用的HTTP服务压测工具介绍</h3><p>在项目正式上线之前，我们通常需要通过压测来评估当前系统能够支撑的请求量、排查可能存在的隐藏bug，同时了解了程序的实际处理能力能够帮我们更好的匹配项目的实际需求，节约资源成本。</p>
+<h3 id="HTTP服务压力测试工具"><a href="#HTTP服务压力测试工具" class="headerlink" title="HTTP服务压力测试工具"></a>HTTP服务压力测试工具</h3><p>在项目正式上线之前，我们通常需要通过压测来评估当前系统能够支撑的请求量、排查可能存在的隐藏bug，同时了解了程序的实际处理能力能够帮我们更好的匹配项目的实际需求，节约资源成本。</p>
+<h4 id="压测相关术语"><a href="#压测相关术语" class="headerlink" title="压测相关术语"></a>压测相关术语</h4><p>响应时间(RT) ：指系统对请求作出响应的时间.</p>
+<p>吞吐量(Throughput) ：指系统在单位时间内处理请求的数量</p>
+<p>QPS每秒查询率(Query Per Second) ：“每秒查询率”，是一台服务器每秒能够响应的查询次数，是对一个特定的查询服务器在规定时间内所处理流量多少的衡量标准。</p>
+<p>TPS(TransactionPerSecond)：每秒钟系统能够处理的交易或事务的数量</p>
+<p>并发连接数：某个时刻服务器所接受的请求总数</p>
+<h4 id="压力测试工具"><a href="#压力测试工具" class="headerlink" title="压力测试工具"></a>压力测试工具</h4><h5 id="ab"><a href="#ab" class="headerlink" title="ab"></a>ab</h5><p>ab全称Apache Bench，是Apache自带的性能测试工具。使用这个工具，只须指定同时连接数、请求数以及URL，即可测试网站或网站程序的性能。</p>
+<p>通过ab发送请求模拟多个访问者同时对某一URL地址进行访问,可以得到每秒传送字节数、每秒处理请求数、每请求处理时间等统计数据。</p>
+<p>命令格式：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ab [options] [http:&#x2F;&#x2F;]hostname[:port]&#x2F;path</span><br></pre></td></tr></table></figure>
+
+<p>常用参数如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">-n requests 总请求数</span><br><span class="line">-c concurrency 一次产生的请求数，可以理解为并发数</span><br><span class="line">-t timelimit 测试所进行的最大秒数, 可以当做请求的超时时间</span><br><span class="line">-p postfile 包含了需要POST的数据的文件</span><br><span class="line">-T content-type POST数据所使用的Content-type头信息</span><br></pre></td></tr></table></figure>
+
+<p>更多参数请查看<a target="_blank" rel="noopener" href="http://httpd.apache.org/docs/2.2/programs/ab.html">官方文档</a>。</p>
+<p>例如测试某个GET请求接口：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ab -n 10000 -c 100 -t 10 &quot;http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;api&#x2F;v1&#x2F;posts?size&#x3D;10&quot;</span><br></pre></td></tr></table></figure>
+
+<p>测试POST请求接口：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ab -n 10000 -c 100 -t 10 -p post.json -T &quot;application&#x2F;json&quot; &quot;http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;api&#x2F;v1&#x2F;post&quot;</span><br></pre></td></tr></table></figure>
+
+<h3 id="wrk"><a href="#wrk" class="headerlink" title="wrk"></a>wrk</h3><p>wrk是一款开源的HTTP性能测试工具，它和上面提到的ab同属于HTTP性能测试工具，它比ab功能更加强大，可以通过编写lua脚本来支持更加复杂的测试场景。</p>
+<p>Mac下安装：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install wrk</span><br></pre></td></tr></table></figure>
+<p>常用命令参数：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">-c --conections：保持的连接数</span><br><span class="line">-d --duration：压测持续时间(s)</span><br><span class="line">-t --threads：使用的线程总数</span><br><span class="line">-s --script：加载lua脚本</span><br><span class="line">-H --header：在请求头部添加一些参数</span><br><span class="line">--latency 打印详细的延迟统计信息</span><br><span class="line">--timeout 请求的最大超时时间(s)</span><br></pre></td></tr></table></figure>
+
+<p>使用示例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wrk -t8 -c100 -d30s --latency http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;api&#x2F;v1&#x2F;posts?size&#x3D;10</span><br></pre></td></tr></table></figure>
+<p>输出结果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Running 30s test @ http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;api&#x2F;v1&#x2F;posts?size&#x3D;10</span><br><span class="line">  8 threads and 100 connections</span><br><span class="line">  Thread Stats   Avg      Stdev     Max   +&#x2F;- Stdev</span><br><span class="line">    Latency    14.55ms    2.02ms  31.59ms   76.70%</span><br><span class="line">    Req&#x2F;Sec   828.16     85.69     0.97k    60.46%</span><br><span class="line">  Latency Distribution</span><br><span class="line">     50%   14.44ms</span><br><span class="line">     75%   15.76ms</span><br><span class="line">     90%   16.63ms</span><br><span class="line">     99%   21.07ms</span><br><span class="line">  198091 requests in 30.05s, 29.66MB read</span><br><span class="line">Requests&#x2F;sec:   6592.29</span><br><span class="line">Transfer&#x2F;sec:      0.99MB</span><br></pre></td></tr></table></figure>
+
+<h4 id="go-wrk"><a href="#go-wrk" class="headerlink" title="go-wrk"></a>go-wrk</h4><p>go-wrk是Go语言版本的wrk，Windows同学可以使用它来测试，使用如下命令来安装go-wrk：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go get github.com&#x2F;adeven&#x2F;go-wrk</span><br></pre></td></tr></table></figure>
+
+<p>使用方法同wrk类似，基本格式如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go-wrk [flags] url</span><br></pre></td></tr></table></figure>
+
+<p>常用的参数：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">-H&#x3D;&quot;User-Agent: go-wrk 0.1 bechmark\nContent-Type: text&#x2F;html;&quot;: 由&#39;\n&#39;分隔的请求头</span><br><span class="line">-c&#x3D;100: 使用的最大连接数</span><br><span class="line">-k&#x3D;true: 是否禁用keep-alives</span><br><span class="line">-i&#x3D;false: if TLS security checks are disabled</span><br><span class="line">-m&#x3D;&quot;GET&quot;: HTTP请求方法</span><br><span class="line">-n&#x3D;1000: 请求总数</span><br><span class="line">-t&#x3D;1: 使用的线程数</span><br><span class="line">-b&#x3D;&quot;&quot; HTTP请求体</span><br><span class="line">-s&#x3D;&quot;&quot; 如果指定，它将计算响应中包含搜索到的字符串s的频率</span><br></pre></td></tr></table></figure>
+
+<p>执行测试：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go-wrk -t&#x3D;8 -c&#x3D;100 -n&#x3D;10000 &quot;http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;api&#x2F;v1&#x2F;posts?size&#x3D;10&quot;</span><br></pre></td></tr></table></figure>
+
+<p>输出结果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;BENCHMARK&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</span><br><span class="line">URL:                            http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;api&#x2F;v1&#x2F;posts?size&#x3D;10</span><br><span class="line"></span><br><span class="line">Used Connections:               100</span><br><span class="line">Used Threads:                   8</span><br><span class="line">Total number of calls:          10000</span><br><span class="line"></span><br><span class="line">&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;TIMINGS&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</span><br><span class="line">Total time passed:              2.74s</span><br><span class="line">Avg time per request:           27.11ms</span><br><span class="line">Requests per second:            3644.53</span><br><span class="line">Median time per request:        26.88ms</span><br><span class="line">99th percentile time:           39.16ms</span><br><span class="line">Slowest time for request:       45.00ms</span><br><span class="line"></span><br><span class="line">&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;DATA&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</span><br><span class="line">Total response body sizes:              340000</span><br><span class="line">Avg response body per request:          34.00 Byte</span><br><span class="line">Transfer rate per second:               123914.11 Byte&#x2F;s (0.12 MByte&#x2F;s)</span><br><span class="line">&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;RESPONSES&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</span><br><span class="line">20X Responses:          10000   (100.00%)</span><br><span class="line">30X Responses:          0       (0.00%)</span><br><span class="line">40X Responses:          0       (0.00%)</span><br><span class="line">50X Responses:          0       (0.00%)</span><br><span class="line">Errors:                 0       (0.00%)</span><br></pre></td></tr></table></figure>
+        <p class="suffix-end">__END__</p>
+        <div class="suffix-box">
+            <div class="suffix-box-left">
+                <img src="https://gitee.com/psycho1900/miss-reddle/raw/master/profile.jpg" alt="Russshare">
+            </div>
+            <div class="suffix-box-right">
+                <span class="suffix-box-title">文章作者</span>：Russshare
+                <br>
+                <span class="suffix-box-title">文章出处</span>：<a href="/2021/07/13/golang%E7%9A%84%E8%B0%83%E8%AF%95%E6%B5%8B%E8%AF%95%EF%BC%88%E5%85%AB%EF%BC%89/" target="_blank">golang的调试测试（八）</a>
+                <br>
+                <span class="suffix-box-title">作者签名</span>：我们生死与共，勇往直前，永远都是坏小子.
+                <br>
+                <span class="suffix-box-title">关于主题</span>：<a href="https://github.com/first19326/Hexo-LiveForCode" target="_blank">Hexo - Russshare</a>
+                <br>
+                <span class="suffix-box-title">版权声明</span>：文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" title="BY-NC-SA" target="_blank">BY-NC-SA</a> 许可协议，转载请注明出处
+                <br>
+            </div>
+            <div style="clear: both;"></div>
+        </div>
+    </div>
+    <div class="article-footer">
+        
+        
+        <div class="article-prev-next">
+            
+                <a href="/2021/07/13/golang%E7%9A%84%E5%B7%A5%E7%A8%8B%E9%83%A8%E7%BD%B2%EF%BC%88%E4%B9%9D%EF%BC%89/" class="prev-prefix">« </a> 上一篇：    <a href="/2021/07/13/golang%E7%9A%84%E5%B7%A5%E7%A8%8B%E9%83%A8%E7%BD%B2%EF%BC%88%E4%B9%9D%EF%BC%89/" title="发布于 2021-07-13 07:23">golang的工程部署（九）</a>
+                <br>
+            
+            
+                <a href="/2021/07/13/golang%E7%9A%84GPM%E8%B0%83%E5%BA%A6%E6%A8%A1%E5%9E%8B%EF%BC%88%E4%B8%83%EF%BC%89/" class="next-prefix">» </a> 下一篇：    <a href="/2021/07/13/golang%E7%9A%84GPM%E8%B0%83%E5%BA%A6%E6%A8%A1%E5%9E%8B%EF%BC%88%E4%B8%83%EF%BC%89/" title="发布于 2021-07-13 07:22">golang的GPM调度模型（七）</a>
+            
+        </div>
+    </div>
+    
+    <div class="article-comments">
+        <div class="comments-title">
+            评论列表
+        </div>
+        <div class="comments-content">
+        </div>
+    </div>
+
+</div>
+
+    </div>
+</div>
+    <div id="footer"></div>
+    <div id="sidebar">
+    <div class="menu-wrap" style="display:none;">
+        <nav class="menu">
+            <div class="menu-introduce"> 
+                <div class="introduce-avatar"></div> 
+                <div class="introduce-info"> 
+                    <div class="introduce-user"><span></span></div>        
+                </div> 
+            </div> 
+            <div class="menu-list">
+                <ul></ul> 
+            </div> 
+            <div class="menu-link"></div> 
+        </nav>
+        <button class="menu-button-close"></button>
+        <div class="morph-shape" id="morph-shape" data-morph-open="M-7.312,0H15c0,0,66,113.339,66,399.5C81,664.006,15,800,15,800H-7.312V0z;M-7.312,0H100c0,0,0,113.839,0,400c0,264.506,0,400,0,400H-7.312V0z">
+            <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 100 800" preserveAspectRatio="none">
+                <path d="M-7.312,0H0c0,0,0,113.839,0,400c0,264.506,0,400,0,400h-7.312V0z"/>
+            </svg>
+        </div>
+    </div>
+    <button class="menu-button-open">MENU</button>
+    <div class="menu-cover"></div>
+</div>
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/search.css">
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/iscroll.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/instantsearch.min.js"></script>
+<div class="search-window">
+    <div class="search-content">
+        <div class="search-content-icon">
+            <i class="iconfont icon-search"></i>
+        </div>
+        <div id="search-input" class="search-input"></div>
+    </div>
+
+    <div class="search-scroll">
+        <div class="search-result">
+            <div id="search-stats" class="search-stats"></div>
+            <div id="search-hits"></div>
+            <div id="search-pagination" class="search-pagination"></div>
+        </div>
+    </div>
+
+    <span class="search-close-icon">
+        <i class="iconfont icon-close"></i>
+    </span>
+</div>
+    <div id="tools">
+    <div class="progressbar-top"></div>
+
+    
+        <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/APlayer.css">
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/APlayer.min.js"></script>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/Meting.min.js"></script>
+        <meting-js id="3778678" lrcshow="false" server="netease" type="playlist" fixed="true" autoplay="false" loop="all" order="random" preload="auto" volume="0.67" mutex="true"></meting-js>
+    
+    
+    <div class="wrap-right"></div>
+    <div class="loading"></div>
+</div>
+    <script>
+    window.config = {
+        GitHubUserName     : 'Russshare',
+        GitHubRepositories : 'Russshare',
+
+        BlogUser      : 'Russshare',
+        BlogAvatar    : 'https://gitee.com/psycho1900/miss-reddle/raw/master/profile.jpg',
+        BlogStartDate : '2021-03-17',
+
+        WebsiteTitleBlur         : '(◍´꒳`◍) Hi, Miss Riddle',
+        WebsiteTitleBlurTimeOut  : 500,
+        WebsiteTitleFocus        : '(*´∇｀*) 欢迎回来!',
+        WebsiteTitleFocusTimeOut : 1000,
+        WebsiteFavicon           : 'https://gitee.com/psycho1900/miss-reddle/raw/master/beer.png',
+
+        ProgressBar: {
+            id       : 'topProgressBar',
+            color    : '#77B6FF',
+            height   : '2px',
+            duration : 0.2
+        },
+
+        Loading: {
+            rebound: {
+                tension  : 16,
+                friction : 5
+            },
+            spinner: {
+                id     : 'spinner',
+                radius : 90,
+                sides  : 3,
+                depth  : 4,
+                colors : {
+                    background : '#F0F0F0',
+                    stroke     : '#272633',
+                    base       : '',
+                    child      : '#272633'
+                },
+                alwaysForward : true,
+                restAt        : 0.5,
+                renderBase    : false
+            }
+        },
+
+        HomeHeaderAnimationRendered : true,
+        HomeHeaderAnimation         : {
+            radius      : 15,
+            density     : 0.2,
+            color       : 'rgba(255, 255, 255, .2)',
+            clearOffset : 0.3
+        },
+
+        ArticleHeaderAnimationRendered : false,
+        ArticleHeaderAnimation         : {
+            triW                  : 14,
+            triH                  : 20,
+            neighbours            : [
+                
+                    'side',
+                
+                    'top',
+                
+                    'bottom',
+                
+            ],
+            speedTrailAppear      : 0.1,
+            speedTrailDisappear   : 0.1,
+            speedTriOpen          : 1,
+            trailMaxLength        : 30,
+            trailIntervalCreation : 100,
+            delayBeforeDisappear  : 2,
+            colors                : [
+                
+                    '#96EDA6',
+                
+                    '#5BC6A9',
+                
+                    '#38668C',
+                
+                    '#374D84',
+                
+                    '#BED5CB',
+                
+                    '#62ADC6',
+                
+                    '#8EE5DE',
+                
+                    '#304E7B',
+                
+            ]
+        },
+
+        BackAnimationRendered          : true,
+        IEBrowserBackAnimationRendered : false,
+        BackAnimation                  : {
+            colorSaturation  : '60%',
+            colorBrightness  : '50%',
+            colorAlpha       : 0.5,
+            colorCycleSpeed  : 5,
+            verticalPosition : 'random',
+            horizontalSpeed  : 200,
+            ribbonCount      : 3,
+            strokeSize       : 0,
+            parallaxAmount   : -0.2,
+            animateSections  : true
+        },
+
+        HomeHeaderImage : [
+            
+                'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/image/header/home.jpg',
+            
+                'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/image/header/home.jpeg',
+            
+        ],
+        HomeBannerText  : '',
+
+        ArticleHeaderImage : [
+            
+                'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/image/header/article.jpg',
+            
+        ],
+
+        OtherBannerText : '',
+
+        MenuList : [
+            
+                {
+                    name   : '首页',
+                    href   : '/',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '标签',
+                    href   : '/tag',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '分类',
+                    href   : '/category',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '赞赏',
+                    href   : '/donate',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '关于',
+                    href   : '/about',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '搜索',
+                    href   : '',    
+                    target : '',
+                    class  : 'search'
+                },
+            
+                {
+                    name   : '留言板',
+                    href   : '/comment',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '友情链接',
+                    href   : '/friend',    
+                    target : '',
+                    class  : ''
+                },
+            
+        ],
+        MenuLink : [
+            
+                
+                    {
+                        icon : 'icon-weibo', 
+                        url  : ''
+                    },
+                
+                    {
+                        icon : 'icon-wechat', 
+                        url  : ''
+                    },
+                
+                    {
+                        icon : 'icon-qq', 
+                        url  : ''
+                    },
+                
+                    {
+                        icon : 'icon-github', 
+                        url  : 'https://github.com/RiddleGo'
+                    },
+                
+            
+        ],
+
+        FooterStyle : 2,
+        BottomText  : {
+            icon    : 'like-fill',
+            left    : '人生若只如初见',
+            right   : '何事秋风悲画扇'
+        },
+        ThemeInfo   : true,
+
+        ConsoleList : [
+            
+                
+                    [
+                        
+                            
+                                'Based on cnblogs theme SimpleMemory.',
+                            
+                                '',
+                            
+                        
+                    ],
+                
+                    [
+                        
+                            
+                                'SimpleMemory Author:',
+                            
+                                'BNDong',
+                            
+                        
+                    ],
+                
+                    [
+                        
+                            
+                                'Theme:',
+                            
+                                'LiveForCode',
+                            
+                        
+                    ],
+                
+            
+        ],
+
+        FontIconExtend : '',
+
+        Donate : {
+            paypal  : '',
+            bitcoin : '',
+            alipay  : '',
+            wechat  : ''
+        },
+
+        Code : {
+            style : 'normal'
+        },  
+
+        Search : {
+            applicationID : '010C3EANT8',
+            apiKey        : 'c7abab9f11b79102b9aff7fe6d41447d',
+            indexName     : 'Notes',
+            hits          : {
+                page : 10
+            },
+            labels        : {
+                placeholder : '搜索',
+                empty       : '未发现与 「${query}」 相关的内容',
+                stats       : '${hits} 条相关条目，使用了 ${time} 毫秒',
+            }
+        }, 
+
+        Valine : {
+            switch         : true,
+            el             : '.comments-content',
+            appId          : 'TKpiBidydKtx7apGCq7DM4Fw-gzGzoHsz',
+            appKey         : 'wsVqBbLWlLy4JRbi9I4XDBpH',
+            placeholder    : '你是我一生只会遇见一次的惊喜...',
+            avatar         : 'mm',
+            meta           : 'nick,mail,link',
+            requiredFields : 'nick,mail',
+            pageSize       : 5,
+            lang           : 'zh-cn',
+            visitor        : true,
+            enableQQ       : true
+        },
+
+        Tocbot : {
+            switch                : true,
+            tocSelector           : '.toc',
+            contentSelector       : '.article-body',
+            headingSelector       : 'h1, h2, h3, h4, h5',
+            headingsOffset        : 0,
+            scrollSmooth          : true,
+            scrollSmoothOffset    : -5,
+            positionFixedSelector : '.toc',
+            positionFixedClass    : 'toc-fixed',
+            fixedSidebarOffset    : '',
+        },
+
+        Require : {
+            baseUrl     : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/',
+            waitSeconds : 100
+        },
+
+        Music : {
+            type : 'Meting'
+        },
+        APlayer : {
+            container : '.aplayer',
+            fixed     : true,
+            autoplay  : false,
+            loop      : 'all',
+            order     : 'random',
+            preload   : 'auto',
+            volume    : 0.67,
+            mutex     : true,
+            lrcType   : 3,
+            audio     : [
+                
+                    {
+                        name   : 'aLIEz',
+                        artist : 'mizuki（瑞葵）',
+                        cover  : '/music/cover/aLIEz.jpg',
+                        url    : '/music/song/aLIEz.mp3',
+                        lrc    : '/music/lrc/aLIEz.lrc'
+                    },
+                
+                    {
+                        name   : 'Endless Tears',
+                        artist : 'CLIFF EDGE',
+                        cover  : '/music/cover/Endless Tears.jpg',
+                        url    : '/music/song/Endless Tears.mp3',
+                        lrc    : '/music/lrc/Endless Tears.lrc'
+                    },
+                
+                    {
+                        name   : 'Miracle',
+                        artist : 'Cascada',
+                        cover  : '/music/cover/Miracle.jpg',
+                        url    : '/music/song/Miracle.mp3',
+                        lrc    : '/music/lrc/Miracle.lrc'
+                    },
+                
+                    {
+                        name   : 'Roll The Dice',
+                        artist : '高珊',
+                        cover  : '/music/cover/Roll The Dice.jpg',
+                        url    : '/music/song/Roll The Dice.mp3',
+                        lrc    : '/music/lrc/Roll The Dice.lrc'
+                    },
+                
+                    {
+                        name   : 'See You Again',
+                        artist : 'Charlie Puth, Wiz Khalifa',
+                        cover  : '/music/cover/See You Again.jpg',
+                        url    : '/music/song/See You Again.mp3',
+                        lrc    : '/music/lrc/See You Again.lrc'
+                    },
+                
+                    {
+                        name   : 'Traveling Light',
+                        artist : 'Joel Hanson, Sara Groves',
+                        cover  : '/music/cover/Traveling Light.jpg',
+                        url    : '/music/song/Traveling Light.mp3',
+                        lrc    : '/music/lrc/Traveling Light.lrc'
+                    },
+                
+                    {
+                        name   : '痴心绝对',
+                        artist : '李圣杰',
+                        cover  : '/music/cover/痴心绝对.jpg',
+                        url    : '/music/song/痴心绝对.mp3',
+                        lrc    : '/music/lrc/痴心绝对.lrc'
+                    },
+                
+                    {
+                        name   : '好想大声说爱你',
+                        artist : 'BAAD（バード）',
+                        cover  : '/music/cover/好想大声说爱你.jpg',
+                        url    : '/music/song/好想大声说爱你.mp3',
+                        lrc    : '/music/lrc/好想大声说爱你.lrc'
+                    },
+                
+            ]
+        },
+        Meting : {
+            id       : '3778678', 
+            lrcshow  : false, 
+            server   : 'netease', 
+            type     : 'playlist', 
+            fixed    : true, 
+            autoplay : false, 
+            loop     : 'all', 
+            order    : 'random', 
+            preload  : 'auto', 
+            volume   : 0.67, 
+            mutex    : true
+        },
+
+        LazyLoad : {
+            default : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/image/website/lazyload.svg'
+        },
+  
+        Style : {
+            aplayer          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/APlayer.css',
+            archive          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/archive.css',
+            donate           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/donate.css',
+            fancybox         : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/jquery.fancybox.css',
+            footer           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/footer.css',
+            iconfont         : 'https://at.alicdn.com/t/font_1546312_l3yohatebw.css',
+            index            : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/index.css',
+            menuBubble       : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/menu-bubble.css',
+            page             : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/page.css',
+            post             : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/post.css',
+            search           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/search.css',
+            tocbot           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/tocbot.css',
+            normal           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/normal.css',
+            night            : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/night.css',
+            clipboard        : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/clipboard.css'
+        },
+
+        Script: {
+            aplayer          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/APlayer.min.js',
+            config           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/require.config.js',
+            index            : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/index.js',
+            instantSearch    : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/instantsearch.min.js',
+            jQuery           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/jquery-3.4.1.min.js',
+            loading          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/loading.js',
+            meting           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/Meting.min.js',
+            iscroll          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/iscroll.js',
+            require          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/require.min.js'
+        },
+
+        Font: {
+            LongCang   : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/LongCang.css',
+            Monda      : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Monda.css',
+            NotoSansSC : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/NotoSansSC.css',
+            Playball   : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Playball.css',
+            PTMono     : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/PTMono.css',
+            RobotoSlab : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/RobotoSlab.css',
+            Rosario    : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Rosario.css',
+            UbuntuMono : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/UbuntuMono.css'
+        },
+
+        Suffix : {
+            about : '我们生死与共，勇往直前，永远都是坏小子.'
+        },
+            
+        Theme : {
+            url  : 'https://github.com/first19326/Hexo-LiveForCode',
+            name : 'Hexo - Russshare'
+        }  
+    };
+</script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/index.js"></script>
+</body>
+</html>

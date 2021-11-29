@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, shrink-to-fit=no">
+    <meta name="referrer" content="origin">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <title>Go标准库http与fasthttp服务端性能比较</title>
+
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/LongCang.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Monda.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/NotoSansSC.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Playball.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/PTMono.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/RobotoSlab.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Rosario.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/UbuntuMono.css">
+
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/post.css">
+    
+        <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/normal.css">
+    
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/jquery-3.4.1.min.js"></script>
+
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+</head>
+<body>
+    <a id="cover"></a>
+    <div id="header">
+    <div class="header">
+        <div class="vertical">
+            <div class="inner">
+                <h1 class="header-subtitle">Go标准库http与fasthttp服务端性能比较</h1>
+                <div class="header-subinfo">
+                    <p class="article-info-text">
+                        <span>
+                            <i class="iconfont icon-time"></i> 发表时间：2021-08-27
+                        </span>
+                        
+                            <span id="/2021/08/27/Go标准库http与fasthttp服务端性能比较/" class="leancloud_visitors" data-flag-title="Go标准库http与fasthttp服务端性能比较">
+                                <i class="iconfont icon-browse"></i> 阅读：<sapn class="leancloud-visitors-count"></span>
+                            </span>
+                        
+                        <span>
+                            <i class="iconfont icon-interactive"></i> 评论：<span class="valine-comment-count" data-xid="/2021/08/27/Go标准库http与fasthttp服务端性能比较/"></span>
+                        </span>  
+                    </p>                 
+                </div>
+            </div>
+        </div>
+        <canvas id="articleHeaderCanvas"></canvas>
+    </div>
+</div>
+    <div id="container">
+    <div id="content">
+        <div id="article">
+    <div class="toc"></div>
+    <div class="article-body">
+        <p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzAxMTA4Njc0OQ==&mid=2651439322&idx=5&sn=13f249b59d4288dfbc524aeaa8f225d1&chksm=80bb1e28b7cc973e392e75157e38b497066e0c8f2c70a9f4c0862143e87dd112dcb38850b43f&scene=21#wechat_redirect">在这里推荐一个系列的关于golang Web的文章，点击这里知己进入</a></p>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/X4ETAMlRHHaCuYh-gUF4tQ">本原文点击这里，转载自前辈的文章</a></p>
+<h2 id="1-背景"><a href="#1-背景" class="headerlink" title="1. 背景"></a>1. 背景</h2><p>Go初学者学习Go时，在编写了经典的“hello, world”程序之后，可能会迫不及待的体验一下Go强大的标准库，比如：用几行代码写一个像下面示例这样拥有完整功能的web server：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 来自https:&#x2F;&#x2F;tip.golang.org&#x2F;pkg&#x2F;net&#x2F;http&#x2F;#example_ListenAndServe</span><br><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line"> &quot;io&quot;</span><br><span class="line"> &quot;log&quot;</span><br><span class="line"> &quot;net&#x2F;http&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line"> helloHandler :&#x3D; func(w http.ResponseWriter, req *http.Request) &#123;</span><br><span class="line">  io.WriteString(w, &quot;Hello, world!\n&quot;)</span><br><span class="line"> &#125;</span><br><span class="line"> http.HandleFunc(&quot;&#x2F;hello&quot;, helloHandler)</span><br><span class="line"> log.Fatal(http.ListenAndServe(&quot;:8080&quot;, nil))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>go net/http包是一个比较均衡的通用实现，能满足大多数gopher 90%以上场景的需要，并且具有如下优点：</p>
+<ul>
+<li>标准库包，无需引入任何第三方依赖；</li>
+<li>对http规范的满足度较好；</li>
+<li>无需做任何优化，即可获得相对较高的性能；</li>
+<li>支持HTTP代理；</li>
+<li>支持HTTPS；</li>
+<li>无缝支持HTTP/2。</li>
+</ul>
+<p>不过也正是因为http包的“均衡”通用实现，在一些对性能要求严格的领域，net/http的性能可能无法胜任，也没有太多的调优空间。这时我们会将眼光转移到其他第三方的http服务端框架实现上。</p>
+<p>而在第三方http服务端框架中，一个“行如其名”的框架fasthttp[1]被提及和采纳的较多，fasthttp官网宣称其性能是net/http的十倍(基于go test benchmark的测试结果)。</p>
+<p>fasthttp采用了许多性能优化上的最佳实践[2]，尤其是在内存对象的重用上，大量使用sync.Pool[3]以降低对Go GC的压力。</p>
+<p>那么在真实环境中，到底fasthttp能比net/http快多少呢？恰好手里有两台性能还不错的服务器可用，在本文中我们就在这个真实环境下看看他们的实际性能。</p>
+<h2 id="2-性能测试"><a href="#2-性能测试" class="headerlink" title="2. 性能测试"></a>2. 性能测试</h2><p>我们分别用net/http和fasthttp实现两个几乎“零业务”的被测程序：</p>
+<ul>
+<li><p>net/http:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; github.com&#x2F;bigwhite&#x2F;experiments&#x2F;blob&#x2F;master&#x2F;http-benchmark&#x2F;nethttp&#x2F;main.go</span><br><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line"> _ &quot;expvar&quot;</span><br><span class="line"> &quot;log&quot;</span><br><span class="line"> &quot;net&#x2F;http&quot;</span><br><span class="line"> _ &quot;net&#x2F;http&#x2F;pprof&quot;</span><br><span class="line"> &quot;runtime&quot;</span><br><span class="line"> &quot;time&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line"> go func() &#123;</span><br><span class="line">  for &#123;</span><br><span class="line">   log.Println(&quot;当前routine数量:&quot;, runtime.NumGoroutine())</span><br><span class="line">   time.Sleep(time.Second)</span><br><span class="line">  &#125;</span><br><span class="line"> &#125;()</span><br><span class="line"></span><br><span class="line"> http.Handle(&quot;&#x2F;&quot;, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) &#123;</span><br><span class="line">  w.Write([]byte(&quot;Hello, Go!&quot;))</span><br><span class="line"> &#125;))</span><br><span class="line"></span><br><span class="line"> log.Fatal(http.ListenAndServe(&quot;:8080&quot;, nil))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>fasthttp:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; github.com&#x2F;bigwhite&#x2F;experiments&#x2F;blob&#x2F;master&#x2F;http-benchmark&#x2F;fasthttp&#x2F;main.go</span><br><span class="line"></span><br><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line"> &quot;fmt&quot;</span><br><span class="line"> &quot;log&quot;</span><br><span class="line"> &quot;net&#x2F;http&quot;</span><br><span class="line"> &quot;runtime&quot;</span><br><span class="line"> &quot;time&quot;</span><br><span class="line"></span><br><span class="line"> _ &quot;expvar&quot;</span><br><span class="line"></span><br><span class="line"> _ &quot;net&#x2F;http&#x2F;pprof&quot;</span><br><span class="line"></span><br><span class="line"> &quot;github.com&#x2F;valyala&#x2F;fasthttp&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">type HelloGoHandler struct &#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func fastHTTPHandler(ctx *fasthttp.RequestCtx) &#123;</span><br><span class="line"> fmt.Fprintln(ctx, &quot;Hello, Go!&quot;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line"> go func() &#123;</span><br><span class="line">  http.ListenAndServe(&quot;:6060&quot;, nil)</span><br><span class="line"> &#125;()</span><br><span class="line"></span><br><span class="line"> go func() &#123;</span><br><span class="line">  for &#123;</span><br><span class="line">   log.Println(&quot;当前routine数量:&quot;, runtime.NumGoroutine())</span><br><span class="line">   time.Sleep(time.Second)</span><br><span class="line">  &#125;</span><br><span class="line"> &#125;()</span><br><span class="line"></span><br><span class="line"> s :&#x3D; &amp;fasthttp.Server&#123;</span><br><span class="line">  Handler: fastHTTPHandler,</span><br><span class="line"> &#125;</span><br><span class="line"> s.ListenAndServe(&quot;:8081&quot;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>对被测目标实施压力测试的客户端，我们基于hey[4]这个http压测工具进行，为了方便调整压力水平，我们将hey“包裹”在下面这个shell脚本中(仅适于在linux上运行)：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; github.com&#x2F;bigwhite&#x2F;experiments&#x2F;blob&#x2F;master&#x2F;http-benchmark&#x2F;client&#x2F;http_client_load.sh</span><br><span class="line"></span><br><span class="line"># .&#x2F;http_client_load.sh 3 10000 10 GET http:&#x2F;&#x2F;10.10.195.181:8080</span><br><span class="line">echo &quot;$0 task_num count_per_hey conn_per_hey method url&quot;</span><br><span class="line">task_num&#x3D;$1</span><br><span class="line">count_per_hey&#x3D;$2</span><br><span class="line">conn_per_hey&#x3D;$3</span><br><span class="line">method&#x3D;$4</span><br><span class="line">url&#x3D;$5</span><br><span class="line"></span><br><span class="line">start&#x3D;$(date +%s%N)</span><br><span class="line">for((i&#x3D;1; i&lt;&#x3D;$task_num; i++)); do &#123;</span><br><span class="line"> tm&#x3D;$(date +%T.%N)</span><br><span class="line">        echo &quot;$tm: task $i start&quot;</span><br><span class="line"> hey -n $count_per_hey -c $conn_per_hey -m $method $url &gt; hey_$i.log</span><br><span class="line"> tm&#x3D;$(date +%T.%N)</span><br><span class="line">        echo &quot;$tm: task $i done&quot;</span><br><span class="line">&#125; &amp; done</span><br><span class="line">wait</span><br><span class="line">end&#x3D;$(date +%s%N)</span><br><span class="line"></span><br><span class="line">count&#x3D;$(( $task_num * $count_per_hey ))</span><br><span class="line">runtime_ns&#x3D;$(( $end - $start ))</span><br><span class="line">runtime&#x3D;&#96;echo &quot;scale&#x3D;2; $runtime_ns &#x2F; 1000000000&quot; | bc&#96;</span><br><span class="line">echo &quot;runtime: &quot;$runtime</span><br><span class="line">speed&#x3D;&#96;echo &quot;scale&#x3D;2; $count &#x2F; $runtime&quot; | bc&#96;</span><br><span class="line">echo &quot;speed: &quot;$speed </span><br></pre></td></tr></table></figure>
+<p>该脚本的执行示例如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">bash http_client_load.sh 8 1000000 200 GET http:&#x2F;&#x2F;10.10.195.134:8080</span><br><span class="line">http_client_load.sh task_num count_per_hey conn_per_hey method url</span><br><span class="line">16:58:09.146948690: task 1 start</span><br><span class="line">16:58:09.147235080: task 2 start</span><br><span class="line">16:58:09.147290430: task 3 start</span><br><span class="line">16:58:09.147740230: task 4 start</span><br><span class="line">16:58:09.147896010: task 5 start</span><br><span class="line">16:58:09.148314900: task 6 start</span><br><span class="line">16:58:09.148446030: task 7 start</span><br><span class="line">16:58:09.148930840: task 8 start</span><br><span class="line">16:58:45.001080740: task 3 done</span><br><span class="line">16:58:45.241903500: task 8 done</span><br><span class="line">16:58:45.261501940: task 1 done</span><br><span class="line">16:58:50.032383770: task 4 done</span><br><span class="line">16:58:50.985076450: task 7 done</span><br><span class="line">16:58:51.269099430: task 5 done</span><br><span class="line">16:58:52.008164010: task 6 done</span><br><span class="line">16:58:52.166402430: task 2 done</span><br><span class="line">runtime: 43.02</span><br><span class="line">speed: 185960.01</span><br></pre></td></tr></table></figure>
+
+<p>从传入的参数来看，该脚本并行启动了8个task(一个task启动一个hey)，每个task向<a href="http://10.10.195.134:8080建立200个并发连接，并发送100w">http://10.10.195.134:8080建立200个并发连接，并发送100w</a> http GET请求。</p>
+<p>我们使用两台服务器分别放置被测目标程序和压力工具脚本：</p>
+<ul>
+<li>目标程序所在服务器：10.10.195.181(物理机，Intel x86-64 CPU，40核，128G内存, CentOs 7.6)<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">$ cat &#x2F;etc&#x2F;redhat-release</span><br><span class="line">CentOS Linux release 7.6.1810 (Core) </span><br><span class="line"></span><br><span class="line">$ lscpu</span><br><span class="line">Architecture:          x86_64</span><br><span class="line">CPU op-mode(s):        32-bit, 64-bit</span><br><span class="line">Byte Order:            Little Endian</span><br><span class="line">CPU(s):                40</span><br><span class="line">On-line CPU(s) list:   0-39</span><br><span class="line">Thread(s) per core:    2</span><br><span class="line">Core(s) per socket:    10</span><br><span class="line">座：                 2</span><br><span class="line">NUMA 节点：         2</span><br><span class="line">厂商 ID：           GenuineIntel</span><br><span class="line">CPU 系列：          6</span><br><span class="line">型号：              85</span><br><span class="line">型号名称：        Intel(R) Xeon(R) Silver 4114 CPU @ 2.20GHz</span><br><span class="line">步进：              4</span><br><span class="line">CPU MHz：             800.000</span><br><span class="line">CPU max MHz:           2201.0000</span><br><span class="line">CPU min MHz:           800.0000</span><br><span class="line">BogoMIPS：            4400.00</span><br><span class="line">虚拟化：           VT-x</span><br><span class="line">L1d 缓存：          32K</span><br><span class="line">L1i 缓存：          32K</span><br><span class="line">L2 缓存：           1024K</span><br><span class="line">L3 缓存：           14080K</span><br><span class="line">NUMA 节点0 CPU：    0-9,20-29</span><br><span class="line">NUMA 节点1 CPU：    10-19,30-39</span><br><span class="line">Flags:                 fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc art arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc aperfmperf eagerfpu pni pclmulqdq dtes64 ds_cpl vmx smx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid dca sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch epb cat_l3 cdp_l3 intel_pt ssbd mba ibrs ibpb stibp tpr_shadow vnmi flexpriority ept vpid fsgsbase tsc_adjust bmi1 hle avx2 smep bmi2 erms invpcid rtm cqm mpx rdt_a avx512f avx512dq rdseed adx smap clflushopt clwb avx512cd avx512bw avx512vl xsaveopt xsavec xgetbv1 cqm_llc cqm_occup_llc cqm_mbm_total cqm_mbm_local dtherm ida arat pln pts pku ospke spec_ctrl intel_stibp flush_l1d</span><br></pre></td></tr></table></figure>
+压力工具所在服务器：10.10.195.133(物理机，鲲鹏arm64 cpu，96核，80G内存, CentOs 7.9)<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"># cat &#x2F;etc&#x2F;redhat-release </span><br><span class="line">CentOS Linux release 7.9.2009 (AltArch)</span><br><span class="line"></span><br><span class="line"># lscpu</span><br><span class="line">Architecture:          aarch64</span><br><span class="line">Byte Order:            Little Endian</span><br><span class="line">CPU(s):                96</span><br><span class="line">On-line CPU(s) list:   0-95</span><br><span class="line">Thread(s) per core:    1</span><br><span class="line">Core(s) per socket:    48</span><br><span class="line">座：                 2</span><br><span class="line">NUMA 节点：         4</span><br><span class="line">型号：              0</span><br><span class="line">CPU max MHz:           2600.0000</span><br><span class="line">CPU min MHz:           200.0000</span><br><span class="line">BogoMIPS：            200.00</span><br><span class="line">L1d 缓存：          64K</span><br><span class="line">L1i 缓存：          64K</span><br><span class="line">L2 缓存：           512K</span><br><span class="line">L3 缓存：           49152K</span><br><span class="line">NUMA 节点0 CPU：    0-23</span><br><span class="line">NUMA 节点1 CPU：    24-47</span><br><span class="line">NUMA 节点2 CPU：    48-71</span><br><span class="line">NUMA 节点3 CPU：    72-95</span><br><span class="line">Flags:                 fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma dcpop asimddp asimdfhm</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>我用dstat监控被测目标所在主机资源占用情况(dstat -tcdngym)，尤其是cpu负荷；通过expvarmon监控memstats[5]查看目标程序中对各类资源消耗情况的排名。</p>
+<p>下面是多次测试后制作的一个数据表格：<br><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/process/fasthttp01.png"></p>
+<h2 id="3-对结果的简要分析"><a href="#3-对结果的简要分析" class="headerlink" title="3. 对结果的简要分析"></a>3. 对结果的简要分析</h2><p>受特定场景、测试工具及脚本精确性以及压力测试环境的影响，上面的测试结果有一定局限，但却真实反映了被测目标的性能趋势。我们看到在给予同样压力的情况下，fasthttp并没有10倍于net http的性能，甚至在这样一个特定的场景下，两倍于net/http的性能都没有达到：我们看到在目标主机cpu资源消耗接近70%的几个用例中，fasthttp的性能仅比net/http高出30%~70%左右。</p>
+<p>那么为什么fasthttp的性能未及预期呢？要回答这个问题，那就要看看net/http和fasthttp各自的实现原理了！我们先来看看net/http的工作原理示意图：</p>
+<p><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/process/fasthttp02.png">图：nethttp工作原理示意图<br>http包作为server端的原理很简单，那就是accept到一个连接(conn)之后，将这个conn甩给一个worker goroutine去处理，后者一直存在，直到该conn的生命周期结束：即连接关闭。</p>
+<p>下面是fasthttp的工作原理示意图：<br><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/process/fasthttp03.png"></p>
+<p>图：fasthttp工作原理示意图</p>
+<p>而fasthttp设计了一套机制，目的是尽量复用goroutine，而不是每次都创建新的goroutine。<strong>fasthttp的Server accept一个conn之后，会尝试从workerpool中的ready切片中取出一个channel，该channel与某个worker goroutine一一对应。</strong></p>
+<p>一旦取出channel，就会将accept到的conn写到该channel里，而channel另一端的worker goroutine就会处理该conn上的数据读写。</p>
+<p>当处理完该conn后，该worker goroutine不会退出，而是会将自己对应的那个channel重新放回workerpool中的ready切片中，等待这下一次被取出。</p>
+<p>fasthttp的goroutine复用策略初衷很好，但在这里的测试场景下效果不明显，从测试结果便可看得出来，在相同的客户端并发和压力下，net/http使用的goroutine数量与fasthttp相差无几。这是由测试模型导致的：在我们这个测试中，每个task中的hey都会向被测目标发起固定数量的长连接(keep-alive)，然后在每条连接上发起“饱和”请求。</p>
+<p><strong>这样fasthttp workerpool中的goroutine一旦接收到某个conn就只能在该conn上的通讯结束后才能重新放回，而该conn直到测试结束才会close，因此这样的场景相当于让fasthttp“退化”成了net/http的模型，</strong></p>
+<p>也染上了net/http的“缺陷”：<strong>goroutine的数量一旦多起来，go runtime自身调度所带来的消耗便不可忽视甚至超过了业务处理所消耗的资源占比。</strong>下面分别是fasthttp在200长连接、8000长连接以及16000长连接下的cpu profile的结果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line">200长连接：</span><br><span class="line"></span><br><span class="line">(pprof) top -cum</span><br><span class="line">Showing nodes accounting for 88.17s, 55.35% of 159.30s total</span><br><span class="line">Dropped 150 nodes (cum &lt;&#x3D; 0.80s)</span><br><span class="line">Showing top 10 nodes out of 60</span><br><span class="line">      flat  flat%   sum%        cum   cum%</span><br><span class="line">     0.46s  0.29%  0.29%    101.46s 63.69%  github.com&#x2F;valyala&#x2F;fasthttp.(*Server).serveConn</span><br><span class="line">         0     0%  0.29%    101.46s 63.69%  github.com&#x2F;valyala&#x2F;fasthttp.(*workerPool).getCh.func1</span><br><span class="line">         0     0%  0.29%    101.46s 63.69%  github.com&#x2F;valyala&#x2F;fasthttp.(*workerPool).workerFunc</span><br><span class="line">     0.04s 0.025%  0.31%     89.46s 56.16%  internal&#x2F;poll.ignoringEINTRIO (inline)</span><br><span class="line">    87.38s 54.85% 55.17%     89.27s 56.04%  syscall.Syscall</span><br><span class="line">     0.12s 0.075% 55.24%     60.39s 37.91%  bufio.(*Writer).Flush</span><br><span class="line">         0     0% 55.24%     60.22s 37.80%  net.(*conn).Write</span><br><span class="line">     0.08s  0.05% 55.29%     60.21s 37.80%  net.(*netFD).Write</span><br><span class="line">     0.09s 0.056% 55.35%     60.12s 37.74%  internal&#x2F;poll.(*FD).Write</span><br><span class="line">         0     0% 55.35%     59.86s 37.58%  syscall.Write (inline)</span><br><span class="line">(pprof) </span><br><span class="line"></span><br><span class="line">8000长连接：</span><br><span class="line"></span><br><span class="line">(pprof) top -cum</span><br><span class="line">Showing nodes accounting for 108.51s, 54.46% of 199.23s total</span><br><span class="line">Dropped 204 nodes (cum &lt;&#x3D; 1s)</span><br><span class="line">Showing top 10 nodes out of 66</span><br><span class="line">      flat  flat%   sum%        cum   cum%</span><br><span class="line">         0     0%     0%    119.11s 59.79%  github.com&#x2F;valyala&#x2F;fasthttp.(*workerPool).getCh.func1</span><br><span class="line">         0     0%     0%    119.11s 59.79%  github.com&#x2F;valyala&#x2F;fasthttp.(*workerPool).workerFunc</span><br><span class="line">     0.69s  0.35%  0.35%    119.05s 59.76%  github.com&#x2F;valyala&#x2F;fasthttp.(*Server).serveConn</span><br><span class="line">     0.04s  0.02%  0.37%    104.22s 52.31%  internal&#x2F;poll.ignoringEINTRIO (inline)</span><br><span class="line">   101.58s 50.99% 51.35%    103.95s 52.18%  syscall.Syscall</span><br><span class="line">     0.10s  0.05% 51.40%     79.95s 40.13%  runtime.mcall</span><br><span class="line">     0.06s  0.03% 51.43%     79.85s 40.08%  runtime.park_m</span><br><span class="line">     0.23s  0.12% 51.55%     79.30s 39.80%  runtime.schedule</span><br><span class="line">     5.67s  2.85% 54.39%     77.47s 38.88%  runtime.findrunnable</span><br><span class="line">     0.14s  0.07% 54.46%     68.96s 34.61%  bufio.(*Writer).Flush</span><br><span class="line"></span><br><span class="line">16000长连接：</span><br><span class="line"></span><br><span class="line">(pprof) top -cum</span><br><span class="line">Showing nodes accounting for 239.60s, 87.07% of 275.17s total</span><br><span class="line">Dropped 190 nodes (cum &lt;&#x3D; 1.38s)</span><br><span class="line">Showing top 10 nodes out of 46</span><br><span class="line">      flat  flat%   sum%        cum   cum%</span><br><span class="line">     0.04s 0.015% 0.015%    153.38s 55.74%  runtime.mcall</span><br><span class="line">     0.01s 0.0036% 0.018%    153.34s 55.73%  runtime.park_m</span><br><span class="line">     0.12s 0.044% 0.062%       153s 55.60%  runtime.schedule</span><br><span class="line">     0.66s  0.24%   0.3%    152.66s 55.48%  runtime.findrunnable</span><br><span class="line">     0.15s 0.055%  0.36%    127.53s 46.35%  runtime.netpoll</span><br><span class="line">   127.04s 46.17% 46.52%    127.04s 46.17%  runtime.epollwait</span><br><span class="line">         0     0% 46.52%       121s 43.97%  github.com&#x2F;valyala&#x2F;fasthttp.(*workerPool).getCh.func1</span><br><span class="line">         0     0% 46.52%       121s 43.97%  github.com&#x2F;valyala&#x2F;fasthttp.(*workerPool).workerFunc</span><br><span class="line">     0.41s  0.15% 46.67%    120.18s 43.67%  github.com&#x2F;valyala&#x2F;fasthttp.(*Server).serveConn</span><br><span class="line">   111.17s 40.40% 87.07%    111.99s 40.70%  syscall.Syscall</span><br><span class="line">(pprof) </span><br></pre></td></tr></table></figure>
+
+
+<p><strong>这个文章快去看一下前辈写的这个再继续看下去</strong><br><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzIyNzM0MDk0Mg==&mid=2247486967&idx=1&sn=346f04a21f4da95cd70dde7de70d551b&scene=21#wechat_redirect">通过实例理解Go标准库http包是如何处理keep-alive连接的</a></p>
+<p>通过上述profile的比对，<strong>我们发现当长连接数量增多时(即workerpool中goroutine数量增多时）</strong>，go runtime调度的占比会逐渐提升，在16000连接时，runtime调度的各个函数已经排名前4了。</p>
+<h2 id="4-优化途径"><a href="#4-优化途径" class="headerlink" title="4. 优化途径"></a>4. 优化途径</h2><p>从上面的测试结果，我们看到<strong>fasthttp的模型不太适合这种连接连上后进行持续“饱和”请求的场景，更适合短连接或长连接但没有持续饱和请求，</strong>在后面这样的场景下，它的goroutine复用模型才能更好的得以发挥。</p>
+<p>但即便“退化”为了net/http模型，fasthttp的性能依然要比net/http略好，这是为什么呢？<strong>这些性能提升主要是fasthttp在内存分配层面的优化trick的结果，比如大量使用sync.Pool，比如避免在[]byte和string互转等。</strong></p>
+<p>那么，在持续“饱和”请求的场景下，如何让fasthttp workerpool中goroutine的数量不会因conn的增多而线性增长呢？fasthttp官方没有给出答案，<strong>但一条可以考虑的路径是使用os的多路复用(linux上的实现为epoll)，即go runtime netpoll使用的那套机制。</strong>在多路复用的机制下，<strong>这样可以让每个workerpool中的goroutine处理同时处理多个连接，这样我们可以根据业务规模选择workerpool池的大小，而不是像目前这样几乎是任意增长goroutine的数量。</strong>当然，<strong>在用户层面引入epoll也可能会带来系统调用占比的增多以及响应延迟增大等问题。</strong>至于该路径是否可行，还是要看具体实现和测试结果。</p>
+<p><strong>注：fasthttp.Server中的Concurrency可以用来限制workerpool中并发处理的goroutine的个数，但由于每个goroutine只处理一个连接，当Concurrency设置过小时，后续的连接可能就会被fasthttp拒绝服务。因此fasthttp的默认Concurrency为：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">const DefaultConcurrency &#x3D; 256 * 1024</span><br></pre></td></tr></table></figure>
+
+<p>本文涉及的源码可以在这里[6] github.com/bigwhite/experiments/blob/master/http-benchmark 下载。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p>[1]<br>fasthttp: <a target="_blank" rel="noopener" href="https://github.com/valyala/fasthttp">https://github.com/valyala/fasthttp</a></p>
+<p>[2]<br>性能优化上的最佳实践: <a target="_blank" rel="noopener" href="https://github.com/valyala/fasthttp#fasthttp-best-practices">https://github.com/valyala/fasthttp#fasthttp-best-practices</a></p>
+<p>[3]<br>sync.Pool: <a target="_blank" rel="noopener" href="https://www.imooc.com/read/87/article/2432">https://www.imooc.com/read/87/article/2432</a></p>
+<p>[4]<br>hey: <a target="_blank" rel="noopener" href="https://github.com/rakyll/hey">https://github.com/rakyll/hey</a></p>
+<p>[5]<br>expvarmon监控memstats: <a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/cr2JeUq5HOYQC0qji_Ip5g">https://mp.weixin.qq.com/s/cr2JeUq5HOYQC0qji_Ip5g</a></p>
+<p>[6]<br>这里: github.com/bigwhite/experiments/blob/master/http-benchmark</p>
+<p>[7]<br>改善Go语⾔编程质量的50个有效实践: <a target="_blank" rel="noopener" href="https://www.imooc.com/read/87">https://www.imooc.com/read/87</a></p>
+<p>[8]<br>Kubernetes实战：高可用集群搭建、配置、运维与应用: <a target="_blank" rel="noopener" href="https://coding.imooc.com/class/284.html">https://coding.imooc.com/class/284.html</a></p>
+<p>[9]<br>我爱发短信: <a target="_blank" rel="noopener" href="https://51smspush.com/">https://51smspush.com/</a></p>
+<p>[10]<br>链接地址: <a target="_blank" rel="noopener" href="https://m.do.co/c/bff6eed92687">https://m.do.co/c/bff6eed92687</a></p>
+
+        <p class="suffix-end">__END__</p>
+        <div class="suffix-box">
+            <div class="suffix-box-left">
+                <img src="https://gitee.com/psycho1900/miss-reddle/raw/master/profile.jpg" alt="Russshare">
+            </div>
+            <div class="suffix-box-right">
+                <span class="suffix-box-title">文章作者</span>：Russshare
+                <br>
+                <span class="suffix-box-title">文章出处</span>：<a href="/2021/08/27/Go%E6%A0%87%E5%87%86%E5%BA%93http%E4%B8%8Efasthttp%E6%9C%8D%E5%8A%A1%E7%AB%AF%E6%80%A7%E8%83%BD%E6%AF%94%E8%BE%83/" target="_blank">Go标准库http与fasthttp服务端性能比较</a>
+                <br>
+                <span class="suffix-box-title">作者签名</span>：我们生死与共，勇往直前，永远都是坏小子.
+                <br>
+                <span class="suffix-box-title">关于主题</span>：<a href="https://github.com/first19326/Hexo-LiveForCode" target="_blank">Hexo - Russshare</a>
+                <br>
+                <span class="suffix-box-title">版权声明</span>：文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" title="BY-NC-SA" target="_blank">BY-NC-SA</a> 许可协议，转载请注明出处
+                <br>
+            </div>
+            <div style="clear: both;"></div>
+        </div>
+    </div>
+    <div class="article-footer">
+        
+            <div class="category">
+                分类：
+                
+                    <a href="/categories/golang-More/">golang-More</a>
+                
+            </div>
+        
+        
+            <div class="tag">
+                标签：
+                
+                    <a href="/tags/fasthttp/">fasthttp</a>
+                
+            </div>
+        
+        <div class="article-prev-next">
+            
+                <a href="/2021/08/27/Go%E4%B8%AD%E7%9A%84%E8%BF%9B%E9%98%B6%E6%B5%8B%E8%AF%95%E6%A8%A1%E5%BC%8F/" class="prev-prefix">« </a> 上一篇：    <a href="/2021/08/27/Go%E4%B8%AD%E7%9A%84%E8%BF%9B%E9%98%B6%E6%B5%8B%E8%AF%95%E6%A8%A1%E5%BC%8F/" title="发布于 2021-08-27 07:47">Go中的进阶测试模式</a>
+                <br>
+            
+            
+                <a href="/2021/08/27/Go%E8%AF%AD%E8%A8%80%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-4-%E5%88%9D%E8%AF%86GORM%E5%BA%93/" class="next-prefix">» </a> 下一篇：    <a href="/2021/08/27/Go%E8%AF%AD%E8%A8%80%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-4-%E5%88%9D%E8%AF%86GORM%E5%BA%93/" title="发布于 2021-08-27 06:57">Go语言微服务框架-4.初识GORM库</a>
+            
+        </div>
+    </div>
+    
+    <div class="article-comments">
+        <div class="comments-title">
+            评论列表
+        </div>
+        <div class="comments-content">
+        </div>
+    </div>
+
+</div>
+
+    </div>
+</div>
+    <div id="footer"></div>
+    <div id="sidebar">
+    <div class="menu-wrap" style="display:none;">
+        <nav class="menu">
+            <div class="menu-introduce"> 
+                <div class="introduce-avatar"></div> 
+                <div class="introduce-info"> 
+                    <div class="introduce-user"><span></span></div>        
+                </div> 
+            </div> 
+            <div class="menu-list">
+                <ul></ul> 
+            </div> 
+            <div class="menu-link"></div> 
+        </nav>
+        <button class="menu-button-close"></button>
+        <div class="morph-shape" id="morph-shape" data-morph-open="M-7.312,0H15c0,0,66,113.339,66,399.5C81,664.006,15,800,15,800H-7.312V0z;M-7.312,0H100c0,0,0,113.839,0,400c0,264.506,0,400,0,400H-7.312V0z">
+            <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 100 800" preserveAspectRatio="none">
+                <path d="M-7.312,0H0c0,0,0,113.839,0,400c0,264.506,0,400,0,400h-7.312V0z"/>
+            </svg>
+        </div>
+    </div>
+    <button class="menu-button-open">MENU</button>
+    <div class="menu-cover"></div>
+</div>
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/search.css">
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/iscroll.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/instantsearch.min.js"></script>
+<div class="search-window">
+    <div class="search-content">
+        <div class="search-content-icon">
+            <i class="iconfont icon-search"></i>
+        </div>
+        <div id="search-input" class="search-input"></div>
+    </div>
+
+    <div class="search-scroll">
+        <div class="search-result">
+            <div id="search-stats" class="search-stats"></div>
+            <div id="search-hits"></div>
+            <div id="search-pagination" class="search-pagination"></div>
+        </div>
+    </div>
+
+    <span class="search-close-icon">
+        <i class="iconfont icon-close"></i>
+    </span>
+</div>
+    <div id="tools">
+    <div class="progressbar-top"></div>
+
+    
+        <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/APlayer.css">
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/APlayer.min.js"></script>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/Meting.min.js"></script>
+        <meting-js id="3778678" lrcshow="false" server="netease" type="playlist" fixed="true" autoplay="false" loop="all" order="random" preload="auto" volume="0.67" mutex="true"></meting-js>
+    
+    
+    <div class="wrap-right"></div>
+    <div class="loading"></div>
+</div>
+    <script>
+    window.config = {
+        GitHubUserName     : 'Russshare',
+        GitHubRepositories : 'Russshare',
+
+        BlogUser      : 'Russshare',
+        BlogAvatar    : 'https://gitee.com/psycho1900/miss-reddle/raw/master/profile.jpg',
+        BlogStartDate : '2021-03-17',
+
+        WebsiteTitleBlur         : '(◍´꒳`◍) Hi, Miss Riddle',
+        WebsiteTitleBlurTimeOut  : 500,
+        WebsiteTitleFocus        : '(*´∇｀*) 欢迎回来!',
+        WebsiteTitleFocusTimeOut : 1000,
+        WebsiteFavicon           : 'https://gitee.com/psycho1900/miss-reddle/raw/master/beer.png',
+
+        ProgressBar: {
+            id       : 'topProgressBar',
+            color    : '#77B6FF',
+            height   : '2px',
+            duration : 0.2
+        },
+
+        Loading: {
+            rebound: {
+                tension  : 16,
+                friction : 5
+            },
+            spinner: {
+                id     : 'spinner',
+                radius : 90,
+                sides  : 3,
+                depth  : 4,
+                colors : {
+                    background : '#F0F0F0',
+                    stroke     : '#272633',
+                    base       : '',
+                    child      : '#272633'
+                },
+                alwaysForward : true,
+                restAt        : 0.5,
+                renderBase    : false
+            }
+        },
+
+        HomeHeaderAnimationRendered : true,
+        HomeHeaderAnimation         : {
+            radius      : 15,
+            density     : 0.2,
+            color       : 'rgba(255, 255, 255, .2)',
+            clearOffset : 0.3
+        },
+
+        ArticleHeaderAnimationRendered : false,
+        ArticleHeaderAnimation         : {
+            triW                  : 14,
+            triH                  : 20,
+            neighbours            : [
+                
+                    'side',
+                
+                    'top',
+                
+                    'bottom',
+                
+            ],
+            speedTrailAppear      : 0.1,
+            speedTrailDisappear   : 0.1,
+            speedTriOpen          : 1,
+            trailMaxLength        : 30,
+            trailIntervalCreation : 100,
+            delayBeforeDisappear  : 2,
+            colors                : [
+                
+                    '#96EDA6',
+                
+                    '#5BC6A9',
+                
+                    '#38668C',
+                
+                    '#374D84',
+                
+                    '#BED5CB',
+                
+                    '#62ADC6',
+                
+                    '#8EE5DE',
+                
+                    '#304E7B',
+                
+            ]
+        },
+
+        BackAnimationRendered          : true,
+        IEBrowserBackAnimationRendered : false,
+        BackAnimation                  : {
+            colorSaturation  : '60%',
+            colorBrightness  : '50%',
+            colorAlpha       : 0.5,
+            colorCycleSpeed  : 5,
+            verticalPosition : 'random',
+            horizontalSpeed  : 200,
+            ribbonCount      : 3,
+            strokeSize       : 0,
+            parallaxAmount   : -0.2,
+            animateSections  : true
+        },
+
+        HomeHeaderImage : [
+            
+                'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/image/header/home.jpg',
+            
+                'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/image/header/home.jpeg',
+            
+        ],
+        HomeBannerText  : '',
+
+        ArticleHeaderImage : [
+            
+                'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/image/header/article.jpg',
+            
+        ],
+
+        OtherBannerText : '',
+
+        MenuList : [
+            
+                {
+                    name   : '首页',
+                    href   : '/',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '标签',
+                    href   : '/tag',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '分类',
+                    href   : '/category',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '赞赏',
+                    href   : '/donate',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '关于',
+                    href   : '/about',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '搜索',
+                    href   : '',    
+                    target : '',
+                    class  : 'search'
+                },
+            
+                {
+                    name   : '留言板',
+                    href   : '/comment',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '友情链接',
+                    href   : '/friend',    
+                    target : '',
+                    class  : ''
+                },
+            
+        ],
+        MenuLink : [
+            
+                
+                    {
+                        icon : 'icon-weibo', 
+                        url  : ''
+                    },
+                
+                    {
+                        icon : 'icon-wechat', 
+                        url  : ''
+                    },
+                
+                    {
+                        icon : 'icon-qq', 
+                        url  : ''
+                    },
+                
+                    {
+                        icon : 'icon-github', 
+                        url  : 'https://github.com/RiddleGo'
+                    },
+                
+            
+        ],
+
+        FooterStyle : 2,
+        BottomText  : {
+            icon    : 'like-fill',
+            left    : '人生若只如初见',
+            right   : '何事秋风悲画扇'
+        },
+        ThemeInfo   : true,
+
+        ConsoleList : [
+            
+                
+                    [
+                        
+                            
+                                'Based on cnblogs theme SimpleMemory.',
+                            
+                                '',
+                            
+                        
+                    ],
+                
+                    [
+                        
+                            
+                                'SimpleMemory Author:',
+                            
+                                'BNDong',
+                            
+                        
+                    ],
+                
+                    [
+                        
+                            
+                                'Theme:',
+                            
+                                'LiveForCode',
+                            
+                        
+                    ],
+                
+            
+        ],
+
+        FontIconExtend : '',
+
+        Donate : {
+            paypal  : '',
+            bitcoin : '',
+            alipay  : '',
+            wechat  : ''
+        },
+
+        Code : {
+            style : 'normal'
+        },  
+
+        Search : {
+            applicationID : '010C3EANT8',
+            apiKey        : 'c7abab9f11b79102b9aff7fe6d41447d',
+            indexName     : 'Notes',
+            hits          : {
+                page : 10
+            },
+            labels        : {
+                placeholder : '搜索',
+                empty       : '未发现与 「${query}」 相关的内容',
+                stats       : '${hits} 条相关条目，使用了 ${time} 毫秒',
+            }
+        }, 
+
+        Valine : {
+            switch         : true,
+            el             : '.comments-content',
+            appId          : 'TKpiBidydKtx7apGCq7DM4Fw-gzGzoHsz',
+            appKey         : 'wsVqBbLWlLy4JRbi9I4XDBpH',
+            placeholder    : '你是我一生只会遇见一次的惊喜...',
+            avatar         : 'mm',
+            meta           : 'nick,mail,link',
+            requiredFields : 'nick,mail',
+            pageSize       : 5,
+            lang           : 'zh-cn',
+            visitor        : true,
+            enableQQ       : true
+        },
+
+        Tocbot : {
+            switch                : true,
+            tocSelector           : '.toc',
+            contentSelector       : '.article-body',
+            headingSelector       : 'h1, h2, h3, h4, h5',
+            headingsOffset        : 0,
+            scrollSmooth          : true,
+            scrollSmoothOffset    : -5,
+            positionFixedSelector : '.toc',
+            positionFixedClass    : 'toc-fixed',
+            fixedSidebarOffset    : '',
+        },
+
+        Require : {
+            baseUrl     : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/',
+            waitSeconds : 100
+        },
+
+        Music : {
+            type : 'Meting'
+        },
+        APlayer : {
+            container : '.aplayer',
+            fixed     : true,
+            autoplay  : false,
+            loop      : 'all',
+            order     : 'random',
+            preload   : 'auto',
+            volume    : 0.67,
+            mutex     : true,
+            lrcType   : 3,
+            audio     : [
+                
+                    {
+                        name   : 'aLIEz',
+                        artist : 'mizuki（瑞葵）',
+                        cover  : '/music/cover/aLIEz.jpg',
+                        url    : '/music/song/aLIEz.mp3',
+                        lrc    : '/music/lrc/aLIEz.lrc'
+                    },
+                
+                    {
+                        name   : 'Endless Tears',
+                        artist : 'CLIFF EDGE',
+                        cover  : '/music/cover/Endless Tears.jpg',
+                        url    : '/music/song/Endless Tears.mp3',
+                        lrc    : '/music/lrc/Endless Tears.lrc'
+                    },
+                
+                    {
+                        name   : 'Miracle',
+                        artist : 'Cascada',
+                        cover  : '/music/cover/Miracle.jpg',
+                        url    : '/music/song/Miracle.mp3',
+                        lrc    : '/music/lrc/Miracle.lrc'
+                    },
+                
+                    {
+                        name   : 'Roll The Dice',
+                        artist : '高珊',
+                        cover  : '/music/cover/Roll The Dice.jpg',
+                        url    : '/music/song/Roll The Dice.mp3',
+                        lrc    : '/music/lrc/Roll The Dice.lrc'
+                    },
+                
+                    {
+                        name   : 'See You Again',
+                        artist : 'Charlie Puth, Wiz Khalifa',
+                        cover  : '/music/cover/See You Again.jpg',
+                        url    : '/music/song/See You Again.mp3',
+                        lrc    : '/music/lrc/See You Again.lrc'
+                    },
+                
+                    {
+                        name   : 'Traveling Light',
+                        artist : 'Joel Hanson, Sara Groves',
+                        cover  : '/music/cover/Traveling Light.jpg',
+                        url    : '/music/song/Traveling Light.mp3',
+                        lrc    : '/music/lrc/Traveling Light.lrc'
+                    },
+                
+                    {
+                        name   : '痴心绝对',
+                        artist : '李圣杰',
+                        cover  : '/music/cover/痴心绝对.jpg',
+                        url    : '/music/song/痴心绝对.mp3',
+                        lrc    : '/music/lrc/痴心绝对.lrc'
+                    },
+                
+                    {
+                        name   : '好想大声说爱你',
+                        artist : 'BAAD（バード）',
+                        cover  : '/music/cover/好想大声说爱你.jpg',
+                        url    : '/music/song/好想大声说爱你.mp3',
+                        lrc    : '/music/lrc/好想大声说爱你.lrc'
+                    },
+                
+            ]
+        },
+        Meting : {
+            id       : '3778678', 
+            lrcshow  : false, 
+            server   : 'netease', 
+            type     : 'playlist', 
+            fixed    : true, 
+            autoplay : false, 
+            loop     : 'all', 
+            order    : 'random', 
+            preload  : 'auto', 
+            volume   : 0.67, 
+            mutex    : true
+        },
+
+        LazyLoad : {
+            default : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/image/website/lazyload.svg'
+        },
+  
+        Style : {
+            aplayer          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/APlayer.css',
+            archive          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/archive.css',
+            donate           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/donate.css',
+            fancybox         : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/jquery.fancybox.css',
+            footer           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/footer.css',
+            iconfont         : 'https://at.alicdn.com/t/font_1546312_l3yohatebw.css',
+            index            : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/index.css',
+            menuBubble       : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/menu-bubble.css',
+            page             : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/page.css',
+            post             : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/post.css',
+            search           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/search.css',
+            tocbot           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/tocbot.css',
+            normal           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/normal.css',
+            night            : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/night.css',
+            clipboard        : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/clipboard.css'
+        },
+
+        Script: {
+            aplayer          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/APlayer.min.js',
+            config           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/require.config.js',
+            index            : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/index.js',
+            instantSearch    : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/instantsearch.min.js',
+            jQuery           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/jquery-3.4.1.min.js',
+            loading          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/loading.js',
+            meting           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/Meting.min.js',
+            iscroll          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/iscroll.js',
+            require          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/require.min.js'
+        },
+
+        Font: {
+            LongCang   : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/LongCang.css',
+            Monda      : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Monda.css',
+            NotoSansSC : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/NotoSansSC.css',
+            Playball   : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Playball.css',
+            PTMono     : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/PTMono.css',
+            RobotoSlab : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/RobotoSlab.css',
+            Rosario    : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Rosario.css',
+            UbuntuMono : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/UbuntuMono.css'
+        },
+
+        Suffix : {
+            about : '我们生死与共，勇往直前，永远都是坏小子.'
+        },
+            
+        Theme : {
+            url  : 'https://github.com/first19326/Hexo-LiveForCode',
+            name : 'Hexo - Russshare'
+        }  
+    };
+</script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/index.js"></script>
+</body>
+</html>

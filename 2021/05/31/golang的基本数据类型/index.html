@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, shrink-to-fit=no">
+    <meta name="referrer" content="origin">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <title>golang的基本数据类型</title>
+
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/LongCang.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Monda.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/NotoSansSC.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Playball.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/PTMono.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/RobotoSlab.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Rosario.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/UbuntuMono.css">
+
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/post.css">
+    
+        <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/normal.css">
+    
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/jquery-3.4.1.min.js"></script>
+
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+</head>
+<body>
+    <a id="cover"></a>
+    <div id="header">
+    <div class="header">
+        <div class="vertical">
+            <div class="inner">
+                <h1 class="header-subtitle">golang的基本数据类型</h1>
+                <div class="header-subinfo">
+                    <p class="article-info-text">
+                        <span>
+                            <i class="iconfont icon-time"></i> 发表时间：2021-05-31
+                        </span>
+                        
+                            <span id="/2021/05/31/golang的基本数据类型/" class="leancloud_visitors" data-flag-title="golang的基本数据类型">
+                                <i class="iconfont icon-browse"></i> 阅读：<sapn class="leancloud-visitors-count"></span>
+                            </span>
+                        
+                        <span>
+                            <i class="iconfont icon-interactive"></i> 评论：<span class="valine-comment-count" data-xid="/2021/05/31/golang的基本数据类型/"></span>
+                        </span>  
+                    </p>                 
+                </div>
+            </div>
+        </div>
+        <canvas id="articleHeaderCanvas"></canvas>
+    </div>
+</div>
+    <div id="container">
+    <div id="content">
+        <div id="article">
+    <div class="toc"></div>
+    <div class="article-body">
+        <h3 id="前言："><a href="#前言：" class="headerlink" title="前言："></a>前言：</h3><p>最近发现在看C的的程序，突然想到我的double类型，最后傻乎乎的才查到这是因为golang中的float32和float64,所以就没有了这个double<br>今天借助此文复习一下，感谢<a href="">原文</a></p>
+<h3 id="go语言学习（基本数据类型）"><a href="#go语言学习（基本数据类型）" class="headerlink" title="go语言学习（基本数据类型）"></a>go语言学习（基本数据类型）</h3><h3 id="值类型："><a href="#值类型：" class="headerlink" title="值类型："></a>值类型：</h3><p><strong>int/uint ：</strong><br>根据系统确定是32还是64位。此外还有int8/uint8、int16/uint16、int32/uint32、int64/uint64</p>
+<p>**byte:**字节型，相当于uint8。</p>
+<p><strong>float：</strong>go语言中没有double型，因为已经有了float32/float64，分别精确到小数点后面7、15位。</p>
+<p>uintptr:保存32bit或64bit指针，应该是保存指针的地址</p>
+<h3 id="数组array："><a href="#数组array：" class="headerlink" title="数组array："></a>数组array：</h3><p>数组是有类型的，比如var a [10]int= [10]int{1}，a的类型为[10]int。</p>
+<p>数组之间可以比较相等==或者不相等（!=），前提是类型相同。如果数组间类型相同且内容依次都一致，那么两个数组相等；如果两个数组类型相同，内容不一致，那么数组不相等。</p>
+<p>数组间赋值是值拷贝，会拷贝整个数组的所有元素给另一个数组，而不是引用拷贝，这点和C很不一样！！！</p>
+<h3 id="string"><a href="#string" class="headerlink" title="string"></a>string</h3><p>有地方说string是不可变的。这里要从string的内部结构说起：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1 type StringHeader struct &#123;     </span><br><span class="line">2     Data uintptr     </span><br><span class="line">3     Len  int</span><br><span class="line">4 &#125;</span><br></pre></td></tr></table></figure>
+<p> string内部是一个指向某块内存的指针，加上内存块的长度。这里说的string不可变指的是uintptr指向的内存块的内容不可变，但是其指向可以变，用C语言描述一下就是：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">const T *uintptr;</span><br></pre></td></tr></table></figure>
+
+<h3 id="struct"><a href="#struct" class="headerlink" title="struct"></a>struct</h3><p>struct是值类型。struct的声明和初始化如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">type Person struct &#123;</span><br><span class="line">        Name string</span><br><span class="line">        Age  int</span><br><span class="line">    &#125;&#x2F;&#x2F;struct声明</span><br><span class="line"></span><br><span class="line">    a :&#x3D; Person&#123;</span><br><span class="line">        Age:  1,</span><br><span class="line">        Name: &quot;hao&quot;,</span><br><span class="line">    &#125;&#x2F;&#x2F;直接初始化赋值，每个赋值语句后面要有逗号</span><br><span class="line"></span><br><span class="line">    b :&#x3D; Person&#123;&#125;    &#x2F;&#x2F;空结构体</span><br></pre></td></tr></table></figure>
+<p>go语言中没有继承的概念，只有组合的概念，下面是个小例子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"> 1 type Person struct &#123;</span><br><span class="line"> 2     Name string</span><br><span class="line"> 3     Age  int</span><br><span class="line"> 4 &#125;</span><br><span class="line"> 5 </span><br><span class="line"> 6 type teacher struct &#123;</span><br><span class="line"> 7     Person</span><br><span class="line"> 8     field string</span><br><span class="line"> 9 &#125;</span><br><span class="line">10 </span><br><span class="line">11 type student struct &#123;</span><br><span class="line">12     Person</span><br><span class="line">13     score int</span><br><span class="line">14 &#125;</span><br><span class="line">15 </span><br><span class="line">16 func main() &#123;</span><br><span class="line">17     a :&#x3D; student&#123;</span><br><span class="line">18         score:  100,</span><br><span class="line">19         Person: Person&#123;&quot;guhao&quot;, 18&#125;,</span><br><span class="line">20     &#125;</span><br><span class="line">21     fmt.Println(a)</span><br><span class="line">22 &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="struct中的method"><a href="#struct中的method" class="headerlink" title="struct中的method"></a>struct中的method</h3><p>go没有class，只有struct。但是struct中提供了method方法，但不支持重载。写法与函数类似，这样一个struct就和method绑定了起来。method可以访问struct的所有字段，事实上go语言struct字段的可见性是针对真个package而言的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"> 1 type A struct &#123;</span><br><span class="line"> 2     Name string</span><br><span class="line"> 3 &#125;</span><br><span class="line"> 4 </span><br><span class="line"> 5 type B struct &#123;</span><br><span class="line"> 6     Name string</span><br><span class="line"> 7 &#125;</span><br><span class="line"> 8 </span><br><span class="line"> 9 func main() &#123;</span><br><span class="line">10     a :&#x3D; A&#123;</span><br><span class="line">11         Name: &quot;gu&quot;,</span><br><span class="line">12     &#125;</span><br><span class="line">13     a.Print(&quot;hao&quot;)</span><br><span class="line">14 &#125;</span><br><span class="line">15 </span><br><span class="line">16 func (a A) Print(arg string) &#123; &#x2F;&#x2F;(a A)表示接收者，arg代表方法的参数</span><br><span class="line">17     fmt.Println(a.Name, arg)</span><br><span class="line">18 &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="基础类型起别名"><a href="#基础类型起别名" class="headerlink" title="基础类型起别名"></a>基础类型起别名</h3><p> go语言中可以给基础类型起别名，类似于C语言一样。下面的例子是给int起了个别名TZ，然后给这个别名绑定了print方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"> 1 type TZ int</span><br><span class="line"> 2 </span><br><span class="line"> 3 func (a *TZ) print() &#123;</span><br><span class="line"> 4     fmt.Println(&quot;TZ:&quot;, *a)</span><br><span class="line"> 5 &#125;</span><br><span class="line"> 6 func main() &#123;</span><br><span class="line"> 7     var a TZ &#x3D; 100</span><br><span class="line"> 8     a.print()</span><br><span class="line"> 9 </span><br><span class="line">10     var b int</span><br><span class="line">11     b &#x3D; a    &#x2F;&#x2F;错误</span><br><span class="line">12     b.print()  &#x2F;&#x2F;错误</span><br><span class="line">13 &#125;</span><br></pre></td></tr></table></figure>
+
+<p>虽然TZ是int的别名，但两者不能直接赋值，需要显式的类型强制转换。go语言将这两者视为不同的类型。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1 var b int &#x3D; 99</span><br><span class="line">2 a &#x3D; TZ(b)</span><br><span class="line">3 a.print()</span><br><span class="line"> </span><br></pre></td></tr></table></figure>
+<h3 id="引用类型："><a href="#引用类型：" class="headerlink" title="引用类型："></a>引用类型：</h3><p>引用类型有三种：slice\map和channel</p>
+<p><strong>slice</strong><br>slice其实是一个结构体，其中包含了指向底层数组的指针、长度、容量。所以改变slice的值也会改变对应的指向的底层数组。</p>
+<p>slice不支持==，或者!=</p>
+<p><strong>map</strong><br>map内部实现是hashtable， 定义如下m:=make(map[int]string)，每一级map需要单独初始化，否则直接用对二级map赋值会报错，而且是运行时候的错误，编译时无法发现。</p>
+<p>1 func main() {<br>2     m := make(map[int]map[int]string)<br>3     a, ok := m[2][1]<br>4     if !ok {<br>5         m[2] = make(map[int]string)<br>6     }<br>7     a = “A”<br>8     fmt.Println(a, ok)<br>9 }</p>
+<p>此外，<strong>map是引用类型，需要用make定义。而且map自动扩容，我需要学习。</strong>map的key必须支持==和!=操作（废话，不然怎么做通过key去查找）。</p>
+<p><strong>channel</strong></p>
+<h3 id="接口类型"><a href="#接口类型" class="headerlink" title="接口类型"></a>接口类型</h3><p>interface</p>
+<p><strong>函数类型</strong><br>func：函数也是一种类型，因为go语言的函数可以赋值给变量。不支持嵌套，重载和默认参数。支持closure。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"> 1 func closure(x int) func(int) int &#123;</span><br><span class="line"> 2     fmt.Printf(&quot;%p\n&quot;, &amp;x)</span><br><span class="line"> 3     return func(y int) int &#123;</span><br><span class="line"> 4         fmt.Printf(&quot;%p\n&quot;, &amp;x)</span><br><span class="line"> 5         return x + y</span><br><span class="line"> 6     &#125;</span><br><span class="line"> 7 &#125;</span><br><span class="line"> 8 </span><br><span class="line"> 9 func main() &#123;</span><br><span class="line">10     x :&#x3D; 1</span><br><span class="line">11     fc :&#x3D; closure(x)</span><br><span class="line">12     fc(100)</span><br><span class="line">13     fc(200)</span><br><span class="line">14 &#125;</span><br></pre></td></tr></table></figure>
+<p>我打印了三次调用的x的地址，打印的结果显示三次调用用到的x的值都是一样的，所以闭包对的x不是值拷贝，而是引用（应该是为了节约空间）。</p>
+<h3 id="defer语句"><a href="#defer语句" class="headerlink" title="defer语句"></a>defer语句</h3><p>go语言特有的，执行顺序和定义顺序相反，先定义的语句后执行。</p>
+<p>此外还支持panic和recover</p>
+<p> panic和recover</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"> 1 func A() &#123;</span><br><span class="line"> 2     fmt.Println(&quot;A&quot;)</span><br><span class="line"> 3 &#125;</span><br><span class="line"> 4 </span><br><span class="line"> 5 func B() &#123;</span><br><span class="line"> 6     defer func() &#123;</span><br><span class="line"> 7         if err :&#x3D; recover(); err !&#x3D; nil &#123;</span><br><span class="line"> 8             fmt.Println(&quot;recover in B&quot;)</span><br><span class="line"> 9         &#125;</span><br><span class="line">10     &#125;()</span><br><span class="line">11     panic(&quot;Panic in B&quot;)</span><br><span class="line">12 &#125;</span><br><span class="line">13 </span><br><span class="line">14 func C() &#123;</span><br><span class="line">15     fmt.Println(&quot;C&quot;)</span><br><span class="line">16 &#125;</span><br><span class="line">17 </span><br><span class="line">18 func main() &#123;</span><br><span class="line">19     A()</span><br><span class="line">20     B()</span><br><span class="line">21     C()</span><br><span class="line">22 &#125;</span><br></pre></td></tr></table></figure>
+<p>panic会导致程序中断，执行完了panic之后就不执行其他语句了，除非我们在panic执行前先注册了defer语句。因此recover登场了。recover必须和defer一起使用。可以帮助程序恢复执行。以上代码执行结构如下：</p>
+<p>类型转换只能显式转换，不能隐式转换</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">1 var a int &#x3D; 3</span><br><span class="line">2 var f float32 &#x3D; float32(a)</span><br></pre></td></tr></table></figure>
+
+<h3 id="枚举类型"><a href="#枚举类型" class="headerlink" title="枚举类型"></a>枚举类型</h3><p><strong>枚举类型必须定义在const块内.</strong></p>
+<p>1、const块内默认下一条使用上一条语句</p>
+<p>2、枚举值与iota出现的次数无关，与出现的位置有关：iota出现的位置代表了其值，默认从0开始。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"> 1 const (</span><br><span class="line"> 2     a &#x3D; &#39;A&#39;</span><br><span class="line"> 3     b</span><br><span class="line"> 4     c</span><br><span class="line"> 5     d &#x3D; iota</span><br><span class="line"> 6     e &#x3D; &#39;B&#39;</span><br><span class="line"> 7     f &#x3D; iota</span><br><span class="line"> 8     g</span><br><span class="line"> 9 )</span><br><span class="line">10 </span><br><span class="line">11 func main() &#123;</span><br><span class="line">12     fmt.Println(a) &#x2F;&#x2F;输出65</span><br><span class="line">13     fmt.Println(b) &#x2F;&#x2F;输出65</span><br><span class="line">14     fmt.Println(c) &#x2F;&#x2F;输出65</span><br><span class="line">15     fmt.Println(d) &#x2F;&#x2F;输出3</span><br><span class="line">16     fmt.Println(e) &#x2F;&#x2F;输出66</span><br><span class="line">17     fmt.Println(f) &#x2F;&#x2F;输出5</span><br><span class="line">18     fmt.Println(g) &#x2F;&#x2F;输出6</span><br><span class="line">19 &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="运算符"><a href="#运算符" class="headerlink" title="运算符"></a>运算符</h3><p>有算术运算符和逻辑运算符、位运算符，写法和C语言一致。</p>
+<p>多了一个专门为channel准备的运算符&lt;-</p>
+<h3 id="new和make"><a href="#new和make" class="headerlink" title="new和make"></a>new和make</h3><p><strong>new返回的是指针，不会初始化变量，只是把新申请的空间内容值为零。</strong><br>用C语言写类似下面：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">1 T *obj&#x3D;(T*)malloc(sizeof(T));</span><br><span class="line">2 memset(obj, 0, sizeof(T));</span><br></pre></td></tr></table></figure>
+<p>但并不是很准确，因为go语言中不同变量类型的零值不一样，比如bool的零值为false，int为零值为0，string的零值为空串，指针的零值是nil。所以下面这段代码p==nil</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var p *[]int &#x3D; new([]int) </span><br></pre></td></tr></table></figure>
+
+<p>内建函数make(T, args)与new(T)的用途不一样。<strong>make它只用来创建slice，map和channel，并且返回一个初始化的(而不是置零)，类型为T的值（而不是*T）</strong>（初始化和置零有区别）。之所以有所不同，是因为这三个类型的背后引用了使用前必须初始化的数据结构。例如，slice是一个三元描述符，包含一个指向数据（在数组中）的指针，长度，以及容量，在这些项被初始化之前，slice都是nil的。对于slice，map和channel，make初始化这些内部数据结构，并准备好可用的值。<br>（就是make对于的三种，很复杂，没法置零，所以你就只能初始化）</p>
+<h3 id="内存管理"><a href="#内存管理" class="headerlink" title="内存管理"></a>内存管理</h3><p>特别值得注意的是，局部变量不是所有的都分配在stack中（new出来的对象当然在heap上），<strong>如果一个函数的局部变量返回后依然被使用，那么这个变量分配在heap上，而不是stack上。</strong></p>
+<p>这一部分有点乱的总结一下，琐碎的知识点</p>
+<p><em><strong>以上就是本次的全部内容，希望对你有所帮助！！！</strong></em></p>
+
+        <p class="suffix-end">__END__</p>
+        <div class="suffix-box">
+            <div class="suffix-box-left">
+                <img src="https://gitee.com/psycho1900/miss-reddle/raw/master/profile.jpg" alt="Russshare">
+            </div>
+            <div class="suffix-box-right">
+                <span class="suffix-box-title">文章作者</span>：Russshare
+                <br>
+                <span class="suffix-box-title">文章出处</span>：<a href="/2021/05/31/golang%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/" target="_blank">golang的基本数据类型</a>
+                <br>
+                <span class="suffix-box-title">作者签名</span>：我们生死与共，勇往直前，永远都是坏小子.
+                <br>
+                <span class="suffix-box-title">关于主题</span>：<a href="https://github.com/first19326/Hexo-LiveForCode" target="_blank">Hexo - Russshare</a>
+                <br>
+                <span class="suffix-box-title">版权声明</span>：文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" title="BY-NC-SA" target="_blank">BY-NC-SA</a> 许可协议，转载请注明出处
+                <br>
+            </div>
+            <div style="clear: both;"></div>
+        </div>
+    </div>
+    <div class="article-footer">
+        
+            <div class="category">
+                分类：
+                
+                    <a href="/categories/golang%E5%9F%BA%E7%A1%80/">golang基础</a>
+                
+            </div>
+        
+        
+            <div class="tag">
+                标签：
+                
+                    <a href="/tags/golang%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/">golang数据类型</a>
+                
+            </div>
+        
+        <div class="article-prev-next">
+            
+                <a href="/2021/05/31/go%E8%AF%AD%E8%A8%80%E7%9A%84%E6%A0%87%E5%87%86%E5%BA%93container-3-ring/" class="prev-prefix">« </a> 上一篇：    <a href="/2021/05/31/go%E8%AF%AD%E8%A8%80%E7%9A%84%E6%A0%87%E5%87%86%E5%BA%93container-3-ring/" title="发布于 2021-05-31 09:25">go语言的标准库container-3-ring</a>
+                <br>
+            
+            
+                <a href="/2021/05/31/golang%E4%B8%ADmap%E7%9A%84%E5%B8%B8%E8%A7%81%E6%93%8D%E4%BD%9C/" class="next-prefix">» </a> 下一篇：    <a href="/2021/05/31/golang%E4%B8%ADmap%E7%9A%84%E5%B8%B8%E8%A7%81%E6%93%8D%E4%BD%9C/" title="发布于 2021-05-31 09:22">golang中map的常见操作</a>
+            
+        </div>
+    </div>
+    
+    <div class="article-comments">
+        <div class="comments-title">
+            评论列表
+        </div>
+        <div class="comments-content">
+        </div>
+    </div>
+
+</div>
+
+    </div>
+</div>
+    <div id="footer"></div>
+    <div id="sidebar">
+    <div class="menu-wrap" style="display:none;">
+        <nav class="menu">
+            <div class="menu-introduce"> 
+                <div class="introduce-avatar"></div> 
+                <div class="introduce-info"> 
+                    <div class="introduce-user"><span></span></div>        
+                </div> 
+            </div> 
+            <div class="menu-list">
+                <ul></ul> 
+            </div> 
+            <div class="menu-link"></div> 
+        </nav>
+        <button class="menu-button-close"></button>
+        <div class="morph-shape" id="morph-shape" data-morph-open="M-7.312,0H15c0,0,66,113.339,66,399.5C81,664.006,15,800,15,800H-7.312V0z;M-7.312,0H100c0,0,0,113.839,0,400c0,264.506,0,400,0,400H-7.312V0z">
+            <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 100 800" preserveAspectRatio="none">
+                <path d="M-7.312,0H0c0,0,0,113.839,0,400c0,264.506,0,400,0,400h-7.312V0z"/>
+            </svg>
+        </div>
+    </div>
+    <button class="menu-button-open">MENU</button>
+    <div class="menu-cover"></div>
+</div>
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/search.css">
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/iscroll.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/instantsearch.min.js"></script>
+<div class="search-window">
+    <div class="search-content">
+        <div class="search-content-icon">
+            <i class="iconfont icon-search"></i>
+        </div>
+        <div id="search-input" class="search-input"></div>
+    </div>
+
+    <div class="search-scroll">
+        <div class="search-result">
+            <div id="search-stats" class="search-stats"></div>
+            <div id="search-hits"></div>
+            <div id="search-pagination" class="search-pagination"></div>
+        </div>
+    </div>
+
+    <span class="search-close-icon">
+        <i class="iconfont icon-close"></i>
+    </span>
+</div>
+    <div id="tools">
+    <div class="progressbar-top"></div>
+
+    
+        <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/APlayer.css">
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/APlayer.min.js"></script>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/Meting.min.js"></script>
+        <meting-js id="3778678" lrcshow="false" server="netease" type="playlist" fixed="true" autoplay="false" loop="all" order="random" preload="auto" volume="0.67" mutex="true"></meting-js>
+    
+    
+    <div class="wrap-right"></div>
+    <div class="loading"></div>
+</div>
+    <script>
+    window.config = {
+        GitHubUserName     : 'Russshare',
+        GitHubRepositories : 'Russshare',
+
+        BlogUser      : 'Russshare',
+        BlogAvatar    : 'https://gitee.com/psycho1900/miss-reddle/raw/master/profile.jpg',
+        BlogStartDate : '2021-03-17',
+
+        WebsiteTitleBlur         : '(◍´꒳`◍) Hi, Miss Riddle',
+        WebsiteTitleBlurTimeOut  : 500,
+        WebsiteTitleFocus        : '(*´∇｀*) 欢迎回来!',
+        WebsiteTitleFocusTimeOut : 1000,
+        WebsiteFavicon           : 'https://gitee.com/psycho1900/miss-reddle/raw/master/beer.png',
+
+        ProgressBar: {
+            id       : 'topProgressBar',
+            color    : '#77B6FF',
+            height   : '2px',
+            duration : 0.2
+        },
+
+        Loading: {
+            rebound: {
+                tension  : 16,
+                friction : 5
+            },
+            spinner: {
+                id     : 'spinner',
+                radius : 90,
+                sides  : 3,
+                depth  : 4,
+                colors : {
+                    background : '#F0F0F0',
+                    stroke     : '#272633',
+                    base       : '',
+                    child      : '#272633'
+                },
+                alwaysForward : true,
+                restAt        : 0.5,
+                renderBase    : false
+            }
+        },
+
+        HomeHeaderAnimationRendered : true,
+        HomeHeaderAnimation         : {
+            radius      : 15,
+            density     : 0.2,
+            color       : 'rgba(255, 255, 255, .2)',
+            clearOffset : 0.3
+        },
+
+        ArticleHeaderAnimationRendered : false,
+        ArticleHeaderAnimation         : {
+            triW                  : 14,
+            triH                  : 20,
+            neighbours            : [
+                
+                    'side',
+                
+                    'top',
+                
+                    'bottom',
+                
+            ],
+            speedTrailAppear      : 0.1,
+            speedTrailDisappear   : 0.1,
+            speedTriOpen          : 1,
+            trailMaxLength        : 30,
+            trailIntervalCreation : 100,
+            delayBeforeDisappear  : 2,
+            colors                : [
+                
+                    '#96EDA6',
+                
+                    '#5BC6A9',
+                
+                    '#38668C',
+                
+                    '#374D84',
+                
+                    '#BED5CB',
+                
+                    '#62ADC6',
+                
+                    '#8EE5DE',
+                
+                    '#304E7B',
+                
+            ]
+        },
+
+        BackAnimationRendered          : true,
+        IEBrowserBackAnimationRendered : false,
+        BackAnimation                  : {
+            colorSaturation  : '60%',
+            colorBrightness  : '50%',
+            colorAlpha       : 0.5,
+            colorCycleSpeed  : 5,
+            verticalPosition : 'random',
+            horizontalSpeed  : 200,
+            ribbonCount      : 3,
+            strokeSize       : 0,
+            parallaxAmount   : -0.2,
+            animateSections  : true
+        },
+
+        HomeHeaderImage : [
+            
+                'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/image/header/home.jpg',
+            
+                'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/image/header/home.jpeg',
+            
+        ],
+        HomeBannerText  : '',
+
+        ArticleHeaderImage : [
+            
+                'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/image/header/article.jpg',
+            
+        ],
+
+        OtherBannerText : '',
+
+        MenuList : [
+            
+                {
+                    name   : '首页',
+                    href   : '/',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '标签',
+                    href   : '/tag',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '分类',
+                    href   : '/category',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '赞赏',
+                    href   : '/donate',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '关于',
+                    href   : '/about',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '搜索',
+                    href   : '',    
+                    target : '',
+                    class  : 'search'
+                },
+            
+                {
+                    name   : '留言板',
+                    href   : '/comment',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '友情链接',
+                    href   : '/friend',    
+                    target : '',
+                    class  : ''
+                },
+            
+        ],
+        MenuLink : [
+            
+                
+                    {
+                        icon : 'icon-weibo', 
+                        url  : ''
+                    },
+                
+                    {
+                        icon : 'icon-wechat', 
+                        url  : ''
+                    },
+                
+                    {
+                        icon : 'icon-qq', 
+                        url  : ''
+                    },
+                
+                    {
+                        icon : 'icon-github', 
+                        url  : 'https://github.com/RiddleGo'
+                    },
+                
+            
+        ],
+
+        FooterStyle : 2,
+        BottomText  : {
+            icon    : 'like-fill',
+            left    : '人生若只如初见',
+            right   : '何事秋风悲画扇'
+        },
+        ThemeInfo   : true,
+
+        ConsoleList : [
+            
+                
+                    [
+                        
+                            
+                                'Based on cnblogs theme SimpleMemory.',
+                            
+                                '',
+                            
+                        
+                    ],
+                
+                    [
+                        
+                            
+                                'SimpleMemory Author:',
+                            
+                                'BNDong',
+                            
+                        
+                    ],
+                
+                    [
+                        
+                            
+                                'Theme:',
+                            
+                                'LiveForCode',
+                            
+                        
+                    ],
+                
+            
+        ],
+
+        FontIconExtend : '',
+
+        Donate : {
+            paypal  : '',
+            bitcoin : '',
+            alipay  : '',
+            wechat  : ''
+        },
+
+        Code : {
+            style : 'normal'
+        },  
+
+        Search : {
+            applicationID : '010C3EANT8',
+            apiKey        : 'c7abab9f11b79102b9aff7fe6d41447d',
+            indexName     : 'Notes',
+            hits          : {
+                page : 10
+            },
+            labels        : {
+                placeholder : '搜索',
+                empty       : '未发现与 「${query}」 相关的内容',
+                stats       : '${hits} 条相关条目，使用了 ${time} 毫秒',
+            }
+        }, 
+
+        Valine : {
+            switch         : true,
+            el             : '.comments-content',
+            appId          : 'TKpiBidydKtx7apGCq7DM4Fw-gzGzoHsz',
+            appKey         : 'wsVqBbLWlLy4JRbi9I4XDBpH',
+            placeholder    : '你是我一生只会遇见一次的惊喜...',
+            avatar         : 'mm',
+            meta           : 'nick,mail,link',
+            requiredFields : 'nick,mail',
+            pageSize       : 5,
+            lang           : 'zh-cn',
+            visitor        : true,
+            enableQQ       : true
+        },
+
+        Tocbot : {
+            switch                : true,
+            tocSelector           : '.toc',
+            contentSelector       : '.article-body',
+            headingSelector       : 'h1, h2, h3, h4, h5',
+            headingsOffset        : 0,
+            scrollSmooth          : true,
+            scrollSmoothOffset    : -5,
+            positionFixedSelector : '.toc',
+            positionFixedClass    : 'toc-fixed',
+            fixedSidebarOffset    : '',
+        },
+
+        Require : {
+            baseUrl     : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/',
+            waitSeconds : 100
+        },
+
+        Music : {
+            type : 'Meting'
+        },
+        APlayer : {
+            container : '.aplayer',
+            fixed     : true,
+            autoplay  : false,
+            loop      : 'all',
+            order     : 'random',
+            preload   : 'auto',
+            volume    : 0.67,
+            mutex     : true,
+            lrcType   : 3,
+            audio     : [
+                
+                    {
+                        name   : 'aLIEz',
+                        artist : 'mizuki（瑞葵）',
+                        cover  : '/music/cover/aLIEz.jpg',
+                        url    : '/music/song/aLIEz.mp3',
+                        lrc    : '/music/lrc/aLIEz.lrc'
+                    },
+                
+                    {
+                        name   : 'Endless Tears',
+                        artist : 'CLIFF EDGE',
+                        cover  : '/music/cover/Endless Tears.jpg',
+                        url    : '/music/song/Endless Tears.mp3',
+                        lrc    : '/music/lrc/Endless Tears.lrc'
+                    },
+                
+                    {
+                        name   : 'Miracle',
+                        artist : 'Cascada',
+                        cover  : '/music/cover/Miracle.jpg',
+                        url    : '/music/song/Miracle.mp3',
+                        lrc    : '/music/lrc/Miracle.lrc'
+                    },
+                
+                    {
+                        name   : 'Roll The Dice',
+                        artist : '高珊',
+                        cover  : '/music/cover/Roll The Dice.jpg',
+                        url    : '/music/song/Roll The Dice.mp3',
+                        lrc    : '/music/lrc/Roll The Dice.lrc'
+                    },
+                
+                    {
+                        name   : 'See You Again',
+                        artist : 'Charlie Puth, Wiz Khalifa',
+                        cover  : '/music/cover/See You Again.jpg',
+                        url    : '/music/song/See You Again.mp3',
+                        lrc    : '/music/lrc/See You Again.lrc'
+                    },
+                
+                    {
+                        name   : 'Traveling Light',
+                        artist : 'Joel Hanson, Sara Groves',
+                        cover  : '/music/cover/Traveling Light.jpg',
+                        url    : '/music/song/Traveling Light.mp3',
+                        lrc    : '/music/lrc/Traveling Light.lrc'
+                    },
+                
+                    {
+                        name   : '痴心绝对',
+                        artist : '李圣杰',
+                        cover  : '/music/cover/痴心绝对.jpg',
+                        url    : '/music/song/痴心绝对.mp3',
+                        lrc    : '/music/lrc/痴心绝对.lrc'
+                    },
+                
+                    {
+                        name   : '好想大声说爱你',
+                        artist : 'BAAD（バード）',
+                        cover  : '/music/cover/好想大声说爱你.jpg',
+                        url    : '/music/song/好想大声说爱你.mp3',
+                        lrc    : '/music/lrc/好想大声说爱你.lrc'
+                    },
+                
+            ]
+        },
+        Meting : {
+            id       : '3778678', 
+            lrcshow  : false, 
+            server   : 'netease', 
+            type     : 'playlist', 
+            fixed    : true, 
+            autoplay : false, 
+            loop     : 'all', 
+            order    : 'random', 
+            preload  : 'auto', 
+            volume   : 0.67, 
+            mutex    : true
+        },
+
+        LazyLoad : {
+            default : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/image/website/lazyload.svg'
+        },
+  
+        Style : {
+            aplayer          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/APlayer.css',
+            archive          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/archive.css',
+            donate           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/donate.css',
+            fancybox         : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/jquery.fancybox.css',
+            footer           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/footer.css',
+            iconfont         : 'https://at.alicdn.com/t/font_1546312_l3yohatebw.css',
+            index            : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/index.css',
+            menuBubble       : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/menu-bubble.css',
+            page             : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/page.css',
+            post             : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/post.css',
+            search           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/search.css',
+            tocbot           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/tocbot.css',
+            normal           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/normal.css',
+            night            : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/night.css',
+            clipboard        : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/clipboard.css'
+        },
+
+        Script: {
+            aplayer          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/APlayer.min.js',
+            config           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/require.config.js',
+            index            : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/index.js',
+            instantSearch    : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/instantsearch.min.js',
+            jQuery           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/jquery-3.4.1.min.js',
+            loading          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/loading.js',
+            meting           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/Meting.min.js',
+            iscroll          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/iscroll.js',
+            require          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/require.min.js'
+        },
+
+        Font: {
+            LongCang   : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/LongCang.css',
+            Monda      : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Monda.css',
+            NotoSansSC : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/NotoSansSC.css',
+            Playball   : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Playball.css',
+            PTMono     : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/PTMono.css',
+            RobotoSlab : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/RobotoSlab.css',
+            Rosario    : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Rosario.css',
+            UbuntuMono : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/UbuntuMono.css'
+        },
+
+        Suffix : {
+            about : '我们生死与共，勇往直前，永远都是坏小子.'
+        },
+            
+        Theme : {
+            url  : 'https://github.com/first19326/Hexo-LiveForCode',
+            name : 'Hexo - Russshare'
+        }  
+    };
+</script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/index.js"></script>
+</body>
+</html>

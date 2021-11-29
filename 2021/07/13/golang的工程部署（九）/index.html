@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, shrink-to-fit=no">
+    <meta name="referrer" content="origin">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <title>golang的工程部署（九）</title>
+
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/LongCang.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Monda.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/NotoSansSC.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Playball.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/PTMono.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/RobotoSlab.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Rosario.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/UbuntuMono.css">
+
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/post.css">
+    
+        <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/normal.css">
+    
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/jquery-3.4.1.min.js"></script>
+
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+</head>
+<body>
+    <a id="cover"></a>
+    <div id="header">
+    <div class="header">
+        <div class="vertical">
+            <div class="inner">
+                <h1 class="header-subtitle">golang的工程部署（九）</h1>
+                <div class="header-subinfo">
+                    <p class="article-info-text">
+                        <span>
+                            <i class="iconfont icon-time"></i> 发表时间：2021-07-13
+                        </span>
+                        
+                            <span id="/2021/07/13/golang的工程部署（九）/" class="leancloud_visitors" data-flag-title="golang的工程部署（九）">
+                                <i class="iconfont icon-browse"></i> 阅读：<sapn class="leancloud-visitors-count"></span>
+                            </span>
+                        
+                        <span>
+                            <i class="iconfont icon-interactive"></i> 评论：<span class="valine-comment-count" data-xid="/2021/07/13/golang的工程部署（九）/"></span>
+                        </span>  
+                    </p>                 
+                </div>
+            </div>
+        </div>
+        <canvas id="articleHeaderCanvas"></canvas>
+    </div>
+</div>
+    <div id="container">
+    <div id="content">
+        <div id="article">
+    <div class="toc"></div>
+    <div class="article-body">
+        <h3 id="前言：文章转自李文周的blog"><a href="#前言：文章转自李文周的blog" class="headerlink" title="前言：文章转自李文周的blog"></a>前言：文章转自李文周的blog</h3><p>这位前辈的blog的干货太多了，真的大家一定要好好去研读一下blog<a target="_blank" rel="noopener" href="https://www.liwenzhou.com/posts/Go/deploy_go_app/">文章</a><br>(本文没有图片，只是相当于记笔记一样，边复制边实践，边阅读。)<br>(为了最好的阅读体验，移步<a target="_blank" rel="noopener" href="https://www.liwenzhou.com/posts/Go/deploy_go_app/">原文</a>)<br>(为了最好的阅读体验，移步<a target="_blank" rel="noopener" href="https://www.liwenzhou.com/posts/Go/deploy_go_app/">原文</a>)<br>(为了最好的阅读体验，移步<a target="_blank" rel="noopener" href="https://www.liwenzhou.com/posts/Go/deploy_go_app/">原文</a>)</p>
+<p>本文以部署 Go Web 程序为例，介绍了在 CentOS7 服务器上部署 Go 语言程序的若干方法。</p>
+<h2 id="部署Go语言项目"><a href="#部署Go语言项目" class="headerlink" title="部署Go语言项目"></a>部署Go语言项目</h2><p>本文以部署 Go Web 程序为例，介绍了在 CentOS7 服务器上部署 Go 语言程序的若干方法。</p>
+<h3 id="独立部署"><a href="#独立部署" class="headerlink" title="独立部署"></a>独立部署</h3><p><strong>Go 语言支持跨平台交叉编译，</strong>也就是说我们可以在 Windows 或 Mac 平台下编写代码，并且将代码编译成能够在 Linux amd64 服务器上运行的程序。</p>
+<p><strong>对于简单的项目，通常我们只需要将编译后的二进制文件拷贝到服务器上，然后设置为后台守护进程运行即可。</strong></p>
+<h4 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h4><p>编译可以通过以下命令或编写 makefile 来操作。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CGO_ENABLED&#x3D;0 GOOS&#x3D;linux GOARCH&#x3D;amd64 go build -o .&#x2F;bin&#x2F;bluebell</span><br></pre></td></tr></table></figure>
+
+<p>下面假设我们将本地编译好的 bluebell 二进制文件、配置文件和静态文件等上传到服务器的/data/app/bluebell目录下。</p>
+<p>补充一点，如果嫌弃编译后的二进制文件太大，可以在编译的时候加上-ldflags “-s -w”参数去掉符号表和调试信息，一般能减小20%的大小。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CGO_ENABLED&#x3D;0 GOOS&#x3D;linux GOARCH&#x3D;amd64 go build -ldflags &quot;-s -w&quot; -o .&#x2F;bin&#x2F;bluebell</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>如果还是嫌大的话可以继续使用 upx 工具对二进制可执行文件进行压缩。</p>
+<p>我们编译好 bluebell 项目后，相关必要文件的目录结构如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">├── bin</span><br><span class="line">│   └── bluebell</span><br><span class="line">├── conf</span><br><span class="line">│   └── config.yaml</span><br><span class="line">├── static</span><br><span class="line">│   ├── css</span><br><span class="line">│   │   └── app.0afe9dae.css</span><br><span class="line">│   ├── favicon.ico</span><br><span class="line">│   ├── img</span><br><span class="line">│   │   ├── avatar.7b0a9835.png</span><br><span class="line">│   │   ├── iconfont.cdbe38a0.svg</span><br><span class="line">│   │   ├── logo.da56125f.png</span><br><span class="line">│   │   └── search.8e85063d.png</span><br><span class="line">│   └── js</span><br><span class="line">│       ├── app.9f3efa6d.js</span><br><span class="line">│       ├── app.9f3efa6d.js.map</span><br><span class="line">│       ├── chunk-vendors.57f9e9d6.js</span><br><span class="line">│       └── chunk-vendors.57f9e9d6.js.map</span><br><span class="line">└── templates</span><br><span class="line">    └── index.html</span><br></pre></td></tr></table></figure>
+
+<h4 id="nohup"><a href="#nohup" class="headerlink" title="nohup"></a>nohup</h4><p>nohup 用于在系统后台不挂断地运行命令，不挂断指的是退出执行命令的终端也不会影响程序的运行。</p>
+<p>我们可以使用 nohup 命令来运行应用程序，使其作为后台守护进程运行。由于在主流的 Linux 发行版中都会默认安装 nohup 命令工具，我们可以直接输入以下命令来启动我们的项目：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo nohup .&#x2F;bin&#x2F;bluebell conf&#x2F;config.yaml &gt; nohup_bluebell.log 2&gt;&amp;1 &amp;</span><br></pre></td></tr></table></figure>
+<p>其中：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">.&#x2F;bluebell conf&#x2F;config.yaml是我们应用程序的启动命令</span><br><span class="line"></span><br><span class="line">nohup ... &amp;表示在后台不挂断的执行上述应用程序的启动命令</span><br><span class="line"></span><br><span class="line">&gt; nohup_bluebell.log表示将命令的标准输出重定向到 nohup_bluebell.log 文件</span><br><span class="line"></span><br><span class="line">2&gt;&amp;1表示将标准错误输出也重定向到标准输出中，结合上一条就是把执行命令的输出都定向到 nohup_bluebell.log 文件</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>上面的命令执行后会返回进程 id</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[1] 6338</span><br></pre></td></tr></table></figure>
+<p>当然我们也可以通过以下命令查看 bluebell 相关活动进程：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ps -ef | grep bluebell</span><br></pre></td></tr></table></figure>
+<p>输出：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">root      6338  4048  0 08:43 pts&#x2F;0    00:00:00 .&#x2F;bin&#x2F;bluebell conf&#x2F;config.yaml</span><br><span class="line">root      6376  4048  0 08:43 pts&#x2F;0    00:00:00 grep --color&#x3D;auto bluebell</span><br></pre></td></tr></table></figure>
+<p>此时就可以打开浏览器输入http://服务器公网ip:端口查看应用程序的展示效果了。</p>
+<h4 id="supervisor"><a href="#supervisor" class="headerlink" title="supervisor"></a>supervisor</h4><p>Supervisor <strong>是业界流行的一个通用的进程管理程序</strong>，<strong>它能将一个普通的命令行进程变为后台守护进程</strong>，<strong>并监控该进程的运行状态</strong>，<strong>当该进程异常退出时能将其自动重启</strong>。</p>
+<p>首先使用 yum 来安装 supervisor：</p>
+<p>如果你还没有安装过 EPEL，可以通过运行下面的命令来完成安装，如果已安装则跳过此步骤：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install epel-release</span><br></pre></td></tr></table></figure>
+<p>安装 supervisor</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install supervisor</span><br></pre></td></tr></table></figure>
+
+<p>Supervisor 的配置文件为：/etc/supervisord.conf ，Supervisor 所管理的应用的配置文件放在 /etc/supervisord.d/ 目录中，这个目录可以在 supervisord.conf 中的include配置。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[include]</span><br><span class="line">files &#x3D; &#x2F;etc&#x2F;supervisord.d&#x2F;*.conf</span><br></pre></td></tr></table></figure>
+<p>启动supervisor服务：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo supervisord -c &#x2F;etc&#x2F;supervisord.conf</span><br></pre></td></tr></table></figure>
+<p>我们在/etc/supervisord.d目录下创建一个名为bluebell.conf的配置文件，具体内容如下。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[program:bluebell]  ;程序名称</span><br><span class="line">user&#x3D;root  ;执行程序的用户</span><br><span class="line">command&#x3D;&#x2F;data&#x2F;app&#x2F;bluebell&#x2F;bin&#x2F;bluebell &#x2F;data&#x2F;app&#x2F;bluebell&#x2F;conf&#x2F;config.yaml  ;执行的命令</span><br><span class="line">directory&#x3D;&#x2F;data&#x2F;app&#x2F;bluebell&#x2F; ;命令执行的目录</span><br><span class="line">stopsignal&#x3D;TERM  ;重启时发送的信号</span><br><span class="line">autostart&#x3D;true  </span><br><span class="line">autorestart&#x3D;true  ;是否自动重启</span><br><span class="line">stdout_logfile&#x3D;&#x2F;var&#x2F;log&#x2F;bluebell-stdout.log  ;标准输出日志位置</span><br><span class="line">stderr_logfile&#x3D;&#x2F;var&#x2F;log&#x2F;bluebell-stderr.log  ;标准错误日志位置</span><br></pre></td></tr></table></figure>
+<p>创建好配置文件之后，重启supervisor服务</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo supervisorctl update # 更新配置文件并重启相关的程序</span><br></pre></td></tr></table></figure>
+<p>查看bluebell的运行状态：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo supervisorctl status bluebell</span><br></pre></td></tr></table></figure>
+<p>输出：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bluebell                         RUNNING   pid 10918, uptime 0:05:46</span><br></pre></td></tr></table></figure>
+<p>最后补充一下常用的supervisr管理命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">supervisorctl status       # 查看所有任务状态</span><br><span class="line">supervisorctl shutdown     # 关闭所有任务</span><br><span class="line">supervisorctl start 程序名  # 启动任务</span><br><span class="line">supervisorctl stop 程序名   # 关闭任务</span><br><span class="line">supervisorctl reload       # 重启supervisor</span><br></pre></td></tr></table></figure>
+<p>接下来就是打开浏览器查看网站是否正常了。</p>
+<h3 id="搭配nginx部署"><a href="#搭配nginx部署" class="headerlink" title="搭配nginx部署"></a>搭配nginx部署</h3><p><strong>在需要静态文件分离</strong>、<strong>需要配置多个域名及证书</strong>、<strong>需要自建负载均衡层等稍复杂的场景下</strong>，我们一般需要搭配第三方的web服务器（Nginx、Apache）来部署我们的程序。</p>
+<h4 id="正向代理与反向代理"><a href="#正向代理与反向代理" class="headerlink" title="正向代理与反向代理"></a>正向代理与反向代理</h4><p><strong>正向代理可以简单理解为客户端的代理</strong>，你访问墙外的网站用的那个属于正向代理。</p>
+<p><strong>反向代理可以简单理解为服务器的代理</strong>，通常说的 Nginx 和 Apache 就属于反向代理。</p>
+<p>Nginx 是一个免费的、开源的、高性能的 HTTP 和反向代理服务，主要负责负载一些访问量比较大的站点。</p>
+<p>Nginx 可以作为一个独立的 Web 服务，也可以用来给 Apache 或是其他的 Web 服务做反向代理。<strong>相比于 Apache，Nginx 可以处理更多的并发连接，而且每个连接的内存占用的非常小。</strong></p>
+<h4 id="使用yum安装nginx"><a href="#使用yum安装nginx" class="headerlink" title="使用yum安装nginx"></a>使用yum安装nginx</h4><p>EPEL 仓库中有 Nginx 的安装包。如果你还没有安装过 EPEL，可以通过运行下面的命令来完成安装：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install epel-release</span><br></pre></td></tr></table></figure>
+<p>安装nginx</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install nginx</span><br></pre></td></tr></table></figure>
+<p>安装完成后，执行下面的命令设置Nginx开机启动：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl enable nginx</span><br></pre></td></tr></table></figure>
+<p>启动Nginx</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl start nginx</span><br></pre></td></tr></table></figure>
+<p>查看Nginx运行状态：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl status nginx</span><br></pre></td></tr></table></figure>
+<h4 id="Nginx配置文件"><a href="#Nginx配置文件" class="headerlink" title="Nginx配置文件"></a>Nginx配置文件</h4><p>通过上面的方法安装的 nginx，所有相关的配置文件都在 /etc/nginx/ 目录中。Nginx 的主配置文件是 /etc/nginx/nginx.conf。</p>
+<p>默认还有一个nginx.conf.default的配置文件示例，可以作为参考。<strong>你可以为多个服务创建不同的配置文件（建议为每个服务（域名）创建一个单独的配置文件），每一个独立的 Nginx 服务配置文件都必须以 .conf结尾，并存储在 /etc/nginx/conf.d 目录中。</strong></p>
+<h4 id="Nginx常用命令"><a href="#Nginx常用命令" class="headerlink" title="Nginx常用命令"></a>Nginx常用命令</h4><p>补充几个 Nginx 常用命令。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">nginx -s stop    # 停止 Nginx 服务</span><br><span class="line">nginx -s reload  # 重新加载配置文件</span><br><span class="line">nginx -s quit    # 平滑停止 Nginx 服务</span><br><span class="line">nginx -t         # 测试配置文件是否正确</span><br></pre></td></tr></table></figure>
+<h4 id="Nginx反向代理部署"><a href="#Nginx反向代理部署" class="headerlink" title="Nginx反向代理部署"></a>Nginx反向代理部署</h4><p>我们推荐使用 nginx 作为反向代理来部署我们的程序，按下面的内容修改 nginx 的配置文件。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">worker_processes  1;</span><br><span class="line"></span><br><span class="line">events &#123;</span><br><span class="line">    worker_connections  1024;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">http &#123;</span><br><span class="line">    include       mime.types;</span><br><span class="line">    default_type  application&#x2F;octet-stream;</span><br><span class="line"></span><br><span class="line">    sendfile        on;</span><br><span class="line">    keepalive_timeout  65;</span><br><span class="line"></span><br><span class="line">    server &#123;</span><br><span class="line">        listen       80;</span><br><span class="line">        server_name  localhost;</span><br><span class="line"></span><br><span class="line">        access_log   &#x2F;var&#x2F;log&#x2F;bluebell-access.log;</span><br><span class="line">        error_log    &#x2F;var&#x2F;log&#x2F;bluebell-error.log;</span><br><span class="line"></span><br><span class="line">        location &#x2F; &#123;</span><br><span class="line">            proxy_pass                 http:&#x2F;&#x2F;127.0.0.1:8084;</span><br><span class="line">            proxy_redirect             off;</span><br><span class="line">            proxy_set_header           Host             $host;</span><br><span class="line">            proxy_set_header           X-Real-IP        $remote_addr;</span><br><span class="line">            proxy_set_header           X-Forwarded-For  $proxy_add_x_forwarded_for;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>执行下面的命令检查配置文件语法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nginx -t</span><br></pre></td></tr></table></figure>
+<p>执行下面的命令重新加载配置文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nginx -s reload</span><br></pre></td></tr></table></figure>
+<p>接下来就是打开浏览器查看网站是否正常了。</p>
+<p>当然我们还可以使用 nginx 的 upstream 配置来添加多个服务器地址实现负载均衡。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">worker_processes  1;</span><br><span class="line"></span><br><span class="line">events &#123;</span><br><span class="line">    worker_connections  1024;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">http &#123;</span><br><span class="line">    include       mime.types;</span><br><span class="line">    default_type  application&#x2F;octet-stream;</span><br><span class="line"></span><br><span class="line">    sendfile        on;</span><br><span class="line">    keepalive_timeout  65;</span><br><span class="line"></span><br><span class="line">    upstream backend &#123;</span><br><span class="line">      server 127.0.0.1:8084;</span><br><span class="line">      # 这里需要填真实可用的地址，默认轮询</span><br><span class="line">      #server backend1.example.com;</span><br><span class="line">      #server backend2.example.com;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    server &#123;</span><br><span class="line">        listen       80;</span><br><span class="line">        server_name  localhost;</span><br><span class="line"></span><br><span class="line">        access_log   &#x2F;var&#x2F;log&#x2F;bluebell-access.log;</span><br><span class="line">        error_log    &#x2F;var&#x2F;log&#x2F;bluebell-error.log;</span><br><span class="line"></span><br><span class="line">        location &#x2F; &#123;</span><br><span class="line">            proxy_pass                 http:&#x2F;&#x2F;backend&#x2F;;</span><br><span class="line">            proxy_redirect             off;</span><br><span class="line">            proxy_set_header           Host             $host;</span><br><span class="line">            proxy_set_header           X-Real-IP        $remote_addr;</span><br><span class="line">            proxy_set_header           X-Forwarded-For  $proxy_add_x_forwarded_for;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Nginx分离静态文件请求"><a href="#Nginx分离静态文件请求" class="headerlink" title="Nginx分离静态文件请求"></a>Nginx分离静态文件请求</h4><p><strong>上面的配置是简单的使用 nginx 作为反向代理处理所有的请求并转发给我们的 Go 程序处理，其实我们还可以有选择的将静态文件部分的请求直接使用 nginx 处理，</strong>而将 API 接口类的动态处理请求转发给后端的 Go 程序来处理。</p>
+<p>分离静态文件请求图示</p>
+<p>下面继续修改我们的 nginx 的配置文件来实现上述功能。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">worker_processes  1;</span><br><span class="line"></span><br><span class="line">events &#123;</span><br><span class="line">    worker_connections  1024;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">http &#123;</span><br><span class="line">    include       mime.types;</span><br><span class="line">    default_type  application&#x2F;octet-stream;</span><br><span class="line"></span><br><span class="line">    sendfile        on;</span><br><span class="line">    keepalive_timeout  65;</span><br><span class="line"></span><br><span class="line">    server &#123;</span><br><span class="line">        listen       80;</span><br><span class="line">        server_name  bluebell;</span><br><span class="line"></span><br><span class="line">        access_log   &#x2F;var&#x2F;log&#x2F;bluebell-access.log;</span><br><span class="line">        error_log    &#x2F;var&#x2F;log&#x2F;bluebell-error.log;</span><br><span class="line"></span><br><span class="line">		# 静态文件请求</span><br><span class="line">        location ~ .*\.(gif|jpg|jpeg|png|js|css|eot|ttf|woff|svg|otf)$ &#123;</span><br><span class="line">            access_log off;</span><br><span class="line">            expires    1d;</span><br><span class="line">            root       &#x2F;data&#x2F;app&#x2F;bluebell;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        # index.html页面请求</span><br><span class="line">        # 因为是单页面应用这里使用 try_files 处理一下，避免刷新页面时出现404的问题</span><br><span class="line">        location &#x2F; &#123;</span><br><span class="line">            root &#x2F;data&#x2F;app&#x2F;bluebell&#x2F;templates;</span><br><span class="line">            index index.html;</span><br><span class="line">            try_files $uri $uri&#x2F; &#x2F;index.html;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">		# API请求</span><br><span class="line">        location &#x2F;api &#123;</span><br><span class="line">            proxy_pass                 http:&#x2F;&#x2F;127.0.0.1:8084;</span><br><span class="line">            proxy_redirect             off;</span><br><span class="line">            proxy_set_header           Host             $host;</span><br><span class="line">            proxy_set_header           X-Real-IP        $remote_addr;</span><br><span class="line">            proxy_set_header           X-Forwarded-For  $proxy_add_x_forwarded_for;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="前后端分开部署"><a href="#前后端分开部署" class="headerlink" title="前后端分开部署"></a>前后端分开部署</h4><p>前后端的代码没必要都部署到相同的服务器上，也可以分开部署到不同的服务器上，下图是前端服务将 API 请求转发至后端服务的方案。</p>
+<p>前后端分开部署方案1</p>
+<p>上面的部署方案中，所有浏览器的请求都是直接访问前端服务，而如果是浏览器直接访问后端API服务的部署模式下，如下图。</p>
+<p>此时前端和后端通常不在同一个域下，我们还需要在后端代码中添加跨域支持。</p>
+<p>前后端分开部署方案2</p>
+<p>这里使用github.com/gin-contrib/cors库来支持跨域请求。</p>
+<p>最简单的允许跨域的配置是使用cors.Default()，它默认允许所有跨域请求。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">func main() &#123;</span><br><span class="line">	router :&#x3D; gin.Default()</span><br><span class="line">	&#x2F;&#x2F; same as</span><br><span class="line">	&#x2F;&#x2F; config :&#x3D; cors.DefaultConfig()</span><br><span class="line">	&#x2F;&#x2F; config.AllowAllOrigins &#x3D; true</span><br><span class="line">	&#x2F;&#x2F; router.Use(cors.New(config))</span><br><span class="line">	router.Use(cors.Default())</span><br><span class="line">	router.Run()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>此外，还可以使用cors.Config自定义具体的跨域请求相关配置项：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">	&quot;time&quot;</span><br><span class="line"></span><br><span class="line">	&quot;github.com&#x2F;gin-contrib&#x2F;cors&quot;</span><br><span class="line">	&quot;github.com&#x2F;gin-gonic&#x2F;gin&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line">	router :&#x3D; gin.Default()</span><br><span class="line">	&#x2F;&#x2F; CORS for https:&#x2F;&#x2F;foo.com and https:&#x2F;&#x2F;github.com origins, allowing:</span><br><span class="line">	&#x2F;&#x2F; - PUT and PATCH methods</span><br><span class="line">	&#x2F;&#x2F; - Origin header</span><br><span class="line">	&#x2F;&#x2F; - Credentials share</span><br><span class="line">	&#x2F;&#x2F; - Preflight requests cached for 12 hours</span><br><span class="line">	router.Use(cors.New(cors.Config&#123;</span><br><span class="line">		AllowOrigins:     []string&#123;&quot;https:&#x2F;&#x2F;foo.com&quot;&#125;,</span><br><span class="line">		AllowMethods:     []string&#123;&quot;PUT&quot;, &quot;PATCH&quot;&#125;,</span><br><span class="line">		AllowHeaders:     []string&#123;&quot;Origin&quot;&#125;,</span><br><span class="line">		ExposeHeaders:    []string&#123;&quot;Content-Length&quot;&#125;,</span><br><span class="line">		AllowCredentials: true,</span><br><span class="line">		AllowOriginFunc: func(origin string) bool &#123;</span><br><span class="line">			return origin &#x3D;&#x3D; &quot;https:&#x2F;&#x2F;github.com&quot;</span><br><span class="line">		&#125;,</span><br><span class="line">		MaxAge: 12 * time.Hour,</span><br><span class="line">	&#125;))</span><br><span class="line">	router.Run()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="容器部署"><a href="#容器部署" class="headerlink" title="容器部署"></a>容器部署</h3><h4 id="为什么需要Docker？"><a href="#为什么需要Docker？" class="headerlink" title="为什么需要Docker？"></a>为什么需要Docker？</h4><p>使用docker的主要目标是容器化。也就是为你的应用程序提供一致的环境，而不依赖于它运行的主机。</p>
+<p><strong>想象一下你是否也会遇到下面这个场景，你在本地开发了你的应用程序，它很可能有很多的依赖环境或包，甚至对依赖的具体版本都有严格的要求，当开发过程完成后，你希望将应用程序部署到web服务器。这个时候你必须确保所有依赖项都安装正确并且版本也完全相同，否则应用程序可能会崩溃并无法运行。如果你想在另一个web服务器上也部署该应用程序，那么你必须从头开始重复这个过程。这种场景就是Docker发挥作用的地方。</strong><br>（我一直认为学好一个东西，就必须先知道这个玩意解决了什么问题。）</p>
+<p>对于运行我们应用程序的主机，不管是笔记本电脑还是web服务器，我们唯一需要做的就是运行一个docker容器平台。从以后，你就不需要担心你使用的是MacOS，Ubuntu，Arch还是其他。你只需定义一次应用，即可随时随地运行。</p>
+<h4 id="Docker部署示例"><a href="#Docker部署示例" class="headerlink" title="Docker部署示例"></a>Docker部署示例</h4><h5 id="准备代码"><a href="#准备代码" class="headerlink" title="准备代码"></a>准备代码</h5><p>这里我先用一段使用net/http库编写的简单代码为例讲解如何使用Docker进行部署，后面再讲解稍微复杂一点的项目部署案例。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">	&quot;fmt&quot;</span><br><span class="line">	&quot;net&#x2F;http&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line">	http.HandleFunc(&quot;&#x2F;&quot;, hello)</span><br><span class="line">	server :&#x3D; &amp;http.Server&#123;</span><br><span class="line">		Addr: &quot;:8888&quot;,</span><br><span class="line">	&#125;</span><br><span class="line">  fmt.Println(&quot;server startup...&quot;)</span><br><span class="line">	if err :&#x3D; server.ListenAndServe(); err !&#x3D; nil &#123;</span><br><span class="line">		fmt.Printf(&quot;server startup failed, err:%v\n&quot;, err)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func hello(w http.ResponseWriter, _ *http.Request) &#123;</span><br><span class="line">	w.Write([]byte(&quot;hello liwenzhou.com!&quot;))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面的代码通过8888端口对外提供服务，返回一个字符串响应：hello liwenzhou.com!。</p>
+<h5 id="创建Docker镜像"><a href="#创建Docker镜像" class="headerlink" title="创建Docker镜像"></a>创建Docker镜像</h5><p>镜像（image）包含运行应用程序所需的所有东西——代码或二进制文件、运行时、依赖项以及所需的任何其他文件系统对象。</p>
+<p>或者简单地说，镜像（image）是定义应用程序及其运行所需的一切。</p>
+<h5 id="编写Dockerfile"><a href="#编写Dockerfile" class="headerlink" title="编写Dockerfile"></a>编写Dockerfile</h5><p>要创建Docker镜像（image）必须在配置文件中指定步骤。这个文件默认我们通常称之为Dockerfile。（虽然这个文件名可以随意命名它，但最好还是使用默认的Dockerfile。）</p>
+<p>现在我们开始编写Dockerfile，具体内容如下：<br><strong>注意：某些步骤不是唯一的，可以根据自己的需要修改诸如文件路径、最终可执行文件的名称等</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">FROM golang:alpine</span><br><span class="line"></span><br><span class="line"># 为我们的镜像设置必要的环境变量</span><br><span class="line">ENV GO111MODULE&#x3D;on \</span><br><span class="line">    CGO_ENABLED&#x3D;0 \</span><br><span class="line">    GOOS&#x3D;linux \</span><br><span class="line">    GOARCH&#x3D;amd64</span><br><span class="line"></span><br><span class="line"># 移动到工作目录：&#x2F;build</span><br><span class="line">WORKDIR &#x2F;build</span><br><span class="line"></span><br><span class="line"># 将代码复制到容器中</span><br><span class="line">COPY . .</span><br><span class="line"></span><br><span class="line"># 将我们的代码编译成二进制可执行文件app</span><br><span class="line">RUN go build -o app .</span><br><span class="line"></span><br><span class="line"># 移动到用于存放生成的二进制文件的 &#x2F;dist 目录</span><br><span class="line">WORKDIR &#x2F;dist</span><br><span class="line"></span><br><span class="line"># 将二进制文件从 &#x2F;build 目录复制到这里</span><br><span class="line">RUN cp &#x2F;build&#x2F;app .</span><br><span class="line"></span><br><span class="line"># 声明服务端口</span><br><span class="line">EXPOSE 8888</span><br><span class="line"></span><br><span class="line"># 启动容器时运行的命令</span><br><span class="line">CMD [&quot;&#x2F;dist&#x2F;app&quot;]</span><br></pre></td></tr></table></figure>
+
+<h5 id="Dockerfile解析"><a href="#Dockerfile解析" class="headerlink" title="Dockerfile解析"></a>Dockerfile解析</h5><h6 id="From"><a href="#From" class="headerlink" title="From"></a>From</h6><p><strong>我们正在使用基础镜像golang:alpine来创建我们的镜像。</strong><br>这和我们要创建的镜像一样是一个我们能够访问的存储在Docker仓库的基础镜像。<br>这个镜像运行的是alpine Linux发行版，该发行版的大小很小并且内置了Go，非常适合我们的用例。<br>有大量公开可用的Docker镜像，请查看<a target="_blank" rel="noopener" href="https://hub.docker.com/_/golang">https://hub.docker.com/_/golang</a></p>
+<h6 id="Env"><a href="#Env" class="headerlink" title="Env"></a>Env</h6><p>用来设置我们编译阶段需要用的环境变量。</p>
+<h6 id="WORKDIR，COPY，RUN"><a href="#WORKDIR，COPY，RUN" class="headerlink" title="WORKDIR，COPY，RUN"></a>WORKDIR，COPY，RUN</h6><p>这几个命令做的事都写在注释里了，很好理解。</p>
+<h6 id="EXPORT，CMD"><a href="#EXPORT，CMD" class="headerlink" title="EXPORT，CMD"></a>EXPORT，CMD</h6><p>最后，我们声明服务端口，因为我们的应用程序监听的是这个端口并通过这个端口对外提供服务。并且我们还定义了在我们运行镜像的时候默认执行的命令CMD [“/dist/app”]。</p>
+<h5 id="构建镜像"><a href="#构建镜像" class="headerlink" title="构建镜像"></a>构建镜像</h5><p>在项目目录下，执行下面的命令创建镜像，并指定镜像名称为goweb_app：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build . -t goweb_app</span><br></pre></td></tr></table></figure>
+<p>等待构建过程结束，输出如下提示：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">Successfully built 90d9283286b7</span><br><span class="line">Successfully tagged goweb_app:latest</span><br></pre></td></tr></table></figure>
+
+<p>现在我们已经准备好了镜像，但是目前它什么也没做。我们接下来要做的是运行我们的镜像，以便它能够处理我们的请求。运行中的镜像称为容器。</p>
+<p>执行下面的命令来运行镜像：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -p 8888:8888 goweb_app</span><br></pre></td></tr></table></figure>
+
+<p>标志位-p用来定义端口绑定。由于容器中的应用程序在端口8888上运行，我们将其绑定到主机端口也是8888。如果要绑定到另一个端口，则可以使用-p $HOST_PORT:8888。例如-p 5000:8888。</p>
+<p>现在就可以测试下我们的web程序是否工作正常，打开浏览器输入<a href="http://127.0.0.1:8888就能看到我们事先定义的响应内容如下：">http://127.0.0.1:8888就能看到我们事先定义的响应内容如下：</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hello liwenzhou.com!</span><br></pre></td></tr></table></figure>
+<h4 id="分阶段构建示例"><a href="#分阶段构建示例" class="headerlink" title="分阶段构建示例"></a>分阶段构建示例</h4><p>我们的Go程序编译之后会得到一个可执行的二进制文件，<strong>其实在最终的镜像中是不需要go编译器的，也就是说我们只需要一个运行最终二进制文件的容器即可。</strong></p>
+<p>Docker的最佳实践之一是通过仅保留二进制文件来减小镜像大小，为此，我们将使用一种称为多阶段构建的技术，这意味着我们将通过多个步骤构建镜像。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">FROM golang:alpine AS builder</span><br><span class="line"></span><br><span class="line"># 为我们的镜像设置必要的环境变量</span><br><span class="line">ENV GO111MODULE&#x3D;on \</span><br><span class="line">    CGO_ENABLED&#x3D;0 \</span><br><span class="line">    GOOS&#x3D;linux \</span><br><span class="line">    GOARCH&#x3D;amd64</span><br><span class="line"></span><br><span class="line"># 移动到工作目录：&#x2F;build</span><br><span class="line">WORKDIR &#x2F;build</span><br><span class="line"></span><br><span class="line"># 将代码复制到容器中</span><br><span class="line">COPY . .</span><br><span class="line"></span><br><span class="line"># 将我们的代码编译成二进制可执行文件 app</span><br><span class="line">RUN go build -o app .</span><br><span class="line"></span><br><span class="line">###################</span><br><span class="line"># 接下来创建一个小镜像</span><br><span class="line">###################</span><br><span class="line">FROM scratch</span><br><span class="line"></span><br><span class="line"># 从builder镜像中把&#x2F;dist&#x2F;app 拷贝到当前目录</span><br><span class="line">COPY --from&#x3D;builder &#x2F;build&#x2F;app &#x2F;</span><br><span class="line"></span><br><span class="line"># 需要运行的命令</span><br><span class="line">ENTRYPOINT [&quot;&#x2F;app&quot;]</span><br></pre></td></tr></table></figure>
+
+<p>使用这种技术，我们剥离了使用golang:alpine作为编译镜像来编译得到二进制可执行文件的过程，<strong>并基于scratch生成一个简单的</strong>、非常小的新镜像。</p>
+<p>我们将二进制文件从命名为builder的第一个镜像中复制到新创建的scratch镜像中。有关scratch镜像的更多信息，请查看<a target="_blank" rel="noopener" href="https://hub.docker.com/_/scratch">https://hub.docker.com/_/scratch</a></p>
+<h3 id="附带其他文件的部署示例"><a href="#附带其他文件的部署示例" class="headerlink" title="附带其他文件的部署示例"></a>附带其他文件的部署示例</h3><p>这里以我之前《Go Web视频教程》中的小清单项目为例，项目的Github仓库地址为：<a target="_blank" rel="noopener" href="https://github.com/Q1mi/bubble%E3%80%82">https://github.com/Q1mi/bubble。</a></p>
+<p>如果项目中带有静态文件或配置文件，需要将其拷贝到最终的镜像文件中。</p>
+<p>我们的bubble项目用到了静态文件和配置文件，具体目录结构如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">bubble</span><br><span class="line">├── README.md</span><br><span class="line">├── bubble</span><br><span class="line">├── conf</span><br><span class="line">│   └── config.ini</span><br><span class="line">├── controller</span><br><span class="line">│   └── controller.go</span><br><span class="line">├── dao</span><br><span class="line">│   └── mysql.go</span><br><span class="line">├── example.png</span><br><span class="line">├── go.mod</span><br><span class="line">├── go.sum</span><br><span class="line">├── main.go</span><br><span class="line">├── models</span><br><span class="line">│   └── todo.go</span><br><span class="line">├── routers</span><br><span class="line">│   └── routers.go</span><br><span class="line">├── setting</span><br><span class="line">│   └── setting.go</span><br><span class="line">├── static</span><br><span class="line">│   ├── css</span><br><span class="line">│   │   ├── app.8eeeaf31.css</span><br><span class="line">│   │   └── chunk-vendors.57db8905.css</span><br><span class="line">│   ├── fonts</span><br><span class="line">│   │   ├── element-icons.535877f5.woff</span><br><span class="line">│   │   └── element-icons.732389de.ttf</span><br><span class="line">│   └── js</span><br><span class="line">│       ├── app.007f9690.js</span><br><span class="line">│       └── chunk-vendors.ddcb6f91.js</span><br><span class="line">└── templates</span><br><span class="line">    ├── favicon.ico</span><br><span class="line">    └── index.html</span><br></pre></td></tr></table></figure>
+<p>我们需要将templates、static、conf三个文件夹中的内容拷贝到最终的镜像文件中。更新后的Dockerfile如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">FROM golang:alpine AS builder</span><br><span class="line"></span><br><span class="line"># 为我们的镜像设置必要的环境变量</span><br><span class="line">ENV GO111MODULE&#x3D;on \</span><br><span class="line">    CGO_ENABLED&#x3D;0 \</span><br><span class="line">    GOOS&#x3D;linux \</span><br><span class="line">    GOARCH&#x3D;amd64</span><br><span class="line"></span><br><span class="line"># 移动到工作目录：&#x2F;build</span><br><span class="line">WORKDIR &#x2F;build</span><br><span class="line"></span><br><span class="line"># 复制项目中的 go.mod 和 go.sum文件并下载依赖信息</span><br><span class="line">COPY go.mod .</span><br><span class="line">COPY go.sum .</span><br><span class="line">RUN go mod download</span><br><span class="line"></span><br><span class="line"># 将代码复制到容器中</span><br><span class="line">COPY . .</span><br><span class="line"></span><br><span class="line"># 将我们的代码编译成二进制可执行文件 bubble</span><br><span class="line">RUN go build -o bubble .</span><br><span class="line"></span><br><span class="line">###################</span><br><span class="line"># 接下来创建一个小镜像</span><br><span class="line">###################</span><br><span class="line">FROM scratch</span><br><span class="line"></span><br><span class="line">COPY .&#x2F;templates &#x2F;templates</span><br><span class="line">COPY .&#x2F;static &#x2F;static</span><br><span class="line">COPY .&#x2F;conf &#x2F;conf</span><br><span class="line"></span><br><span class="line"># 从builder镜像中把&#x2F;dist&#x2F;app 拷贝到当前目录</span><br><span class="line">COPY --from&#x3D;builder &#x2F;build&#x2F;bubble &#x2F;</span><br><span class="line"></span><br><span class="line"># 需要运行的命令</span><br><span class="line">ENTRYPOINT [&quot;&#x2F;bubble&quot;, &quot;conf&#x2F;config.ini&quot;]</span><br></pre></td></tr></table></figure>
+
+<p>简单来说就是多了几步COPY的步骤，大家看一下Dockerfile中的注释即可。</p>
+<!-- 
+Tips： 这里把COPY静态文件的步骤放在上层，把COPY二进制可执行文件放在下层，争取多使用缓存。 -->
+<h4 id="关联其他容器"><a href="#关联其他容器" class="headerlink" title="关联其他容器"></a>关联其他容器</h4><p>又因为我们的项目中使用了MySQL，我们可以选择使用如下命令启动一个MySQL容器，它的别名为mysql8019；root用户的密码为root1234；挂载容器中的/var/lib/mysql到本地的/Users/q1mi/docker/mysql目录；内部服务端口为3306，映射到外部的13306端口。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --name mysql8019 -p 13306:3306 -e MYSQL_ROOT_PASSWORD&#x3D;root1234 -v &#x2F;Users&#x2F;q1mi&#x2F;docker&#x2F;mysql:&#x2F;var&#x2F;lib&#x2F;mysql -d mysql:8.0.19</span><br></pre></td></tr></table></figure>
+
+<p>这里需要修改一下我们程序中配置的MySQL的host地址为容器别名，使它们在内部通过别名（此处为mysql8019）联通。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[mysql]</span><br><span class="line">user &#x3D; root</span><br><span class="line">password &#x3D; root1234</span><br><span class="line">host &#x3D; mysql8019</span><br><span class="line">port &#x3D; 3306</span><br><span class="line">db &#x3D; bubble</span><br></pre></td></tr></table></figure>
+<p>修改后记得重新构建bubble_app镜像：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build . -t bubble_app</span><br></pre></td></tr></table></figure>
+<p>我们这里运行bubble_app容器的时候需要使用–link的方式与上面的mysql8019容器关联起来，具体命令如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --link&#x3D;mysql8019:mysql8019 -p 8888:8888 bubble_app</span><br></pre></td></tr></table></figure>
+<h4 id="Docker-Compose模式"><a href="#Docker-Compose模式" class="headerlink" title="Docker Compose模式"></a>Docker Compose模式</h4><p>除了像上面一样使用–link的方式来关联两个容器之外，我们还可以使用Docker Compose来定义和运行多个容器。</p>
+<p>Compose是用于定义和运行多容器 Docker 应用程序的工具。通过 Compose，你可以使用 YML 文件来配置应用程序需要的所有服务。然后，使用一个命令，就可以从 YML 文件配置中创建并启动所有服务。</p>
+<p>使用Compose基本上是一个三步过程：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">使用Dockerfile定义你的应用环境以便可以在任何地方复制。</span><br><span class="line"></span><br><span class="line">定义组成应用程序的服务，docker-compose.yml 以便它们可以在隔离的环境中一起运行。</span><br><span class="line"></span><br><span class="line">执行 docker-compose up命令来启动并运行整个应用程序。</span><br></pre></td></tr></table></figure>
+<p>我们的项目需要两个容器分别运行mysql和bubble_app，我们编写的docker-compose.yml文件内容如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"># yaml 配置</span><br><span class="line">version: &quot;3.7&quot;</span><br><span class="line">services:</span><br><span class="line">  mysql8019:</span><br><span class="line">    image: &quot;mysql:8.0.19&quot;</span><br><span class="line">    ports:</span><br><span class="line">      - &quot;33061:3306&quot;</span><br><span class="line">    command: &quot;--default-authentication-plugin&#x3D;mysql_native_password --init-file &#x2F;data&#x2F;application&#x2F;init.sql&quot;</span><br><span class="line">    environment:</span><br><span class="line">      MYSQL_ROOT_PASSWORD: &quot;root1234&quot;</span><br><span class="line">      MYSQL_DATABASE: &quot;bubble&quot;</span><br><span class="line">      MYSQL_PASSWORD: &quot;root1234&quot;</span><br><span class="line">    volumes:</span><br><span class="line">      - .&#x2F;init.sql:&#x2F;data&#x2F;application&#x2F;init.sql</span><br><span class="line">  bubble_app:</span><br><span class="line">    build: .</span><br><span class="line">    command: sh -c &quot;.&#x2F;wait-for.sh mysql8019:3306 -- .&#x2F;bubble .&#x2F;conf&#x2F;config.ini&quot;</span><br><span class="line">    depends_on:</span><br><span class="line">      - mysql8019</span><br><span class="line">    ports:</span><br><span class="line">      - &quot;8888:8888&quot;</span><br></pre></td></tr></table></figure>
+
+<p>这个 Compose 文件定义了两个服务：bubble_app 和 mysql8019。其中：</p>
+<h5 id="bubble-app"><a href="#bubble-app" class="headerlink" title="bubble_app"></a>bubble_app</h5><p>使用当前目录下的Dockerfile文件构建镜像，并通过depends_on指定依赖mysql8019服务，声明服务端口8888并绑定对外8888端口。</p>
+<h5 id="mysql8019"><a href="#mysql8019" class="headerlink" title="mysql8019"></a>mysql8019</h5><p>mysql8019 服务使用 Docker Hub 的公共 mysql:8.0.19 镜像，内部端口3306，外部端口33061。</p>
+<p>这里需要注意一个问题就是，<strong>我们的bubble_app容器需要等待mysql8019容器正常启动之后再尝试启动，因为我们的web程序在启动的时候会初始化MySQL连接。</strong>这里共有两个地方要更改，第一个就是我们Dockerfile中要把最后一句注释掉：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># Dockerfile</span><br><span class="line">...</span><br><span class="line"># 需要运行的命令（注释掉这一句，因为需要等MySQL启动之后再启动我们的Web程序）</span><br><span class="line"># ENTRYPOINT [&quot;&#x2F;bubble&quot;, &quot;conf&#x2F;config.ini&quot;]</span><br></pre></td></tr></table></figure>
+
+<p>第二个地方是在bubble_app下面添加如下命令，使用提前编写的wait-for.sh脚本检测mysql8019:3306正常后再执行后续启动Web应用程序的命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">command: sh -c &quot;.&#x2F;wait-for.sh mysql8019:3306 -- .&#x2F;bubble .&#x2F;conf&#x2F;config.ini&quot;</span><br></pre></td></tr></table></figure>
+<p>当然，因为我们现在要在bubble_app镜像中执行sh命令，所以不能在使用scratch镜像构建了，这里改为使用debian:stretch-slim，同时还要安装wait-for.sh脚本用到的netcat，最后不要忘了把wait-for.sh脚本文件COPY到最终的镜像中，并赋予可执行权限哦。更新后的Dockerfile内容如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">FROM golang:alpine AS builder</span><br><span class="line"></span><br><span class="line"># 为我们的镜像设置必要的环境变量</span><br><span class="line">ENV GO111MODULE&#x3D;on \</span><br><span class="line">    CGO_ENABLED&#x3D;0 \</span><br><span class="line">    GOOS&#x3D;linux \</span><br><span class="line">    GOARCH&#x3D;amd64</span><br><span class="line"></span><br><span class="line"># 移动到工作目录：&#x2F;build</span><br><span class="line">WORKDIR &#x2F;build</span><br><span class="line"></span><br><span class="line"># 复制项目中的 go.mod 和 go.sum文件并下载依赖信息</span><br><span class="line">COPY go.mod .</span><br><span class="line">COPY go.sum .</span><br><span class="line">RUN go mod download</span><br><span class="line"></span><br><span class="line"># 将代码复制到容器中</span><br><span class="line">COPY . .</span><br><span class="line"></span><br><span class="line"># 将我们的代码编译成二进制可执行文件 bubble</span><br><span class="line">RUN go build -o bubble .</span><br><span class="line"></span><br><span class="line">###################</span><br><span class="line"># 接下来创建一个小镜像</span><br><span class="line">###################</span><br><span class="line">FROM debian:stretch-slim</span><br><span class="line"></span><br><span class="line">COPY .&#x2F;wait-for.sh &#x2F;</span><br><span class="line">COPY .&#x2F;templates &#x2F;templates</span><br><span class="line">COPY .&#x2F;static &#x2F;static</span><br><span class="line">COPY .&#x2F;conf &#x2F;conf</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 从builder镜像中把&#x2F;dist&#x2F;app 拷贝到当前目录</span><br><span class="line">COPY --from&#x3D;builder &#x2F;build&#x2F;bubble &#x2F;</span><br><span class="line"></span><br><span class="line">RUN set -eux; \</span><br><span class="line">	apt-get update; \</span><br><span class="line">	apt-get install -y \</span><br><span class="line">		--no-install-recommends \</span><br><span class="line">		netcat; \</span><br><span class="line">        chmod 755 wait-for.sh</span><br><span class="line"></span><br><span class="line"># 需要运行的命令</span><br><span class="line"># ENTRYPOINT [&quot;&#x2F;bubble&quot;, &quot;conf&#x2F;config.ini&quot;]</span><br></pre></td></tr></table></figure>
+<p>所有的条件都准备就绪后，就可以执行下面的命令跑起来了：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker-compose up</span><br></pre></td></tr></table></figure>
+<p>完整版代码示例，请查看我的github仓库：<a target="_blank" rel="noopener" href="https://github.com/Q1mi/deploy_bubble_using_docker%E3%80%82">https://github.com/Q1mi/deploy_bubble_using_docker。</a></p>
+<p>总结<br>使用Docker容器能够极大简化我们在配置依赖环境方面的操作，但同时也对我们的技术储备提了更高的要求。对于Docker不管你是熟悉抑或是不熟悉，技术发展的车轮都滚滚向前。</p>
+<p>参考链接：</p>
+<p><a target="_blank" rel="noopener" href="https://levelup.gitconnected.com/complete-guide-to-create-docker-container-for-your-golang-application-80f3fb59a15e">https://levelup.gitconnected.com/complete-guide-to-create-docker-container-for-your-golang-application-80f3fb59a15e</a></p>
+
+        <p class="suffix-end">__END__</p>
+        <div class="suffix-box">
+            <div class="suffix-box-left">
+                <img src="https://gitee.com/psycho1900/miss-reddle/raw/master/profile.jpg" alt="Russshare">
+            </div>
+            <div class="suffix-box-right">
+                <span class="suffix-box-title">文章作者</span>：Russshare
+                <br>
+                <span class="suffix-box-title">文章出处</span>：<a href="/2021/07/13/golang%E7%9A%84%E5%B7%A5%E7%A8%8B%E9%83%A8%E7%BD%B2%EF%BC%88%E4%B9%9D%EF%BC%89/" target="_blank">golang的工程部署（九）</a>
+                <br>
+                <span class="suffix-box-title">作者签名</span>：我们生死与共，勇往直前，永远都是坏小子.
+                <br>
+                <span class="suffix-box-title">关于主题</span>：<a href="https://github.com/first19326/Hexo-LiveForCode" target="_blank">Hexo - Russshare</a>
+                <br>
+                <span class="suffix-box-title">版权声明</span>：文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" title="BY-NC-SA" target="_blank">BY-NC-SA</a> 许可协议，转载请注明出处
+                <br>
+            </div>
+            <div style="clear: both;"></div>
+        </div>
+    </div>
+    <div class="article-footer">
+        
+            <div class="category">
+                分类：
+                
+                    <a href="/categories/golang%E9%9D%A2%E8%AF%95/">golang面试</a>
+                
+            </div>
+        
+        
+            <div class="tag">
+                标签：
+                
+                    <a href="/tags/golang/">golang</a>
+                
+                    <a href="/tags/docker/">docker</a>
+                
+                    <a href="/tags/%E9%83%A8%E7%BD%B2/">部署</a>
+                
+            </div>
+        
+        <div class="article-prev-next">
+            
+                <a href="/2021/07/13/%E4%B8%BA%E4%BB%80%E4%B9%88%E9%80%89%E6%8B%A9golang%EF%BC%88%E5%8D%81%EF%BC%89/" class="prev-prefix">« </a> 上一篇：    <a href="/2021/07/13/%E4%B8%BA%E4%BB%80%E4%B9%88%E9%80%89%E6%8B%A9golang%EF%BC%88%E5%8D%81%EF%BC%89/" title="发布于 2021-07-13 07:23">为什么选择golang（十）</a>
+                <br>
+            
+            
+                <a href="/2021/07/13/golang%E7%9A%84%E8%B0%83%E8%AF%95%E6%B5%8B%E8%AF%95%EF%BC%88%E5%85%AB%EF%BC%89/" class="next-prefix">» </a> 下一篇：    <a href="/2021/07/13/golang%E7%9A%84%E8%B0%83%E8%AF%95%E6%B5%8B%E8%AF%95%EF%BC%88%E5%85%AB%EF%BC%89/" title="发布于 2021-07-13 07:22">golang的调试测试（八）</a>
+            
+        </div>
+    </div>
+    
+    <div class="article-comments">
+        <div class="comments-title">
+            评论列表
+        </div>
+        <div class="comments-content">
+        </div>
+    </div>
+
+</div>
+
+    </div>
+</div>
+    <div id="footer"></div>
+    <div id="sidebar">
+    <div class="menu-wrap" style="display:none;">
+        <nav class="menu">
+            <div class="menu-introduce"> 
+                <div class="introduce-avatar"></div> 
+                <div class="introduce-info"> 
+                    <div class="introduce-user"><span></span></div>        
+                </div> 
+            </div> 
+            <div class="menu-list">
+                <ul></ul> 
+            </div> 
+            <div class="menu-link"></div> 
+        </nav>
+        <button class="menu-button-close"></button>
+        <div class="morph-shape" id="morph-shape" data-morph-open="M-7.312,0H15c0,0,66,113.339,66,399.5C81,664.006,15,800,15,800H-7.312V0z;M-7.312,0H100c0,0,0,113.839,0,400c0,264.506,0,400,0,400H-7.312V0z">
+            <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 100 800" preserveAspectRatio="none">
+                <path d="M-7.312,0H0c0,0,0,113.839,0,400c0,264.506,0,400,0,400h-7.312V0z"/>
+            </svg>
+        </div>
+    </div>
+    <button class="menu-button-open">MENU</button>
+    <div class="menu-cover"></div>
+</div>
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/search.css">
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/iscroll.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/instantsearch.min.js"></script>
+<div class="search-window">
+    <div class="search-content">
+        <div class="search-content-icon">
+            <i class="iconfont icon-search"></i>
+        </div>
+        <div id="search-input" class="search-input"></div>
+    </div>
+
+    <div class="search-scroll">
+        <div class="search-result">
+            <div id="search-stats" class="search-stats"></div>
+            <div id="search-hits"></div>
+            <div id="search-pagination" class="search-pagination"></div>
+        </div>
+    </div>
+
+    <span class="search-close-icon">
+        <i class="iconfont icon-close"></i>
+    </span>
+</div>
+    <div id="tools">
+    <div class="progressbar-top"></div>
+
+    
+        <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/APlayer.css">
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/APlayer.min.js"></script>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/Meting.min.js"></script>
+        <meting-js id="3778678" lrcshow="false" server="netease" type="playlist" fixed="true" autoplay="false" loop="all" order="random" preload="auto" volume="0.67" mutex="true"></meting-js>
+    
+    
+    <div class="wrap-right"></div>
+    <div class="loading"></div>
+</div>
+    <script>
+    window.config = {
+        GitHubUserName     : 'Russshare',
+        GitHubRepositories : 'Russshare',
+
+        BlogUser      : 'Russshare',
+        BlogAvatar    : 'https://gitee.com/psycho1900/miss-reddle/raw/master/profile.jpg',
+        BlogStartDate : '2021-03-17',
+
+        WebsiteTitleBlur         : '(◍´꒳`◍) Hi, Miss Riddle',
+        WebsiteTitleBlurTimeOut  : 500,
+        WebsiteTitleFocus        : '(*´∇｀*) 欢迎回来!',
+        WebsiteTitleFocusTimeOut : 1000,
+        WebsiteFavicon           : 'https://gitee.com/psycho1900/miss-reddle/raw/master/beer.png',
+
+        ProgressBar: {
+            id       : 'topProgressBar',
+            color    : '#77B6FF',
+            height   : '2px',
+            duration : 0.2
+        },
+
+        Loading: {
+            rebound: {
+                tension  : 16,
+                friction : 5
+            },
+            spinner: {
+                id     : 'spinner',
+                radius : 90,
+                sides  : 3,
+                depth  : 4,
+                colors : {
+                    background : '#F0F0F0',
+                    stroke     : '#272633',
+                    base       : '',
+                    child      : '#272633'
+                },
+                alwaysForward : true,
+                restAt        : 0.5,
+                renderBase    : false
+            }
+        },
+
+        HomeHeaderAnimationRendered : true,
+        HomeHeaderAnimation         : {
+            radius      : 15,
+            density     : 0.2,
+            color       : 'rgba(255, 255, 255, .2)',
+            clearOffset : 0.3
+        },
+
+        ArticleHeaderAnimationRendered : false,
+        ArticleHeaderAnimation         : {
+            triW                  : 14,
+            triH                  : 20,
+            neighbours            : [
+                
+                    'side',
+                
+                    'top',
+                
+                    'bottom',
+                
+            ],
+            speedTrailAppear      : 0.1,
+            speedTrailDisappear   : 0.1,
+            speedTriOpen          : 1,
+            trailMaxLength        : 30,
+            trailIntervalCreation : 100,
+            delayBeforeDisappear  : 2,
+            colors                : [
+                
+                    '#96EDA6',
+                
+                    '#5BC6A9',
+                
+                    '#38668C',
+                
+                    '#374D84',
+                
+                    '#BED5CB',
+                
+                    '#62ADC6',
+                
+                    '#8EE5DE',
+                
+                    '#304E7B',
+                
+            ]
+        },
+
+        BackAnimationRendered          : true,
+        IEBrowserBackAnimationRendered : false,
+        BackAnimation                  : {
+            colorSaturation  : '60%',
+            colorBrightness  : '50%',
+            colorAlpha       : 0.5,
+            colorCycleSpeed  : 5,
+            verticalPosition : 'random',
+            horizontalSpeed  : 200,
+            ribbonCount      : 3,
+            strokeSize       : 0,
+            parallaxAmount   : -0.2,
+            animateSections  : true
+        },
+
+        HomeHeaderImage : [
+            
+                'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/image/header/home.jpg',
+            
+                'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/image/header/home.jpeg',
+            
+        ],
+        HomeBannerText  : '',
+
+        ArticleHeaderImage : [
+            
+                'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/image/header/article.jpg',
+            
+        ],
+
+        OtherBannerText : '',
+
+        MenuList : [
+            
+                {
+                    name   : '首页',
+                    href   : '/',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '标签',
+                    href   : '/tag',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '分类',
+                    href   : '/category',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '赞赏',
+                    href   : '/donate',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '关于',
+                    href   : '/about',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '搜索',
+                    href   : '',    
+                    target : '',
+                    class  : 'search'
+                },
+            
+                {
+                    name   : '留言板',
+                    href   : '/comment',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '友情链接',
+                    href   : '/friend',    
+                    target : '',
+                    class  : ''
+                },
+            
+        ],
+        MenuLink : [
+            
+                
+                    {
+                        icon : 'icon-weibo', 
+                        url  : ''
+                    },
+                
+                    {
+                        icon : 'icon-wechat', 
+                        url  : ''
+                    },
+                
+                    {
+                        icon : 'icon-qq', 
+                        url  : ''
+                    },
+                
+                    {
+                        icon : 'icon-github', 
+                        url  : 'https://github.com/RiddleGo'
+                    },
+                
+            
+        ],
+
+        FooterStyle : 2,
+        BottomText  : {
+            icon    : 'like-fill',
+            left    : '人生若只如初见',
+            right   : '何事秋风悲画扇'
+        },
+        ThemeInfo   : true,
+
+        ConsoleList : [
+            
+                
+                    [
+                        
+                            
+                                'Based on cnblogs theme SimpleMemory.',
+                            
+                                '',
+                            
+                        
+                    ],
+                
+                    [
+                        
+                            
+                                'SimpleMemory Author:',
+                            
+                                'BNDong',
+                            
+                        
+                    ],
+                
+                    [
+                        
+                            
+                                'Theme:',
+                            
+                                'LiveForCode',
+                            
+                        
+                    ],
+                
+            
+        ],
+
+        FontIconExtend : '',
+
+        Donate : {
+            paypal  : '',
+            bitcoin : '',
+            alipay  : '',
+            wechat  : ''
+        },
+
+        Code : {
+            style : 'normal'
+        },  
+
+        Search : {
+            applicationID : '010C3EANT8',
+            apiKey        : 'c7abab9f11b79102b9aff7fe6d41447d',
+            indexName     : 'Notes',
+            hits          : {
+                page : 10
+            },
+            labels        : {
+                placeholder : '搜索',
+                empty       : '未发现与 「${query}」 相关的内容',
+                stats       : '${hits} 条相关条目，使用了 ${time} 毫秒',
+            }
+        }, 
+
+        Valine : {
+            switch         : true,
+            el             : '.comments-content',
+            appId          : 'TKpiBidydKtx7apGCq7DM4Fw-gzGzoHsz',
+            appKey         : 'wsVqBbLWlLy4JRbi9I4XDBpH',
+            placeholder    : '你是我一生只会遇见一次的惊喜...',
+            avatar         : 'mm',
+            meta           : 'nick,mail,link',
+            requiredFields : 'nick,mail',
+            pageSize       : 5,
+            lang           : 'zh-cn',
+            visitor        : true,
+            enableQQ       : true
+        },
+
+        Tocbot : {
+            switch                : true,
+            tocSelector           : '.toc',
+            contentSelector       : '.article-body',
+            headingSelector       : 'h1, h2, h3, h4, h5',
+            headingsOffset        : 0,
+            scrollSmooth          : true,
+            scrollSmoothOffset    : -5,
+            positionFixedSelector : '.toc',
+            positionFixedClass    : 'toc-fixed',
+            fixedSidebarOffset    : '',
+        },
+
+        Require : {
+            baseUrl     : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/',
+            waitSeconds : 100
+        },
+
+        Music : {
+            type : 'Meting'
+        },
+        APlayer : {
+            container : '.aplayer',
+            fixed     : true,
+            autoplay  : false,
+            loop      : 'all',
+            order     : 'random',
+            preload   : 'auto',
+            volume    : 0.67,
+            mutex     : true,
+            lrcType   : 3,
+            audio     : [
+                
+                    {
+                        name   : 'aLIEz',
+                        artist : 'mizuki（瑞葵）',
+                        cover  : '/music/cover/aLIEz.jpg',
+                        url    : '/music/song/aLIEz.mp3',
+                        lrc    : '/music/lrc/aLIEz.lrc'
+                    },
+                
+                    {
+                        name   : 'Endless Tears',
+                        artist : 'CLIFF EDGE',
+                        cover  : '/music/cover/Endless Tears.jpg',
+                        url    : '/music/song/Endless Tears.mp3',
+                        lrc    : '/music/lrc/Endless Tears.lrc'
+                    },
+                
+                    {
+                        name   : 'Miracle',
+                        artist : 'Cascada',
+                        cover  : '/music/cover/Miracle.jpg',
+                        url    : '/music/song/Miracle.mp3',
+                        lrc    : '/music/lrc/Miracle.lrc'
+                    },
+                
+                    {
+                        name   : 'Roll The Dice',
+                        artist : '高珊',
+                        cover  : '/music/cover/Roll The Dice.jpg',
+                        url    : '/music/song/Roll The Dice.mp3',
+                        lrc    : '/music/lrc/Roll The Dice.lrc'
+                    },
+                
+                    {
+                        name   : 'See You Again',
+                        artist : 'Charlie Puth, Wiz Khalifa',
+                        cover  : '/music/cover/See You Again.jpg',
+                        url    : '/music/song/See You Again.mp3',
+                        lrc    : '/music/lrc/See You Again.lrc'
+                    },
+                
+                    {
+                        name   : 'Traveling Light',
+                        artist : 'Joel Hanson, Sara Groves',
+                        cover  : '/music/cover/Traveling Light.jpg',
+                        url    : '/music/song/Traveling Light.mp3',
+                        lrc    : '/music/lrc/Traveling Light.lrc'
+                    },
+                
+                    {
+                        name   : '痴心绝对',
+                        artist : '李圣杰',
+                        cover  : '/music/cover/痴心绝对.jpg',
+                        url    : '/music/song/痴心绝对.mp3',
+                        lrc    : '/music/lrc/痴心绝对.lrc'
+                    },
+                
+                    {
+                        name   : '好想大声说爱你',
+                        artist : 'BAAD（バード）',
+                        cover  : '/music/cover/好想大声说爱你.jpg',
+                        url    : '/music/song/好想大声说爱你.mp3',
+                        lrc    : '/music/lrc/好想大声说爱你.lrc'
+                    },
+                
+            ]
+        },
+        Meting : {
+            id       : '3778678', 
+            lrcshow  : false, 
+            server   : 'netease', 
+            type     : 'playlist', 
+            fixed    : true, 
+            autoplay : false, 
+            loop     : 'all', 
+            order    : 'random', 
+            preload  : 'auto', 
+            volume   : 0.67, 
+            mutex    : true
+        },
+
+        LazyLoad : {
+            default : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/image/website/lazyload.svg'
+        },
+  
+        Style : {
+            aplayer          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/APlayer.css',
+            archive          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/archive.css',
+            donate           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/donate.css',
+            fancybox         : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/jquery.fancybox.css',
+            footer           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/footer.css',
+            iconfont         : 'https://at.alicdn.com/t/font_1546312_l3yohatebw.css',
+            index            : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/index.css',
+            menuBubble       : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/menu-bubble.css',
+            page             : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/page.css',
+            post             : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/post.css',
+            search           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/search.css',
+            tocbot           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/tocbot.css',
+            normal           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/normal.css',
+            night            : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/night.css',
+            clipboard        : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/clipboard.css'
+        },
+
+        Script: {
+            aplayer          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/APlayer.min.js',
+            config           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/require.config.js',
+            index            : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/index.js',
+            instantSearch    : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/instantsearch.min.js',
+            jQuery           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/jquery-3.4.1.min.js',
+            loading          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/loading.js',
+            meting           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/Meting.min.js',
+            iscroll          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/iscroll.js',
+            require          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/require.min.js'
+        },
+
+        Font: {
+            LongCang   : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/LongCang.css',
+            Monda      : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Monda.css',
+            NotoSansSC : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/NotoSansSC.css',
+            Playball   : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Playball.css',
+            PTMono     : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/PTMono.css',
+            RobotoSlab : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/RobotoSlab.css',
+            Rosario    : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Rosario.css',
+            UbuntuMono : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/UbuntuMono.css'
+        },
+
+        Suffix : {
+            about : '我们生死与共，勇往直前，永远都是坏小子.'
+        },
+            
+        Theme : {
+            url  : 'https://github.com/first19326/Hexo-LiveForCode',
+            name : 'Hexo - Russshare'
+        }  
+    };
+</script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/index.js"></script>
+</body>
+</html>

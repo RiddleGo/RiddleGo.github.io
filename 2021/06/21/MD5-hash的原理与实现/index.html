@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, shrink-to-fit=no">
+    <meta name="referrer" content="origin">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <title>MD5_hash的原理与实现</title>
+
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/LongCang.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Monda.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/NotoSansSC.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Playball.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/PTMono.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/RobotoSlab.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Rosario.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/UbuntuMono.css">
+
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/post.css">
+    
+        <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/normal.css">
+    
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/jquery-3.4.1.min.js"></script>
+
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+</head>
+<body>
+    <a id="cover"></a>
+    <div id="header">
+    <div class="header">
+        <div class="vertical">
+            <div class="inner">
+                <h1 class="header-subtitle">MD5_hash的原理与实现</h1>
+                <div class="header-subinfo">
+                    <p class="article-info-text">
+                        <span>
+                            <i class="iconfont icon-time"></i> 发表时间：2021-06-21
+                        </span>
+                        
+                            <span id="/2021/06/21/MD5-hash的原理与实现/" class="leancloud_visitors" data-flag-title="MD5_hash的原理与实现">
+                                <i class="iconfont icon-browse"></i> 阅读：<sapn class="leancloud-visitors-count"></span>
+                            </span>
+                        
+                        <span>
+                            <i class="iconfont icon-interactive"></i> 评论：<span class="valine-comment-count" data-xid="/2021/06/21/MD5-hash的原理与实现/"></span>
+                        </span>  
+                    </p>                 
+                </div>
+            </div>
+        </div>
+        <canvas id="articleHeaderCanvas"></canvas>
+    </div>
+</div>
+    <div id="container">
+    <div id="content">
+        <div id="article">
+    <div class="toc"></div>
+    <div class="article-body">
+        <h2 id="MD5算法原理与实现"><a href="#MD5算法原理与实现" class="headerlink" title="MD5算法原理与实现"></a>MD5算法原理与实现</h2><h3 id="一、MD5概念"><a href="#一、MD5概念" class="headerlink" title="一、MD5概念"></a>一、MD5概念</h3><p>MD5，全名Message Digest Algorithm 5 ，中文名为消息摘要算法第五版，为计算机安全领域广泛使用的一种散列函数，用以提供消息的完整性保护。上面这段话话引用自百度百科，我的理解MD5是一种信息摘要算法，主要是通过特定的hash散列方法将文本信息转换成简短的信息摘要，压缩+加密+hash算法的结合体，是绝对不可逆的。</p>
+<p>MD5（单向散列算法）的全称是Message-Digest Algorithm 5（信息-摘要算法），经MD2、MD3和MD4发展而来。MD5算法的使用不需要支付任何版权费用。</p>
+<p><strong>MD5功能：</strong><br>    输入任意长度的信息，经过处理，输出为128位的信息（数字指纹）；</p>
+<pre><code>不同的输入得到的不同的结果（唯一性）；
+
+根据128位的输出结果不可能反推出输入的信息（不可逆）； 
+</code></pre>
+<p><strong>输入任意长度的信息，经过处理，输出为128位的信息（数字指纹）；</strong></p>
+<p>不同的输入得到的不同的结果（唯一性）；</p>
+<p><strong>MD5属不属于加密算法</strong></p>
+<p>认为不属于的人是因为他们觉得不能从密文（散列值）反过来得到原文，即没有解密算法，所以这部分人认为MD5只能属于算法，不能称为加密算法；</p>
+<p>认为属于的人是因为他们觉得经过MD5处理后看不到原文，即已经将原文加密，所以认为MD5属于加密算法；我个人支持前者，正如认为BASE64算法只能算编码一样。</p>
+<p><strong>MD5算法是否可逆？</strong></p>
+<p>MD5不可逆的原因是其是一种散列函数，使用的是hash算法，在计算过程中原文的部分信息是丢失了的。</p>
+<p>不过有个地方值得指出的是，一个MD5理论上的确是可能对应无数多个原文的，因为MD5是有限多个的而原文可以是无数多个。比如主流使用的MD5将任意长度的“字节串映射为一个128bit的大整数。也就是一共有2^128种可能，大概是3.4*10^38，这个数字是有限多个的，而但是世界上可以被用来加密的原文则会有无数的可能性。</p>
+<p>不过需要注意的一点是，尽量这是一个理论上的有限对无限，不过问题是这个无限在现实生活中并不完全成立，因为一方面现实中原文的长度往往是有限的（以常用的密码为例，一般人都在20位以内），另</p>
+<p>一方面目前想要发现两段原文对应同一个MD5（专业的说这叫杂凑冲撞）值非常困难，因此某种意义上来说，在一定范围内想构建MD5值与原文的一一对应关系是完全有可能的。所以对于MD5目前最有效的攻击方式就是彩虹表，具体详情你可以通过谷歌了解。</p>
+<p><strong>MD5相当于超损压缩。</strong></p>
+<h3 id="二、MD5应用"><a href="#二、MD5应用" class="headerlink" title="二、MD5应用"></a>二、MD5应用</h3><h4 id="1-防止被篡改："><a href="#1-防止被篡改：" class="headerlink" title="1.防止被篡改："></a>1.防止被篡改：</h4><p>1）比如发送一个电子文档，发送前，我先得到MD5的输出结果a。然后在对方收到电子文档后，对方也得到一个MD5的输出结果b。如果a与b一样就代表中途未被篡改。</p>
+<p>2）比如我提供文件下载，为了防止不法分子在安装程序中添加木马，我可以在网站上公布由安装文件得到的MD5输出结果。</p>
+<p>3）SVN在检测文件是否在CheckOut后被修改过，也是用到了MD5.</p>
+<h4 id="2-防止直接看到明文："><a href="#2-防止直接看到明文：" class="headerlink" title="2.防止直接看到明文："></a>2.防止直接看到明文：</h4><p>现在很多网站在数据库存储用户的密码的时候都是存储用户密码的MD5值。这样就算不法分子得到数据库的用户密码的MD5值，也无法知道用户的密码。（比如在UNIX系统中用户的密码就是以MD5（或其它类似的算法）经加密后存储在文件系统中。当用户登录的时候，系统把用户输入的密码计算成MD5值，然后再去和保存在文件系统中的MD5值进行比较，进而确定输入的密码是否正确。通过这样的步骤，系统在并不知道用户密码的明码的情况下就可以确定用户登录系统的合法性。这不但可以避免用户的密码被具有系统管理员权限的用户知道，而且还在一定程度上增加了密码被破解的难度。）</p>
+<h4 id="3-防止抵赖（数字签名）："><a href="#3-防止抵赖（数字签名）：" class="headerlink" title="3.防止抵赖（数字签名）："></a>3.防止抵赖（数字签名）：</h4><p>这需要一个第三方认证机构。例如A写了一个文件，认证机构对此文件用MD5算法产生摘要信息并做好记录。若以后A说这文件不是他写的，权威机构只需对此文件重新产生摘要信息，然后跟记录在册的摘要信息进行比对，相同的话，就证明是A写的了。这就是所谓的“数字签名”。</p>
+<h3 id="三、MD5计算步骤"><a href="#三、MD5计算步骤" class="headerlink" title="三、MD5计算步骤"></a>三、MD5计算步骤</h3><p>MD5以512位分组来处理输入的信息，且每一分组又被划分为16个32位子分组，经过了一系列的处理后，算法的输出由四个32位分组组成，将这四个32位分组级联后将生成一个128位散列值。<br> <img src="https://gitee.com/psycho1900/miss-reddle/raw/master/md5/01.png"></p>
+<h4 id="第一步、填充"><a href="#第一步、填充" class="headerlink" title="第一步、填充"></a>第一步、填充</h4><p>如果输入信息的长度(bit)对512求余的结果不等于448，就需要填充使得对512求余的结果等于448。填充的方法是填充一个1和n个0。填充完后，信息的长度就为N*512+448(bit)；</p>
+<h4 id="第二步、记录信息长度"><a href="#第二步、记录信息长度" class="headerlink" title="第二步、记录信息长度"></a>第二步、记录信息长度</h4><p>用64位来存储填充前信息长度。这64位加在第一步结果的后面，这样信息长度就变为N*512+448+64=(N+1)*512位。</p>
+<h4 id="第三步、装入标准的幻数（四个整数）-设置初始值"><a href="#第三步、装入标准的幻数（四个整数）-设置初始值" class="headerlink" title="第三步、装入标准的幻数（四个整数）/设置初始值"></a>第三步、装入标准的幻数（四个整数）/设置初始值</h4><p>标准的幻数（物理顺序）是（A=(01234567)16，B=(89ABCDEF)16，C=(FEDCBA98)16，D=(76543210)16）。如果在程序中定义应该是（A=0X67452301L，B=0XEFCDAB89L，C=0X98BADCFEL，D=0X10325476L）。</p>
+<p>MD5的哈希结果长度为128位，按每32位分成一组共4组。这4组结果是由4个初始值A、B、C、D经过不断演变得到。</p>
+<p>MD5的官方实现中，A、B、C、D的初始值如下（16进制）：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">A&#x3D;0x01234567</span><br><span class="line">B&#x3D;0x89ABCDEF</span><br><span class="line">C&#x3D;0xFEDCBA98</span><br><span class="line">D&#x3D;0x76543210</span><br></pre></td></tr></table></figure>
+
+<h4 id="第四步、四轮循环运算"><a href="#第四步、四轮循环运算" class="headerlink" title="第四步、四轮循环运算"></a>第四步、四轮循环运算</h4><p><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/md5/02.png"></p>
+<p>A.    图中，A，B，C，D就是哈希值的四个分组。<br>B.    每一次循环都会让旧的ABCD产生新的ABCD。<br>C.    一共进行多少次循环呢？由处理后的原文长度决定。</p>
+<p>假设处理后的原文长度是M</p>
+<p>主循环次数 = M / 512</p>
+<p>每个主循环中包含 512 / 32 * 4 = 64 次 子循环。<br>(上面这张图所表达的就是单次子循环的流程。)</p>
+<p>下面对图中其他元素一一解释：</p>
+<p>1.绿色F</p>
+<p>图中的绿色F，代表非线性函数。官方MD5所用到的函数有四种：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">F(X, Y, Z) &#x3D;(X&amp;Y) | ((~X) &amp; Z)</span><br><span class="line">G(X, Y, Z) &#x3D;(X&amp;Z) | (Y &amp; (~Z))</span><br><span class="line">H(X, Y, Z) &#x3D;X^Y^Z</span><br><span class="line">I(X, Y, Z)&#x3D;Y^(X|(~Z))</span><br></pre></td></tr></table></figure>
+<p>在主循环下面64次子循环中，F、G、H、I 交替使用，第一个16次使用F，第二个16次使用G，第三个16次使用H，第四个16次使用I。</p>
+<p>2.红色“田”字</p>
+<p>很简单，红色的田字代表相加的意思。</p>
+<p>3.Mi</p>
+<p>Mi是第一步处理后的原文。在第一步中，处理后原文的长度是512的整数倍。把原文的每512位再分成16等份，命名为M0<del>M15，每一等份长度32。在64次子循环中，每16次循环，都会交替用到M1</del>M16之一。</p>
+<p>4.Ki</p>
+<p>一个常量，在64次子循环中，每一次用到的常量都是不同的。</p>
+<p>5.黄色的&lt;&lt;</p>
+<p>第一轮：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">FF(a,b,c,d,M0,7,0xd76aa478）     s[0]&#x3D;7,   K[0] &#x3D; 0xd76aa478</span><br><span class="line">　　FF(a,b,c,d,M1,12,0xe8c7b756）   s[1]&#x3D;12,  K[1] &#x3D; 0xe8c7b756</span><br><span class="line">　　FF(a,b,c,d,M2,17,0x242070db)</span><br><span class="line">　　FF(a,b,c,d,M3,22,0xc1bdceee)</span><br><span class="line">　　FF(a,b,c,d,M4,7,0xf57c0faf)</span><br><span class="line">　　FF(a,b,c,d,M5,12,0x4787c62a)</span><br><span class="line">　　FF(a,b,c,d,M6,17,0xa8304613）</span><br><span class="line">　　FF(a,b,c,d,M7,22,0xfd469501）</span><br><span class="line">　　FF(a,b,c,d,M8,7,0x698098d8）</span><br><span class="line">　　FF(a,b,c,d,M9,12,0x8b44f7af)</span><br><span class="line">　　FF(a,b,c,d,M10,17,0xffff5bb1）</span><br><span class="line">　　FF(a,b,c,d,M11,22,0x895cd7be)</span><br><span class="line">　　FF(a,b,c,d,M12,7,0x6b901122）</span><br><span class="line">　　FF(a,b,c,d,M13,12,0xfd987193）</span><br><span class="line">　　FF(a,b,c,d,M14,17, 0xa679438e)</span><br><span class="line">　　FF(a,b,c,d,M15,22,0x49b40821）</span><br></pre></td></tr></table></figure>
+<p>第二轮：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">　　GG(a,b,c,d,M1,5,0xf61e2562）</span><br><span class="line">　　GG(a,b,c,d,M6,9,0xc040b340）</span><br><span class="line">　　GG(a,b,c,d,M11,14,0x265e5a51）</span><br><span class="line">　　GG(a,b,c,d,M0,20,0xe9b6c7aa)</span><br><span class="line">　　GG(a,b,c,d,M5,5,0xd62f105d)</span><br><span class="line">　　GG(a,b,c,d,M10,9,0x02441453）</span><br><span class="line">　　GG(a,b,c,d,M15,14,0xd8a1e681）</span><br><span class="line">　　GG(a,b,c,d,M4,20,0xe7d3fbc8）</span><br><span class="line">　　GG(a,b,c,d,M9,5,0x21e1cde6）</span><br><span class="line">　　GG(a,b,c,d,M14,9,0xc33707d6）</span><br><span class="line">　　GG(a,b,c,d,M3,14,0xf4d50d87）</span><br><span class="line">　　GG(a,b,c,d,M8,20,0x455a14ed)</span><br><span class="line">　　GG(a,b,c,d,M13,5,0xa9e3e905）</span><br><span class="line">　　GG(a,b,c,d,M2,9,0xfcefa3f8）</span><br><span class="line">　　GG(a,b,c,d,M7,14,0x676f02d9）</span><br><span class="line">　　GG(a,b,c,d,M12,20,0x8d2a4c8a)</span><br><span class="line">第三轮：</span><br><span class="line">　　HH(a,b,c,d,M5,4,0xfffa3942）</span><br><span class="line">　　HH(a,b,c,d,M8,11,0x8771f681）</span><br><span class="line">　　HH(a,b,c,d,M11,16,0x6d9d6122）</span><br><span class="line">　　HH(a,b,c,d,M14,23,0xfde5380c)</span><br><span class="line">　　HH(a,b,c,d,M1,4,0xa4beea44）</span><br><span class="line">　　HH(a,b,c,d,M4,11,0x4bdecfa9）</span><br><span class="line">　　HH(a,b,c,d,M7,16,0xf6bb4b60）</span><br><span class="line">　　HH(a,b,c,d,M10,23,0xbebfbc70）</span><br><span class="line">　　HH(a,b,c,d,M13,4,0x289b7ec6）</span><br><span class="line">　　HH(a,b,c,d,M0,11,0xeaa127fa)</span><br><span class="line">　　HH(a,b,c,d,M3,16,0xd4ef3085）</span><br><span class="line">　　HH(a,b,c,d,M6,23,0x04881d05）</span><br><span class="line">　　HH(a,b,c,d,M9,4,0xd9d4d039）</span><br><span class="line">　　HH(a,b,c,d,M12,11,0xe6db99e5）</span><br><span class="line">　　HH(a,b,c,d,M15,16,0x1fa27cf8）</span><br><span class="line">　　HH(a,b,c,d,M2,23,0xc4ac5665）</span><br><span class="line">第四轮：</span><br><span class="line">　　Ⅱ（a,b,c,d,M0,6,0xf4292244）</span><br><span class="line">　　Ⅱ（a,b,c,d,M7,10,0x432aff97）</span><br><span class="line">　　Ⅱ（a,b,c,d,M14,15,0xab9423a7）</span><br><span class="line">　　Ⅱ（a,b,c,d,M5,21,0xfc93a039）</span><br><span class="line">　　Ⅱ（a,b,c,d,M12,6,0x655b59c3）</span><br><span class="line">　　Ⅱ（a,b,c,d,M3,10,0x8f0ccc92）</span><br><span class="line">　　Ⅱ（a,b,c,d,M10,15,0xffeff47d)</span><br><span class="line">　　Ⅱ（a,b,c,d,M1,21,0x85845dd1）</span><br><span class="line">　　Ⅱ（a,b,c,d,M8,6,0x6fa87e4f)</span><br><span class="line">　　Ⅱ（a,b,c,d,M15,10,0xfe2ce6e0)</span><br><span class="line">　　Ⅱ（a,b,c,d,M6,15,0xa3014314）</span><br><span class="line">　　Ⅱ（a,b,c,d,M13,21,0x4e0811a1）</span><br><span class="line">　　Ⅱ（a,b,c,d,M4,6,0xf7537e82）</span><br><span class="line">　　Ⅱ（a,b,c,d,M11,10,0xbd3af235）</span><br><span class="line">　　Ⅱ（a,b,c,d,M2,15,0x2ad7d2bb)</span><br><span class="line">　　Ⅱ（a,b,c,d,M9,21,0xeb86d391）</span><br></pre></td></tr></table></figure>
+<h4 id="第五步-拼接结果"><a href="#第五步-拼接结果" class="headerlink" title="第五步:拼接结果"></a>第五步:拼接结果</h4><pre><code>这一步就很简单了，把循环加工最终产生的A，B，C，D四个值拼接在一起，转换成字符串即可。
+</code></pre>
+<h3 id="四、实现"><a href="#四、实现" class="headerlink" title="四、实现"></a>四、实现</h3><h4 id="4-1-JAVA实现MD5"><a href="#4-1-JAVA实现MD5" class="headerlink" title="4.1 JAVA实现MD5"></a>4.1 JAVA实现MD5</h4><p>处理需要用到的线性函数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;**</span><br><span class="line">     * 下面是处理要用到的线性函数</span><br><span class="line">     *&#x2F;</span><br><span class="line">    private static long F(long x, long y, long z) &#123;</span><br><span class="line">        return (x &amp; y) | ((~x) &amp; z);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private static long G(long x, long y, long z) &#123;</span><br><span class="line">        return (x &amp; z) | (y &amp; (~z));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private static long H(long x, long y, long z) &#123;</span><br><span class="line">        return x ^ y ^ z;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private static long I(long x, long y, long z) &#123;</span><br><span class="line">        return y ^ (x | (~z));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private static long FF(long a, long b, long c, long d, long x, long s,</span><br><span class="line">            long ac) &#123;</span><br><span class="line">        a +&#x3D; (F(b, c, d)&amp;0xFFFFFFFFL) + x + ac;</span><br><span class="line">        a &#x3D; ((a&amp;0xFFFFFFFFL)&lt;&lt; s) | ((a&amp;0xFFFFFFFFL) &gt;&gt;&gt; (32 - s));</span><br><span class="line">        a +&#x3D; b;</span><br><span class="line">        return (a&amp;0xFFFFFFFFL);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private static long GG(long a, long b, long c, long d, long x, long s,</span><br><span class="line">            long ac) &#123;</span><br><span class="line">        a +&#x3D; (G(b, c, d)&amp;0xFFFFFFFFL) + x + ac;</span><br><span class="line">        a &#x3D; ((a&amp;0xFFFFFFFFL) &lt;&lt; s) | ((a&amp;0xFFFFFFFFL) &gt;&gt;&gt; (32 - s));</span><br><span class="line">        a +&#x3D; b;</span><br><span class="line">        return (a&amp;0xFFFFFFFFL);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private static long HH(long a, long b, long c, long d, long x, long s,</span><br><span class="line">            long ac) &#123;</span><br><span class="line">        a +&#x3D; (H(b, c, d)&amp;0xFFFFFFFFL) + x + ac;</span><br><span class="line">        a &#x3D; ((a&amp;0xFFFFFFFFL) &lt;&lt; s) | ((a&amp;0xFFFFFFFFL) &gt;&gt;&gt; (32 - s));</span><br><span class="line">        a +&#x3D; b;</span><br><span class="line">        return (a&amp;0xFFFFFFFFL);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private static long II(long a, long b, long c, long d, long x, long s,</span><br><span class="line">            long ac) &#123;</span><br><span class="line">        a +&#x3D; (I(b, c, d)&amp;0xFFFFFFFFL) + x + ac;</span><br><span class="line">        a &#x3D; ((a&amp;0xFFFFFFFFL) &lt;&lt; s) | ((a&amp;0xFFFFFFFFL) &gt;&gt;&gt; (32 - s));</span><br><span class="line">        a +&#x3D; b;</span><br><span class="line">        return (a&amp;0xFFFFFFFFL);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><strong>在java中实现MD5是很简单的，在包java.security有个类MessageDigest。</strong></p>
+<p>官方文档如下</p>
+<p>MessageDigest 类为应用程序提供信息摘要算法的功能，如 MD5 或 SHA 算法。</p>
+<p>信息摘要是安全的单向哈希函数，它接收任意大小的数据，输出固定长度的哈希值。</p>
+<p>MessageDigest 对象开始被初始化。该对象通过使用 update 方法处理数据。任何时候都可以调用 reset 方法重置摘要。一旦所有需要更新的数据都已经被更新了，应该调用 digest 方法之一完成哈希计算。</p>
+<p>对于给定数量的更新数据，digest 方法只能被调用一次。digest 被调用后，MessageDigest 对象被重新设置成其初始状态。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">import java.security.MessageDigest;</span><br><span class="line"></span><br><span class="line">public class MyMD5 &#123;</span><br><span class="line"></span><br><span class="line">    static char[] hex &#x3D; &#123;&#39;0&#39;,&#39;1&#39;,&#39;2&#39;,&#39;3&#39;,&#39;4&#39;,&#39;5&#39;,&#39;6&#39;,&#39;7&#39;,&#39;8&#39;,&#39;9&#39;,&#39;A&#39;,&#39;B&#39;,&#39;C&#39;,&#39;D&#39;,&#39;E&#39;,&#39;F&#39;&#125;; </span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        try&#123;</span><br><span class="line">            MessageDigest md5 &#x3D; MessageDigest.getInstance(&quot;MD5&quot;);&#x2F;&#x2F;申明使用MD5算法</span><br><span class="line">            md5.update(&quot;a&quot;.getBytes());&#x2F;&#x2F;</span><br><span class="line">            System.out.println(&quot;md5(a)&#x3D;&quot;+byte2str(md5.digest()));</span><br><span class="line">            md5.update(&quot;a&quot;.getBytes());</span><br><span class="line">            md5.update(&quot;bc&quot;.getBytes());</span><br><span class="line">            System.out.println(&quot;md5(abc)&#x3D;&quot;+byte2str(md5.digest()));</span><br><span class="line">        &#125;catch(Exception e)&#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    &#x2F;**</span><br><span class="line">     * 将字节数组转换成十六进制字符串</span><br><span class="line">     * @param bytes</span><br><span class="line">     * @return</span><br><span class="line">     *&#x2F;</span><br><span class="line">    private static String byte2str(byte []bytes)&#123;</span><br><span class="line">        int len &#x3D; bytes.length;   </span><br><span class="line">        StringBuffer result &#x3D; new StringBuffer();    </span><br><span class="line">        for (int i &#x3D; 0; i &lt; len; i++) &#123;   </span><br><span class="line">            byte byte0 &#x3D; bytes[i];   </span><br><span class="line">            result.append(hex[byte0 &gt;&gt;&gt; 4 &amp; 0xf]);   </span><br><span class="line">            result.append(hex[byte0 &amp; 0xf]);   </span><br><span class="line">        &#125;</span><br><span class="line">        return result.toString();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="4-2-C-实现"><a href="#4-2-C-实现" class="headerlink" title="4.2 C++实现"></a>4.2 C++实现</h4><p>MD5算法的头文件Md5.h：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br></pre></td><td class="code"><pre><span class="line">#ifndef MD5_H  </span><br><span class="line">#define MD5_H  </span><br><span class="line"> </span><br><span class="line">typedef struct</span><br><span class="line">&#123;</span><br><span class="line">	unsigned int count[2];</span><br><span class="line">	unsigned int state[4];</span><br><span class="line">	unsigned char buffer[64];</span><br><span class="line">&#125;MD5_CTX;</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">#define F(x,y,z) ((x &amp; y) | (~x &amp; z))  </span><br><span class="line">#define G(x,y,z) ((x &amp; z) | (y &amp; ~z))  </span><br><span class="line">#define H(x,y,z) (x^y^z)  </span><br><span class="line">#define I(x,y,z) (y ^ (x | ~z))  </span><br><span class="line">#define ROTATE_LEFT(x,n) ((x &lt;&lt; n) | (x &gt;&gt; (32-n)))  </span><br><span class="line"> </span><br><span class="line">#define FF(a,b,c,d,x,s,ac) &#123; \</span><br><span class="line">a +&#x3D; F(b, c, d) + x + ac; \</span><br><span class="line">a &#x3D; ROTATE_LEFT(a, s); \</span><br><span class="line">a +&#x3D; b; \</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">#define GG(a,b,c,d,x,s,ac) &#123; \</span><br><span class="line">	a +&#x3D; G(b, c, d) + x + ac; \</span><br><span class="line">	a &#x3D; ROTATE_LEFT(a, s); \</span><br><span class="line">	a +&#x3D; b; \</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">#define HH(a,b,c,d,x,s,ac) &#123; \</span><br><span class="line">	a +&#x3D; H(b, c, d) + x + ac; \</span><br><span class="line">	a &#x3D; ROTATE_LEFT(a, s); \</span><br><span class="line">	a +&#x3D; b; \</span><br><span class="line">&#125;</span><br><span class="line">#define II(a,b,c,d,x,s,ac) &#123; \</span><br><span class="line">	a +&#x3D; I(b, c, d) + x + ac; \</span><br><span class="line">	a &#x3D; ROTATE_LEFT(a, s); \</span><br><span class="line">	a +&#x3D; b; \</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">void MD5Init(MD5_CTX *context);</span><br><span class="line">void MD5Update(MD5_CTX *context, unsigned char *input, unsigned int inputlen);</span><br><span class="line">void MD5Final(MD5_CTX *context, unsigned char digest[16]);</span><br><span class="line">void MD5Transform(unsigned int state[4], unsigned char block[64]);</span><br><span class="line">void MD5Encode(unsigned char *output, unsigned int *input, unsigned int len);</span><br><span class="line">void MD5Decode(unsigned int *output, unsigned char *input, unsigned int len);</span><br><span class="line"> </span><br><span class="line">#endif  </span><br><span class="line"></span><br><span class="line">MD5算法的实现文件Md5.cpp：</span><br><span class="line">unsigned char PADDING[] &#x3D; &#123; </span><br><span class="line">	0x80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,</span><br><span class="line">	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,</span><br><span class="line">	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,</span><br><span class="line">	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 &#125;;</span><br><span class="line"> </span><br><span class="line">&#x2F;&#x2F;在逆向代码的时候，需要关注下面的特征值</span><br><span class="line">void MD5Init(MD5_CTX *context)</span><br><span class="line">&#123;</span><br><span class="line">	context-&gt;count[0] &#x3D; 0;</span><br><span class="line">	context-&gt;count[1] &#x3D; 0;</span><br><span class="line">	context-&gt;state[0] &#x3D; 0x67452301;</span><br><span class="line">	context-&gt;state[1] &#x3D; 0xEFCDAB89;</span><br><span class="line">	context-&gt;state[2] &#x3D; 0x98BADCFE;</span><br><span class="line">	context-&gt;state[3] &#x3D; 0x10325476;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">void MD5Update(MD5_CTX *context, unsigned char *input, unsigned int inputlen)</span><br><span class="line">&#123;</span><br><span class="line">	unsigned int i &#x3D; 0, index &#x3D; 0, partlen &#x3D; 0;</span><br><span class="line">	index &#x3D; (context-&gt;count[0] &gt;&gt; 3) &amp; 0x3F;</span><br><span class="line">	partlen &#x3D; 64 - index;</span><br><span class="line">	context-&gt;count[0] +&#x3D; inputlen &lt;&lt; 3;</span><br><span class="line">	if (context-&gt;count[0] &lt; (inputlen &lt;&lt; 3))</span><br><span class="line">		context-&gt;count[1]++;</span><br><span class="line">	context-&gt;count[1] +&#x3D; inputlen &gt;&gt; 29;</span><br><span class="line"> </span><br><span class="line">	if (inputlen &gt;&#x3D; partlen)</span><br><span class="line">	&#123;</span><br><span class="line">		memcpy(&amp;context-&gt;buffer[index], input, partlen);</span><br><span class="line">		MD5Transform(context-&gt;state, context-&gt;buffer);</span><br><span class="line">		for (i &#x3D; partlen; i + 64 &lt;&#x3D; inputlen; i +&#x3D; 64)</span><br><span class="line">			MD5Transform(context-&gt;state, &amp;input[i]);</span><br><span class="line">		index &#x3D; 0;</span><br><span class="line">	&#125;</span><br><span class="line">	else</span><br><span class="line">	&#123;</span><br><span class="line">		i &#x3D; 0;</span><br><span class="line">	&#125;</span><br><span class="line">	memcpy(&amp;context-&gt;buffer[index], &amp;input[i], inputlen - i);</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">void MD5Final(MD5_CTX *context, unsigned char digest[16])</span><br><span class="line">&#123;</span><br><span class="line">	unsigned int index &#x3D; 0, padlen &#x3D; 0;</span><br><span class="line">	unsigned char bits[8];</span><br><span class="line">	index &#x3D; (context-&gt;count[0] &gt;&gt; 3) &amp; 0x3F;</span><br><span class="line">	padlen &#x3D; (index &lt; 56) ? (56 - index) : (120 - index);</span><br><span class="line">	MD5Encode(bits, context-&gt;count, 8);</span><br><span class="line">	MD5Update(context, PADDING, padlen);</span><br><span class="line">	MD5Update(context, bits, 8);</span><br><span class="line">	MD5Encode(digest, context-&gt;state, 16);</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">void MD5Encode(unsigned char *output, unsigned int *input, unsigned int len)</span><br><span class="line">&#123;</span><br><span class="line">	unsigned int i &#x3D; 0, j &#x3D; 0;</span><br><span class="line">	while (j &lt; len)</span><br><span class="line">	&#123;</span><br><span class="line">		output[j] &#x3D; input[i] &amp; 0xFF;</span><br><span class="line">		output[j + 1] &#x3D; (input[i] &gt;&gt; 8) &amp; 0xFF;</span><br><span class="line">		output[j + 2] &#x3D; (input[i] &gt;&gt; 16) &amp; 0xFF;</span><br><span class="line">		output[j + 3] &#x3D; (input[i] &gt;&gt; 24) &amp; 0xFF;</span><br><span class="line">		i++;</span><br><span class="line">		j +&#x3D; 4;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">void MD5Decode(unsigned int *output, unsigned char *input, unsigned int len)</span><br><span class="line">&#123;</span><br><span class="line">	unsigned int i &#x3D; 0, j &#x3D; 0;</span><br><span class="line">	while (j &lt; len)</span><br><span class="line">	&#123;</span><br><span class="line">		output[i] &#x3D; (input[j]) |</span><br><span class="line">			(input[j + 1] &lt;&lt; 8) |</span><br><span class="line">			(input[j + 2] &lt;&lt; 16) |</span><br><span class="line">			(input[j + 3] &lt;&lt; 24);</span><br><span class="line">		i++;</span><br><span class="line">		j +&#x3D; 4;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">void MD5Transform(unsigned int state[4], unsigned char block[64])</span><br><span class="line">&#123;</span><br><span class="line">	unsigned int a &#x3D; state[0];</span><br><span class="line">	unsigned int b &#x3D; state[1];</span><br><span class="line">	unsigned int c &#x3D; state[2];</span><br><span class="line">	unsigned int d &#x3D; state[3];</span><br><span class="line">	unsigned int x[64];</span><br><span class="line"> </span><br><span class="line">	MD5Decode(x, block, 64);</span><br><span class="line">	FF(a, b, c, d, x[0], 7, 0xd76aa478);</span><br><span class="line">	FF(d, a, b, c, x[1], 12, 0xe8c7b756);</span><br><span class="line">	FF(c, d, a, b, x[2], 17, 0x242070db);</span><br><span class="line">	FF(b, c, d, a, x[3], 22, 0xc1bdceee);</span><br><span class="line">	FF(a, b, c, d, x[4], 7, 0xf57c0faf);</span><br><span class="line">	FF(d, a, b, c, x[5], 12, 0x4787c62a);</span><br><span class="line">	FF(c, d, a, b, x[6], 17, 0xa8304613);</span><br><span class="line">	FF(b, c, d, a, x[7], 22, 0xfd469501);</span><br><span class="line">	FF(a, b, c, d, x[8], 7, 0x698098d8);</span><br><span class="line">	FF(d, a, b, c, x[9], 12, 0x8b44f7af);</span><br><span class="line">	FF(c, d, a, b, x[10], 17, 0xffff5bb1);</span><br><span class="line">	FF(b, c, d, a, x[11], 22, 0x895cd7be);</span><br><span class="line">	FF(a, b, c, d, x[12], 7, 0x6b901122);</span><br><span class="line">	FF(d, a, b, c, x[13], 12, 0xfd987193);</span><br><span class="line">	FF(c, d, a, b, x[14], 17, 0xa679438e);</span><br><span class="line">	FF(b, c, d, a, x[15], 22, 0x49b40821);</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">	GG(a, b, c, d, x[1], 5, 0xf61e2562);</span><br><span class="line">	GG(d, a, b, c, x[6], 9, 0xc040b340);</span><br><span class="line">	GG(c, d, a, b, x[11], 14, 0x265e5a51);</span><br><span class="line">	GG(b, c, d, a, x[0], 20, 0xe9b6c7aa);</span><br><span class="line">	GG(a, b, c, d, x[5], 5, 0xd62f105d);</span><br><span class="line">	GG(d, a, b, c, x[10], 9, 0x2441453);</span><br><span class="line">	GG(c, d, a, b, x[15], 14, 0xd8a1e681);</span><br><span class="line">	GG(b, c, d, a, x[4], 20, 0xe7d3fbc8);</span><br><span class="line">	GG(a, b, c, d, x[9], 5, 0x21e1cde6);</span><br><span class="line">	GG(d, a, b, c, x[14], 9, 0xc33707d6);</span><br><span class="line">	GG(c, d, a, b, x[3], 14, 0xf4d50d87);</span><br><span class="line">	GG(b, c, d, a, x[8], 20, 0x455a14ed);</span><br><span class="line">	GG(a, b, c, d, x[13], 5, 0xa9e3e905);</span><br><span class="line">	GG(d, a, b, c, x[2], 9, 0xfcefa3f8);</span><br><span class="line">	GG(c, d, a, b, x[7], 14, 0x676f02d9);</span><br><span class="line">	GG(b, c, d, a, x[12], 20, 0x8d2a4c8a);</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">	HH(a, b, c, d, x[5], 4, 0xfffa3942);</span><br><span class="line">	HH(d, a, b, c, x[8], 11, 0x8771f681);</span><br><span class="line">	HH(c, d, a, b, x[11], 16, 0x6d9d6122);</span><br><span class="line">	HH(b, c, d, a, x[14], 23, 0xfde5380c);</span><br><span class="line">	HH(a, b, c, d, x[1], 4, 0xa4beea44);</span><br><span class="line">	HH(d, a, b, c, x[4], 11, 0x4bdecfa9);</span><br><span class="line">	HH(c, d, a, b, x[7], 16, 0xf6bb4b60);</span><br><span class="line">	HH(b, c, d, a, x[10], 23, 0xbebfbc70);</span><br><span class="line">	HH(a, b, c, d, x[13], 4, 0x289b7ec6);</span><br><span class="line">	HH(d, a, b, c, x[0], 11, 0xeaa127fa);</span><br><span class="line">	HH(c, d, a, b, x[3], 16, 0xd4ef3085);</span><br><span class="line">	HH(b, c, d, a, x[6], 23, 0x4881d05);</span><br><span class="line">	HH(a, b, c, d, x[9], 4, 0xd9d4d039);</span><br><span class="line">	HH(d, a, b, c, x[12], 11, 0xe6db99e5);</span><br><span class="line">	HH(c, d, a, b, x[15], 16, 0x1fa27cf8);</span><br><span class="line">	HH(b, c, d, a, x[2], 23, 0xc4ac5665);</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">	II(a, b, c, d, x[0], 6, 0xf4292244);</span><br><span class="line">	II(d, a, b, c, x[7], 10, 0x432aff97);</span><br><span class="line">	II(c, d, a, b, x[14], 15, 0xab9423a7);</span><br><span class="line">	II(b, c, d, a, x[5], 21, 0xfc93a039);</span><br><span class="line">	II(a, b, c, d, x[12], 6, 0x655b59c3);</span><br><span class="line">	II(d, a, b, c, x[3], 10, 0x8f0ccc92);</span><br><span class="line">	II(c, d, a, b, x[10], 15, 0xffeff47d);</span><br><span class="line">	II(b, c, d, a, x[1], 21, 0x85845dd1);</span><br><span class="line">	II(a, b, c, d, x[8], 6, 0x6fa87e4f);</span><br><span class="line">	II(d, a, b, c, x[15], 10, 0xfe2ce6e0);</span><br><span class="line">	II(c, d, a, b, x[6], 15, 0xa3014314);</span><br><span class="line">	II(b, c, d, a, x[13], 21, 0x4e0811a1);</span><br><span class="line">	II(a, b, c, d, x[4], 6, 0xf7537e82);</span><br><span class="line">	II(d, a, b, c, x[11], 10, 0xbd3af235);</span><br><span class="line">	II(c, d, a, b, x[2], 15, 0x2ad7d2bb);</span><br><span class="line">	II(b, c, d, a, x[9], 21, 0xeb86d391);</span><br><span class="line">	state[0] +&#x3D; a;</span><br><span class="line">	state[1] +&#x3D; b;</span><br><span class="line">	state[2] +&#x3D; c;</span><br><span class="line">	state[3] +&#x3D; d;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>破解MD5加密的网址：<a target="_blank" rel="noopener" href="http://www.cmd5.com/%EF%BC%88%E6%9A%B4%E5%8A%9B%E7%A0%B4%E8%A7%A3%EF%BC%89">http://www.cmd5.com/（暴力破解）</a></p>
+<h4 id="4-3-C语言实现"><a href="#4-3-C语言实现" class="headerlink" title="4.3 C语言实现"></a>4.3 C语言实现</h4><p>头文件md5.h</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">#ifndef MD5_H</span><br><span class="line">#define MD5_H</span><br><span class="line"> </span><br><span class="line">typedef struct</span><br><span class="line">&#123;</span><br><span class="line">	unsigned int count[2];</span><br><span class="line">	unsigned int state[4];</span><br><span class="line">	unsigned char buffer[64];   </span><br><span class="line">&#125;MD5_CTX;</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">#define F(x,y,z) ((x &amp; y) | (~x &amp; z))</span><br><span class="line">#define G(x,y,z) ((x &amp; z) | (y &amp; ~z))</span><br><span class="line">#define H(x,y,z) (x^y^z)</span><br><span class="line">#define I(x,y,z) (y ^ (x | ~z))</span><br><span class="line">#define ROTATE_LEFT(x,n) ((x &lt;&lt; n) | (x &gt;&gt; (32-n)))</span><br><span class="line">#define FF(a,b,c,d,x,s,ac) \</span><br><span class="line">&#123; \</span><br><span class="line">	a +&#x3D; F(b,c,d) + x + ac; \</span><br><span class="line">	a &#x3D; ROTATE_LEFT(a,s); \</span><br><span class="line">	a +&#x3D; b; \</span><br><span class="line">&#125;</span><br><span class="line">#define GG(a,b,c,d,x,s,ac) \</span><br><span class="line">&#123; \</span><br><span class="line">	a +&#x3D; G(b,c,d) + x + ac; \</span><br><span class="line">	a &#x3D; ROTATE_LEFT(a,s); \</span><br><span class="line">	a +&#x3D; b; \</span><br><span class="line">&#125;</span><br><span class="line">#define HH(a,b,c,d,x,s,ac) \</span><br><span class="line">&#123; \</span><br><span class="line">	a +&#x3D; H(b,c,d) + x + ac; \</span><br><span class="line">	a &#x3D; ROTATE_LEFT(a,s); \</span><br><span class="line">	a +&#x3D; b; \</span><br><span class="line">&#125;</span><br><span class="line">#define II(a,b,c,d,x,s,ac) \</span><br><span class="line">&#123; \</span><br><span class="line">	a +&#x3D; I(b,c,d) + x + ac; \</span><br><span class="line">	a &#x3D; ROTATE_LEFT(a,s); \</span><br><span class="line">	a +&#x3D; b; \</span><br><span class="line">&#125;                                            </span><br><span class="line">void MD5Init(MD5_CTX *context);</span><br><span class="line">void MD5Update(MD5_CTX *context,unsigned char *input,unsigned int inputlen);</span><br><span class="line">void MD5Final(MD5_CTX *context,unsigned char digest[16]);</span><br><span class="line">void MD5Transform(unsigned int state[4],unsigned char block[64]);</span><br><span class="line">void MD5Encode(unsigned char *output,unsigned int *input,unsigned int len);</span><br><span class="line">void MD5Decode(unsigned int *output,unsigned char *input,unsigned int len);</span><br><span class="line"> </span><br><span class="line">#endif</span><br></pre></td></tr></table></figure>
+<p><strong>C语言文件md5.c</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;memory.h&gt;</span><br><span class="line">#include &quot;md5.h&quot;</span><br><span class="line"> </span><br><span class="line">unsigned char PADDING[]&#x3D;&#123;0x80,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,</span><br><span class="line">0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,</span><br><span class="line">0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,</span><br><span class="line">0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0&#125;;</span><br><span class="line"> </span><br><span class="line">void MD5Init(MD5_CTX *context)</span><br><span class="line">&#123;</span><br><span class="line">	context-&gt;count[0] &#x3D; 0;</span><br><span class="line">	context-&gt;count[1] &#x3D; 0;</span><br><span class="line">	context-&gt;state[0] &#x3D; 0x67452301;</span><br><span class="line">	context-&gt;state[1] &#x3D; 0xEFCDAB89;</span><br><span class="line">	context-&gt;state[2] &#x3D; 0x98BADCFE;</span><br><span class="line">	context-&gt;state[3] &#x3D; 0x10325476;</span><br><span class="line">&#125;</span><br><span class="line">void MD5Update(MD5_CTX *context,unsigned char *input,unsigned int inputlen)</span><br><span class="line">&#123;</span><br><span class="line">	unsigned int i &#x3D; 0,index &#x3D; 0,partlen &#x3D; 0;</span><br><span class="line">	index &#x3D; (context-&gt;count[0] &gt;&gt; 3) &amp; 0x3F;</span><br><span class="line">	partlen &#x3D; 64 - index;</span><br><span class="line">	context-&gt;count[0] +&#x3D; inputlen &lt;&lt; 3;</span><br><span class="line">	if(context-&gt;count[0] &lt; (inputlen &lt;&lt; 3))</span><br><span class="line">		context-&gt;count[1]++;</span><br><span class="line">	context-&gt;count[1] +&#x3D; inputlen &gt;&gt; 29;</span><br><span class="line"> </span><br><span class="line">	if(inputlen &gt;&#x3D; partlen)</span><br><span class="line">	&#123;</span><br><span class="line">		memcpy(&amp;context-&gt;buffer[index],input,partlen);</span><br><span class="line">		MD5Transform(context-&gt;state,context-&gt;buffer);</span><br><span class="line">		for(i &#x3D; partlen;i+64 &lt;&#x3D; inputlen;i+&#x3D;64)</span><br><span class="line">			MD5Transform(context-&gt;state,&amp;input[i]);</span><br><span class="line">		index &#x3D; 0;        </span><br><span class="line">	&#125;  </span><br><span class="line">	else</span><br><span class="line">	&#123;</span><br><span class="line">		i &#x3D; 0;</span><br><span class="line">	&#125;</span><br><span class="line">	memcpy(&amp;context-&gt;buffer[index],&amp;input[i],inputlen-i);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>void MD5Final(MD5_CTX *context,unsigned char digest[16])<br>{<br>    unsigned int index = 0,padlen = 0;<br>    unsigned char bits[8];<br>    index = (context-&gt;count[0] &gt;&gt; 3) &amp; 0x3F;<br>    padlen = (index &lt; 56)?(56-index):(120-index);<br>    MD5Encode(bits,context-&gt;count,8);<br>    MD5Update(context,PADDING,padlen);<br>    MD5Update(context,bits,8);<br>    MD5Encode(digest,context-&gt;state,16);<br>}</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">void MD5Encode(unsigned char *output,unsigned int *input,unsigned int len)</span><br><span class="line">&#123;</span><br><span class="line">	unsigned int i &#x3D; 0,j &#x3D; 0;</span><br><span class="line">	while(j &lt; len)</span><br><span class="line">	&#123;</span><br><span class="line">		output[j] &#x3D; input[i] &amp; 0xFF;  </span><br><span class="line">		output[j+1] &#x3D; (input[i] &gt;&gt; 8) &amp; 0xFF;</span><br><span class="line">		output[j+2] &#x3D; (input[i] &gt;&gt; 16) &amp; 0xFF;</span><br><span class="line">		output[j+3] &#x3D; (input[i] &gt;&gt; 24) &amp; 0xFF;</span><br><span class="line">		i++;</span><br><span class="line">		j+&#x3D;4;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">void MD5Decode(unsigned int *output,unsigned char *input,unsigned int len)</span><br><span class="line">&#123;</span><br><span class="line">	unsigned int i &#x3D; 0,j &#x3D; 0;</span><br><span class="line">	while(j &lt; len)</span><br><span class="line">	&#123;</span><br><span class="line">		output[i] &#x3D; (input[j]) |</span><br><span class="line">			(input[j+1] &lt;&lt; 8) |</span><br><span class="line">			(input[j+2] &lt;&lt; 16) |</span><br><span class="line">			(input[j+3] &lt;&lt; 24);</span><br><span class="line">		i++;</span><br><span class="line">		j+&#x3D;4; </span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br></pre></td><td class="code"><pre><span class="line">void MD5Transform(unsigned int state[4],unsigned char block[64])</span><br><span class="line">&#123;</span><br><span class="line">	unsigned int a &#x3D; state[0];</span><br><span class="line">	unsigned int b &#x3D; state[1];</span><br><span class="line">	unsigned int c &#x3D; state[2];</span><br><span class="line">	unsigned int d &#x3D; state[3];</span><br><span class="line">	unsigned int x[64];</span><br><span class="line">	MD5Decode(x,block,64);</span><br><span class="line">	FF(a, b, c, d, x[ 0], 7, 0xd76aa478); &#x2F;* 1 *&#x2F;</span><br><span class="line">	FF(d, a, b, c, x[ 1], 12, 0xe8c7b756); &#x2F;* 2 *&#x2F;</span><br><span class="line">	FF(c, d, a, b, x[ 2], 17, 0x242070db); &#x2F;* 3 *&#x2F;</span><br><span class="line">	FF(b, c, d, a, x[ 3], 22, 0xc1bdceee); &#x2F;* 4 *&#x2F;</span><br><span class="line">	FF(a, b, c, d, x[ 4], 7, 0xf57c0faf); &#x2F;* 5 *&#x2F;</span><br><span class="line">	FF(d, a, b, c, x[ 5], 12, 0x4787c62a); &#x2F;* 6 *&#x2F;</span><br><span class="line">	FF(c, d, a, b, x[ 6], 17, 0xa8304613); &#x2F;* 7 *&#x2F;</span><br><span class="line">	FF(b, c, d, a, x[ 7], 22, 0xfd469501); &#x2F;* 8 *&#x2F;</span><br><span class="line">	FF(a, b, c, d, x[ 8], 7, 0x698098d8); &#x2F;* 9 *&#x2F;</span><br><span class="line">	FF(d, a, b, c, x[ 9], 12, 0x8b44f7af); &#x2F;* 10 *&#x2F;</span><br><span class="line">	FF(c, d, a, b, x[10], 17, 0xffff5bb1); &#x2F;* 11 *&#x2F;</span><br><span class="line">	FF(b, c, d, a, x[11], 22, 0x895cd7be); &#x2F;* 12 *&#x2F;</span><br><span class="line">	FF(a, b, c, d, x[12], 7, 0x6b901122); &#x2F;* 13 *&#x2F;</span><br><span class="line">	FF(d, a, b, c, x[13], 12, 0xfd987193); &#x2F;* 14 *&#x2F;</span><br><span class="line">	FF(c, d, a, b, x[14], 17, 0xa679438e); &#x2F;* 15 *&#x2F;</span><br><span class="line">	FF(b, c, d, a, x[15], 22, 0x49b40821); &#x2F;* 16 *&#x2F;</span><br><span class="line"> </span><br><span class="line">	&#x2F;* Round 2 *&#x2F;</span><br><span class="line">	GG(a, b, c, d, x[ 1], 5, 0xf61e2562); &#x2F;* 17 *&#x2F;</span><br><span class="line">	GG(d, a, b, c, x[ 6], 9, 0xc040b340); &#x2F;* 18 *&#x2F;</span><br><span class="line">	GG(c, d, a, b, x[11], 14, 0x265e5a51); &#x2F;* 19 *&#x2F;</span><br><span class="line">	GG(b, c, d, a, x[ 0], 20, 0xe9b6c7aa); &#x2F;* 20 *&#x2F;</span><br><span class="line">	GG(a, b, c, d, x[ 5], 5, 0xd62f105d); &#x2F;* 21 *&#x2F;</span><br><span class="line">	GG(d, a, b, c, x[10], 9,  0x2441453); &#x2F;* 22 *&#x2F;</span><br><span class="line">	GG(c, d, a, b, x[15], 14, 0xd8a1e681); &#x2F;* 23 *&#x2F;</span><br><span class="line">	GG(b, c, d, a, x[ 4], 20, 0xe7d3fbc8); &#x2F;* 24 *&#x2F;</span><br><span class="line">	GG(a, b, c, d, x[ 9], 5, 0x21e1cde6); &#x2F;* 25 *&#x2F;</span><br><span class="line">	GG(d, a, b, c, x[14], 9, 0xc33707d6); &#x2F;* 26 *&#x2F;</span><br><span class="line">	GG(c, d, a, b, x[ 3], 14, 0xf4d50d87); &#x2F;* 27 *&#x2F;</span><br><span class="line">	GG(b, c, d, a, x[ 8], 20, 0x455a14ed); &#x2F;* 28 *&#x2F;</span><br><span class="line">	GG(a, b, c, d, x[13], 5, 0xa9e3e905); &#x2F;* 29 *&#x2F;</span><br><span class="line">	GG(d, a, b, c, x[ 2], 9, 0xfcefa3f8); &#x2F;* 30 *&#x2F;</span><br><span class="line">	GG(c, d, a, b, x[ 7], 14, 0x676f02d9); &#x2F;* 31 *&#x2F;</span><br><span class="line">	GG(b, c, d, a, x[12], 20, 0x8d2a4c8a); &#x2F;* 32 *&#x2F;</span><br><span class="line"> </span><br><span class="line">	&#x2F;* Round 3 *&#x2F;</span><br><span class="line">	HH(a, b, c, d, x[ 5], 4, 0xfffa3942); &#x2F;* 33 *&#x2F;</span><br><span class="line">	HH(d, a, b, c, x[ 8], 11, 0x8771f681); &#x2F;* 34 *&#x2F;</span><br><span class="line">	HH(c, d, a, b, x[11], 16, 0x6d9d6122); &#x2F;* 35 *&#x2F;</span><br><span class="line">	HH(b, c, d, a, x[14], 23, 0xfde5380c); &#x2F;* 36 *&#x2F;</span><br><span class="line">	HH(a, b, c, d, x[ 1], 4, 0xa4beea44); &#x2F;* 37 *&#x2F;</span><br><span class="line">	HH(d, a, b, c, x[ 4], 11, 0x4bdecfa9); &#x2F;* 38 *&#x2F;</span><br><span class="line">	HH(c, d, a, b, x[ 7], 16, 0xf6bb4b60); &#x2F;* 39 *&#x2F;</span><br><span class="line">	HH(b, c, d, a, x[10], 23, 0xbebfbc70); &#x2F;* 40 *&#x2F;</span><br><span class="line">	HH(a, b, c, d, x[13], 4, 0x289b7ec6); &#x2F;* 41 *&#x2F;</span><br><span class="line">	HH(d, a, b, c, x[ 0], 11, 0xeaa127fa); &#x2F;* 42 *&#x2F;</span><br><span class="line">	HH(c, d, a, b, x[ 3], 16, 0xd4ef3085); &#x2F;* 43 *&#x2F;</span><br><span class="line">	HH(b, c, d, a, x[ 6], 23,  0x4881d05); &#x2F;* 44 *&#x2F;</span><br><span class="line">	HH(a, b, c, d, x[ 9], 4, 0xd9d4d039); &#x2F;* 45 *&#x2F;</span><br><span class="line">	HH(d, a, b, c, x[12], 11, 0xe6db99e5); &#x2F;* 46 *&#x2F;</span><br><span class="line">	HH(c, d, a, b, x[15], 16, 0x1fa27cf8); &#x2F;* 47 *&#x2F;</span><br><span class="line">	HH(b, c, d, a, x[ 2], 23, 0xc4ac5665); &#x2F;* 48 *&#x2F;</span><br><span class="line"> </span><br><span class="line">	&#x2F;* Round 4 *&#x2F;</span><br><span class="line">	II(a, b, c, d, x[ 0], 6, 0xf4292244); &#x2F;* 49 *&#x2F;</span><br><span class="line">	II(d, a, b, c, x[ 7], 10, 0x432aff97); &#x2F;* 50 *&#x2F;</span><br><span class="line">	II(c, d, a, b, x[14], 15, 0xab9423a7); &#x2F;* 51 *&#x2F;</span><br><span class="line">	II(b, c, d, a, x[ 5], 21, 0xfc93a039); &#x2F;* 52 *&#x2F;</span><br><span class="line">	II(a, b, c, d, x[12], 6, 0x655b59c3); &#x2F;* 53 *&#x2F;</span><br><span class="line">	II(d, a, b, c, x[ 3], 10, 0x8f0ccc92); &#x2F;* 54 *&#x2F;</span><br><span class="line">	II(c, d, a, b, x[10], 15, 0xffeff47d); &#x2F;* 55 *&#x2F;</span><br><span class="line">	II(b, c, d, a, x[ 1], 21, 0x85845dd1); &#x2F;* 56 *&#x2F;</span><br><span class="line">	II(a, b, c, d, x[ 8], 6, 0x6fa87e4f); &#x2F;* 57 *&#x2F;</span><br><span class="line">	II(d, a, b, c, x[15], 10, 0xfe2ce6e0); &#x2F;* 58 *&#x2F;</span><br><span class="line">	II(c, d, a, b, x[ 6], 15, 0xa3014314); &#x2F;* 59 *&#x2F;</span><br><span class="line">	II(b, c, d, a, x[13], 21, 0x4e0811a1); &#x2F;* 60 *&#x2F;</span><br><span class="line">	II(a, b, c, d, x[ 4], 6, 0xf7537e82); &#x2F;* 61 *&#x2F;</span><br><span class="line">	II(d, a, b, c, x[11], 10, 0xbd3af235); &#x2F;* 62 *&#x2F;</span><br><span class="line">	II(c, d, a, b, x[ 2], 15, 0x2ad7d2bb); &#x2F;* 63 *&#x2F;</span><br><span class="line">	II(b, c, d, a, x[ 9], 21, 0xeb86d391); &#x2F;* 64 *&#x2F;</span><br><span class="line">	state[0] +&#x3D; a;</span><br><span class="line">	state[1] +&#x3D; b;</span><br><span class="line">	state[2] +&#x3D; c;</span><br><span class="line">	state[3] +&#x3D; d;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p> <br><strong>md5函数测试代码文件</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include &lt;stdlib.h&gt;</span><br><span class="line">#include &lt;string.h&gt;</span><br><span class="line">#include &quot;md5.h&quot;</span><br><span class="line"> </span><br><span class="line">int main(int argc, char *argv[])</span><br><span class="line">&#123;</span><br><span class="line">	MD5_CTX md5;</span><br><span class="line">	MD5Init(&amp;md5);         </span><br><span class="line">	int i;</span><br><span class="line">	unsigned char encrypt[] &#x3D;&quot;admin&quot;;&#x2F;&#x2F;21232f297a57a5a743894a0e4a801fc3</span><br><span class="line">	unsigned char decrypt[16];    </span><br><span class="line">	MD5Update(&amp;md5,encrypt,strlen((char *)encrypt));</span><br><span class="line">	MD5Final(&amp;md5,decrypt);        </span><br><span class="line">	printf(&quot;加密前:%s\n加密后:&quot;,encrypt);</span><br><span class="line">	for(i&#x3D;0;i&lt;16;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		printf(&quot;%02x&quot;,decrypt[i]);</span><br><span class="line">	&#125;</span><br><span class="line"> </span><br><span class="line">	getchar();</span><br><span class="line"> </span><br><span class="line">	return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="md5小知识"><a href="#md5小知识" class="headerlink" title="md5小知识"></a>md5小知识</h3><p>MD5：是一个具体的算法,散列算法，哈西算法，但非加密算法（因为没有密钥），可用于加密（不可逆）</p>
+<p>MD5是一种单向散列函数，单向散列函数的作用是将任何长度的一段数据散列成固定长度。常用于生成消息认证码等等，可以与非对称算法一起用于数字签名。</p>
+<p>标准见<a target="_blank" rel="noopener" href="http://www.ietf.org/rfc/rfc1321.txt">http://www.ietf.org/rfc/rfc1321.txt</a></p>
+<p>MD5好象被国内的一个教授破解了,顺便给大家一个地址<a target="_blank" rel="noopener" href="http://www.cmd5.com/,%E6%9C%89%E6%97%B6%E5%80%99%E5%BA%94%E8%AF%A5%E4%BC%9A%E5%BE%88%E6%96%B9%E4%BE%BF%E7%9A%84">http://www.cmd5.com/,有时候应该会很方便的</a>.:)</p>
+<p><em><strong>以上就是本次的全部内容，希望对你有所帮助！！！</strong></em></p>
+
+        <p class="suffix-end">__END__</p>
+        <div class="suffix-box">
+            <div class="suffix-box-left">
+                <img src="https://gitee.com/psycho1900/miss-reddle/raw/master/profile.jpg" alt="Russshare">
+            </div>
+            <div class="suffix-box-right">
+                <span class="suffix-box-title">文章作者</span>：Russshare
+                <br>
+                <span class="suffix-box-title">文章出处</span>：<a href="/2021/06/21/MD5-hash%E7%9A%84%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0/" target="_blank">MD5_hash的原理与实现</a>
+                <br>
+                <span class="suffix-box-title">作者签名</span>：我们生死与共，勇往直前，永远都是坏小子.
+                <br>
+                <span class="suffix-box-title">关于主题</span>：<a href="https://github.com/first19326/Hexo-LiveForCode" target="_blank">Hexo - Russshare</a>
+                <br>
+                <span class="suffix-box-title">版权声明</span>：文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" title="BY-NC-SA" target="_blank">BY-NC-SA</a> 许可协议，转载请注明出处
+                <br>
+            </div>
+            <div style="clear: both;"></div>
+        </div>
+    </div>
+    <div class="article-footer">
+        
+            <div class="category">
+                分类：
+                
+                    <a href="/categories/Zigbee-ZStack-CC2530/">Zigbee-ZStack-CC2530</a>
+                
+            </div>
+        
+        
+            <div class="tag">
+                标签：
+                
+                    <a href="/tags/MD5/">MD5</a>
+                
+                    <a href="/tags/hash/">hash</a>
+                
+                    <a href="/tags/%E5%8A%A0%E5%AF%86/">加密</a>
+                
+            </div>
+        
+        <div class="article-prev-next">
+            
+                <a href="/2021/06/21/Zigbee%20Security/" class="prev-prefix">« </a> 上一篇：    <a href="/2021/06/21/Zigbee%20Security/" title="发布于 2021-06-21 06:41">Zigbee Security</a>
+                <br>
+            
+            
+                <a href="/2021/06/21/%E6%89%8B%E5%86%99%E4%B8%AD%E9%97%B4%E4%BB%B6/" class="next-prefix">» </a> 下一篇：    <a href="/2021/06/21/%E6%89%8B%E5%86%99%E4%B8%AD%E9%97%B4%E4%BB%B6/" title="发布于 2021-06-21 06:37">手写中间件</a>
+            
+        </div>
+    </div>
+    
+    <div class="article-comments">
+        <div class="comments-title">
+            评论列表
+        </div>
+        <div class="comments-content">
+        </div>
+    </div>
+
+</div>
+
+    </div>
+</div>
+    <div id="footer"></div>
+    <div id="sidebar">
+    <div class="menu-wrap" style="display:none;">
+        <nav class="menu">
+            <div class="menu-introduce"> 
+                <div class="introduce-avatar"></div> 
+                <div class="introduce-info"> 
+                    <div class="introduce-user"><span></span></div>        
+                </div> 
+            </div> 
+            <div class="menu-list">
+                <ul></ul> 
+            </div> 
+            <div class="menu-link"></div> 
+        </nav>
+        <button class="menu-button-close"></button>
+        <div class="morph-shape" id="morph-shape" data-morph-open="M-7.312,0H15c0,0,66,113.339,66,399.5C81,664.006,15,800,15,800H-7.312V0z;M-7.312,0H100c0,0,0,113.839,0,400c0,264.506,0,400,0,400H-7.312V0z">
+            <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 100 800" preserveAspectRatio="none">
+                <path d="M-7.312,0H0c0,0,0,113.839,0,400c0,264.506,0,400,0,400h-7.312V0z"/>
+            </svg>
+        </div>
+    </div>
+    <button class="menu-button-open">MENU</button>
+    <div class="menu-cover"></div>
+</div>
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/search.css">
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/iscroll.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/instantsearch.min.js"></script>
+<div class="search-window">
+    <div class="search-content">
+        <div class="search-content-icon">
+            <i class="iconfont icon-search"></i>
+        </div>
+        <div id="search-input" class="search-input"></div>
+    </div>
+
+    <div class="search-scroll">
+        <div class="search-result">
+            <div id="search-stats" class="search-stats"></div>
+            <div id="search-hits"></div>
+            <div id="search-pagination" class="search-pagination"></div>
+        </div>
+    </div>
+
+    <span class="search-close-icon">
+        <i class="iconfont icon-close"></i>
+    </span>
+</div>
+    <div id="tools">
+    <div class="progressbar-top"></div>
+
+    
+        <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/APlayer.css">
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/APlayer.min.js"></script>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/Meting.min.js"></script>
+        <meting-js id="3778678" lrcshow="false" server="netease" type="playlist" fixed="true" autoplay="false" loop="all" order="random" preload="auto" volume="0.67" mutex="true"></meting-js>
+    
+    
+    <div class="wrap-right"></div>
+    <div class="loading"></div>
+</div>
+    <script>
+    window.config = {
+        GitHubUserName     : 'Russshare',
+        GitHubRepositories : 'Russshare',
+
+        BlogUser      : 'Russshare',
+        BlogAvatar    : 'https://gitee.com/psycho1900/miss-reddle/raw/master/profile.jpg',
+        BlogStartDate : '2021-03-17',
+
+        WebsiteTitleBlur         : '(◍´꒳`◍) Hi, Miss Riddle',
+        WebsiteTitleBlurTimeOut  : 500,
+        WebsiteTitleFocus        : '(*´∇｀*) 欢迎回来!',
+        WebsiteTitleFocusTimeOut : 1000,
+        WebsiteFavicon           : 'https://gitee.com/psycho1900/miss-reddle/raw/master/beer.png',
+
+        ProgressBar: {
+            id       : 'topProgressBar',
+            color    : '#77B6FF',
+            height   : '2px',
+            duration : 0.2
+        },
+
+        Loading: {
+            rebound: {
+                tension  : 16,
+                friction : 5
+            },
+            spinner: {
+                id     : 'spinner',
+                radius : 90,
+                sides  : 3,
+                depth  : 4,
+                colors : {
+                    background : '#F0F0F0',
+                    stroke     : '#272633',
+                    base       : '',
+                    child      : '#272633'
+                },
+                alwaysForward : true,
+                restAt        : 0.5,
+                renderBase    : false
+            }
+        },
+
+        HomeHeaderAnimationRendered : true,
+        HomeHeaderAnimation         : {
+            radius      : 15,
+            density     : 0.2,
+            color       : 'rgba(255, 255, 255, .2)',
+            clearOffset : 0.3
+        },
+
+        ArticleHeaderAnimationRendered : false,
+        ArticleHeaderAnimation         : {
+            triW                  : 14,
+            triH                  : 20,
+            neighbours            : [
+                
+                    'side',
+                
+                    'top',
+                
+                    'bottom',
+                
+            ],
+            speedTrailAppear      : 0.1,
+            speedTrailDisappear   : 0.1,
+            speedTriOpen          : 1,
+            trailMaxLength        : 30,
+            trailIntervalCreation : 100,
+            delayBeforeDisappear  : 2,
+            colors                : [
+                
+                    '#96EDA6',
+                
+                    '#5BC6A9',
+                
+                    '#38668C',
+                
+                    '#374D84',
+                
+                    '#BED5CB',
+                
+                    '#62ADC6',
+                
+                    '#8EE5DE',
+                
+                    '#304E7B',
+                
+            ]
+        },
+
+        BackAnimationRendered          : true,
+        IEBrowserBackAnimationRendered : false,
+        BackAnimation                  : {
+            colorSaturation  : '60%',
+            colorBrightness  : '50%',
+            colorAlpha       : 0.5,
+            colorCycleSpeed  : 5,
+            verticalPosition : 'random',
+            horizontalSpeed  : 200,
+            ribbonCount      : 3,
+            strokeSize       : 0,
+            parallaxAmount   : -0.2,
+            animateSections  : true
+        },
+
+        HomeHeaderImage : [
+            
+                'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/image/header/home.jpg',
+            
+                'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/image/header/home.jpeg',
+            
+        ],
+        HomeBannerText  : '',
+
+        ArticleHeaderImage : [
+            
+                'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/image/header/article.jpg',
+            
+        ],
+
+        OtherBannerText : '',
+
+        MenuList : [
+            
+                {
+                    name   : '首页',
+                    href   : '/',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '标签',
+                    href   : '/tag',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '分类',
+                    href   : '/category',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '赞赏',
+                    href   : '/donate',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '关于',
+                    href   : '/about',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '搜索',
+                    href   : '',    
+                    target : '',
+                    class  : 'search'
+                },
+            
+                {
+                    name   : '留言板',
+                    href   : '/comment',    
+                    target : '',
+                    class  : ''
+                },
+            
+                {
+                    name   : '友情链接',
+                    href   : '/friend',    
+                    target : '',
+                    class  : ''
+                },
+            
+        ],
+        MenuLink : [
+            
+                
+                    {
+                        icon : 'icon-weibo', 
+                        url  : ''
+                    },
+                
+                    {
+                        icon : 'icon-wechat', 
+                        url  : ''
+                    },
+                
+                    {
+                        icon : 'icon-qq', 
+                        url  : ''
+                    },
+                
+                    {
+                        icon : 'icon-github', 
+                        url  : 'https://github.com/RiddleGo'
+                    },
+                
+            
+        ],
+
+        FooterStyle : 2,
+        BottomText  : {
+            icon    : 'like-fill',
+            left    : '人生若只如初见',
+            right   : '何事秋风悲画扇'
+        },
+        ThemeInfo   : true,
+
+        ConsoleList : [
+            
+                
+                    [
+                        
+                            
+                                'Based on cnblogs theme SimpleMemory.',
+                            
+                                '',
+                            
+                        
+                    ],
+                
+                    [
+                        
+                            
+                                'SimpleMemory Author:',
+                            
+                                'BNDong',
+                            
+                        
+                    ],
+                
+                    [
+                        
+                            
+                                'Theme:',
+                            
+                                'LiveForCode',
+                            
+                        
+                    ],
+                
+            
+        ],
+
+        FontIconExtend : '',
+
+        Donate : {
+            paypal  : '',
+            bitcoin : '',
+            alipay  : '',
+            wechat  : ''
+        },
+
+        Code : {
+            style : 'normal'
+        },  
+
+        Search : {
+            applicationID : '010C3EANT8',
+            apiKey        : 'c7abab9f11b79102b9aff7fe6d41447d',
+            indexName     : 'Notes',
+            hits          : {
+                page : 10
+            },
+            labels        : {
+                placeholder : '搜索',
+                empty       : '未发现与 「${query}」 相关的内容',
+                stats       : '${hits} 条相关条目，使用了 ${time} 毫秒',
+            }
+        }, 
+
+        Valine : {
+            switch         : true,
+            el             : '.comments-content',
+            appId          : 'TKpiBidydKtx7apGCq7DM4Fw-gzGzoHsz',
+            appKey         : 'wsVqBbLWlLy4JRbi9I4XDBpH',
+            placeholder    : '你是我一生只会遇见一次的惊喜...',
+            avatar         : 'mm',
+            meta           : 'nick,mail,link',
+            requiredFields : 'nick,mail',
+            pageSize       : 5,
+            lang           : 'zh-cn',
+            visitor        : true,
+            enableQQ       : true
+        },
+
+        Tocbot : {
+            switch                : true,
+            tocSelector           : '.toc',
+            contentSelector       : '.article-body',
+            headingSelector       : 'h1, h2, h3, h4, h5',
+            headingsOffset        : 0,
+            scrollSmooth          : true,
+            scrollSmoothOffset    : -5,
+            positionFixedSelector : '.toc',
+            positionFixedClass    : 'toc-fixed',
+            fixedSidebarOffset    : '',
+        },
+
+        Require : {
+            baseUrl     : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/',
+            waitSeconds : 100
+        },
+
+        Music : {
+            type : 'Meting'
+        },
+        APlayer : {
+            container : '.aplayer',
+            fixed     : true,
+            autoplay  : false,
+            loop      : 'all',
+            order     : 'random',
+            preload   : 'auto',
+            volume    : 0.67,
+            mutex     : true,
+            lrcType   : 3,
+            audio     : [
+                
+                    {
+                        name   : 'aLIEz',
+                        artist : 'mizuki（瑞葵）',
+                        cover  : '/music/cover/aLIEz.jpg',
+                        url    : '/music/song/aLIEz.mp3',
+                        lrc    : '/music/lrc/aLIEz.lrc'
+                    },
+                
+                    {
+                        name   : 'Endless Tears',
+                        artist : 'CLIFF EDGE',
+                        cover  : '/music/cover/Endless Tears.jpg',
+                        url    : '/music/song/Endless Tears.mp3',
+                        lrc    : '/music/lrc/Endless Tears.lrc'
+                    },
+                
+                    {
+                        name   : 'Miracle',
+                        artist : 'Cascada',
+                        cover  : '/music/cover/Miracle.jpg',
+                        url    : '/music/song/Miracle.mp3',
+                        lrc    : '/music/lrc/Miracle.lrc'
+                    },
+                
+                    {
+                        name   : 'Roll The Dice',
+                        artist : '高珊',
+                        cover  : '/music/cover/Roll The Dice.jpg',
+                        url    : '/music/song/Roll The Dice.mp3',
+                        lrc    : '/music/lrc/Roll The Dice.lrc'
+                    },
+                
+                    {
+                        name   : 'See You Again',
+                        artist : 'Charlie Puth, Wiz Khalifa',
+                        cover  : '/music/cover/See You Again.jpg',
+                        url    : '/music/song/See You Again.mp3',
+                        lrc    : '/music/lrc/See You Again.lrc'
+                    },
+                
+                    {
+                        name   : 'Traveling Light',
+                        artist : 'Joel Hanson, Sara Groves',
+                        cover  : '/music/cover/Traveling Light.jpg',
+                        url    : '/music/song/Traveling Light.mp3',
+                        lrc    : '/music/lrc/Traveling Light.lrc'
+                    },
+                
+                    {
+                        name   : '痴心绝对',
+                        artist : '李圣杰',
+                        cover  : '/music/cover/痴心绝对.jpg',
+                        url    : '/music/song/痴心绝对.mp3',
+                        lrc    : '/music/lrc/痴心绝对.lrc'
+                    },
+                
+                    {
+                        name   : '好想大声说爱你',
+                        artist : 'BAAD（バード）',
+                        cover  : '/music/cover/好想大声说爱你.jpg',
+                        url    : '/music/song/好想大声说爱你.mp3',
+                        lrc    : '/music/lrc/好想大声说爱你.lrc'
+                    },
+                
+            ]
+        },
+        Meting : {
+            id       : '3778678', 
+            lrcshow  : false, 
+            server   : 'netease', 
+            type     : 'playlist', 
+            fixed    : true, 
+            autoplay : false, 
+            loop     : 'all', 
+            order    : 'random', 
+            preload  : 'auto', 
+            volume   : 0.67, 
+            mutex    : true
+        },
+
+        LazyLoad : {
+            default : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/image/website/lazyload.svg'
+        },
+  
+        Style : {
+            aplayer          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/APlayer.css',
+            archive          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/archive.css',
+            donate           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/donate.css',
+            fancybox         : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/jquery.fancybox.css',
+            footer           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/footer.css',
+            iconfont         : 'https://at.alicdn.com/t/font_1546312_l3yohatebw.css',
+            index            : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/index.css',
+            menuBubble       : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/menu-bubble.css',
+            page             : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/page.css',
+            post             : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/post.css',
+            search           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/search.css',
+            tocbot           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/tocbot.css',
+            normal           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/normal.css',
+            night            : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/night.css',
+            clipboard        : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/css/clipboard.css'
+        },
+
+        Script: {
+            aplayer          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/APlayer.min.js',
+            config           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/require.config.js',
+            index            : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/index.js',
+            instantSearch    : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/instantsearch.min.js',
+            jQuery           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/jquery-3.4.1.min.js',
+            loading          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/loading.js',
+            meting           : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/Meting.min.js',
+            iscroll          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/iscroll.js',
+            require          : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/require.min.js'
+        },
+
+        Font: {
+            LongCang   : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/LongCang.css',
+            Monda      : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Monda.css',
+            NotoSansSC : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/NotoSansSC.css',
+            Playball   : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Playball.css',
+            PTMono     : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/PTMono.css',
+            RobotoSlab : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/RobotoSlab.css',
+            Rosario    : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/Rosario.css',
+            UbuntuMono : 'https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/font/UbuntuMono.css'
+        },
+
+        Suffix : {
+            about : '我们生死与共，勇往直前，永远都是坏小子.'
+        },
+            
+        Theme : {
+            url  : 'https://github.com/first19326/Hexo-LiveForCode',
+            name : 'Hexo - Russshare'
+        }  
+    };
+</script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/first19326/cdn@master/static/js/index.js"></script>
+</body>
+</html>
