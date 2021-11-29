@@ -1,238 +1,429 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
-  <head>
-    
-<meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+<html>
+
+	<head>
+		
+<title>go设计模式-迭代器(番外篇)-Quiet</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="shortcut icon" type="image/x-icon" href="/image/favicon.ico">
 
 
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="keywords" content="设计模式,">
+<meta name="description" content="">
 
 
-
-  <meta name="description" content="go设计模式-迭代器(番外篇)"/>
-
+<script src="/js/jquery.min.js"></script>
 
 
+	<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+</head>
 
-  <meta name="keywords" content="设计模式," />
-
-
-
-
-
-  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+	<body>
+		
+<link rel="stylesheet" href="/css/page.css">
 
 
+<link rel="stylesheet" href="/css/page_cente.css">
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+<link rel="stylesheet" href="/css/atom-one-dark.css">
 
 
+<link rel="stylesheet" href="/css/header.css">
 
-<link rel="canonical" href="https://riddlego.github.io/2021/05/26/go设计模式-迭代器(番外篇)/"/>
-
-
-<meta name="description" content="go设计模式-迭代器Iterator前言：最近看到一道题，然后用到了java的迭代器，然后去百度了一下这玩意，当时玩java的时候对这个没有太深的印象。竟然发现这玩意是个设计模式，涉及到设计模式，我不得不说这个东西是个很有价值的东西。我们不应该被规矩束缚，当时更不应该忽视前辈们精髓思想。 本文转自：https:&#x2F;&#x2F;blog.csdn.net&#x2F;na17p9f&#x2F;article&#x2F;details&#x2F;4061">
-<meta property="og:type" content="article">
-<meta property="og:title" content="go设计模式-迭代器(番外篇)">
-<meta property="og:url" content="https://riddlego.github.io/2021/05/26/go%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E8%BF%AD%E4%BB%A3%E5%99%A8(%E7%95%AA%E5%A4%96%E7%AF%87)/index.html">
-<meta property="og:site_name" content="RiddleGo">
-<meta property="og:description" content="go设计模式-迭代器Iterator前言：最近看到一道题，然后用到了java的迭代器，然后去百度了一下这玩意，当时玩java的时候对这个没有太深的印象。竟然发现这玩意是个设计模式，涉及到设计模式，我不得不说这个东西是个很有价值的东西。我们不应该被规矩束缚，当时更不应该忽视前辈们精髓思想。 本文转自：https:&#x2F;&#x2F;blog.csdn.net&#x2F;na17p9f&#x2F;article&#x2F;details&#x2F;4061">
-<meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2021-05-26T06:21:47.000Z">
-<meta property="article:modified_time" content="2021-08-22T03:13:30.680Z">
-<meta property="article:author" content="Russshare">
-<meta property="article:tag" content="设计模式">
-<meta name="twitter:card" content="summary">
-
-
-<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
-<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
-
-
-
-
-
-<script type="text/javascript">
-  var themeConfig = {
-    fancybox: {
-      enable: false
-    },
-  };
-</script>
-
-
-
-
-  
-
-
-
-    <title> go设计模式-迭代器(番外篇) - RiddleGo </title>
-  <meta name="generator" content="Hexo 5.4.0"></head>
-
-  <body>
-    <div id="page">
-      <header id="masthead"><div class="site-header-inner">
-    <h1 class="site-title">
-        <a href="/." class="logo">RiddleGo</a>
-    </h1>
-
-    <nav id="nav-top">
+	<div class="header">
+		<div class="header-top">
+			<div class="h-left">
+				<a href="/">
+					<img src="/image/logo.png" alt="Quiet">
+				</a>
+			</div>
+			<div class="h-right">
+				<ul>
+					
+						
+								<li>
+									<a href="/">
+										HOME
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/archives">
+										ARCHIVE
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/categories">
+										CATEGORIES
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/tags">
+										TAGS
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/links">
+										LINKS
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/about">
+										ABOUT
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+				</ul>
+			</div>
+			<div class="h-right-close">
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+					<path fill="none" d="M0 0h24v24H0z" />
+					<path d="M3 4h18v2H3V4zm0 7h18v2H3v-2zm0 7h18v2H3v-2z" fill="rgba(68,68,68,1)" />
+				</svg>
+			</div>
+		</div>
+	</div>
+	<div class="sidebar">
+    <div class="topo">
+        <h2>CHANGEQ</h2>
+    </div>
+    <ul>
         
-            <ul id="menu-top" class="nav-top-items">
-                
-                    <li class="menu-item">
-                        <a href="/archives">
-                            
-                            
-                                Archives
-                            
-                        </a>
-                    </li>
-                
-                    <li class="menu-item">
-                        <a href="/about">
-                            
-                            
-                                About
-                            
-                        </a>
-                    </li>
-                
-            </ul>
+        <li>
+            <a href="/">HOME</a>
+        </li>
         
-  </nav>
+        <li>
+            <a href="/archives">ARCHIVE</a>
+        </li>
+        
+        <li>
+            <a href="/categories">CATEGORIES</a>
+        </li>
+        
+        <li>
+            <a href="/tags">TAGS</a>
+        </li>
+        
+        <li>
+            <a href="/links">LINKS</a>
+        </li>
+        
+        <li>
+            <a href="/about">ABOUT</a>
+        </li>
+        
+    </ul>
+    <div class="my_foot">
+        
+        <a target="_blank" rel="noopener" href="https://github.com/qiaobug">
+            <img src="https://cdn.jsdelivr.net/gh/duogongneng/MyBlogImg/imggithub.png" alt="Quiet主题">
+        </a>
+        
+    </div>
 </div>
+<div class='shelter'
+    style='cursor: pointer;display: none; position: fixed;left: 0;top: 0; right: 0;bottom: 0;background-color: #333;opacity:0.5;z-index: 108;'>
+</div>
+<style>
+    .sidebar {
+        width: 0;
+        height: 100%;
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        background: #fff;
+        z-index: 999;
+        text-align: center;
+        box-shadow: -6px 0 20px rgba(98, 94, 94, .815)
+    }
 
-      </header>
-      <div id="content">
-        
-    <div id="primary">
-        
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          go设计模式-迭代器(番外篇)
-        
-      </h1>
+    .topo {
+        width: 100%;
+        height: 200px;
+        background: url(https://api.ixiaowai.cn/gqapi/gqapi.php) no-repeat;
+        background-size: 100% 100%;
+        position: relative;
+        display: flex;
+        align-items: flex-end
+    }
 
-      <time class="post-time">
-          5月 26 2021
-      </time>
-    </header>
+    .topo h2 {
+        color: #fff;
+        z-index: 1;
+        position: relative;
+        margin: 0 0 10px 10px;
+        font-size: 1.2em;
+        box-sizing: border-box
+    }
 
+    .topo:before {
+        content: '';
+        background-image: url(/image/pattern.png);
+        background-repeat: repeat;
+        height: 100%;
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 100%;
+        z-index: 1
+    }
 
+    .sidebar ul {
+        width: 100%;
+        margin-top: 50px
+    }
 
-    
-            <div class="post-content">
-            <h2 id="go设计模式-迭代器Iterator"><a href="#go设计模式-迭代器Iterator" class="headerlink" title="go设计模式-迭代器Iterator"></a>go设计模式-迭代器Iterator</h2><h3 id="前言："><a href="#前言：" class="headerlink" title="前言："></a>前言：</h3><p>最近看到一道题，然后用到了java的迭代器，然后去百度了一下这玩意，当时玩java的时候对这个没有太深的印象。竟然发现这玩意是个设计模式，涉及到设计模式，我不得不说这个东西是个很有价值的东西。我们不应该被规矩束缚，当时更不应该忽视前辈们精髓思想。</p>
+    .sidebar ul li {
+        height: 50px;
+        list-style: none;
+        font-size: 1.2em;
+        text-align: right;
+        margin-right: 10px
+    }
+
+    .sidebar ul li a {
+        display: grid;
+        color: #5d606a;
+        text-overflow: ellipsis;
+        width: 100%;
+        text-decoration: none
+    }
+
+    .my_foot {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        position: absolute;
+        bottom: 0
+    }
+
+    .my_foot a {
+        text-decoration: none;
+        margin-right: 10px;
+        display: inline-block
+    }
+
+    .my_foot a img {
+        width: 30px;
+        height: 30px
+    }
+</style>
+
+<script>
+    $(function () { $('.h-right-close>svg').click(function () { $('.sidebar').animate({ width: "66%" }, 500); $('.shelter').fadeIn("slow") }); $('.shelter').click(function (e) { $('.sidebar').animate({ width: "0" }, 500); $('.shelter').fadeOut("slow") }) })
+</script>
+		<script>
+			$(function () { $(window).scroll(function () { if ($(document).scrollTop() > 100) { $(".header-top").removeClass("header-move2"); $('.header-top').addClass('header-move1') } else { $(".header-top").removeClass("header-move1"); $('.header-top').addClass('header-move2') } }) });
+		</script>
+<div class="header-bg ">
+    <div class="bg-content">
+        <ul class="tag">
+            
+            
+            <li><a href="/tags/设计模式">设计模式</a></li>
+            
+            
+        </ul>
+        <h1>go设计模式-迭代器(番外篇)</h1>
+        <div class="article-info">
+            <div class="article-author">
+                
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+                    <g>
+                        <path fill="#12183A"
+                            d="M6.187 15.265A6.47 6.47 0 0 0 10 16.5a6.47 6.47 0 0 0 3.813-1.235A4.99 4.99 0 0 0 10 13.5a4.99 4.99 0 0 0-3.813 1.765zM5.082 14.25A6.485 6.485 0 0 1 10 12c1.965 0 3.726.872 4.918 2.25a6.5 6.5 0 1 0-9.836 0zM10 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0-1.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z">
+                        </path>
+                    </g>
+                </svg>
+                
+                <span> <a href="">CHANGEQ</a></span>
+                <p>2021-05-26 14:21:47</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="article-content">
+    <div id="article" class="content">
+        <h2 id="go设计模式-迭代器Iterator"><a href="#go设计模式-迭代器Iterator" class="headerlink" title="go设计模式-迭代器Iterator"></a>go设计模式-迭代器Iterator</h2><h3 id="前言："><a href="#前言：" class="headerlink" title="前言："></a>前言：</h3><p>最近看到一道题，然后用到了java的迭代器，然后去百度了一下这玩意，当时玩java的时候对这个没有太深的印象。竟然发现这玩意是个设计模式，涉及到设计模式，我不得不说这个东西是个很有价值的东西。我们不应该被规矩束缚，当时更不应该忽视前辈们精髓思想。</p>
 <p>本文转自：<a target="_blank" rel="noopener" href="https://blog.csdn.net/na17p9f/article/details/40617145">https://blog.csdn.net/na17p9f/article/details/40617145</a></p>
 <h3 id="1、关于go语言设计模式"><a href="#1、关于go语言设计模式" class="headerlink" title="1、关于go语言设计模式"></a>1、关于go语言设计模式</h3><p><strong>虽然Go语言不是一门面向对象编程语言，但是很多面向对象设计模式所要解决的问题是在程序设计中客观存在的。不管用什么语言，总是要面对和解决这些问题的，只是解决的思路和途径会有所不同。</strong>所以我想就以经典的设计模式作为切入点来展开这个系列，毕竟大家对设计模式都很熟悉了，可以避免无中生有想出一些蹩脚的应用场景。</p>
 <h3 id="2、不使用迭代器的方案"><a href="#2、不使用迭代器的方案" class="headerlink" title="2、不使用迭代器的方案"></a>2、不使用迭代器的方案</h3><p><strong>首先要指出的是，绝大多数情况下Go程序是不需要用迭代器的。</strong>因为内置的slice和map两种容器都可以通过range进行遍历，并且这两种容器在性能方面做了足够的优化。只要没有特殊的需求，通常是直接用这两种容器解决问题。<strong>即使不得不写了一个自定义容器，我们几乎总是可以实现一个函数，把所有元素（的引用）拷贝到一个slice之后返回，这样调用者又可以直接用range进行遍历了。</strong></p>
 <p>当然某些特殊场合迭代器还是有用武之地。比如迭代器的Next()是个耗时操作，不能一口气拷贝所有元素；再比如某些条件下需要中断遍历。</p>
 <h3 id="3、经典实现"><a href="#3、经典实现" class="headerlink" title="3、经典实现"></a>3、经典实现</h3><p>经典实现完全采用面向对象的思路。为了简化问题，下面的例子中容器就是简单的[]int，我们在main函数中使用迭代器进行遍历操作并打印取到的值，迭代器的接口设计参考java。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import &quot;fmt&quot;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;定义一个数组</span><br><span class="line">type Ints []int</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;初始化一个迭代器</span><br><span class="line">func (i Ints) First() Iterator &#123;</span><br><span class="line">	return Iterator&#123;</span><br><span class="line">		data:  i,</span><br><span class="line">		index: 0,</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;定义一个迭代的结构体</span><br><span class="line">type Iterator struct &#123;</span><br><span class="line">	data  Ints</span><br><span class="line">	index int</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;获取迭代器里数组中的一个元素</span><br><span class="line">func (i Iterator) Get() int &#123;</span><br><span class="line">	return i.data[i.index]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;如果迭代器获取的元素的下标   是小于data数组的长度  肯定就还有下一个</span><br><span class="line">func (i Iterator) HasNext() bool &#123;</span><br><span class="line">	return i.index &lt; len(i.data)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;获取下一个元素</span><br><span class="line">&#x2F;&#x2F;还是原来的数组</span><br><span class="line">&#x2F;&#x2F;下标加一</span><br><span class="line">func (i Iterator) Next() Iterator &#123;</span><br><span class="line">	return Iterator&#123;</span><br><span class="line">		data:  i.data,</span><br><span class="line">		index: i.index + 1,</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line">	ints :&#x3D; Ints&#123;1, 2, 3&#125;</span><br><span class="line">	for it :&#x3D; ints.First(); it.HasNext(); it &#x3D; it.Next() &#123;</span><br><span class="line">		fmt.Println(it.Get())</span><br><span class="line">	&#125;</span><br><span class="line">	return</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<figure class="highlight go"><table><tr><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><br><span class="hljs-keyword">import</span> <span class="hljs-string">&quot;fmt&quot;</span><br><br><span class="hljs-comment">//定义一个数组</span><br><span class="hljs-keyword">type</span> Ints []<span class="hljs-keyword">int</span><br><br><span class="hljs-comment">//初始化一个迭代器</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(i Ints)</span> <span class="hljs-title">First</span><span class="hljs-params">()</span> <span class="hljs-title">Iterator</span></span> &#123;<br>	<span class="hljs-keyword">return</span> Iterator&#123;<br>		data:  i,<br>		index: <span class="hljs-number">0</span>,<br>	&#125;<br>&#125;<br><br><span class="hljs-comment">//定义一个迭代的结构体</span><br><span class="hljs-keyword">type</span> Iterator <span class="hljs-keyword">struct</span> &#123;<br>	data  Ints<br>	index <span class="hljs-keyword">int</span><br>&#125;<br><br><span class="hljs-comment">//获取迭代器里数组中的一个元素</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(i Iterator)</span> <span class="hljs-title">Get</span><span class="hljs-params">()</span> <span class="hljs-title">int</span></span> &#123;<br>	<span class="hljs-keyword">return</span> i.data[i.index]<br>&#125;<br><br><span class="hljs-comment">//如果迭代器获取的元素的下标   是小于data数组的长度  肯定就还有下一个</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(i Iterator)</span> <span class="hljs-title">HasNext</span><span class="hljs-params">()</span> <span class="hljs-title">bool</span></span> &#123;<br>	<span class="hljs-keyword">return</span> i.index &lt; <span class="hljs-built_in">len</span>(i.data)<br>&#125;<br><br><span class="hljs-comment">//获取下一个元素</span><br><span class="hljs-comment">//还是原来的数组</span><br><span class="hljs-comment">//下标加一</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(i Iterator)</span> <span class="hljs-title">Next</span><span class="hljs-params">()</span> <span class="hljs-title">Iterator</span></span> &#123;<br>	<span class="hljs-keyword">return</span> Iterator&#123;<br>		data:  i.data,<br>		index: i.index + <span class="hljs-number">1</span>,<br>	&#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	ints := Ints&#123;<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>&#125;<br>	<span class="hljs-keyword">for</span> it := ints.First(); it.HasNext(); it = it.Next() &#123;<br>		fmt.Println(it.Get())<br>	&#125;<br>	<span class="hljs-keyword">return</span><br>&#125;<br><br></code></pre></td></tr></table></figure>
 <h3 id="4、闭包实现"><a href="#4、闭包实现" class="headerlink" title="4、闭包实现"></a>4、闭包实现</h3><p>Go语言支持first class functions、高阶函数、闭包、多返回值函数。用上这些特性可以换种方式实现迭代器。</p>
 <p>初看之下闭包实现与经典实现完全不同，<br>其实从本质上来看，二者区别不大。<br>经典实现中把迭代器需要的数据存在struct中，Get() HasNext() Next()三个函数定义为Iterator的方法从而和数据绑定了起来；<br>闭包实现中迭代器是一个匿名函数，它所需要的数据i Ints和index以闭包up value的形式绑定了起来，匿名函数返回的两个值正好对应经典实现中的Get()和HasNext()。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"> </span><br><span class="line">import &quot;fmt&quot;</span><br><span class="line"> </span><br><span class="line">type Ints []int</span><br><span class="line"> </span><br><span class="line">func (i Ints) Iterator() func() (int, bool) &#123;</span><br><span class="line">	index :&#x3D; 0</span><br><span class="line">	return func() (val int, ok bool) &#123;</span><br><span class="line">		if index &gt;&#x3D; len(i) &#123;</span><br><span class="line">			return</span><br><span class="line">		&#125;</span><br><span class="line"> </span><br><span class="line">		val, ok &#x3D; i[index], true</span><br><span class="line">		index++</span><br><span class="line">		return</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">func main() &#123;</span><br><span class="line">	ints :&#x3D; Ints&#123;1, 2, 3&#125;</span><br><span class="line">	it :&#x3D; ints.Iterator()</span><br><span class="line">	for &#123;</span><br><span class="line">		val, ok :&#x3D; it()</span><br><span class="line">		if !ok &#123;</span><br><span class="line">			break</span><br><span class="line">		&#125;</span><br><span class="line">		fmt.Println(val)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight go"><table><tr><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br> <br><span class="hljs-keyword">import</span> <span class="hljs-string">&quot;fmt&quot;</span><br> <br><span class="hljs-keyword">type</span> Ints []<span class="hljs-keyword">int</span><br> <br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(i Ints)</span> <span class="hljs-title">Iterator</span><span class="hljs-params">()</span> <span class="hljs-title">func</span><span class="hljs-params">()</span> <span class="hljs-params">(<span class="hljs-keyword">int</span>, <span class="hljs-keyword">bool</span>)</span></span> &#123;<br>	index := <span class="hljs-number">0</span><br>	<span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span> <span class="hljs-params">(val <span class="hljs-keyword">int</span>, ok <span class="hljs-keyword">bool</span>)</span></span> &#123;<br>		<span class="hljs-keyword">if</span> index &gt;= <span class="hljs-built_in">len</span>(i) &#123;<br>			<span class="hljs-keyword">return</span><br>		&#125;<br> <br>		val, ok = i[index], <span class="hljs-literal">true</span><br>		index++<br>		<span class="hljs-keyword">return</span><br>	&#125;<br>&#125;<br> <br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	ints := Ints&#123;<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>&#125;<br>	it := ints.Iterator()<br>	<span class="hljs-keyword">for</span> &#123;<br>		val, ok := it()<br>		<span class="hljs-keyword">if</span> !ok &#123;<br>			<span class="hljs-keyword">break</span><br>		&#125;<br>		fmt.Println(val)<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 
 <h3 id="5、channel实现"><a href="#5、channel实现" class="headerlink" title="5、channel实现"></a>5、channel实现</h3><p>这份实现是最go way的，使用了一个channel在新的goroutine中将容器内的元素依次输出。优点是channel是可以用range接收的，所以调用方代码很简洁；缺点是goroutine上下文切换会有开销，这份实现无疑是最低效的，另外调用方必须接收完所有数据，如果只接收一半就中断掉发送方将永远阻塞。</p>
 <p>依稀记得在邮件列表里看到说标准库里有这个用法的例子，刚才去翻了下没找到原帖了:-)</p>
 <p>顺便说一下，“在函数中创建一个channel返回，同时创建一个goroutine往channel中塞数据”这是一个重要的惯用法（虽然我不知道这个应该叫什么名字=。=），可以用来做序列发生器、fan-out、fan-in等。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"> </span><br><span class="line">import &quot;fmt&quot;</span><br><span class="line"> </span><br><span class="line">type Ints []int</span><br><span class="line"> </span><br><span class="line">func (i Ints) Iterator() &lt;-chan int &#123;</span><br><span class="line">	c :&#x3D; make(chan int)</span><br><span class="line">	go func() &#123;</span><br><span class="line">		for _, v :&#x3D; range i &#123;</span><br><span class="line">			c &lt;- v</span><br><span class="line">		&#125;</span><br><span class="line">		close(c)</span><br><span class="line">	&#125;()</span><br><span class="line">	return c</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">func main() &#123;</span><br><span class="line">	ints :&#x3D; Ints&#123;1, 2, 3&#125;</span><br><span class="line">	for v :&#x3D; range ints.Iterator() &#123;</span><br><span class="line">		fmt.Println(v)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight go"><table><tr><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br> <br><span class="hljs-keyword">import</span> <span class="hljs-string">&quot;fmt&quot;</span><br> <br><span class="hljs-keyword">type</span> Ints []<span class="hljs-keyword">int</span><br> <br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(i Ints)</span> <span class="hljs-title">Iterator</span><span class="hljs-params">()</span> &lt;-<span class="hljs-title">chan</span> <span class="hljs-title">int</span></span> &#123;<br>	c := <span class="hljs-built_in">make</span>(<span class="hljs-keyword">chan</span> <span class="hljs-keyword">int</span>)<br>	<span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>		<span class="hljs-keyword">for</span> _, v := <span class="hljs-keyword">range</span> i &#123;<br>			c &lt;- v<br>		&#125;<br>		<span class="hljs-built_in">close</span>(c)<br>	&#125;()<br>	<span class="hljs-keyword">return</span> c<br>&#125;<br> <br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	ints := Ints&#123;<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>&#125;<br>	<span class="hljs-keyword">for</span> v := <span class="hljs-keyword">range</span> ints.Iterator() &#123;<br>		fmt.Println(v)<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 <h3 id="7、Do实现"><a href="#7、Do实现" class="headerlink" title="7、Do实现"></a>7、Do实现</h3><p>这份迭代器实现是最简洁的，代码也很直白，无须多言。如果想加上中断迭代的功能，可以将func(int)改为func(int)bool，Do中根据返回值决定是否退出迭代。</p>
 <p>标准库中的container/list中有Do()用法的例子。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"> </span><br><span class="line">import &quot;fmt&quot;</span><br><span class="line"> </span><br><span class="line">type Ints []int</span><br><span class="line"> </span><br><span class="line">func (i Ints) Do(fn func(int)) &#123;</span><br><span class="line">	for _, v :&#x3D; range i &#123;</span><br><span class="line">		fn(v)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">func main() &#123;</span><br><span class="line">	ints :&#x3D; Ints&#123;1, 2, 3&#125;</span><br><span class="line">	ints.Do(func(v int) &#123;</span><br><span class="line">		fmt.Println(v)</span><br><span class="line">	&#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight go"><table><tr><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br> <br><span class="hljs-keyword">import</span> <span class="hljs-string">&quot;fmt&quot;</span><br> <br><span class="hljs-keyword">type</span> Ints []<span class="hljs-keyword">int</span><br> <br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(i Ints)</span> <span class="hljs-title">Do</span><span class="hljs-params">(fn <span class="hljs-keyword">func</span>(<span class="hljs-keyword">int</span>)</span>)</span> &#123;<br>	<span class="hljs-keyword">for</span> _, v := <span class="hljs-keyword">range</span> i &#123;<br>		fn(v)<br>	&#125;<br>&#125;<br> <br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	ints := Ints&#123;<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>&#125;<br>	ints.Do(<span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(v <span class="hljs-keyword">int</span>)</span></span> &#123;<br>		fmt.Println(v)<br>	&#125;)<br>&#125;<br></code></pre></td></tr></table></figure>
 <h3 id="8、总结"><a href="#8、总结" class="headerlink" title="8、总结"></a>8、总结</h3><p>Go语言中没有class和继承，不具备完整表达面向对象的能力，不是一门通常意义上的面向对象语言。但是这不妨碍Go语言实现面向对象的思想，利用其语言特性，实现封装、组合、多态都没有问题。</p>
 <p>设计模式的精髓在于思想而不在于类图。编程语言是在不断进步的，类图却一直用几十年前那一张，抛开类图重新审视问题，合理利用语言新特性可以得到更简洁的设计模式实现。</p>
 <p><em><strong>以上就是本次全部内容，希望对你有所帮助！！！</strong></em></p>
 
-            </div>
-          
-
-    
-      <footer class="post-footer">
-		
-		<div class="post-tags">
-		  
-			<a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a>
-		  
-		</div>
-		
-
-        
-        
-  <nav class="post-nav">
-    
-      <a class="prev" href="/2021/05/28/git%E5%B8%B8%E7%94%A8%E5%A5%97%E8%B7%AF/">
-        <i class="iconfont icon-left"></i>
-        <span class="prev-text nav-default">git常用套路</span>
-        <span class="prev-text nav-mobile">Prev</span>
-      </a>
-    
-    
-      <a class="next" href="/2021/05/26/queue%E7%9A%84%E5%AE%9E%E7%8E%B0%E4%B8%8E%E6%93%8D%E4%BD%9C/">
-        <span class="next-text nav-default">queue的实现与操作</span>
-        <span class="prev-text nav-mobile">Next</span>
-        <i class="iconfont icon-right"></i>
-      </a>
-    
-  </nav>
-
-        
-  <div class="comments" id="comments">
-    
-  </div>
-
-
-      </footer>
-    
-  </article>
-
     </div>
+</div>
+<style>
+    #noneimg img {
+        display: none;
+        z-index: 109;
+        width: 600px !important;
+        border-radius: 0px;
+        position: fixed;
+        box-shadow: 0 0 0px #c3c3c300 !important;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto !important;
+    }
 
-      </div>
+    @media screen and (max-width:600px) {
+        #noneimg img {
+            width: 88%
+        }
+    }
+</style>
+<script>
+    $(function () { $('#article').click(function (e) { if (e.target.tagName == "IMG") { if ($('#nonediv').length == 0) { let MImg = `<div id='noneimg'><img src='${e.target.currentSrc}'></div>`; let MDiv = "<div id='nonediv' style='cursor: pointer;display: none; position: fixed;left: 0;top: 0; right: 0;bottom: 0;background-color: #333;opacity:0.5;z-index: 108;'></div>"; $('#article').append(MDiv); $('#article').append(MImg); $("#nonediv").fadeIn("slow"); $("#noneimg img").fadeIn("slow") } } else { if ($('#nonediv').length !== 0) { $("#noneimg ").fadeOut("slow"); $("#nonediv").fadeOut("slow"); setTimeout(function () { $('#nonediv').remove(); $('#noneimg').remove() }, 500) } } }); $('.article-content').addClass('content-move') });
+</script>
+<div class="Last-Next">
+    
+    <a href="/2021/05/28/git%E5%B8%B8%E7%94%A8%E5%A5%97%E8%B7%AF/">
+        <div class="last">
+            <span>上一篇</span>
+            <p>git常用套路</p>
+        </div>
+    </a>
+    
 
-      <footer id="colophon"><span class="copyright-year">
     
-        &copy;
+    <a href="/2021/05/26/queue%E7%9A%84%E5%AE%9E%E7%8E%B0%E4%B8%8E%E6%93%8D%E4%BD%9C/">
+        <div class="next">
+            <span>下一篇</span>
+            <p>queue的实现与操作</p>
+        </div>
+    </a>
     
-        2014 -
-    
-    2021
-    <span class="footer-author">Russshare.</span>
-    <span class="power-by">
-        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+</div>
+		
+<link rel="stylesheet" href="/css/food.css">
+
+<div class="footer">
+	<div class="Copyright">
+		©2021 By CHANGEQ. 主题：<a
+			style="text-decoration: none;display: contents; color: #898F9F;"
+			target="_blank" rel="noopener" href="https://github.com/qiaobug/hexo-theme-quiet">Quiet</a>
+	</div>
+	<div class="contact">
+		
+		<a target="_blank" rel="noopener" href="https://github.com/qiaobug">
+			<img src="https://cdn.jsdelivr.net/gh/duogongneng/MyBlogImg/imggithub.png" alt="Quiet主题">
+		</a>
+		
+	</div>
+</div>
+
+<script src="/js/jquery.min.js"></script>
+
+
+<script src="/js/gotop.js"></script>
+
+
+<style type="text/css">
+    @media screen and (min-width: 600px) {
+        .goTop>span {
+            display: block;
+            border-radius: 50%;
+            width: 66px;
+            height: 66px;
+            cursor: pointer;
+            opacity: 0.8;
+            background: rgba(18, 24, 58, 0.06);
+            text-align: center;
+            border: 1px solid rgba(18, 24, 58, 0.06);
+
+            transition: border .5s;
+            -moz-transition: border .5s;
+            /* Firefox 4 */
+            -webkit-transition: border .5s;
+            /* Safari 和 Chrome */
+            -o-transition: border .5s;
+            /* Opera */
+        }
+
+        .goTop>span:hover {
+            border: 1px solid #6680B3;
+        }
+
+
+        .goTop {
+            position: fixed;
+            right: 30px;
+            bottom: 80px;
+        }
+
+        .goTop>span>svg {
+            width: 30px;
+            height: 30px;
+            margin-top: 17.5px;
+            opacity: 0.7;
+        }
+
+    }
+
+    @media screen and (max-width: 600px) {
+        .goTop {
+            display: none;
+        }
+    }
+</style>
+<div class="goTop" id="js-go_top">
+    <span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <g>
+                <path d="M13 12v8h-2v-8H4l8-8 8 8z"></path>
+            </g>
+        </svg>
     </span>
-</span>
+</div>
+<script>
+    $('#js-go_top').gotoTop({ offset: 500, speed: 300, animationShow: { 'transform': 'translate(0,0)', 'transition': 'transform .5s ease-in-out' }, animationHide: { 'transform': 'translate(100px,0)', 'transition': 'transform .5s ease-in-out' } });
+</script>
+<script>
+	console.log('\n %c Hexo-Quiet 主题 %c https://github.com/QiaoBug/hexo-theme-quiet \n', 'color: #fadfa3; background: #030307; padding:5px 0;', 'background: #fadfa3; padding:5px 0;')
+</script>
+	</body>
 
-      </footer>
-
-      <div class="back-to-top" id="back-to-top">
-        <i class="iconfont icon-up"></i>
-      </div>
-    </div>
-    
-
-
-    
-
-
-
-
-  
-    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
-  
-
-  
-
-    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
-<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
-
-  </body>
 </html>

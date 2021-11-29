@@ -1,159 +1,301 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
-  <head>
-    
-<meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+<html>
+
+	<head>
+		
+<title>go语言的标准库container-1-list-Quiet</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="shortcut icon" type="image/x-icon" href="/image/favicon.ico">
 
 
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="keywords" content="golang数据结构,list,链表,">
+<meta name="description" content="">
 
 
-
-  <meta name="description" content="go语言的标准库container-1-list"/>
-
+<script src="/js/jquery.min.js"></script>
 
 
+	<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+</head>
 
-  <meta name="keywords" content="golang数据结构,list,链表," />
-
-
-
-
-
-  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+	<body>
+		
+<link rel="stylesheet" href="/css/page.css">
 
 
+<link rel="stylesheet" href="/css/page_cente.css">
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+<link rel="stylesheet" href="/css/atom-one-dark.css">
 
 
+<link rel="stylesheet" href="/css/header.css">
 
-<link rel="canonical" href="https://riddlego.github.io/2021/05/31/go语言的标准库container-1-list/"/>
-
-
-<meta name="description" content="前言：以前有过一个go语言怎么使用list的，这篇文章就来看看这个玩意里面长的什么样子（因为刚刚看到前辈写的关于heap的文章，哈哈没忍住把这个一起copy过来学习一下哈哈，原文） GO语言list剖析 1. 使用方法在GO语言的标准库中，提供了一个container包，这个包中提供了三种数据类型，就是heap,list和ring，本节要讲的是list的使用以及源码剖析。要使用GO提供的list链">
-<meta property="og:type" content="article">
-<meta property="og:title" content="go语言的标准库container-1-list">
-<meta property="og:url" content="https://riddlego.github.io/2021/05/31/go%E8%AF%AD%E8%A8%80%E7%9A%84%E6%A0%87%E5%87%86%E5%BA%93container-1-list/index.html">
-<meta property="og:site_name" content="RiddleGo">
-<meta property="og:description" content="前言：以前有过一个go语言怎么使用list的，这篇文章就来看看这个玩意里面长的什么样子（因为刚刚看到前辈写的关于heap的文章，哈哈没忍住把这个一起copy过来学习一下哈哈，原文） GO语言list剖析 1. 使用方法在GO语言的标准库中，提供了一个container包，这个包中提供了三种数据类型，就是heap,list和ring，本节要讲的是list的使用以及源码剖析。要使用GO提供的list链">
-<meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2021-05-31T13:29:23.000Z">
-<meta property="article:modified_time" content="2021-05-31T13:30:42.000Z">
-<meta property="article:author" content="Russshare">
-<meta property="article:tag" content="golang数据结构">
-<meta property="article:tag" content="list">
-<meta property="article:tag" content="链表">
-<meta name="twitter:card" content="summary">
-
-
-<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
-<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
-
-
-
-
-
-<script type="text/javascript">
-  var themeConfig = {
-    fancybox: {
-      enable: false
-    },
-  };
-</script>
-
-
-
-
-  
-
-
-
-    <title> go语言的标准库container-1-list - RiddleGo </title>
-  <meta name="generator" content="Hexo 5.4.0"></head>
-
-  <body>
-    <div id="page">
-      <header id="masthead"><div class="site-header-inner">
-    <h1 class="site-title">
-        <a href="/." class="logo">RiddleGo</a>
-    </h1>
-
-    <nav id="nav-top">
+	<div class="header">
+		<div class="header-top">
+			<div class="h-left">
+				<a href="/">
+					<img src="/image/logo.png" alt="Quiet">
+				</a>
+			</div>
+			<div class="h-right">
+				<ul>
+					
+						
+								<li>
+									<a href="/">
+										HOME
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/archives">
+										ARCHIVE
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/categories">
+										CATEGORIES
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/tags">
+										TAGS
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/links">
+										LINKS
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/about">
+										ABOUT
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+				</ul>
+			</div>
+			<div class="h-right-close">
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+					<path fill="none" d="M0 0h24v24H0z" />
+					<path d="M3 4h18v2H3V4zm0 7h18v2H3v-2zm0 7h18v2H3v-2z" fill="rgba(68,68,68,1)" />
+				</svg>
+			</div>
+		</div>
+	</div>
+	<div class="sidebar">
+    <div class="topo">
+        <h2>CHANGEQ</h2>
+    </div>
+    <ul>
         
-            <ul id="menu-top" class="nav-top-items">
-                
-                    <li class="menu-item">
-                        <a href="/archives">
-                            
-                            
-                                Archives
-                            
-                        </a>
-                    </li>
-                
-                    <li class="menu-item">
-                        <a href="/about">
-                            
-                            
-                                About
-                            
-                        </a>
-                    </li>
-                
-            </ul>
+        <li>
+            <a href="/">HOME</a>
+        </li>
         
-  </nav>
+        <li>
+            <a href="/archives">ARCHIVE</a>
+        </li>
+        
+        <li>
+            <a href="/categories">CATEGORIES</a>
+        </li>
+        
+        <li>
+            <a href="/tags">TAGS</a>
+        </li>
+        
+        <li>
+            <a href="/links">LINKS</a>
+        </li>
+        
+        <li>
+            <a href="/about">ABOUT</a>
+        </li>
+        
+    </ul>
+    <div class="my_foot">
+        
+        <a target="_blank" rel="noopener" href="https://github.com/qiaobug">
+            <img src="https://cdn.jsdelivr.net/gh/duogongneng/MyBlogImg/imggithub.png" alt="Quiet主题">
+        </a>
+        
+    </div>
 </div>
+<div class='shelter'
+    style='cursor: pointer;display: none; position: fixed;left: 0;top: 0; right: 0;bottom: 0;background-color: #333;opacity:0.5;z-index: 108;'>
+</div>
+<style>
+    .sidebar {
+        width: 0;
+        height: 100%;
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        background: #fff;
+        z-index: 999;
+        text-align: center;
+        box-shadow: -6px 0 20px rgba(98, 94, 94, .815)
+    }
 
-      </header>
-      <div id="content">
-        
-    <div id="primary">
-        
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          go语言的标准库container-1-list
-        
-      </h1>
+    .topo {
+        width: 100%;
+        height: 200px;
+        background: url(https://api.ixiaowai.cn/gqapi/gqapi.php) no-repeat;
+        background-size: 100% 100%;
+        position: relative;
+        display: flex;
+        align-items: flex-end
+    }
 
-      <time class="post-time">
-          5月 31 2021
-      </time>
-    </header>
+    .topo h2 {
+        color: #fff;
+        z-index: 1;
+        position: relative;
+        margin: 0 0 10px 10px;
+        font-size: 1.2em;
+        box-sizing: border-box
+    }
 
+    .topo:before {
+        content: '';
+        background-image: url(/image/pattern.png);
+        background-repeat: repeat;
+        height: 100%;
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 100%;
+        z-index: 1
+    }
 
+    .sidebar ul {
+        width: 100%;
+        margin-top: 50px
+    }
 
-    
-            <div class="post-content">
-            <h3 id="前言："><a href="#前言：" class="headerlink" title="前言："></a>前言：</h3><p>以前有过一个go语言怎么使用list的，这篇文章就来看看这个玩意里面长的什么样子（因为刚刚看到前辈写的关于heap的文章，哈哈没忍住把这个一起copy过来学习一下哈哈，<a target="_blank" rel="noopener" href="https://www.cnblogs.com/huxianglin/p/6924425.html">原文</a>）</p>
+    .sidebar ul li {
+        height: 50px;
+        list-style: none;
+        font-size: 1.2em;
+        text-align: right;
+        margin-right: 10px
+    }
+
+    .sidebar ul li a {
+        display: grid;
+        color: #5d606a;
+        text-overflow: ellipsis;
+        width: 100%;
+        text-decoration: none
+    }
+
+    .my_foot {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        position: absolute;
+        bottom: 0
+    }
+
+    .my_foot a {
+        text-decoration: none;
+        margin-right: 10px;
+        display: inline-block
+    }
+
+    .my_foot a img {
+        width: 30px;
+        height: 30px
+    }
+</style>
+
+<script>
+    $(function () { $('.h-right-close>svg').click(function () { $('.sidebar').animate({ width: "66%" }, 500); $('.shelter').fadeIn("slow") }); $('.shelter').click(function (e) { $('.sidebar').animate({ width: "0" }, 500); $('.shelter').fadeOut("slow") }) })
+</script>
+		<script>
+			$(function () { $(window).scroll(function () { if ($(document).scrollTop() > 100) { $(".header-top").removeClass("header-move2"); $('.header-top').addClass('header-move1') } else { $(".header-top").removeClass("header-move1"); $('.header-top').addClass('header-move2') } }) });
+		</script>
+<div class="header-bg ">
+    <div class="bg-content">
+        <ul class="tag">
+            
+            
+            <li><a href="/tags/golang数据结构">golang数据结构</a></li>
+            
+            <li><a href="/tags/list">list</a></li>
+            
+            <li><a href="/tags/链表">链表</a></li>
+            
+            
+        </ul>
+        <h1>go语言的标准库container-1-list</h1>
+        <div class="article-info">
+            <div class="article-author">
+                
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+                    <g>
+                        <path fill="#12183A"
+                            d="M6.187 15.265A6.47 6.47 0 0 0 10 16.5a6.47 6.47 0 0 0 3.813-1.235A4.99 4.99 0 0 0 10 13.5a4.99 4.99 0 0 0-3.813 1.765zM5.082 14.25A6.485 6.485 0 0 1 10 12c1.965 0 3.726.872 4.918 2.25a6.5 6.5 0 1 0-9.836 0zM10 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0-1.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z">
+                        </path>
+                    </g>
+                </svg>
+                
+                <span> <a href="">CHANGEQ</a></span>
+                <p>2021-05-31 21:29:23</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="article-content">
+    <div id="article" class="content">
+        <h3 id="前言："><a href="#前言：" class="headerlink" title="前言："></a>前言：</h3><p>以前有过一个go语言怎么使用list的，这篇文章就来看看这个玩意里面长的什么样子（因为刚刚看到前辈写的关于heap的文章，哈哈没忍住把这个一起copy过来学习一下哈哈，<a target="_blank" rel="noopener" href="https://www.cnblogs.com/huxianglin/p/6924425.html">原文</a>）</p>
 <p><strong>GO语言list剖析</strong></p>
 <h3 id="1-使用方法"><a href="#1-使用方法" class="headerlink" title="1. 使用方法"></a>1. 使用方法</h3><p>在GO语言的标准库中，提供了一个container包，这个包中提供了三种数据类型，就是heap,list和ring，本节要讲的是list的使用以及源码剖析。<br>要使用GO提供的list链表，则首先需要导入list包，如下所示：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line">import(</span><br><span class="line">	&quot;container&#x2F;list&quot;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<figure class="highlight ada"><table><tr><td class="code"><pre><code class="hljs ada"><span class="hljs-keyword">package</span> <span class="hljs-title">main</span><br>import(<br>	<span class="hljs-string">&quot;container/list&quot;</span><br>)<br></code></pre></td></tr></table></figure>
 <p>导入包之后，需要了解list中定义了两种数据类型，Element和List，定义如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; Element is an element of a linked list.</span><br><span class="line">type Element struct &#123;</span><br><span class="line">    &#x2F;&#x2F; Next and previous pointers in the doubly-linked list of elements.</span><br><span class="line">    &#x2F;&#x2F; To simplify the implementation, internally a list l is implemented</span><br><span class="line">    &#x2F;&#x2F; as a ring, such that &amp;l.root is both the next element of the last</span><br><span class="line">    &#x2F;&#x2F; list element (l.Back()) and the previous element of the first list</span><br><span class="line">    &#x2F;&#x2F; element (l.Front()).</span><br><span class="line">    next, prev *Element</span><br><span class="line"></span><br><span class="line">    &#x2F;&#x2F; The list to which this element belongs.</span><br><span class="line">    list *List</span><br><span class="line"></span><br><span class="line">    &#x2F;&#x2F; The value stored with this element.</span><br><span class="line">    Value interface&#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">type List struct &#123;</span><br><span class="line">    root Element &#x2F;&#x2F; sentinel list element, only &amp;root, root.prev, and root.next are used</span><br><span class="line">    len  int     &#x2F;&#x2F; current list length excluding (this) sentinel element</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<figure class="highlight gauss"><table><tr><td class="code"><pre><code class="hljs gauss"><span class="hljs-comment">// Element is an element of a linked list.</span><br><span class="hljs-built_in">type</span> Element <span class="hljs-keyword">struct</span> &#123;<br>    <span class="hljs-comment">// Next and previous pointers in the doubly-linked list of elements.</span><br>    <span class="hljs-comment">// To simplify the implementation, internally a list l is implemented</span><br>    <span class="hljs-comment">// as a ring, such that &amp;l.root is both the next element of the last</span><br>    <span class="hljs-comment">// list element (l.Back()) and the previous element of the first list</span><br>    <span class="hljs-comment">// element (l.Front()).</span><br>    next, prev *Element<br><br>    <span class="hljs-comment">// The list to which this element belongs.</span><br>    list *List<br><br>    <span class="hljs-comment">// The value stored with this element.</span><br>    Value interface&#123;&#125;<br>&#125;<br><br><span class="hljs-built_in">type</span> List <span class="hljs-keyword">struct</span> &#123;<br>    root Element <span class="hljs-comment">// sentinel list element, only &amp;root, root.prev, and root.next are used</span><br>    len  int     <span class="hljs-comment">// current list length excluding (this) sentinel element</span><br>&#125;<br><br></code></pre></td></tr></table></figure>
 <p>Element里面定义了两个Element类型的指针next, prev以及List类型的指针list, Value用来存储值，List里面定义了一个Element作为链表的Root，len作为链表的长度。</p>
 <p>import之后，就可以使用链表了：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">func main()  &#123;</span><br><span class="line">    list_test:&#x3D;list.New()  &#x2F;&#x2F; 创建list对象</span><br><span class="line">    list_test.PushBack(&quot;123&quot;)  &#x2F;&#x2F; 往List队列尾部插入数据</span><br><span class="line">    list_test.PushBack(&quot;456&quot;)</span><br><span class="line">    list_test.PushBack(&quot;789&quot;)</span><br><span class="line">    fmt.Println(list_test.Len())  &#x2F;&#x2F; 输出list长度</span><br><span class="line">    fmt.Println(list_test.Front())  &#x2F;&#x2F; 输出list第一个元素</span><br><span class="line">    fmt.Println(list_test.Front().Next())  &#x2F;&#x2F; 输出list第一个元素的下一个元素</span><br><span class="line">    fmt.Println(list_test.Front().Next().Next())  &#x2F;&#x2F; 输出list第三个元素</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight stylus"><table><tr><td class="code"><pre><code class="hljs stylus">func <span class="hljs-selector-tag">main</span>()  &#123;<br>    list_test:=list<span class="hljs-selector-class">.New</span>()  <span class="hljs-comment">// 创建list对象</span><br>    list_test<span class="hljs-selector-class">.PushBack</span>(<span class="hljs-string">&quot;123&quot;</span>)  <span class="hljs-comment">// 往List队列尾部插入数据</span><br>    list_test<span class="hljs-selector-class">.PushBack</span>(<span class="hljs-string">&quot;456&quot;</span>)<br>    list_test<span class="hljs-selector-class">.PushBack</span>(<span class="hljs-string">&quot;789&quot;</span>)<br>    fmt<span class="hljs-selector-class">.Println</span>(list_test<span class="hljs-selector-class">.Len</span>())  <span class="hljs-comment">// 输出list长度</span><br>    fmt<span class="hljs-selector-class">.Println</span>(list_test<span class="hljs-selector-class">.Front</span>())  <span class="hljs-comment">// 输出list第一个元素</span><br>    fmt<span class="hljs-selector-class">.Println</span>(list_test<span class="hljs-selector-class">.Front</span>()<span class="hljs-selector-class">.Next</span>())  <span class="hljs-comment">// 输出list第一个元素的下一个元素</span><br>    fmt<span class="hljs-selector-class">.Println</span>(list_test<span class="hljs-selector-class">.Front</span>()<span class="hljs-selector-class">.Next</span>()<span class="hljs-selector-class">.Next</span>())  <span class="hljs-comment">// 输出list第三个元素</span><br>&#125;<br></code></pre></td></tr></table></figure>
 <h3 id="2-list提供的方法"><a href="#2-list提供的方法" class="headerlink" title="2. list提供的方法"></a>2. list提供的方法</h3><p>list提供的方法如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">type Element</span><br><span class="line">    func (e *Element) Next() *Element</span><br><span class="line">    func (e *Element) Prev() *Element</span><br><span class="line">type List</span><br><span class="line">    func New() *List</span><br><span class="line">    func (l *List) Back() *Element   &#x2F;&#x2F; 返回最后一个元素</span><br><span class="line">    func (l *List) Front() *Element  &#x2F;&#x2F; 返回第一个元素</span><br><span class="line">    func (l *List) Init() *List  &#x2F;&#x2F; 链表初始化</span><br><span class="line">    func (l *List) InsertAfter(v interface&#123;&#125;, mark *Element) *Element &#x2F;&#x2F; 在某个元素前插入</span><br><span class="line">    func (l *List) InsertBefore(v interface&#123;&#125;, mark *Element) *Element  &#x2F;&#x2F; 在某个元素后插入</span><br><span class="line">    func (l *List) Len() int &#x2F;&#x2F; 返回链表长度</span><br><span class="line">    func (l *List) MoveAfter(e, mark *Element)  &#x2F;&#x2F; 把e元素移动到mark之后</span><br><span class="line">    func (l *List) MoveBefore(e, mark *Element)  &#x2F;&#x2F; 把e元素移动到mark之前</span><br><span class="line">    func (l *List) MoveToBack(e *Element) &#x2F;&#x2F; 把e元素移动到队列最后</span><br><span class="line">    func (l *List) MoveToFront(e *Element) &#x2F;&#x2F; 把e元素移动到队列最头部</span><br><span class="line">    func (l *List) PushBack(v interface&#123;&#125;) *Element  &#x2F;&#x2F; 在队列最后插入元素</span><br><span class="line">    func (l *List) PushBackList(other *List)  &#x2F;&#x2F; 在队列最后插入接上新队列</span><br><span class="line">    func (l *List) PushFront(v interface&#123;&#125;) *Element  &#x2F;&#x2F; 在队列头部插入元素</span><br><span class="line">    func (l *List) PushFrontList(other *List) &#x2F;&#x2F; 在队列头部插入接上新队列</span><br><span class="line">    func (l *List) Remove(e *Element) interface&#123;&#125; &#x2F;&#x2F; 删除某个元素</span><br></pre></td></tr></table></figure>
+<figure class="highlight swift"><table><tr><td class="code"><pre><code class="hljs swift">type <span class="hljs-type">Element</span><br>    <span class="hljs-function"><span class="hljs-keyword">func</span> (e <span class="hljs-operator">*</span><span class="hljs-type">Element</span>)</span> <span class="hljs-type">Next</span>() <span class="hljs-operator">*</span><span class="hljs-type">Element</span><br>    <span class="hljs-function"><span class="hljs-keyword">func</span> (e <span class="hljs-operator">*</span><span class="hljs-type">Element</span>)</span> <span class="hljs-type">Prev</span>() <span class="hljs-operator">*</span><span class="hljs-type">Element</span><br>type <span class="hljs-type">List</span><br>    <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">New</span>()</span> <span class="hljs-operator">*</span><span class="hljs-type">List</span><br>    <span class="hljs-function"><span class="hljs-keyword">func</span> (l <span class="hljs-operator">*</span><span class="hljs-type">List</span>)</span> <span class="hljs-type">Back</span>() <span class="hljs-operator">*</span><span class="hljs-type">Element</span>   <span class="hljs-comment">// 返回最后一个元素</span><br>    <span class="hljs-function"><span class="hljs-keyword">func</span> (l <span class="hljs-operator">*</span><span class="hljs-type">List</span>)</span> <span class="hljs-type">Front</span>() <span class="hljs-operator">*</span><span class="hljs-type">Element</span>  <span class="hljs-comment">// 返回第一个元素</span><br>    <span class="hljs-function"><span class="hljs-keyword">func</span> (l <span class="hljs-operator">*</span><span class="hljs-type">List</span>)</span> <span class="hljs-type">Init</span>() <span class="hljs-operator">*</span><span class="hljs-type">List</span>  <span class="hljs-comment">// 链表初始化</span><br>    <span class="hljs-function"><span class="hljs-keyword">func</span> (l <span class="hljs-operator">*</span><span class="hljs-type">List</span>)</span> <span class="hljs-type">InsertAfter</span>(v interface&#123;&#125;, mark <span class="hljs-operator">*</span><span class="hljs-type">Element</span>) <span class="hljs-operator">*</span><span class="hljs-type">Element</span> <span class="hljs-comment">// 在某个元素前插入</span><br>    <span class="hljs-function"><span class="hljs-keyword">func</span> (l <span class="hljs-operator">*</span><span class="hljs-type">List</span>)</span> <span class="hljs-type">InsertBefore</span>(v interface&#123;&#125;, mark <span class="hljs-operator">*</span><span class="hljs-type">Element</span>) <span class="hljs-operator">*</span><span class="hljs-type">Element</span>  <span class="hljs-comment">// 在某个元素后插入</span><br>    <span class="hljs-function"><span class="hljs-keyword">func</span> (l <span class="hljs-operator">*</span><span class="hljs-type">List</span>)</span> <span class="hljs-type">Len</span>() int <span class="hljs-comment">// 返回链表长度</span><br>    <span class="hljs-function"><span class="hljs-keyword">func</span> (l <span class="hljs-operator">*</span><span class="hljs-type">List</span>)</span> <span class="hljs-type">MoveAfter</span>(e, mark <span class="hljs-operator">*</span><span class="hljs-type">Element</span>)  <span class="hljs-comment">// 把e元素移动到mark之后</span><br>    <span class="hljs-function"><span class="hljs-keyword">func</span> (l <span class="hljs-operator">*</span><span class="hljs-type">List</span>)</span> <span class="hljs-type">MoveBefore</span>(e, mark <span class="hljs-operator">*</span><span class="hljs-type">Element</span>)  <span class="hljs-comment">// 把e元素移动到mark之前</span><br>    <span class="hljs-function"><span class="hljs-keyword">func</span> (l <span class="hljs-operator">*</span><span class="hljs-type">List</span>)</span> <span class="hljs-type">MoveToBack</span>(e <span class="hljs-operator">*</span><span class="hljs-type">Element</span>) <span class="hljs-comment">// 把e元素移动到队列最后</span><br>    <span class="hljs-function"><span class="hljs-keyword">func</span> (l <span class="hljs-operator">*</span><span class="hljs-type">List</span>)</span> <span class="hljs-type">MoveToFront</span>(e <span class="hljs-operator">*</span><span class="hljs-type">Element</span>) <span class="hljs-comment">// 把e元素移动到队列最头部</span><br>    <span class="hljs-function"><span class="hljs-keyword">func</span> (l <span class="hljs-operator">*</span><span class="hljs-type">List</span>)</span> <span class="hljs-type">PushBack</span>(v interface&#123;&#125;) <span class="hljs-operator">*</span><span class="hljs-type">Element</span>  <span class="hljs-comment">// 在队列最后插入元素</span><br>    <span class="hljs-function"><span class="hljs-keyword">func</span> (l <span class="hljs-operator">*</span><span class="hljs-type">List</span>)</span> <span class="hljs-type">PushBackList</span>(other <span class="hljs-operator">*</span><span class="hljs-type">List</span>)  <span class="hljs-comment">// 在队列最后插入接上新队列</span><br>    <span class="hljs-function"><span class="hljs-keyword">func</span> (l <span class="hljs-operator">*</span><span class="hljs-type">List</span>)</span> <span class="hljs-type">PushFront</span>(v interface&#123;&#125;) <span class="hljs-operator">*</span><span class="hljs-type">Element</span>  <span class="hljs-comment">// 在队列头部插入元素</span><br>    <span class="hljs-function"><span class="hljs-keyword">func</span> (l <span class="hljs-operator">*</span><span class="hljs-type">List</span>)</span> <span class="hljs-type">PushFrontList</span>(other <span class="hljs-operator">*</span><span class="hljs-type">List</span>) <span class="hljs-comment">// 在队列头部插入接上新队列</span><br>    <span class="hljs-function"><span class="hljs-keyword">func</span> (l <span class="hljs-operator">*</span><span class="hljs-type">List</span>)</span> <span class="hljs-type">Remove</span>(e <span class="hljs-operator">*</span><span class="hljs-type">Element</span>) interface&#123;&#125; <span class="hljs-comment">// 删除某个元素</span><br></code></pre></td></tr></table></figure>
 
 <h3 id="3-源码剖析"><a href="#3-源码剖析" class="headerlink" title="3. 源码剖析"></a>3. 源码剖析</h3><p>首先，使用list.New()方法，返回的是一个List对象的指针，源码func New() *List { return new(List).Init() }并执行了List对象的Init()方法对list进行初始化，初始化root的prev和next指针以及list的长度。<br>之后调用list_test.PushBack(“123”)在队列尾部插入元素123，源码如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">func (l *List) PushBack(v interface&#123;&#125;) *Element &#123;</span><br><span class="line">	l.lazyInit()</span><br><span class="line">	return l.insertValue(v, l.root.prev)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight reasonml"><table><tr><td class="code"><pre><code class="hljs reasonml">func (l *List) <span class="hljs-constructor">PushBack(<span class="hljs-params">v</span> <span class="hljs-params">interface</span>&#123;&#125;)</span> *Element &#123;<br>	l.<span class="hljs-keyword">lazy</span><span class="hljs-constructor">Init()</span><br>	return l.insert<span class="hljs-constructor">Value(<span class="hljs-params">v</span>, <span class="hljs-params">l</span>.<span class="hljs-params">root</span>.<span class="hljs-params">prev</span>)</span><br>&#125;<br></code></pre></td></tr></table></figure>
 <p>调用lazyInit(),如果链表没有初始化，则先初始化一遍，之后，调用list的insertValue方法，insertValue方法初始化节点之后，调用insert方法进行插入链表。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">func (l *List) insertValue(v interface&#123;&#125;, at *Element) *Element &#123;</span><br><span class="line">	return l.insert(&amp;Element&#123;Value: v&#125;, at)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight dart"><table><tr><td class="code"><pre><code class="hljs dart">func (l *<span class="hljs-built_in">List</span>) insertValue(v <span class="hljs-class"><span class="hljs-keyword">interface</span></span>&#123;&#125;, at *<span class="hljs-built_in">Element</span>) *<span class="hljs-built_in">Element</span> &#123;<br>	<span class="hljs-keyword">return</span> l.insert(&amp;<span class="hljs-built_in">Element</span>&#123;Value: v&#125;, at)<br>&#125;<br></code></pre></td></tr></table></figure>
 <p><strong>整篇文章最精髓的地方就在insert方法中了，源码如下：</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">func (l *List) insert(e, at *Element) *Element &#123;</span><br><span class="line">	n :&#x3D; at.next  &#x2F;&#x2F; 用中间变量n保存at节点的next指针</span><br><span class="line">	at.next &#x3D; e  &#x2F;&#x2F; at节点的next指向要插入的节点</span><br><span class="line">	e.prev &#x3D; at  &#x2F;&#x2F; 要插入的节点e的prev指向at节点</span><br><span class="line">	e.next &#x3D; n  &#x2F;&#x2F; e的next节点指向中间变量n保存的指针</span><br><span class="line">	n.prev &#x3D; e  &#x2F;&#x2F; at节点的下一个节点的prev指向e节点</span><br><span class="line">	e.list &#x3D; l  &#x2F;&#x2F; e节点的list指向链表的root节点</span><br><span class="line">	l.len++  &#x2F;&#x2F; 链表的长度加一</span><br><span class="line">	return e  &#x2F;&#x2F; 返回刚插入节点的指针</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight awk"><table><tr><td class="code"><pre><code class="hljs awk"><span class="hljs-keyword">func</span> (l *List) insert(e, at *Element) *Element &#123;<br>	n := at.<span class="hljs-keyword">next</span>  <span class="hljs-regexp">//</span> 用中间变量n保存at节点的<span class="hljs-keyword">next</span>指针<br>	at.<span class="hljs-keyword">next</span> = e  <span class="hljs-regexp">//</span> at节点的<span class="hljs-keyword">next</span>指向要插入的节点<br>	e.prev = at  <span class="hljs-regexp">//</span> 要插入的节点e的prev指向at节点<br>	e.<span class="hljs-keyword">next</span> = n  <span class="hljs-regexp">//</span> e的<span class="hljs-keyword">next</span>节点指向中间变量n保存的指针<br>	n.prev = e  <span class="hljs-regexp">//</span> at节点的下一个节点的prev指向e节点<br>	e.list = l  <span class="hljs-regexp">//</span> e节点的list指向链表的root节点<br>	l.len++  <span class="hljs-regexp">//</span> 链表的长度加一<br>	return e  <span class="hljs-regexp">//</span> 返回刚插入节点的指针<br>&#125;<br></code></pre></td></tr></table></figure>
 <p><strong>这里的链表结构是双向链表，</strong>并且在root节点的prev指针指向了链表的结尾，链表结尾的next指针也指向了root节点，这样，其实形成了一个环形结构，如果是向链表的尾部插入新数据，则将root.prev传递给insert方法的at参数，如果是向头部插入，则将root传递给insert方法的at参数。</p>
 <p><strong>这样做的好处是显而易见的，那就是从链表的尾部插入数据，将不需要遍历一遍链表，而只需要将root节点的prev传递给insert方法中就可以了，大大节省了从尾部插入节点的时间。</strong>这段代码我看了很久，觉得这个包中最精髓的地方也就在这了，这也是这篇文章诞生的原因。</p>
 <p>源码如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; Copyright 2009 The Go Authors. All rights reserved.</span><br><span class="line">&#x2F;&#x2F; Use of this source code is governed by a BSD-style</span><br><span class="line">&#x2F;&#x2F; license that can be found in the LICENSE file.</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; Package list implements a doubly linked list.</span><br><span class="line">&#x2F;&#x2F;</span><br><span class="line">&#x2F;&#x2F; To iterate over a list (where l is a *List):</span><br><span class="line">&#x2F;&#x2F;	for e :&#x3D; l.Front(); e !&#x3D; nil; e &#x3D; e.Next() &#123;</span><br><span class="line">&#x2F;&#x2F;		&#x2F;&#x2F; do something with e.Value</span><br><span class="line">&#x2F;&#x2F;	&#125;</span><br><span class="line">&#x2F;&#x2F;</span><br><span class="line">package list</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; Element is an element of a linked list.</span><br><span class="line">type Element struct &#123;</span><br><span class="line">	&#x2F;&#x2F; Next and previous pointers in the doubly-linked list of elements.</span><br><span class="line">	&#x2F;&#x2F; To simplify the implementation, internally a list l is implemented</span><br><span class="line">	&#x2F;&#x2F; as a ring, such that &amp;l.root is both the next element of the last</span><br><span class="line">	&#x2F;&#x2F; list element (l.Back()) and the previous element of the first list</span><br><span class="line">	&#x2F;&#x2F; element (l.Front()).</span><br><span class="line">	next, prev *Element</span><br><span class="line"></span><br><span class="line">	&#x2F;&#x2F; The list to which this element belongs.</span><br><span class="line">	list *List</span><br><span class="line"></span><br><span class="line">	&#x2F;&#x2F; The value stored with this element.</span><br><span class="line">	Value interface&#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; Next returns the next list element or nil.</span><br><span class="line">func (e *Element) Next() *Element &#123;</span><br><span class="line">	if p :&#x3D; e.next; e.list !&#x3D; nil &amp;&amp; p !&#x3D; &amp;e.list.root &#123;</span><br><span class="line">		return p</span><br><span class="line">	&#125;</span><br><span class="line">	return nil</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; Prev returns the previous list element or nil.</span><br><span class="line">func (e *Element) Prev() *Element &#123;</span><br><span class="line">	if p :&#x3D; e.prev; e.list !&#x3D; nil &amp;&amp; p !&#x3D; &amp;e.list.root &#123;</span><br><span class="line">		return p</span><br><span class="line">	&#125;</span><br><span class="line">	return nil</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; List represents a doubly linked list.</span><br><span class="line">&#x2F;&#x2F; The zero value for List is an empty list ready to use.</span><br><span class="line">type List struct &#123;</span><br><span class="line">	root Element &#x2F;&#x2F; sentinel list element, only &amp;root, root.prev, and root.next are used</span><br><span class="line">	len  int     &#x2F;&#x2F; current list length excluding (this) sentinel element</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; Init initializes or clears list l.</span><br><span class="line">func (l *List) Init() *List &#123;</span><br><span class="line">	l.root.next &#x3D; &amp;l.root</span><br><span class="line">	l.root.prev &#x3D; &amp;l.root</span><br><span class="line">	l.len &#x3D; 0</span><br><span class="line">	return l</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; New returns an initialized list.</span><br><span class="line">func New() *List &#123; return new(List).Init() &#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; Len returns the number of elements of list l.</span><br><span class="line">&#x2F;&#x2F; The complexity is O(1).</span><br><span class="line">func (l *List) Len() int &#123; return l.len &#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; Front returns the first element of list l or nil.</span><br><span class="line">func (l *List) Front() *Element &#123;</span><br><span class="line">	if l.len &#x3D;&#x3D; 0 &#123;</span><br><span class="line">		return nil</span><br><span class="line">	&#125;</span><br><span class="line">	return l.root.next</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; Back returns the last element of list l or nil.</span><br><span class="line">func (l *List) Back() *Element &#123;</span><br><span class="line">	if l.len &#x3D;&#x3D; 0 &#123;</span><br><span class="line">		return nil</span><br><span class="line">	&#125;</span><br><span class="line">	return l.root.prev</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; lazyInit lazily initializes a zero List value.</span><br><span class="line">func (l *List) lazyInit() &#123;</span><br><span class="line">	if l.root.next &#x3D;&#x3D; nil &#123;</span><br><span class="line">		l.Init()</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; insert inserts e after at, increments l.len, and returns e.</span><br><span class="line">func (l *List) insert(e, at *Element) *Element &#123;</span><br><span class="line">	n :&#x3D; at.next</span><br><span class="line">	at.next &#x3D; e</span><br><span class="line">	e.prev &#x3D; at</span><br><span class="line">	e.next &#x3D; n</span><br><span class="line">	n.prev &#x3D; e</span><br><span class="line">	e.list &#x3D; l</span><br><span class="line">	l.len++</span><br><span class="line">	return e</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; insertValue is a convenience wrapper for insert(&amp;Element&#123;Value: v&#125;, at).</span><br><span class="line">func (l *List) insertValue(v interface&#123;&#125;, at *Element) *Element &#123;</span><br><span class="line">	return l.insert(&amp;Element&#123;Value: v&#125;, at)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; remove removes e from its list, decrements l.len, and returns e.</span><br><span class="line">func (l *List) remove(e *Element) *Element &#123;</span><br><span class="line">	e.prev.next &#x3D; e.next</span><br><span class="line">	e.next.prev &#x3D; e.prev</span><br><span class="line">	e.next &#x3D; nil &#x2F;&#x2F; avoid memory leaks</span><br><span class="line">	e.prev &#x3D; nil &#x2F;&#x2F; avoid memory leaks</span><br><span class="line">	e.list &#x3D; nil</span><br><span class="line">	l.len--</span><br><span class="line">	return e</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; Remove removes e from l if e is an element of list l.</span><br><span class="line">&#x2F;&#x2F; It returns the element value e.Value.</span><br><span class="line">func (l *List) Remove(e *Element) interface&#123;&#125; &#123;</span><br><span class="line">	if e.list &#x3D;&#x3D; l &#123;</span><br><span class="line">		&#x2F;&#x2F; if e.list &#x3D;&#x3D; l, l must have been initialized when e was inserted</span><br><span class="line">		&#x2F;&#x2F; in l or l &#x3D;&#x3D; nil (e is a zero Element) and l.remove will crash</span><br><span class="line">		l.remove(e)</span><br><span class="line">	&#125;</span><br><span class="line">	return e.Value</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; PushFront inserts a new element e with value v at the front of list l and returns e.</span><br><span class="line">func (l *List) PushFront(v interface&#123;&#125;) *Element &#123;</span><br><span class="line">	l.lazyInit()</span><br><span class="line">	return l.insertValue(v, &amp;l.root)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; PushBack inserts a new element e with value v at the back of list l and returns e.</span><br><span class="line">func (l *List) PushBack(v interface&#123;&#125;) *Element &#123;</span><br><span class="line">	l.lazyInit()</span><br><span class="line">	return l.insertValue(v, l.root.prev)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; InsertBefore inserts a new element e with value v immediately before mark and returns e.</span><br><span class="line">&#x2F;&#x2F; If mark is not an element of l, the list is not modified.</span><br><span class="line">func (l *List) InsertBefore(v interface&#123;&#125;, mark *Element) *Element &#123;</span><br><span class="line">	if mark.list !&#x3D; l &#123;</span><br><span class="line">		return nil</span><br><span class="line">	&#125;</span><br><span class="line">	&#x2F;&#x2F; see comment in List.Remove about initialization of l</span><br><span class="line">	return l.insertValue(v, mark.prev)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; InsertAfter inserts a new element e with value v immediately after mark and returns e.</span><br><span class="line">&#x2F;&#x2F; If mark is not an element of l, the list is not modified.</span><br><span class="line">func (l *List) InsertAfter(v interface&#123;&#125;, mark *Element) *Element &#123;</span><br><span class="line">	if mark.list !&#x3D; l &#123;</span><br><span class="line">		return nil</span><br><span class="line">	&#125;</span><br><span class="line">	&#x2F;&#x2F; see comment in List.Remove about initialization of l</span><br><span class="line">	return l.insertValue(v, mark)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; MoveToFront moves element e to the front of list l.</span><br><span class="line">&#x2F;&#x2F; If e is not an element of l, the list is not modified.</span><br><span class="line">func (l *List) MoveToFront(e *Element) &#123;</span><br><span class="line">	if e.list !&#x3D; l || l.root.next &#x3D;&#x3D; e &#123;</span><br><span class="line">		return</span><br><span class="line">	&#125;</span><br><span class="line">	&#x2F;&#x2F; see comment in List.Remove about initialization of l</span><br><span class="line">	l.insert(l.remove(e), &amp;l.root)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; MoveToBack moves element e to the back of list l.</span><br><span class="line">&#x2F;&#x2F; If e is not an element of l, the list is not modified.</span><br><span class="line">func (l *List) MoveToBack(e *Element) &#123;</span><br><span class="line">	if e.list !&#x3D; l || l.root.prev &#x3D;&#x3D; e &#123;</span><br><span class="line">		return</span><br><span class="line">	&#125;</span><br><span class="line">	&#x2F;&#x2F; see comment in List.Remove about initialization of l</span><br><span class="line">	l.insert(l.remove(e), l.root.prev)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; MoveBefore moves element e to its new position before mark.</span><br><span class="line">&#x2F;&#x2F; If e or mark is not an element of l, or e &#x3D;&#x3D; mark, the list is not modified.</span><br><span class="line">func (l *List) MoveBefore(e, mark *Element) &#123;</span><br><span class="line">	if e.list !&#x3D; l || e &#x3D;&#x3D; mark || mark.list !&#x3D; l &#123;</span><br><span class="line">		return</span><br><span class="line">	&#125;</span><br><span class="line">	l.insert(l.remove(e), mark.prev)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; MoveAfter moves element e to its new position after mark.</span><br><span class="line">&#x2F;&#x2F; If e or mark is not an element of l, or e &#x3D;&#x3D; mark, the list is not modified.</span><br><span class="line">func (l *List) MoveAfter(e, mark *Element) &#123;</span><br><span class="line">	if e.list !&#x3D; l || e &#x3D;&#x3D; mark || mark.list !&#x3D; l &#123;</span><br><span class="line">		return</span><br><span class="line">	&#125;</span><br><span class="line">	l.insert(l.remove(e), mark)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; PushBackList inserts a copy of an other list at the back of list l.</span><br><span class="line">&#x2F;&#x2F; The lists l and other may be the same.</span><br><span class="line">func (l *List) PushBackList(other *List) &#123;</span><br><span class="line">	l.lazyInit()</span><br><span class="line">	for i, e :&#x3D; other.Len(), other.Front(); i &gt; 0; i, e &#x3D; i-1, e.Next() &#123;</span><br><span class="line">		l.insertValue(e.Value, l.root.prev)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; PushFrontList inserts a copy of an other list at the front of list l.</span><br><span class="line">&#x2F;&#x2F; The lists l and other may be the same.</span><br><span class="line">func (l *List) PushFrontList(other *List) &#123;</span><br><span class="line">	l.lazyInit()</span><br><span class="line">	for i, e :&#x3D; other.Len(), other.Back(); i &gt; 0; i, e &#x3D; i-1, e.Prev() &#123;</span><br><span class="line">		l.insertValue(e.Value, &amp;l.root)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight go"><table><tr><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// Copyright 2009 The Go Authors. All rights reserved.</span><br><span class="hljs-comment">// Use of this source code is governed by a BSD-style</span><br><span class="hljs-comment">// license that can be found in the LICENSE file.</span><br><br><span class="hljs-comment">// Package list implements a doubly linked list.</span><br><span class="hljs-comment">//</span><br><span class="hljs-comment">// To iterate over a list (where l is a *List):</span><br><span class="hljs-comment">//	for e := l.Front(); e != nil; e = e.Next() &#123;</span><br><span class="hljs-comment">//		// do something with e.Value</span><br><span class="hljs-comment">//	&#125;</span><br><span class="hljs-comment">//</span><br><span class="hljs-keyword">package</span> list<br><br><span class="hljs-comment">// Element is an element of a linked list.</span><br><span class="hljs-keyword">type</span> Element <span class="hljs-keyword">struct</span> &#123;<br>	<span class="hljs-comment">// Next and previous pointers in the doubly-linked list of elements.</span><br>	<span class="hljs-comment">// To simplify the implementation, internally a list l is implemented</span><br>	<span class="hljs-comment">// as a ring, such that &amp;l.root is both the next element of the last</span><br>	<span class="hljs-comment">// list element (l.Back()) and the previous element of the first list</span><br>	<span class="hljs-comment">// element (l.Front()).</span><br>	next, prev *Element<br><br>	<span class="hljs-comment">// The list to which this element belongs.</span><br>	list *List<br><br>	<span class="hljs-comment">// The value stored with this element.</span><br>	Value <span class="hljs-keyword">interface</span>&#123;&#125;<br>&#125;<br><br><span class="hljs-comment">// Next returns the next list element or nil.</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(e *Element)</span> <span class="hljs-title">Next</span><span class="hljs-params">()</span> *<span class="hljs-title">Element</span></span> &#123;<br>	<span class="hljs-keyword">if</span> p := e.next; e.list != <span class="hljs-literal">nil</span> &amp;&amp; p != &amp;e.list.root &#123;<br>		<span class="hljs-keyword">return</span> p<br>	&#125;<br>	<span class="hljs-keyword">return</span> <span class="hljs-literal">nil</span><br>&#125;<br><br><span class="hljs-comment">// Prev returns the previous list element or nil.</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(e *Element)</span> <span class="hljs-title">Prev</span><span class="hljs-params">()</span> *<span class="hljs-title">Element</span></span> &#123;<br>	<span class="hljs-keyword">if</span> p := e.prev; e.list != <span class="hljs-literal">nil</span> &amp;&amp; p != &amp;e.list.root &#123;<br>		<span class="hljs-keyword">return</span> p<br>	&#125;<br>	<span class="hljs-keyword">return</span> <span class="hljs-literal">nil</span><br>&#125;<br><br><span class="hljs-comment">// List represents a doubly linked list.</span><br><span class="hljs-comment">// The zero value for List is an empty list ready to use.</span><br><span class="hljs-keyword">type</span> List <span class="hljs-keyword">struct</span> &#123;<br>	root Element <span class="hljs-comment">// sentinel list element, only &amp;root, root.prev, and root.next are used</span><br>	<span class="hljs-built_in">len</span>  <span class="hljs-keyword">int</span>     <span class="hljs-comment">// current list length excluding (this) sentinel element</span><br>&#125;<br><br><span class="hljs-comment">// Init initializes or clears list l.</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(l *List)</span> <span class="hljs-title">Init</span><span class="hljs-params">()</span> *<span class="hljs-title">List</span></span> &#123;<br>	l.root.next = &amp;l.root<br>	l.root.prev = &amp;l.root<br>	l.<span class="hljs-built_in">len</span> = <span class="hljs-number">0</span><br>	<span class="hljs-keyword">return</span> l<br>&#125;<br><br><span class="hljs-comment">// New returns an initialized list.</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">New</span><span class="hljs-params">()</span> *<span class="hljs-title">List</span></span> &#123; <span class="hljs-keyword">return</span> <span class="hljs-built_in">new</span>(List).Init() &#125;<br><br><span class="hljs-comment">// Len returns the number of elements of list l.</span><br><span class="hljs-comment">// The complexity is O(1).</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(l *List)</span> <span class="hljs-title">Len</span><span class="hljs-params">()</span> <span class="hljs-title">int</span></span> &#123; <span class="hljs-keyword">return</span> l.<span class="hljs-built_in">len</span> &#125;<br><br><span class="hljs-comment">// Front returns the first element of list l or nil.</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(l *List)</span> <span class="hljs-title">Front</span><span class="hljs-params">()</span> *<span class="hljs-title">Element</span></span> &#123;<br>	<span class="hljs-keyword">if</span> l.<span class="hljs-built_in">len</span> == <span class="hljs-number">0</span> &#123;<br>		<span class="hljs-keyword">return</span> <span class="hljs-literal">nil</span><br>	&#125;<br>	<span class="hljs-keyword">return</span> l.root.next<br>&#125;<br><br><span class="hljs-comment">// Back returns the last element of list l or nil.</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(l *List)</span> <span class="hljs-title">Back</span><span class="hljs-params">()</span> *<span class="hljs-title">Element</span></span> &#123;<br>	<span class="hljs-keyword">if</span> l.<span class="hljs-built_in">len</span> == <span class="hljs-number">0</span> &#123;<br>		<span class="hljs-keyword">return</span> <span class="hljs-literal">nil</span><br>	&#125;<br>	<span class="hljs-keyword">return</span> l.root.prev<br>&#125;<br><br><span class="hljs-comment">// lazyInit lazily initializes a zero List value.</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(l *List)</span> <span class="hljs-title">lazyInit</span><span class="hljs-params">()</span></span> &#123;<br>	<span class="hljs-keyword">if</span> l.root.next == <span class="hljs-literal">nil</span> &#123;<br>		l.Init()<br>	&#125;<br>&#125;<br><br><span class="hljs-comment">// insert inserts e after at, increments l.len, and returns e.</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(l *List)</span> <span class="hljs-title">insert</span><span class="hljs-params">(e, at *Element)</span> *<span class="hljs-title">Element</span></span> &#123;<br>	n := at.next<br>	at.next = e<br>	e.prev = at<br>	e.next = n<br>	n.prev = e<br>	e.list = l<br>	l.<span class="hljs-built_in">len</span>++<br>	<span class="hljs-keyword">return</span> e<br>&#125;<br><br><span class="hljs-comment">// insertValue is a convenience wrapper for insert(&amp;Element&#123;Value: v&#125;, at).</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(l *List)</span> <span class="hljs-title">insertValue</span><span class="hljs-params">(v <span class="hljs-keyword">interface</span>&#123;&#125;, at *Element)</span> *<span class="hljs-title">Element</span></span> &#123;<br>	<span class="hljs-keyword">return</span> l.insert(&amp;Element&#123;Value: v&#125;, at)<br>&#125;<br><br><span class="hljs-comment">// remove removes e from its list, decrements l.len, and returns e.</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(l *List)</span> <span class="hljs-title">remove</span><span class="hljs-params">(e *Element)</span> *<span class="hljs-title">Element</span></span> &#123;<br>	e.prev.next = e.next<br>	e.next.prev = e.prev<br>	e.next = <span class="hljs-literal">nil</span> <span class="hljs-comment">// avoid memory leaks</span><br>	e.prev = <span class="hljs-literal">nil</span> <span class="hljs-comment">// avoid memory leaks</span><br>	e.list = <span class="hljs-literal">nil</span><br>	l.<span class="hljs-built_in">len</span>--<br>	<span class="hljs-keyword">return</span> e<br>&#125;<br><br><span class="hljs-comment">// Remove removes e from l if e is an element of list l.</span><br><span class="hljs-comment">// It returns the element value e.Value.</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(l *List)</span> <span class="hljs-title">Remove</span><span class="hljs-params">(e *Element)</span> <span class="hljs-title">interface</span></span>&#123;&#125; &#123;<br>	<span class="hljs-keyword">if</span> e.list == l &#123;<br>		<span class="hljs-comment">// if e.list == l, l must have been initialized when e was inserted</span><br>		<span class="hljs-comment">// in l or l == nil (e is a zero Element) and l.remove will crash</span><br>		l.remove(e)<br>	&#125;<br>	<span class="hljs-keyword">return</span> e.Value<br>&#125;<br><br><span class="hljs-comment">// PushFront inserts a new element e with value v at the front of list l and returns e.</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(l *List)</span> <span class="hljs-title">PushFront</span><span class="hljs-params">(v <span class="hljs-keyword">interface</span>&#123;&#125;)</span> *<span class="hljs-title">Element</span></span> &#123;<br>	l.lazyInit()<br>	<span class="hljs-keyword">return</span> l.insertValue(v, &amp;l.root)<br>&#125;<br><br><span class="hljs-comment">// PushBack inserts a new element e with value v at the back of list l and returns e.</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(l *List)</span> <span class="hljs-title">PushBack</span><span class="hljs-params">(v <span class="hljs-keyword">interface</span>&#123;&#125;)</span> *<span class="hljs-title">Element</span></span> &#123;<br>	l.lazyInit()<br>	<span class="hljs-keyword">return</span> l.insertValue(v, l.root.prev)<br>&#125;<br><br><span class="hljs-comment">// InsertBefore inserts a new element e with value v immediately before mark and returns e.</span><br><span class="hljs-comment">// If mark is not an element of l, the list is not modified.</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(l *List)</span> <span class="hljs-title">InsertBefore</span><span class="hljs-params">(v <span class="hljs-keyword">interface</span>&#123;&#125;, mark *Element)</span> *<span class="hljs-title">Element</span></span> &#123;<br>	<span class="hljs-keyword">if</span> mark.list != l &#123;<br>		<span class="hljs-keyword">return</span> <span class="hljs-literal">nil</span><br>	&#125;<br>	<span class="hljs-comment">// see comment in List.Remove about initialization of l</span><br>	<span class="hljs-keyword">return</span> l.insertValue(v, mark.prev)<br>&#125;<br><br><span class="hljs-comment">// InsertAfter inserts a new element e with value v immediately after mark and returns e.</span><br><span class="hljs-comment">// If mark is not an element of l, the list is not modified.</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(l *List)</span> <span class="hljs-title">InsertAfter</span><span class="hljs-params">(v <span class="hljs-keyword">interface</span>&#123;&#125;, mark *Element)</span> *<span class="hljs-title">Element</span></span> &#123;<br>	<span class="hljs-keyword">if</span> mark.list != l &#123;<br>		<span class="hljs-keyword">return</span> <span class="hljs-literal">nil</span><br>	&#125;<br>	<span class="hljs-comment">// see comment in List.Remove about initialization of l</span><br>	<span class="hljs-keyword">return</span> l.insertValue(v, mark)<br>&#125;<br><br><span class="hljs-comment">// MoveToFront moves element e to the front of list l.</span><br><span class="hljs-comment">// If e is not an element of l, the list is not modified.</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(l *List)</span> <span class="hljs-title">MoveToFront</span><span class="hljs-params">(e *Element)</span></span> &#123;<br>	<span class="hljs-keyword">if</span> e.list != l || l.root.next == e &#123;<br>		<span class="hljs-keyword">return</span><br>	&#125;<br>	<span class="hljs-comment">// see comment in List.Remove about initialization of l</span><br>	l.insert(l.remove(e), &amp;l.root)<br>&#125;<br><br><span class="hljs-comment">// MoveToBack moves element e to the back of list l.</span><br><span class="hljs-comment">// If e is not an element of l, the list is not modified.</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(l *List)</span> <span class="hljs-title">MoveToBack</span><span class="hljs-params">(e *Element)</span></span> &#123;<br>	<span class="hljs-keyword">if</span> e.list != l || l.root.prev == e &#123;<br>		<span class="hljs-keyword">return</span><br>	&#125;<br>	<span class="hljs-comment">// see comment in List.Remove about initialization of l</span><br>	l.insert(l.remove(e), l.root.prev)<br>&#125;<br><br><span class="hljs-comment">// MoveBefore moves element e to its new position before mark.</span><br><span class="hljs-comment">// If e or mark is not an element of l, or e == mark, the list is not modified.</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(l *List)</span> <span class="hljs-title">MoveBefore</span><span class="hljs-params">(e, mark *Element)</span></span> &#123;<br>	<span class="hljs-keyword">if</span> e.list != l || e == mark || mark.list != l &#123;<br>		<span class="hljs-keyword">return</span><br>	&#125;<br>	l.insert(l.remove(e), mark.prev)<br>&#125;<br><br><span class="hljs-comment">// MoveAfter moves element e to its new position after mark.</span><br><span class="hljs-comment">// If e or mark is not an element of l, or e == mark, the list is not modified.</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(l *List)</span> <span class="hljs-title">MoveAfter</span><span class="hljs-params">(e, mark *Element)</span></span> &#123;<br>	<span class="hljs-keyword">if</span> e.list != l || e == mark || mark.list != l &#123;<br>		<span class="hljs-keyword">return</span><br>	&#125;<br>	l.insert(l.remove(e), mark)<br>&#125;<br><br><span class="hljs-comment">// PushBackList inserts a copy of an other list at the back of list l.</span><br><span class="hljs-comment">// The lists l and other may be the same.</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(l *List)</span> <span class="hljs-title">PushBackList</span><span class="hljs-params">(other *List)</span></span> &#123;<br>	l.lazyInit()<br>	<span class="hljs-keyword">for</span> i, e := other.Len(), other.Front(); i &gt; <span class="hljs-number">0</span>; i, e = i<span class="hljs-number">-1</span>, e.Next() &#123;<br>		l.insertValue(e.Value, l.root.prev)<br>	&#125;<br>&#125;<br><br><span class="hljs-comment">// PushFrontList inserts a copy of an other list at the front of list l.</span><br><span class="hljs-comment">// The lists l and other may be the same.</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(l *List)</span> <span class="hljs-title">PushFrontList</span><span class="hljs-params">(other *List)</span></span> &#123;<br>	l.lazyInit()<br>	<span class="hljs-keyword">for</span> i, e := other.Len(), other.Back(); i &gt; <span class="hljs-number">0</span>; i, e = i<span class="hljs-number">-1</span>, e.Prev() &#123;<br>		l.insertValue(e.Value, &amp;l.root)<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 <p>（我是打印下来，然后笔笔勾画看了的，比较我这个菜鸟代码多了还是头晕哈哈哈）</p>
 <p>到这里，如果你是认真看过来的，其实真的你知道了golang的基础，你会觉得其实能搞懂逻辑的。</p>
 <p>这里面真的你看不见复杂的代码，只有一些简单的代码将逻辑一一实现，真的很精彩。</p>
@@ -161,91 +303,138 @@
 <p><strong>感谢前辈的精妙分享</strong></p>
 <p><em><strong>以上就是本次的全部内容，希望对你有所帮助！！！</strong></em></p>
 
-            </div>
-          
-
-    
-      <footer class="post-footer">
-		
-		<div class="post-tags">
-		  
-			<a href="/tags/golang%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">golang数据结构</a>
-		  
-			<a href="/tags/list/">list</a>
-		  
-			<a href="/tags/%E9%93%BE%E8%A1%A8/">链表</a>
-		  
-		</div>
-		
-
-        
-        
-  <nav class="post-nav">
-    
-      <a class="prev" href="/2021/06/21/%E6%89%8B%E5%86%99%E4%B8%AD%E9%97%B4%E4%BB%B6/">
-        <i class="iconfont icon-left"></i>
-        <span class="prev-text nav-default">手写中间件</span>
-        <span class="prev-text nav-mobile">Prev</span>
-      </a>
-    
-    
-      <a class="next" href="/2021/05/31/go%E8%AF%AD%E8%A8%80%E7%9A%84%E6%A0%87%E5%87%86%E5%BA%93container-2-heap/">
-        <span class="next-text nav-default">go语言的标准库container-2-heap</span>
-        <span class="prev-text nav-mobile">Next</span>
-        <i class="iconfont icon-right"></i>
-      </a>
-    
-  </nav>
-
-        
-  <div class="comments" id="comments">
-    
-  </div>
-
-
-      </footer>
-    
-  </article>
-
     </div>
+</div>
+<style>
+    #noneimg img {
+        display: none;
+        z-index: 109;
+        width: 600px !important;
+        border-radius: 0px;
+        position: fixed;
+        box-shadow: 0 0 0px #c3c3c300 !important;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto !important;
+    }
 
-      </div>
+    @media screen and (max-width:600px) {
+        #noneimg img {
+            width: 88%
+        }
+    }
+</style>
+<script>
+    $(function () { $('#article').click(function (e) { if (e.target.tagName == "IMG") { if ($('#nonediv').length == 0) { let MImg = `<div id='noneimg'><img src='${e.target.currentSrc}'></div>`; let MDiv = "<div id='nonediv' style='cursor: pointer;display: none; position: fixed;left: 0;top: 0; right: 0;bottom: 0;background-color: #333;opacity:0.5;z-index: 108;'></div>"; $('#article').append(MDiv); $('#article').append(MImg); $("#nonediv").fadeIn("slow"); $("#noneimg img").fadeIn("slow") } } else { if ($('#nonediv').length !== 0) { $("#noneimg ").fadeOut("slow"); $("#nonediv").fadeOut("slow"); setTimeout(function () { $('#nonediv').remove(); $('#noneimg').remove() }, 500) } } }); $('.article-content').addClass('content-move') });
+</script>
+<div class="Last-Next">
+    
+    <a href="/2021/06/21/%E6%89%8B%E5%86%99%E4%B8%AD%E9%97%B4%E4%BB%B6/">
+        <div class="last">
+            <span>上一篇</span>
+            <p>手写中间件</p>
+        </div>
+    </a>
+    
 
-      <footer id="colophon"><span class="copyright-year">
     
-        &copy;
+    <a href="/2021/05/31/go%E8%AF%AD%E8%A8%80%E7%9A%84%E6%A0%87%E5%87%86%E5%BA%93container-2-heap/">
+        <div class="next">
+            <span>下一篇</span>
+            <p>go语言的标准库container-2-heap</p>
+        </div>
+    </a>
     
-        2014 -
-    
-    2021
-    <span class="footer-author">Russshare.</span>
-    <span class="power-by">
-        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+</div>
+		
+<link rel="stylesheet" href="/css/food.css">
+
+<div class="footer">
+	<div class="Copyright">
+		©2021 By CHANGEQ. 主题：<a
+			style="text-decoration: none;display: contents; color: #898F9F;"
+			target="_blank" rel="noopener" href="https://github.com/qiaobug/hexo-theme-quiet">Quiet</a>
+	</div>
+	<div class="contact">
+		
+		<a target="_blank" rel="noopener" href="https://github.com/qiaobug">
+			<img src="https://cdn.jsdelivr.net/gh/duogongneng/MyBlogImg/imggithub.png" alt="Quiet主题">
+		</a>
+		
+	</div>
+</div>
+
+<script src="/js/jquery.min.js"></script>
+
+
+<script src="/js/gotop.js"></script>
+
+
+<style type="text/css">
+    @media screen and (min-width: 600px) {
+        .goTop>span {
+            display: block;
+            border-radius: 50%;
+            width: 66px;
+            height: 66px;
+            cursor: pointer;
+            opacity: 0.8;
+            background: rgba(18, 24, 58, 0.06);
+            text-align: center;
+            border: 1px solid rgba(18, 24, 58, 0.06);
+
+            transition: border .5s;
+            -moz-transition: border .5s;
+            /* Firefox 4 */
+            -webkit-transition: border .5s;
+            /* Safari 和 Chrome */
+            -o-transition: border .5s;
+            /* Opera */
+        }
+
+        .goTop>span:hover {
+            border: 1px solid #6680B3;
+        }
+
+
+        .goTop {
+            position: fixed;
+            right: 30px;
+            bottom: 80px;
+        }
+
+        .goTop>span>svg {
+            width: 30px;
+            height: 30px;
+            margin-top: 17.5px;
+            opacity: 0.7;
+        }
+
+    }
+
+    @media screen and (max-width: 600px) {
+        .goTop {
+            display: none;
+        }
+    }
+</style>
+<div class="goTop" id="js-go_top">
+    <span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <g>
+                <path d="M13 12v8h-2v-8H4l8-8 8 8z"></path>
+            </g>
+        </svg>
     </span>
-</span>
+</div>
+<script>
+    $('#js-go_top').gotoTop({ offset: 500, speed: 300, animationShow: { 'transform': 'translate(0,0)', 'transition': 'transform .5s ease-in-out' }, animationHide: { 'transform': 'translate(100px,0)', 'transition': 'transform .5s ease-in-out' } });
+</script>
+<script>
+	console.log('\n %c Hexo-Quiet 主题 %c https://github.com/QiaoBug/hexo-theme-quiet \n', 'color: #fadfa3; background: #030307; padding:5px 0;', 'background: #fadfa3; padding:5px 0;')
+</script>
+	</body>
 
-      </footer>
-
-      <div class="back-to-top" id="back-to-top">
-        <i class="iconfont icon-up"></i>
-      </div>
-    </div>
-    
-
-
-    
-
-
-
-
-  
-    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
-  
-
-  
-
-    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
-<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
-
-  </body>
 </html>

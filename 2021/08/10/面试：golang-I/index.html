@@ -1,137 +1,278 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
-  <head>
-    
-<meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+<html>
+
+	<head>
+		
+<title>面试：golang-I-Quiet</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="shortcut icon" type="image/x-icon" href="/image/favicon.ico">
 
 
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="keywords" content="golang,面试,">
+<meta name="description" content="">
 
 
-
-  <meta name="description" content="面试：golang-I"/>
-
+<script src="/js/jquery.min.js"></script>
 
 
+	<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+</head>
 
-  <meta name="keywords" content="golang,面试," />
-
-
-
-
-
-  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+	<body>
+		
+<link rel="stylesheet" href="/css/page.css">
 
 
+<link rel="stylesheet" href="/css/page_cente.css">
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+<link rel="stylesheet" href="/css/atom-one-dark.css">
 
 
+<link rel="stylesheet" href="/css/header.css">
 
-<link rel="canonical" href="https://riddlego.github.io/2021/08/10/面试：golang-I/"/>
-
-
-<meta name="description" content="golang 面试题(从基础到高级) Golang进阶面试题整理 面试总结：Golang常见面试题汇总 Golang精编100题-搞定golang面试 2020 腾讯社招 Golang后端 面试题解析 golang面试题整理１、go的调度–GPM这个调度模型—1、我先讲一下GPM分别代表什么，G就是我们所常说的goroutine对象，每次go调用的时候，都会创建一个G对象。P就是代表一个处理器，在">
-<meta property="og:type" content="article">
-<meta property="og:title" content="面试：golang-I">
-<meta property="og:url" content="https://riddlego.github.io/2021/08/10/%E9%9D%A2%E8%AF%95%EF%BC%9Agolang-I/index.html">
-<meta property="og:site_name" content="RiddleGo">
-<meta property="og:description" content="golang 面试题(从基础到高级) Golang进阶面试题整理 面试总结：Golang常见面试题汇总 Golang精编100题-搞定golang面试 2020 腾讯社招 Golang后端 面试题解析 golang面试题整理１、go的调度–GPM这个调度模型—1、我先讲一下GPM分别代表什么，G就是我们所常说的goroutine对象，每次go调用的时候，都会创建一个G对象。P就是代表一个处理器，在">
-<meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2021-08-10T14:37:20.000Z">
-<meta property="article:modified_time" content="2021-08-16T15:07:44.362Z">
-<meta property="article:author" content="Russshare">
-<meta property="article:tag" content="golang">
-<meta property="article:tag" content="面试">
-<meta name="twitter:card" content="summary">
-
-
-<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
-<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
-
-
-
-
-
-<script type="text/javascript">
-  var themeConfig = {
-    fancybox: {
-      enable: false
-    },
-  };
-</script>
-
-
-
-
-  
-
-
-
-    <title> 面试：golang-I - RiddleGo </title>
-  <meta name="generator" content="Hexo 5.4.0"></head>
-
-  <body>
-    <div id="page">
-      <header id="masthead"><div class="site-header-inner">
-    <h1 class="site-title">
-        <a href="/." class="logo">RiddleGo</a>
-    </h1>
-
-    <nav id="nav-top">
+	<div class="header">
+		<div class="header-top">
+			<div class="h-left">
+				<a href="/">
+					<img src="/image/logo.png" alt="Quiet">
+				</a>
+			</div>
+			<div class="h-right">
+				<ul>
+					
+						
+								<li>
+									<a href="/">
+										HOME
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/archives">
+										ARCHIVE
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/categories">
+										CATEGORIES
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/tags">
+										TAGS
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/links">
+										LINKS
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/about">
+										ABOUT
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+				</ul>
+			</div>
+			<div class="h-right-close">
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+					<path fill="none" d="M0 0h24v24H0z" />
+					<path d="M3 4h18v2H3V4zm0 7h18v2H3v-2zm0 7h18v2H3v-2z" fill="rgba(68,68,68,1)" />
+				</svg>
+			</div>
+		</div>
+	</div>
+	<div class="sidebar">
+    <div class="topo">
+        <h2>CHANGEQ</h2>
+    </div>
+    <ul>
         
-            <ul id="menu-top" class="nav-top-items">
-                
-                    <li class="menu-item">
-                        <a href="/archives">
-                            
-                            
-                                Archives
-                            
-                        </a>
-                    </li>
-                
-                    <li class="menu-item">
-                        <a href="/about">
-                            
-                            
-                                About
-                            
-                        </a>
-                    </li>
-                
-            </ul>
+        <li>
+            <a href="/">HOME</a>
+        </li>
         
-  </nav>
+        <li>
+            <a href="/archives">ARCHIVE</a>
+        </li>
+        
+        <li>
+            <a href="/categories">CATEGORIES</a>
+        </li>
+        
+        <li>
+            <a href="/tags">TAGS</a>
+        </li>
+        
+        <li>
+            <a href="/links">LINKS</a>
+        </li>
+        
+        <li>
+            <a href="/about">ABOUT</a>
+        </li>
+        
+    </ul>
+    <div class="my_foot">
+        
+        <a target="_blank" rel="noopener" href="https://github.com/qiaobug">
+            <img src="https://cdn.jsdelivr.net/gh/duogongneng/MyBlogImg/imggithub.png" alt="Quiet主题">
+        </a>
+        
+    </div>
 </div>
+<div class='shelter'
+    style='cursor: pointer;display: none; position: fixed;left: 0;top: 0; right: 0;bottom: 0;background-color: #333;opacity:0.5;z-index: 108;'>
+</div>
+<style>
+    .sidebar {
+        width: 0;
+        height: 100%;
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        background: #fff;
+        z-index: 999;
+        text-align: center;
+        box-shadow: -6px 0 20px rgba(98, 94, 94, .815)
+    }
 
-      </header>
-      <div id="content">
-        
-    <div id="primary">
-        
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          面试：golang-I
-        
-      </h1>
+    .topo {
+        width: 100%;
+        height: 200px;
+        background: url(https://api.ixiaowai.cn/gqapi/gqapi.php) no-repeat;
+        background-size: 100% 100%;
+        position: relative;
+        display: flex;
+        align-items: flex-end
+    }
 
-      <time class="post-time">
-          8月 10 2021
-      </time>
-    </header>
+    .topo h2 {
+        color: #fff;
+        z-index: 1;
+        position: relative;
+        margin: 0 0 10px 10px;
+        font-size: 1.2em;
+        box-sizing: border-box
+    }
 
+    .topo:before {
+        content: '';
+        background-image: url(/image/pattern.png);
+        background-repeat: repeat;
+        height: 100%;
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 100%;
+        z-index: 1
+    }
 
+    .sidebar ul {
+        width: 100%;
+        margin-top: 50px
+    }
 
-    
-            <div class="post-content">
-            <p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_34128839/article/details/94488565">golang 面试题(从基础到高级)</a></p>
+    .sidebar ul li {
+        height: 50px;
+        list-style: none;
+        font-size: 1.2em;
+        text-align: right;
+        margin-right: 10px
+    }
+
+    .sidebar ul li a {
+        display: grid;
+        color: #5d606a;
+        text-overflow: ellipsis;
+        width: 100%;
+        text-decoration: none
+    }
+
+    .my_foot {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        position: absolute;
+        bottom: 0
+    }
+
+    .my_foot a {
+        text-decoration: none;
+        margin-right: 10px;
+        display: inline-block
+    }
+
+    .my_foot a img {
+        width: 30px;
+        height: 30px
+    }
+</style>
+
+<script>
+    $(function () { $('.h-right-close>svg').click(function () { $('.sidebar').animate({ width: "66%" }, 500); $('.shelter').fadeIn("slow") }); $('.shelter').click(function (e) { $('.sidebar').animate({ width: "0" }, 500); $('.shelter').fadeOut("slow") }) })
+</script>
+		<script>
+			$(function () { $(window).scroll(function () { if ($(document).scrollTop() > 100) { $(".header-top").removeClass("header-move2"); $('.header-top').addClass('header-move1') } else { $(".header-top").removeClass("header-move1"); $('.header-top').addClass('header-move2') } }) });
+		</script>
+<div class="header-bg ">
+    <div class="bg-content">
+        <ul class="tag">
+            
+            
+            <li><a href="/tags/golang">golang</a></li>
+            
+            <li><a href="/tags/面试">面试</a></li>
+            
+            
+        </ul>
+        <h1>面试：golang-I</h1>
+        <div class="article-info">
+            <div class="article-author">
+                
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+                    <g>
+                        <path fill="#12183A"
+                            d="M6.187 15.265A6.47 6.47 0 0 0 10 16.5a6.47 6.47 0 0 0 3.813-1.235A4.99 4.99 0 0 0 10 13.5a4.99 4.99 0 0 0-3.813 1.765zM5.082 14.25A6.485 6.485 0 0 1 10 12c1.965 0 3.726.872 4.918 2.25a6.5 6.5 0 1 0-9.836 0zM10 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0-1.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z">
+                        </path>
+                    </g>
+                </svg>
+                
+                <span> <a href="">CHANGEQ</a></span>
+                <p>2021-08-10 22:37:20</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="article-content">
+    <div id="article" class="content">
+        <p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_34128839/article/details/94488565">golang 面试题(从基础到高级)</a></p>
 <p><a target="_blank" rel="noopener" href="https://blog.csdn.net/sinat_35406909/article/details/103818364?utm_medium=distribute.pc_relevant.none-task-blog-2~default~searchFromBaidu~default-2.pc_relevant_baidujshouduan&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~searchFromBaidu~default-2.pc_relevant_baidujshouduan">Golang进阶面试题整理</a></p>
 <p><a target="_blank" rel="noopener" href="https://blog.csdn.net/No_Game_No_Life_/article/details/118309813?utm_medium=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~default-11.pc_relevant_baidujshouduan&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~default-11.pc_relevant_baidujshouduan">面试总结：Golang常见面试题汇总</a></p>
 <p><a target="_blank" rel="noopener" href="https://yincheng.blog.csdn.net/article/details/80462619?utm_medium=distribute.pc_relevant.none-task-blog-2~default~searchFromBaidu~default-4.pc_relevant_baidujshouduan&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~searchFromBaidu~default-4.pc_relevant_baidujshouduan">Golang精编100题-搞定golang面试</a></p>
@@ -160,7 +301,7 @@
 <h3 id="７、主协程如何等其余协程完再操作"><a href="#７、主协程如何等其余协程完再操作" class="headerlink" title="７、主协程如何等其余协程完再操作"></a>７、主协程如何等其余协程完再操作</h3><p>使用channel进行通信，context,select</p>
 <h3 id="８、slice，len，cap，共享，扩容"><a href="#８、slice，len，cap，共享，扩容" class="headerlink" title="８、slice，len，cap，共享，扩容"></a>８、slice，len，cap，共享，扩容</h3><p>append函数，因为slice底层数据结构是，由数组、len、cap组成，所以，在使用append扩容时，会查看数组后面有没有连续内存快，有就在后面添加，没有就重新生成一个大的素组</p>
 <h3 id="９、map如何顺序读取"><a href="#９、map如何顺序读取" class="headerlink" title="９、map如何顺序读取"></a>９、map如何顺序读取</h3><p>map不能顺序读取，是因为他是无序的，想要有序读取，首先的解决的问题就是，把ｋｅｙ变为有序，所以可以把key放入切片，对切片进行排序，遍历切片，通过key取值。</p>
-<h3 id="１０、实现set"><a href="#１０、实现set" class="headerlink" title="１０、实现set"></a>１０、实现set</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">type inter interface&#123;&#125;</span><br><span class="line">type Set struct &#123;</span><br><span class="line">    m map[inter]bool</span><br><span class="line">    sync.RWMutex</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">func New() *Set &#123;</span><br><span class="line">    return &amp;Set&#123;</span><br><span class="line">    m: map[inter]bool&#123;&#125;,</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">func (s *Set) Add(item inter) &#123;</span><br><span class="line">    s.Lock()</span><br><span class="line">    defer s.Unlock()</span><br><span class="line">    s.m[item] &#x3D; true</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="１０、实现set"><a href="#１０、实现set" class="headerlink" title="１０、实现set"></a>１０、实现set</h3><figure class="highlight go"><table><tr><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> inter <span class="hljs-keyword">interface</span>&#123;&#125;<br><span class="hljs-keyword">type</span> Set <span class="hljs-keyword">struct</span> &#123;<br>    m <span class="hljs-keyword">map</span>[inter]<span class="hljs-keyword">bool</span><br>    sync.RWMutex<br>&#125;<br> <br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">New</span><span class="hljs-params">()</span> *<span class="hljs-title">Set</span></span> &#123;<br>    <span class="hljs-keyword">return</span> &amp;Set&#123;<br>    m: <span class="hljs-keyword">map</span>[inter]<span class="hljs-keyword">bool</span>&#123;&#125;,<br>    &#125;<br>&#125;<br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(s *Set)</span> <span class="hljs-title">Add</span><span class="hljs-params">(item inter)</span></span> &#123;<br>    s.Lock()<br>    <span class="hljs-keyword">defer</span> s.Unlock()<br>    s.m[item] = <span class="hljs-literal">true</span><br>&#125;<br></code></pre></td></tr></table></figure>
 
 <h3 id="１１、实现消息队列（多生产者，多消费者）"><a href="#１１、实现消息队列（多生产者，多消费者）" class="headerlink" title="１１、实现消息队列（多生产者，多消费者）"></a>１１、实现消息队列（多生产者，多消费者）</h3><p>OPQ</p>
 <p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_39397165/article/details/108686391">手把手教姐姐写消息队列（golang）- 使用channel实现消息队列</a></p>
@@ -204,7 +345,7 @@
 <p>这个时候才能知道你当前分支于你需要比较的分支之间的差异。</p>
 <p>原理很简单：rebase需要基于一个分支来设置你当前的分支的基线，这基线就是当前分支的开始时间轴向后移动到最新的跟踪分支的最后面，这样你的当前分支就是最新的跟踪分支。</p>
 <p>这里的操作是基于文件事务处理的，所以你不用怕中间失败会影响文件的一致性。在中间的过程中你可以随时取消rebase 事务。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">#--------------------</span><br><span class="line">git checkout master</span><br><span class="line">git pull</span><br><span class="line">git checkout local</span><br><span class="line">#切换到local分支后， 就是修改代码</span><br><span class="line">#修改完了， 就正常提交代码-------git commit</span><br><span class="line">#如果有多次local分支的提交，就合并，只有一次可以不合并</span><br><span class="line">git rebase -i HEAD~2  &#x2F;&#x2F;合并提交 --- 2表示合并两个</span><br><span class="line">#将master内容合并到local</span><br><span class="line">git rebase master----&gt;解决冲突---&gt;git rebase --continue</span><br><span class="line">#再起切换到master或其他目标分支</span><br><span class="line">git checkout master</span><br><span class="line">#将local合并到master</span><br><span class="line">git merge local</span><br><span class="line">#推送到远程仓库</span><br><span class="line">git push</span><br></pre></td></tr></table></figure>
+<figure class="highlight crmsh"><table><tr><td class="code"><pre><code class="hljs crmsh"><span class="hljs-comment">#--------------------</span><br>git checkout <span class="hljs-literal">master</span><br>git pull<br>git checkout local<br><span class="hljs-comment">#切换到local分支后， 就是修改代码</span><br><span class="hljs-comment">#修改完了， 就正常提交代码-------git commit</span><br><span class="hljs-comment">#如果有多次local分支的提交，就合并，只有一次可以不合并</span><br>git rebase -i HEAD~<span class="hljs-number">2</span>  //合并提交 --- <span class="hljs-number">2</span>表示合并两个<br><span class="hljs-comment">#将master内容合并到local</span><br>git rebase <span class="hljs-literal">master</span>----&gt;解决冲突---&gt;git rebase --continue<br><span class="hljs-comment">#再起切换到master或其他目标分支</span><br>git checkout <span class="hljs-literal">master</span><br><span class="hljs-comment">#将local合并到master</span><br>git merge local<br><span class="hljs-comment">#推送到远程仓库</span><br>git push<br></code></pre></td></tr></table></figure>
 
 <p><a target="_blank" rel="noopener" href="https://blog.csdn.net/u012150179/article/details/14047183?utm_medium=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~default-7.control&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~default-7.control">Git使用之——冲突解决一（git merge conflict）</a></p>
 <p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_35770969/article/details/79925261?utm_medium=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromMachineLearnPai2~default-4.baidujsUnder6&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromMachineLearnPai2~default-4.baidujsUnder6">Git冲突与解决冲突</a></p>
@@ -227,7 +368,7 @@
 <p>reflect.Value.Elem() 的作用已经在前面稍微提到了，主要就是返回一个 interface 或者 pointer 的值：</p>
 <p><strong>可以根据 v.MethodByName(name)获取方法</strong></p>
 <p>比较map<br>由于reflect.DeepEqual需要经过反射操作，效率比我们自己写的函数差的多了<br>在一般情况下，这点儿性能损失不算什么，尤其在不确定类型需要反射的时候，更是我们不可不用的强大工具。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">注册方法</span><br><span class="line">我们再定义一个保存 M 所有方法的 map struct ：</span><br><span class="line"></span><br><span class="line">type Handler struct &#123;</span><br><span class="line">	Func   reflect.Value</span><br><span class="line">	In     reflect.Type</span><br><span class="line">	NumIn  int</span><br><span class="line">	Out    reflect.Type</span><br><span class="line">	NumOut int</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">然后我们就可以来遍历结构体 M 的所有方法了：</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line">	handlers :&#x3D; make(map[string]*Handler)</span><br><span class="line">	v :&#x3D; reflect.ValueOf(&amp;M&#123;&#125;)</span><br><span class="line">	t :&#x3D; reflect.TypeOf(&amp;M&#123;&#125;)</span><br><span class="line">	for i :&#x3D; 0; i &lt; v.NumMethod(); i++ &#123;</span><br><span class="line">		name :&#x3D; t.Method(i).Name</span><br><span class="line">		&#x2F;&#x2F; 可以根据 i 来获取实例的方法，也可以用 v.MethodByName(name) 获取 </span><br><span class="line">		m :&#x3D; v.Method(i)</span><br><span class="line">		&#x2F;&#x2F; 这个例子我们只获取第一个输入参数和第一个返回参数</span><br><span class="line">		in :&#x3D; m.Type().In(0)</span><br><span class="line">		out :&#x3D; m.Type().Out(0)</span><br><span class="line">		handlers[name] &#x3D; &amp;Handler&#123;</span><br><span class="line">			Func:   m,</span><br><span class="line">			In:     in,</span><br><span class="line">			NumIn:  m.Type().NumIn(),</span><br><span class="line">			Out:    out,</span><br><span class="line">			NumOut: m.Type().NumOut(),</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight pgsql"><table><tr><td class="code"><pre><code class="hljs pgsql">注册方法<br>我们再定义一个保存 M 所有方法的 map struct ：<br><br><span class="hljs-keyword">type</span> <span class="hljs-keyword">Handler</span> struct &#123;<br>	Func   reflect.<span class="hljs-keyword">Value</span><br>	<span class="hljs-keyword">In</span>     reflect.<span class="hljs-keyword">Type</span><br>	NumIn  <span class="hljs-type">int</span><br>	<span class="hljs-keyword">Out</span>    reflect.<span class="hljs-keyword">Type</span><br>	NumOut <span class="hljs-type">int</span><br>&#125;<br><br>然后我们就可以来遍历结构体 M 的所有方法了：<br><br>func main() &#123;<br>	handlers := make(map[string]*<span class="hljs-keyword">Handler</span>)<br>	v := reflect.ValueOf(&amp;M&#123;&#125;)<br>	t := reflect.TypeOf(&amp;M&#123;&#125;)<br>	<span class="hljs-keyword">for</span> i := <span class="hljs-number">0</span>; i &lt; v.NumMethod(); i++ &#123;<br>		<span class="hljs-type">name</span> := t.<span class="hljs-keyword">Method</span>(i).Name<br>		// 可以根据 i 来获取实例的方法，也可以用 v.MethodByName(<span class="hljs-type">name</span>) 获取 <br>		m := v.<span class="hljs-keyword">Method</span>(i)<br>		// 这个例子我们只获取第一个输入参数和第一个返回参数<br>		<span class="hljs-keyword">in</span> := m.<span class="hljs-keyword">Type</span>().<span class="hljs-keyword">In</span>(<span class="hljs-number">0</span>)<br>		<span class="hljs-keyword">out</span> := m.<span class="hljs-keyword">Type</span>().<span class="hljs-keyword">Out</span>(<span class="hljs-number">0</span>)<br>		handlers[<span class="hljs-type">name</span>] = &amp;<span class="hljs-keyword">Handler</span>&#123;<br>			Func:   m,<br>			<span class="hljs-keyword">In</span>:     <span class="hljs-keyword">in</span>,<br>			NumIn:  m.<span class="hljs-keyword">Type</span>().NumIn(),<br>			<span class="hljs-keyword">Out</span>:    <span class="hljs-keyword">out</span>,<br>			NumOut: m.<span class="hljs-keyword">Type</span>().NumOut(),<br>		&#125;<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 <h3 id="３０、Redis基本数据结构"><a href="#３０、Redis基本数据结构" class="headerlink" title="３０、Redis基本数据结构"></a>３０、Redis基本数据结构</h3><p>Redis有5种基本数据结构：String(字符串)、list(列表)、set(集合)、hash(哈希)、zset(有序集合)</p>
 <p>[这篇文章挺好，就是那个关于ziplist节省空间的理由看的有点不太顺畅，当然主要是因为我]</p>
 <p>原文：从图可以看出快速列表其实就是由压缩列表和双向的指针组成，不过我们知道链表是两个指针的，也就是prev和next执行，这就是快速列表和linklist的一个不同点了。PS：然后redis设计时，为什么改成双向指针？假如和链表一样，用两个指针prev、next，同样可以实现遍<strong>历，不过双向指针有一个很明显的优点，就是占用的内存空间就相对少了。</strong>（这里应该是压缩链表明显优点）</p>
@@ -322,7 +463,7 @@
 <p><a target="_blank" rel="noopener" href="https://blog.csdn.net/u010601183/article/details/56481868?utm_medium=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromMachineLearnPai2~default-2.baidujsUnder6&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromMachineLearnPai2~default-2.baidujsUnder6">怎么在海量数据中找出重复次数最多的一个</a></p>
 <h3 id="最长连续字串和，这里我说的解决方案没用dp（对dp不熟），面试官一直引导我dp，还是不会"><a href="#最长连续字串和，这里我说的解决方案没用dp（对dp不熟），面试官一直引导我dp，还是不会" class="headerlink" title="最长连续字串和，这里我说的解决方案没用dp（对dp不熟），面试官一直引导我dp，还是不会"></a>最长连续字串和，这里我说的解决方案没用dp（对dp不熟），面试官一直引导我dp，还是不会</h3><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/i6223671/article/details/89789503">动态规划（2）：最大连续字串和</a></p>
 <p><a target="_blank" rel="noopener" href="https://blog.csdn.net/QQ245671051/article/details/72162320?utm_medium=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromMachineLearnPai2~default-2.control&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromMachineLearnPai2~default-2.control">golang动态规划求解最大连续子数组和</a></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">func MaxSum(arr int[]) int&#123;</span><br><span class="line">  &#x2F;&#x2F;当前位置的和</span><br><span class="line">  curSum :&#x3D; 0</span><br><span class="line">  &#x2F;&#x2F;最大的和</span><br><span class="line">  max :&#x3D; 0</span><br><span class="line">  for _,v :&#x3D; range arr&#123;</span><br><span class="line">    if curSum &gt; 0&#123;</span><br><span class="line">      curSum&#x3D;curSum+v</span><br><span class="line">    &#125;else&#123;</span><br><span class="line">      curSum &#x3D; v</span><br><span class="line">    &#125;</span><br><span class="line">    &#x2F;&#x2F;更新最大值</span><br><span class="line">    if curSum &gt; max&#123;</span><br><span class="line">      max &#x3D; curSum</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  return max</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight arduino"><table><tr><td class="code"><pre><code class="hljs arduino"><span class="hljs-function">func <span class="hljs-title">MaxSum</span><span class="hljs-params">(arr <span class="hljs-keyword">int</span>[])</span> <span class="hljs-keyword">int</span></span>&#123;<br>  <span class="hljs-comment">//当前位置的和</span><br>  curSum := <span class="hljs-number">0</span><br>  <span class="hljs-comment">//最大的和</span><br>  max := <span class="hljs-number">0</span><br>  <span class="hljs-keyword">for</span> _,v := range arr&#123;<br>    <span class="hljs-keyword">if</span> curSum &gt; <span class="hljs-number">0</span>&#123;<br>      curSum=curSum+v<br>    &#125;<span class="hljs-keyword">else</span>&#123;<br>      curSum = v<br>    &#125;<br>    <span class="hljs-comment">//更新最大值</span><br>    <span class="hljs-keyword">if</span> curSum &gt; max&#123;<br>      max = curSum<br>    &#125;<br>  &#125;<br><br>  <span class="hljs-keyword">return</span> max<br>&#125;<br></code></pre></td></tr></table></figure>
 
 <p><a target="_blank" rel="noopener" href="https://studygolang.com/articles/30728">Golang 无重复字符的最长子串</a></p>
 <h3 id="６１、什么是主键"><a href="#６１、什么是主键" class="headerlink" title="６１、什么是主键"></a>６１、什么是主键</h3><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/u013235478/article/details/50625677?utm_medium=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~default-8.control&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~default-8.control">MySQL索引原理</a></p>
@@ -392,89 +533,138 @@
 <h3 id="９７、为什么使用pg"><a href="#９７、为什么使用pg" class="headerlink" title="９７、为什么使用pg"></a>９７、为什么使用pg</h3><p><a target="_blank" rel="noopener" href="https://www.py.cn/db/postgresql/17423.html">为什么使用postgresql</a></p>
 <h3 id="９９、所有左叶子节点的和"><a href="#９９、所有左叶子节点的和" class="headerlink" title="９９、所有左叶子节点的和"></a>９９、所有左叶子节点的和</h3><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_42138662/article/details/118074453?utm_medium=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~default-6.control&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~default-6.control">二叉树（九）：左子叶之和</a></p>
 
-            </div>
-          
-
-    
-      <footer class="post-footer">
-		
-		<div class="post-tags">
-		  
-			<a href="/tags/golang/">golang</a>
-		  
-			<a href="/tags/%E9%9D%A2%E8%AF%95/">面试</a>
-		  
-		</div>
-		
-
-        
-        
-  <nav class="post-nav">
-    
-      <a class="prev" href="/2021/08/15/%E9%9D%A2%E8%AF%95%EF%BC%9Agolang-II/">
-        <i class="iconfont icon-left"></i>
-        <span class="prev-text nav-default">面试：golang-II</span>
-        <span class="prev-text nav-mobile">Prev</span>
-      </a>
-    
-    
-      <a class="next" href="/2021/08/08/KVM/">
-        <span class="next-text nav-default">KVM</span>
-        <span class="prev-text nav-mobile">Next</span>
-        <i class="iconfont icon-right"></i>
-      </a>
-    
-  </nav>
-
-        
-  <div class="comments" id="comments">
-    
-  </div>
-
-
-      </footer>
-    
-  </article>
-
     </div>
+</div>
+<style>
+    #noneimg img {
+        display: none;
+        z-index: 109;
+        width: 600px !important;
+        border-radius: 0px;
+        position: fixed;
+        box-shadow: 0 0 0px #c3c3c300 !important;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto !important;
+    }
 
-      </div>
+    @media screen and (max-width:600px) {
+        #noneimg img {
+            width: 88%
+        }
+    }
+</style>
+<script>
+    $(function () { $('#article').click(function (e) { if (e.target.tagName == "IMG") { if ($('#nonediv').length == 0) { let MImg = `<div id='noneimg'><img src='${e.target.currentSrc}'></div>`; let MDiv = "<div id='nonediv' style='cursor: pointer;display: none; position: fixed;left: 0;top: 0; right: 0;bottom: 0;background-color: #333;opacity:0.5;z-index: 108;'></div>"; $('#article').append(MDiv); $('#article').append(MImg); $("#nonediv").fadeIn("slow"); $("#noneimg img").fadeIn("slow") } } else { if ($('#nonediv').length !== 0) { $("#noneimg ").fadeOut("slow"); $("#nonediv").fadeOut("slow"); setTimeout(function () { $('#nonediv').remove(); $('#noneimg').remove() }, 500) } } }); $('.article-content').addClass('content-move') });
+</script>
+<div class="Last-Next">
+    
+    <a href="/2021/08/15/%E9%9D%A2%E8%AF%95%EF%BC%9Agolang-II/">
+        <div class="last">
+            <span>上一篇</span>
+            <p>面试：golang-II</p>
+        </div>
+    </a>
+    
 
-      <footer id="colophon"><span class="copyright-year">
     
-        &copy;
+    <a href="/2021/08/08/KVM/">
+        <div class="next">
+            <span>下一篇</span>
+            <p>KVM</p>
+        </div>
+    </a>
     
-        2014 -
-    
-    2021
-    <span class="footer-author">Russshare.</span>
-    <span class="power-by">
-        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+</div>
+		
+<link rel="stylesheet" href="/css/food.css">
+
+<div class="footer">
+	<div class="Copyright">
+		©2021 By CHANGEQ. 主题：<a
+			style="text-decoration: none;display: contents; color: #898F9F;"
+			target="_blank" rel="noopener" href="https://github.com/qiaobug/hexo-theme-quiet">Quiet</a>
+	</div>
+	<div class="contact">
+		
+		<a target="_blank" rel="noopener" href="https://github.com/qiaobug">
+			<img src="https://cdn.jsdelivr.net/gh/duogongneng/MyBlogImg/imggithub.png" alt="Quiet主题">
+		</a>
+		
+	</div>
+</div>
+
+<script src="/js/jquery.min.js"></script>
+
+
+<script src="/js/gotop.js"></script>
+
+
+<style type="text/css">
+    @media screen and (min-width: 600px) {
+        .goTop>span {
+            display: block;
+            border-radius: 50%;
+            width: 66px;
+            height: 66px;
+            cursor: pointer;
+            opacity: 0.8;
+            background: rgba(18, 24, 58, 0.06);
+            text-align: center;
+            border: 1px solid rgba(18, 24, 58, 0.06);
+
+            transition: border .5s;
+            -moz-transition: border .5s;
+            /* Firefox 4 */
+            -webkit-transition: border .5s;
+            /* Safari 和 Chrome */
+            -o-transition: border .5s;
+            /* Opera */
+        }
+
+        .goTop>span:hover {
+            border: 1px solid #6680B3;
+        }
+
+
+        .goTop {
+            position: fixed;
+            right: 30px;
+            bottom: 80px;
+        }
+
+        .goTop>span>svg {
+            width: 30px;
+            height: 30px;
+            margin-top: 17.5px;
+            opacity: 0.7;
+        }
+
+    }
+
+    @media screen and (max-width: 600px) {
+        .goTop {
+            display: none;
+        }
+    }
+</style>
+<div class="goTop" id="js-go_top">
+    <span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <g>
+                <path d="M13 12v8h-2v-8H4l8-8 8 8z"></path>
+            </g>
+        </svg>
     </span>
-</span>
+</div>
+<script>
+    $('#js-go_top').gotoTop({ offset: 500, speed: 300, animationShow: { 'transform': 'translate(0,0)', 'transition': 'transform .5s ease-in-out' }, animationHide: { 'transform': 'translate(100px,0)', 'transition': 'transform .5s ease-in-out' } });
+</script>
+<script>
+	console.log('\n %c Hexo-Quiet 主题 %c https://github.com/QiaoBug/hexo-theme-quiet \n', 'color: #fadfa3; background: #030307; padding:5px 0;', 'background: #fadfa3; padding:5px 0;')
+</script>
+	</body>
 
-      </footer>
-
-      <div class="back-to-top" id="back-to-top">
-        <i class="iconfont icon-up"></i>
-      </div>
-    </div>
-    
-
-
-    
-
-
-
-
-  
-    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
-  
-
-  
-
-    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
-<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
-
-  </body>
 </html>

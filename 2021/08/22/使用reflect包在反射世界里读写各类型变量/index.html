@@ -1,137 +1,278 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
-  <head>
-    
-<meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+<html>
+
+	<head>
+		
+<title>使用reflect包在反射世界里读写各类型变量-Quiet</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="shortcut icon" type="image/x-icon" href="/image/favicon.ico">
 
 
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="keywords" content="reflect,反射,">
+<meta name="description" content="">
 
 
-
-  <meta name="description" content="使用reflect包在反射世界里读写各类型变量"/>
-
+<script src="/js/jquery.min.js"></script>
 
 
+	<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+</head>
 
-  <meta name="keywords" content="reflect,反射," />
-
-
-
-
-
-  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+	<body>
+		
+<link rel="stylesheet" href="/css/page.css">
 
 
+<link rel="stylesheet" href="/css/page_cente.css">
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+<link rel="stylesheet" href="/css/atom-one-dark.css">
 
 
+<link rel="stylesheet" href="/css/header.css">
 
-<link rel="canonical" href="https://riddlego.github.io/2021/08/22/使用reflect包在反射世界里读写各类型变量/"/>
-
-
-<meta name="description" content="使用reflect包在反射世界里读写各类型变量Go在标准库中提供的reflect包[2]让Go程序具备运行时的反射能力(reflection)[3]，但这种反射能力也是一把“双刃剑”，它在解决一类特定问题方面具有优势，但也带来了逻辑不清晰、性能问题以及难于发现问题和调试等不足。不过从Go诞生伊始就随着Go一起发布的reflect包是Go不可或缺的重要能力，不管你是否使用，都要掌握使用reflect">
-<meta property="og:type" content="article">
-<meta property="og:title" content="使用reflect包在反射世界里读写各类型变量">
-<meta property="og:url" content="https://riddlego.github.io/2021/08/22/%E4%BD%BF%E7%94%A8reflect%E5%8C%85%E5%9C%A8%E5%8F%8D%E5%B0%84%E4%B8%96%E7%95%8C%E9%87%8C%E8%AF%BB%E5%86%99%E5%90%84%E7%B1%BB%E5%9E%8B%E5%8F%98%E9%87%8F/index.html">
-<meta property="og:site_name" content="RiddleGo">
-<meta property="og:description" content="使用reflect包在反射世界里读写各类型变量Go在标准库中提供的reflect包[2]让Go程序具备运行时的反射能力(reflection)[3]，但这种反射能力也是一把“双刃剑”，它在解决一类特定问题方面具有优势，但也带来了逻辑不清晰、性能问题以及难于发现问题和调试等不足。不过从Go诞生伊始就随着Go一起发布的reflect包是Go不可或缺的重要能力，不管你是否使用，都要掌握使用reflect">
-<meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2021-08-22T01:51:07.000Z">
-<meta property="article:modified_time" content="2021-08-22T02:35:35.707Z">
-<meta property="article:author" content="Russshare">
-<meta property="article:tag" content="reflect">
-<meta property="article:tag" content="反射">
-<meta name="twitter:card" content="summary">
-
-
-<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
-<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
-
-
-
-
-
-<script type="text/javascript">
-  var themeConfig = {
-    fancybox: {
-      enable: false
-    },
-  };
-</script>
-
-
-
-
-  
-
-
-
-    <title> 使用reflect包在反射世界里读写各类型变量 - RiddleGo </title>
-  <meta name="generator" content="Hexo 5.4.0"></head>
-
-  <body>
-    <div id="page">
-      <header id="masthead"><div class="site-header-inner">
-    <h1 class="site-title">
-        <a href="/." class="logo">RiddleGo</a>
-    </h1>
-
-    <nav id="nav-top">
+	<div class="header">
+		<div class="header-top">
+			<div class="h-left">
+				<a href="/">
+					<img src="/image/logo.png" alt="Quiet">
+				</a>
+			</div>
+			<div class="h-right">
+				<ul>
+					
+						
+								<li>
+									<a href="/">
+										HOME
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/archives">
+										ARCHIVE
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/categories">
+										CATEGORIES
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/tags">
+										TAGS
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/links">
+										LINKS
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/about">
+										ABOUT
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+				</ul>
+			</div>
+			<div class="h-right-close">
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+					<path fill="none" d="M0 0h24v24H0z" />
+					<path d="M3 4h18v2H3V4zm0 7h18v2H3v-2zm0 7h18v2H3v-2z" fill="rgba(68,68,68,1)" />
+				</svg>
+			</div>
+		</div>
+	</div>
+	<div class="sidebar">
+    <div class="topo">
+        <h2>CHANGEQ</h2>
+    </div>
+    <ul>
         
-            <ul id="menu-top" class="nav-top-items">
-                
-                    <li class="menu-item">
-                        <a href="/archives">
-                            
-                            
-                                Archives
-                            
-                        </a>
-                    </li>
-                
-                    <li class="menu-item">
-                        <a href="/about">
-                            
-                            
-                                About
-                            
-                        </a>
-                    </li>
-                
-            </ul>
+        <li>
+            <a href="/">HOME</a>
+        </li>
         
-  </nav>
+        <li>
+            <a href="/archives">ARCHIVE</a>
+        </li>
+        
+        <li>
+            <a href="/categories">CATEGORIES</a>
+        </li>
+        
+        <li>
+            <a href="/tags">TAGS</a>
+        </li>
+        
+        <li>
+            <a href="/links">LINKS</a>
+        </li>
+        
+        <li>
+            <a href="/about">ABOUT</a>
+        </li>
+        
+    </ul>
+    <div class="my_foot">
+        
+        <a target="_blank" rel="noopener" href="https://github.com/qiaobug">
+            <img src="https://cdn.jsdelivr.net/gh/duogongneng/MyBlogImg/imggithub.png" alt="Quiet主题">
+        </a>
+        
+    </div>
 </div>
+<div class='shelter'
+    style='cursor: pointer;display: none; position: fixed;left: 0;top: 0; right: 0;bottom: 0;background-color: #333;opacity:0.5;z-index: 108;'>
+</div>
+<style>
+    .sidebar {
+        width: 0;
+        height: 100%;
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        background: #fff;
+        z-index: 999;
+        text-align: center;
+        box-shadow: -6px 0 20px rgba(98, 94, 94, .815)
+    }
 
-      </header>
-      <div id="content">
-        
-    <div id="primary">
-        
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          使用reflect包在反射世界里读写各类型变量
-        
-      </h1>
+    .topo {
+        width: 100%;
+        height: 200px;
+        background: url(https://api.ixiaowai.cn/gqapi/gqapi.php) no-repeat;
+        background-size: 100% 100%;
+        position: relative;
+        display: flex;
+        align-items: flex-end
+    }
 
-      <time class="post-time">
-          8月 22 2021
-      </time>
-    </header>
+    .topo h2 {
+        color: #fff;
+        z-index: 1;
+        position: relative;
+        margin: 0 0 10px 10px;
+        font-size: 1.2em;
+        box-sizing: border-box
+    }
 
+    .topo:before {
+        content: '';
+        background-image: url(/image/pattern.png);
+        background-repeat: repeat;
+        height: 100%;
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 100%;
+        z-index: 1
+    }
 
+    .sidebar ul {
+        width: 100%;
+        margin-top: 50px
+    }
 
-    
-            <div class="post-content">
-            <h2 id="使用reflect包在反射世界里读写各类型变量"><a href="#使用reflect包在反射世界里读写各类型变量" class="headerlink" title="使用reflect包在反射世界里读写各类型变量"></a>使用reflect包在反射世界里读写各类型变量</h2><p>Go在标准库中提供的reflect包[2]让Go程序具备运行时的反射能力(reflection)[3]，<strong>但这种反射能力也是一把“双刃剑”，它在解决一类特定问题方面具有优势，但也带来了逻辑不清晰、性能问题以及难于发现问题和调试等不足。</strong>不过从Go诞生伊始就随着Go一起发布的reflect包是Go不可或缺的重要能力，不管你是否使用，都要掌握使用reflect与类型系统交互的基本方法，比如在反射的世界里如何读写各类型变量。本文就来和大家快速过一遍使用reflect包读写Go基本类型变量、复合类型变量的方法以及它们的应用。</p>
+    .sidebar ul li {
+        height: 50px;
+        list-style: none;
+        font-size: 1.2em;
+        text-align: right;
+        margin-right: 10px
+    }
+
+    .sidebar ul li a {
+        display: grid;
+        color: #5d606a;
+        text-overflow: ellipsis;
+        width: 100%;
+        text-decoration: none
+    }
+
+    .my_foot {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        position: absolute;
+        bottom: 0
+    }
+
+    .my_foot a {
+        text-decoration: none;
+        margin-right: 10px;
+        display: inline-block
+    }
+
+    .my_foot a img {
+        width: 30px;
+        height: 30px
+    }
+</style>
+
+<script>
+    $(function () { $('.h-right-close>svg').click(function () { $('.sidebar').animate({ width: "66%" }, 500); $('.shelter').fadeIn("slow") }); $('.shelter').click(function (e) { $('.sidebar').animate({ width: "0" }, 500); $('.shelter').fadeOut("slow") }) })
+</script>
+		<script>
+			$(function () { $(window).scroll(function () { if ($(document).scrollTop() > 100) { $(".header-top").removeClass("header-move2"); $('.header-top').addClass('header-move1') } else { $(".header-top").removeClass("header-move1"); $('.header-top').addClass('header-move2') } }) });
+		</script>
+<div class="header-bg ">
+    <div class="bg-content">
+        <ul class="tag">
+            
+            
+            <li><a href="/tags/reflect">reflect</a></li>
+            
+            <li><a href="/tags/反射">反射</a></li>
+            
+            
+        </ul>
+        <h1>使用reflect包在反射世界里读写各类型变量</h1>
+        <div class="article-info">
+            <div class="article-author">
+                
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+                    <g>
+                        <path fill="#12183A"
+                            d="M6.187 15.265A6.47 6.47 0 0 0 10 16.5a6.47 6.47 0 0 0 3.813-1.235A4.99 4.99 0 0 0 10 13.5a4.99 4.99 0 0 0-3.813 1.765zM5.082 14.25A6.485 6.485 0 0 1 10 12c1.965 0 3.726.872 4.918 2.25a6.5 6.5 0 1 0-9.836 0zM10 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0-1.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z">
+                        </path>
+                    </g>
+                </svg>
+                
+                <span> <a href="">CHANGEQ</a></span>
+                <p>2021-08-22 09:51:07</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="article-content">
+    <div id="article" class="content">
+        <h2 id="使用reflect包在反射世界里读写各类型变量"><a href="#使用reflect包在反射世界里读写各类型变量" class="headerlink" title="使用reflect包在反射世界里读写各类型变量"></a>使用reflect包在反射世界里读写各类型变量</h2><p>Go在标准库中提供的reflect包[2]让Go程序具备运行时的反射能力(reflection)[3]，<strong>但这种反射能力也是一把“双刃剑”，它在解决一类特定问题方面具有优势，但也带来了逻辑不清晰、性能问题以及难于发现问题和调试等不足。</strong>不过从Go诞生伊始就随着Go一起发布的reflect包是Go不可或缺的重要能力，不管你是否使用，都要掌握使用reflect与类型系统交互的基本方法，比如在反射的世界里如何读写各类型变量。本文就来和大家快速过一遍使用reflect包读写Go基本类型变量、复合类型变量的方法以及它们的应用。</p>
 <p>Golang提供了一种机制，在编译时不知道类型的情况下，可更新变量、运行时查看值、调用方法以及直接对他们的布局进行操作的机制，称为反射。</p>
 <h2 id="1-基本类型"><a href="#1-基本类型" class="headerlink" title="1. 基本类型"></a>1. 基本类型</h2><hr>
 <p>进入reflect世界的大门主要有两个：<strong>reflect.ValueOf</strong>和<strong>reflect.TypeOf</strong>。进入到反射世界，每个变量都能找到一个与自己的对应的reflect.Value，通过该Value我们可以读写真实世界的变量信息。这里主要和大家过一遍操作各类型变量值的方法，因此主要用到的是reflect.ValueOf。</p>
@@ -149,7 +290,7 @@
 </li>
 </ul>
 <p>我们在反射的世界里如何获取这些类型变量的值，又或如何在反射的世界里修改这些变量的值呢？<strong>下面这个示例可以作为日常使用reflect读写Go基本类型变量的速查表：</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; github.com&#x2F;bigwhite&#x2F;experiments&#x2F;blob&#x2F;master&#x2F;vars-in-reflect&#x2F;basic&#x2F;main.go</span><br><span class="line"></span><br><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line"> &quot;fmt&quot;</span><br><span class="line"> &quot;reflect&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line"> &#x2F;&#x2F; 整型</span><br><span class="line"> var i int &#x3D; 11</span><br><span class="line"> vi :&#x3D; reflect.ValueOf(i)                         &#x2F;&#x2F; reflect Value of i</span><br><span class="line"> fmt.Printf(&quot;i &#x3D; [%d], vi &#x3D; [%d]\n&quot;, i, vi.Int()) &#x2F;&#x2F; i &#x3D; [11], vi &#x3D; [11]</span><br><span class="line"> &#x2F;&#x2F; vi.SetInt(11 + 100) &#x2F;&#x2F; panic: reflect: reflect.Value.SetInt using unaddressable value</span><br><span class="line"></span><br><span class="line"> vai :&#x3D; reflect.ValueOf(&amp;i) &#x2F;&#x2F; reflect Value of Address of i</span><br><span class="line"> vi &#x3D; vai.Elem()</span><br><span class="line"> fmt.Printf(&quot;i &#x3D; [%d], vi &#x3D; [%d]\n&quot;, i, vi.Int()) &#x2F;&#x2F; i &#x3D; [11], vi &#x3D; [11]</span><br><span class="line"> vi.SetInt(11 + 100)</span><br><span class="line"> fmt.Printf(&quot;after set, i &#x3D; [%d]\n&quot;, i) &#x2F;&#x2F; after set, i &#x3D; [111]</span><br><span class="line"></span><br><span class="line"> &#x2F;&#x2F; 整型指针</span><br><span class="line"> i &#x3D; 11</span><br><span class="line"> var pi *int &#x3D; &amp;i</span><br><span class="line"> vpi :&#x3D; reflect.ValueOf(pi) &#x2F;&#x2F; reflect Value of pi</span><br><span class="line"> vi &#x3D; vpi.Elem()</span><br><span class="line"> vi.SetInt(11 + 100)</span><br><span class="line"> fmt.Printf(&quot;after set, i &#x3D; [%d]\n&quot;, i) &#x2F;&#x2F; after set, i &#x3D; [111]</span><br><span class="line"></span><br><span class="line"> &#x2F;&#x2F; 浮点型</span><br><span class="line"> var f float64 &#x3D; 3.1415</span><br><span class="line"></span><br><span class="line"> vaf :&#x3D; reflect.ValueOf(&amp;f)</span><br><span class="line"> vf :&#x3D; vaf.Elem()</span><br><span class="line"> fmt.Printf(&quot;f &#x3D; [%f], vf &#x3D; [%f]\n&quot;, f, vf.Float()) &#x2F;&#x2F; f &#x3D; [3.141500], vf &#x3D; [3.141500]</span><br><span class="line"> vf.SetFloat(100 + 3.1415)</span><br><span class="line"> fmt.Printf(&quot;after set, f &#x3D; [%f]\n&quot;, f) &#x2F;&#x2F; after set, f &#x3D; [103.141500]</span><br><span class="line"></span><br><span class="line"> &#x2F;&#x2F; 复数型</span><br><span class="line"> var c &#x3D; complex(5.1, 6.2)</span><br><span class="line"></span><br><span class="line"> vac :&#x3D; reflect.ValueOf(&amp;c)</span><br><span class="line"> vc :&#x3D; vac.Elem()</span><br><span class="line"> fmt.Printf(&quot;c &#x3D; [%g], vc &#x3D; [%g]\n&quot;, f, vc.Complex()) &#x2F;&#x2F; c &#x3D; [103.1415], vc &#x3D; [(5.1+6.2i)]</span><br><span class="line"> vc.SetComplex(complex(105.1, 106.2))</span><br><span class="line"> fmt.Printf(&quot;after set, c &#x3D; [%g]\n&quot;, c) &#x2F;&#x2F; after set, c &#x3D; [(105.1+106.2i)]</span><br><span class="line"></span><br><span class="line"> &#x2F;&#x2F; 布尔类型</span><br><span class="line"> var b bool &#x3D; true</span><br><span class="line"></span><br><span class="line"> vab :&#x3D; reflect.ValueOf(&amp;b)</span><br><span class="line"> vb :&#x3D; vab.Elem()</span><br><span class="line"> fmt.Printf(&quot;b &#x3D; [%t], vb &#x3D; [%t]\n&quot;, b, vb.Bool()) &#x2F;&#x2F; b &#x3D; [true], vb &#x3D; [true]</span><br><span class="line"> vb.SetBool(false)</span><br><span class="line"> fmt.Printf(&quot;after set, b &#x3D; [%t]\n&quot;, b) &#x2F;&#x2F; after set, b &#x3D; [false]</span><br><span class="line"></span><br><span class="line"> &#x2F;&#x2F; 字符串类型</span><br><span class="line"> var s string &#x3D; &quot;hello, reflect&quot;</span><br><span class="line"></span><br><span class="line"> vas :&#x3D; reflect.ValueOf(&amp;s)</span><br><span class="line"> vs :&#x3D; vas.Elem()</span><br><span class="line"> fmt.Printf(&quot;s &#x3D; [%s], vs &#x3D; [%s]\n&quot;, s, vs.String()) &#x2F;&#x2F; s &#x3D; [hello, reflect], vs &#x3D; [hello, reflect]</span><br><span class="line"> vs.SetString(&quot;bye, reflect&quot;)</span><br><span class="line"> fmt.Printf(&quot;after set, s &#x3D; [%s]\n&quot;, s) &#x2F;&#x2F; after set, s &#x3D; [bye, reflect]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight stylus"><table><tr><td class="code"><pre><code class="hljs stylus"><span class="hljs-comment">// github.com/bigwhite/experiments/blob/master/vars-in-reflect/basic/main.go</span><br><br>package main<br><br>import (<br> <span class="hljs-string">&quot;fmt&quot;</span><br> <span class="hljs-string">&quot;reflect&quot;</span><br>)<br><br>func <span class="hljs-selector-tag">main</span>() &#123;<br> <span class="hljs-comment">// 整型</span><br> <span class="hljs-selector-tag">var</span> <span class="hljs-selector-tag">i</span> int = <span class="hljs-number">11</span><br> vi := reflect<span class="hljs-selector-class">.ValueOf</span>(i)                         <span class="hljs-comment">// reflect Value of i</span><br> fmt<span class="hljs-selector-class">.Printf</span>(<span class="hljs-string">&quot;i = [%d], vi = [%d]\n&quot;</span>, <span class="hljs-selector-tag">i</span>, vi<span class="hljs-selector-class">.Int</span>()) <span class="hljs-comment">// i = [11], vi = [11]</span><br> <span class="hljs-comment">// vi.SetInt(11 + 100) // panic: reflect: reflect.Value.SetInt using unaddressable value</span><br><br> vai := reflect<span class="hljs-selector-class">.ValueOf</span>(&amp;i) <span class="hljs-comment">// reflect Value of Address of i</span><br> vi = vai<span class="hljs-selector-class">.Elem</span>()<br> fmt<span class="hljs-selector-class">.Printf</span>(<span class="hljs-string">&quot;i = [%d], vi = [%d]\n&quot;</span>, <span class="hljs-selector-tag">i</span>, vi<span class="hljs-selector-class">.Int</span>()) <span class="hljs-comment">// i = [11], vi = [11]</span><br> vi<span class="hljs-selector-class">.SetInt</span>(<span class="hljs-number">11</span> + <span class="hljs-number">100</span>)<br> fmt<span class="hljs-selector-class">.Printf</span>(<span class="hljs-string">&quot;after set, i = [%d]\n&quot;</span>, i) <span class="hljs-comment">// after set, i = [111]</span><br><br> <span class="hljs-comment">// 整型指针</span><br> <span class="hljs-selector-tag">i</span> = <span class="hljs-number">11</span><br> <span class="hljs-selector-tag">var</span> pi *int = &amp;i<br> vpi := reflect<span class="hljs-selector-class">.ValueOf</span>(pi) <span class="hljs-comment">// reflect Value of pi</span><br> vi = vpi<span class="hljs-selector-class">.Elem</span>()<br> vi<span class="hljs-selector-class">.SetInt</span>(<span class="hljs-number">11</span> + <span class="hljs-number">100</span>)<br> fmt<span class="hljs-selector-class">.Printf</span>(<span class="hljs-string">&quot;after set, i = [%d]\n&quot;</span>, i) <span class="hljs-comment">// after set, i = [111]</span><br><br> <span class="hljs-comment">// 浮点型</span><br> <span class="hljs-selector-tag">var</span> f float64 = <span class="hljs-number">3.1415</span><br><br> vaf := reflect<span class="hljs-selector-class">.ValueOf</span>(&amp;f)<br> vf := vaf<span class="hljs-selector-class">.Elem</span>()<br> fmt<span class="hljs-selector-class">.Printf</span>(<span class="hljs-string">&quot;f = [%f], vf = [%f]\n&quot;</span>, f, vf<span class="hljs-selector-class">.Float</span>()) <span class="hljs-comment">// f = [3.141500], vf = [3.141500]</span><br> vf<span class="hljs-selector-class">.SetFloat</span>(<span class="hljs-number">100</span> + <span class="hljs-number">3.1415</span>)<br> fmt<span class="hljs-selector-class">.Printf</span>(<span class="hljs-string">&quot;after set, f = [%f]\n&quot;</span>, f) <span class="hljs-comment">// after set, f = [103.141500]</span><br><br> <span class="hljs-comment">// 复数型</span><br> <span class="hljs-selector-tag">var</span> c = complex(<span class="hljs-number">5.1</span>, <span class="hljs-number">6.2</span>)<br><br> vac := reflect<span class="hljs-selector-class">.ValueOf</span>(&amp;c)<br> vc := vac<span class="hljs-selector-class">.Elem</span>()<br> fmt<span class="hljs-selector-class">.Printf</span>(<span class="hljs-string">&quot;c = [%g], vc = [%g]\n&quot;</span>, f, vc<span class="hljs-selector-class">.Complex</span>()) <span class="hljs-comment">// c = [103.1415], vc = [(5.1+6.2i)]</span><br> vc<span class="hljs-selector-class">.SetComplex</span>(complex(<span class="hljs-number">105.1</span>, <span class="hljs-number">106.2</span>))<br> fmt<span class="hljs-selector-class">.Printf</span>(<span class="hljs-string">&quot;after set, c = [%g]\n&quot;</span>, c) <span class="hljs-comment">// after set, c = [(105.1+106.2i)]</span><br><br> <span class="hljs-comment">// 布尔类型</span><br> <span class="hljs-selector-tag">var</span> <span class="hljs-selector-tag">b</span> bool = true<br><br> vab := reflect<span class="hljs-selector-class">.ValueOf</span>(&amp;b)<br> vb := vab<span class="hljs-selector-class">.Elem</span>()<br> fmt<span class="hljs-selector-class">.Printf</span>(<span class="hljs-string">&quot;b = [%t], vb = [%t]\n&quot;</span>, <span class="hljs-selector-tag">b</span>, vb<span class="hljs-selector-class">.Bool</span>()) <span class="hljs-comment">// b = [true], vb = [true]</span><br> vb<span class="hljs-selector-class">.SetBool</span>(false)<br> fmt<span class="hljs-selector-class">.Printf</span>(<span class="hljs-string">&quot;after set, b = [%t]\n&quot;</span>, b) <span class="hljs-comment">// after set, b = [false]</span><br><br> <span class="hljs-comment">// 字符串类型</span><br> <span class="hljs-selector-tag">var</span> s string = <span class="hljs-string">&quot;hello, reflect&quot;</span><br><br> vas := reflect<span class="hljs-selector-class">.ValueOf</span>(&amp;s)<br> vs := vas<span class="hljs-selector-class">.Elem</span>()<br> fmt<span class="hljs-selector-class">.Printf</span>(<span class="hljs-string">&quot;s = [%s], vs = [%s]\n&quot;</span>, s, vs<span class="hljs-selector-class">.String</span>()) <span class="hljs-comment">// s = [hello, reflect], vs = [hello, reflect]</span><br> vs<span class="hljs-selector-class">.SetString</span>(<span class="hljs-string">&quot;bye, reflect&quot;</span>)<br> fmt<span class="hljs-selector-class">.Printf</span>(<span class="hljs-string">&quot;after set, s = [%s]\n&quot;</span>, s) <span class="hljs-comment">// after set, s = [bye, reflect]</span><br>&#125;<br></code></pre></td></tr></table></figure>
 
 
 <p>我们看到：</p>
@@ -158,9 +299,9 @@
 <p>同样，在反射世界中，我们通过reflect.Value的SetXXX系列方法在运行时设置相关变量的值，从而达到写变量的目的。</p>
 <h2 id="2-复合类型"><a href="#2-复合类型" class="headerlink" title="2. 复合类型"></a>2. 复合类型</h2><p>前面我们已经看到，使用reflect包在反射世界读写原生基本类型的变量还是相对容易的多的，接下来我们再来看看复合类型(Composite type)变量的读写。</p>
 <p>Go中的复合类型包括：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">数组</span><br><span class="line">切片</span><br><span class="line">map</span><br><span class="line">结构体</span><br><span class="line">channel</span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><code class="hljs cpp">数组<br>切片<br>map<br>结构体<br>channel<br></code></pre></td></tr></table></figure>
 <p>与基本类型变量不同，复合变量多由同构和异构的字段(field)或元素(element)组成，如何读写复合类型变量中的字段或元素的值才是我们需要考虑的问题。下面这个示例可作为日常使用reflect在反射世界里读写Go复合类型变量中字段或元素值的速查表：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; github.com&#x2F;bigwhite&#x2F;experiments&#x2F;blob&#x2F;master&#x2F;vars-in-reflect&#x2F;composite&#x2F;main.go</span><br><span class="line"></span><br><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line"> &quot;fmt&quot;</span><br><span class="line"> &quot;reflect&quot;</span><br><span class="line"> &quot;unsafe&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">type Foo struct &#123;</span><br><span class="line"> Name string</span><br><span class="line"> age  int</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line"> &#x2F;&#x2F; 数组</span><br><span class="line"> var a &#x3D; [5]int&#123;1, 2, 3, 4, 5&#125;</span><br><span class="line"> vaa :&#x3D; reflect.ValueOf(&amp;a) &#x2F;&#x2F; reflect Value of Address of arr</span><br><span class="line"> va :&#x3D; vaa.Elem()</span><br><span class="line"> va0 :&#x3D; va.Index(0)</span><br><span class="line"> fmt.Printf(&quot;a0 &#x3D; [%d], va0 &#x3D; [%d]\n&quot;, a[0], va0.Int()) &#x2F;&#x2F; a0 &#x3D; [1], va0 &#x3D; [1]</span><br><span class="line"> va0.SetInt(100 + 1)</span><br><span class="line"> fmt.Printf(&quot;after set, a0 &#x3D; [%d]\n&quot;, a[0]) &#x2F;&#x2F; after set, a0 &#x3D; [101]</span><br><span class="line"></span><br><span class="line"> &#x2F;&#x2F; 切片</span><br><span class="line"> var s &#x3D; []int&#123;11, 12, 13&#125;</span><br><span class="line"> vs :&#x3D; reflect.ValueOf(s)</span><br><span class="line"> vs0 :&#x3D; vs.Index(0)</span><br><span class="line"> fmt.Printf(&quot;s0 &#x3D; [%d], vs0 &#x3D; [%d]\n&quot;, s[0], vs0.Int()) &#x2F;&#x2F; s0 &#x3D; [11], vs0 &#x3D; [11]</span><br><span class="line"> vs0.SetInt(100 + 11)</span><br><span class="line"> fmt.Printf(&quot;after set, s0 &#x3D; [%d]\n&quot;, s[0]) &#x2F;&#x2F; after set, s0 &#x3D; [111]</span><br><span class="line"></span><br><span class="line"> &#x2F;&#x2F; map</span><br><span class="line"> var m &#x3D; map[int]string&#123;</span><br><span class="line">  1: &quot;tom&quot;,</span><br><span class="line">  2: &quot;jerry&quot;,</span><br><span class="line">  3: &quot;lucy&quot;,</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"> vm :&#x3D; reflect.ValueOf(m)</span><br><span class="line"> vm_1_v :&#x3D; vm.MapIndex(reflect.ValueOf(1))                      &#x2F;&#x2F; the reflect Value of the value of key 1</span><br><span class="line"> fmt.Printf(&quot;m_1 &#x3D; [%s], vm_1 &#x3D; [%s]\n&quot;, m[1], vm_1_v.String()) &#x2F;&#x2F; m_1 &#x3D; [tom], vm_1 &#x3D; [tom]</span><br><span class="line"> vm.SetMapIndex(reflect.ValueOf(1), reflect.ValueOf(&quot;tony&quot;))</span><br><span class="line"> fmt.Printf(&quot;after set, m_1 &#x3D; [%s]\n&quot;, m[1]) &#x2F;&#x2F; after set, m_1 &#x3D; [tony]</span><br><span class="line"></span><br><span class="line"> &#x2F;&#x2F; 为map m新增一组key-value</span><br><span class="line"> vm.SetMapIndex(reflect.ValueOf(4), reflect.ValueOf(&quot;amy&quot;))</span><br><span class="line"> fmt.Printf(&quot;after set, m &#x3D; [%#v]\n&quot;, m) &#x2F;&#x2F; after set, m &#x3D; [map[int]string&#123;1:&quot;tony&quot;, 2:&quot;jerry&quot;, 3:&quot;lucy&quot;, 4:&quot;amy&quot;&#125;]</span><br><span class="line"></span><br><span class="line"> &#x2F;&#x2F; 结构体</span><br><span class="line"> var f &#x3D; Foo&#123;</span><br><span class="line">  Name: &quot;lily&quot;,</span><br><span class="line">  age:  16,</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"> vaf :&#x3D; reflect.ValueOf(&amp;f)</span><br><span class="line"> vf :&#x3D; vaf.Elem()</span><br><span class="line"> field1 :&#x3D; vf.FieldByName(&quot;Name&quot;)</span><br><span class="line"> fmt.Printf(&quot;the Name of f &#x3D; [%s]\n&quot;, field1.String()) &#x2F;&#x2F; the Name of f &#x3D; [lily]</span><br><span class="line"> field2 :&#x3D; vf.FieldByName(&quot;age&quot;)</span><br><span class="line"> fmt.Printf(&quot;the age of f &#x3D; [%d]\n&quot;, field2.Int()) &#x2F;&#x2F; the age of f &#x3D; [16]</span><br><span class="line"></span><br><span class="line"> field1.SetString(&quot;ally&quot;)</span><br><span class="line"> &#x2F;&#x2F; field2.SetInt(8) &#x2F;&#x2F; panic: reflect: reflect.Value.SetInt using value obtained using unexported field</span><br><span class="line"> nAge :&#x3D; reflect.NewAt(field2.Type(), unsafe.Pointer(field2.UnsafeAddr())).Elem()</span><br><span class="line"> nAge.SetInt(8)</span><br><span class="line"> fmt.Printf(&quot;after set, f is [%#v]\n&quot;, f) &#x2F;&#x2F; after set, f is [main.Foo&#123;Name:&quot;ally&quot;, age:8&#125;]</span><br><span class="line"></span><br><span class="line"> &#x2F;&#x2F; 接口</span><br><span class="line"> var g &#x3D; Foo&#123;</span><br><span class="line">  Name: &quot;Jordan&quot;,</span><br><span class="line">  age:  40,</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"> &#x2F;&#x2F; 接口底层动态类型为复合类型变量</span><br><span class="line"> var i interface&#123;&#125; &#x3D; &amp;g</span><br><span class="line"> vi :&#x3D; reflect.ValueOf(i)</span><br><span class="line"> vg :&#x3D; vi.Elem()</span><br><span class="line"></span><br><span class="line"> field1 &#x3D; vg.FieldByName(&quot;Name&quot;)</span><br><span class="line"> fmt.Printf(&quot;the Name of g &#x3D; [%s]\n&quot;, field1.String()) &#x2F;&#x2F; the Name of g &#x3D; [Jordan]</span><br><span class="line"> field2 &#x3D; vg.FieldByName(&quot;age&quot;)</span><br><span class="line"> fmt.Printf(&quot;the age of g &#x3D; [%d]\n&quot;, field2.Int()) &#x2F;&#x2F; the age of g &#x3D; [40]</span><br><span class="line"></span><br><span class="line"> nAge &#x3D; reflect.NewAt(field2.Type(), unsafe.Pointer(field2.UnsafeAddr())).Elem()</span><br><span class="line"> nAge.SetInt(50)</span><br><span class="line"> fmt.Printf(&quot;after set, g is [%#v]\n&quot;, g) &#x2F;&#x2F; after set, g is [main.Foo&#123;Name:&quot;Jordan&quot;, age:50&#125;]</span><br><span class="line"></span><br><span class="line"> &#x2F;&#x2F; 接口底层动态类型为基本类型变量</span><br><span class="line"> var n &#x3D; 5</span><br><span class="line"> i &#x3D; &amp;n</span><br><span class="line"> vi &#x3D; reflect.ValueOf(i).Elem()</span><br><span class="line"> fmt.Printf(&quot;i &#x3D; [%d], vi &#x3D; [%d]\n&quot;, n, vi.Int()) &#x2F;&#x2F; i &#x3D; [5], vi &#x3D; [5]</span><br><span class="line"> vi.SetInt(10)</span><br><span class="line"> fmt.Printf(&quot;after set, n is [%d]\n&quot;, n) &#x2F;&#x2F; after set, n is [10]</span><br><span class="line"></span><br><span class="line"> &#x2F;&#x2F; channel</span><br><span class="line"> var ch &#x3D; make(chan int, 100)</span><br><span class="line"> vch :&#x3D; reflect.ValueOf(ch)</span><br><span class="line"> vch.Send(reflect.ValueOf(22))</span><br><span class="line"></span><br><span class="line"> j :&#x3D; &lt;-ch</span><br><span class="line"> fmt.Printf(&quot;recv [%d] from channel\n&quot;, j) &#x2F;&#x2F; recv [22] from channel</span><br><span class="line"></span><br><span class="line"> ch &lt;- 33</span><br><span class="line"> vj, ok :&#x3D; vch.Recv()</span><br><span class="line"> fmt.Printf(&quot;recv [%d] ok[%t]\n&quot;, vj.Int(), ok) &#x2F;&#x2F; recv [33] ok[true]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight stylus"><table><tr><td class="code"><pre><code class="hljs stylus"><span class="hljs-comment">// github.com/bigwhite/experiments/blob/master/vars-in-reflect/composite/main.go</span><br><br>package main<br><br>import (<br> <span class="hljs-string">&quot;fmt&quot;</span><br> <span class="hljs-string">&quot;reflect&quot;</span><br> <span class="hljs-string">&quot;unsafe&quot;</span><br>)<br><br>type Foo struct &#123;<br> Name string<br> age  int<br>&#125;<br><br>func <span class="hljs-selector-tag">main</span>() &#123;<br> <span class="hljs-comment">// 数组</span><br> <span class="hljs-selector-tag">var</span> <span class="hljs-selector-tag">a</span> = <span class="hljs-selector-attr">[5]</span>int&#123;<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>&#125;<br> vaa := reflect<span class="hljs-selector-class">.ValueOf</span>(&amp;a) <span class="hljs-comment">// reflect Value of Address of arr</span><br> va := vaa<span class="hljs-selector-class">.Elem</span>()<br> va0 := va<span class="hljs-selector-class">.Index</span>(<span class="hljs-number">0</span>)<br> fmt<span class="hljs-selector-class">.Printf</span>(<span class="hljs-string">&quot;a0 = [%d], va0 = [%d]\n&quot;</span>, <span class="hljs-selector-tag">a</span><span class="hljs-selector-attr">[0]</span>, va0<span class="hljs-selector-class">.Int</span>()) <span class="hljs-comment">// a0 = [1], va0 = [1]</span><br> va0<span class="hljs-selector-class">.SetInt</span>(<span class="hljs-number">100</span> + <span class="hljs-number">1</span>)<br> fmt<span class="hljs-selector-class">.Printf</span>(<span class="hljs-string">&quot;after set, a0 = [%d]\n&quot;</span>, <span class="hljs-selector-tag">a</span><span class="hljs-selector-attr">[0]</span>) <span class="hljs-comment">// after set, a0 = [101]</span><br><br> <span class="hljs-comment">// 切片</span><br> <span class="hljs-selector-tag">var</span> s = <span class="hljs-selector-attr">[]</span>int&#123;<span class="hljs-number">11</span>, <span class="hljs-number">12</span>, <span class="hljs-number">13</span>&#125;<br> vs := reflect<span class="hljs-selector-class">.ValueOf</span>(s)<br> vs0 := vs<span class="hljs-selector-class">.Index</span>(<span class="hljs-number">0</span>)<br> fmt<span class="hljs-selector-class">.Printf</span>(<span class="hljs-string">&quot;s0 = [%d], vs0 = [%d]\n&quot;</span>, s<span class="hljs-selector-attr">[0]</span>, vs0<span class="hljs-selector-class">.Int</span>()) <span class="hljs-comment">// s0 = [11], vs0 = [11]</span><br> vs0<span class="hljs-selector-class">.SetInt</span>(<span class="hljs-number">100</span> + <span class="hljs-number">11</span>)<br> fmt<span class="hljs-selector-class">.Printf</span>(<span class="hljs-string">&quot;after set, s0 = [%d]\n&quot;</span>, s<span class="hljs-selector-attr">[0]</span>) <span class="hljs-comment">// after set, s0 = [111]</span><br><br> <span class="hljs-comment">// map</span><br> <span class="hljs-selector-tag">var</span> m = map<span class="hljs-selector-attr">[int]</span>string&#123;<br>  <span class="hljs-number">1</span>: <span class="hljs-string">&quot;tom&quot;</span>,<br>  <span class="hljs-number">2</span>: <span class="hljs-string">&quot;jerry&quot;</span>,<br>  <span class="hljs-number">3</span>: <span class="hljs-string">&quot;lucy&quot;</span>,<br> &#125;<br><br> vm := reflect<span class="hljs-selector-class">.ValueOf</span>(m)<br> vm_1_v := vm<span class="hljs-selector-class">.MapIndex</span>(reflect<span class="hljs-selector-class">.ValueOf</span>(<span class="hljs-number">1</span>))                      <span class="hljs-comment">// the reflect Value of the value of key 1</span><br> fmt<span class="hljs-selector-class">.Printf</span>(<span class="hljs-string">&quot;m_1 = [%s], vm_1 = [%s]\n&quot;</span>, m<span class="hljs-selector-attr">[1]</span>, vm_1_v<span class="hljs-selector-class">.String</span>()) <span class="hljs-comment">// m_1 = [tom], vm_1 = [tom]</span><br> vm<span class="hljs-selector-class">.SetMapIndex</span>(reflect<span class="hljs-selector-class">.ValueOf</span>(<span class="hljs-number">1</span>), reflect<span class="hljs-selector-class">.ValueOf</span>(<span class="hljs-string">&quot;tony&quot;</span>))<br> fmt<span class="hljs-selector-class">.Printf</span>(<span class="hljs-string">&quot;after set, m_1 = [%s]\n&quot;</span>, m<span class="hljs-selector-attr">[1]</span>) <span class="hljs-comment">// after set, m_1 = [tony]</span><br><br> <span class="hljs-comment">// 为map m新增一组key-value</span><br> vm<span class="hljs-selector-class">.SetMapIndex</span>(reflect<span class="hljs-selector-class">.ValueOf</span>(<span class="hljs-number">4</span>), reflect<span class="hljs-selector-class">.ValueOf</span>(<span class="hljs-string">&quot;amy&quot;</span>))<br> fmt<span class="hljs-selector-class">.Printf</span>(<span class="hljs-string">&quot;after set, m = [%#v]\n&quot;</span>, m) <span class="hljs-comment">// after set, m = [map[int]string&#123;1:&quot;tony&quot;, 2:&quot;jerry&quot;, 3:&quot;lucy&quot;, 4:&quot;amy&quot;&#125;]</span><br><br> <span class="hljs-comment">// 结构体</span><br> <span class="hljs-selector-tag">var</span> f = Foo&#123;<br>  Name: <span class="hljs-string">&quot;lily&quot;</span>,<br>  age:  <span class="hljs-number">16</span>,<br> &#125;<br><br> vaf := reflect<span class="hljs-selector-class">.ValueOf</span>(&amp;f)<br> vf := vaf<span class="hljs-selector-class">.Elem</span>()<br> field1 := vf<span class="hljs-selector-class">.FieldByName</span>(<span class="hljs-string">&quot;Name&quot;</span>)<br> fmt<span class="hljs-selector-class">.Printf</span>(<span class="hljs-string">&quot;the Name of f = [%s]\n&quot;</span>, field1<span class="hljs-selector-class">.String</span>()) <span class="hljs-comment">// the Name of f = [lily]</span><br> field2 := vf<span class="hljs-selector-class">.FieldByName</span>(<span class="hljs-string">&quot;age&quot;</span>)<br> fmt<span class="hljs-selector-class">.Printf</span>(<span class="hljs-string">&quot;the age of f = [%d]\n&quot;</span>, field2<span class="hljs-selector-class">.Int</span>()) <span class="hljs-comment">// the age of f = [16]</span><br><br> field1<span class="hljs-selector-class">.SetString</span>(<span class="hljs-string">&quot;ally&quot;</span>)<br> <span class="hljs-comment">// field2.SetInt(8) // panic: reflect: reflect.Value.SetInt using value obtained using unexported field</span><br> nAge := reflect<span class="hljs-selector-class">.NewAt</span>(field2<span class="hljs-selector-class">.Type</span>(), unsafe<span class="hljs-selector-class">.Pointer</span>(field2<span class="hljs-selector-class">.UnsafeAddr</span>()))<span class="hljs-selector-class">.Elem</span>()<br> nAge<span class="hljs-selector-class">.SetInt</span>(<span class="hljs-number">8</span>)<br> fmt<span class="hljs-selector-class">.Printf</span>(<span class="hljs-string">&quot;after set, f is [%#v]\n&quot;</span>, f) <span class="hljs-comment">// after set, f is [main.Foo&#123;Name:&quot;ally&quot;, age:8&#125;]</span><br><br> <span class="hljs-comment">// 接口</span><br> <span class="hljs-selector-tag">var</span> g = Foo&#123;<br>  Name: <span class="hljs-string">&quot;Jordan&quot;</span>,<br>  age:  <span class="hljs-number">40</span>,<br> &#125;<br><br> <span class="hljs-comment">// 接口底层动态类型为复合类型变量</span><br> <span class="hljs-selector-tag">var</span> <span class="hljs-selector-tag">i</span> interface&#123;&#125; = &amp;g<br> vi := reflect<span class="hljs-selector-class">.ValueOf</span>(i)<br> vg := vi<span class="hljs-selector-class">.Elem</span>()<br><br> field1 = vg<span class="hljs-selector-class">.FieldByName</span>(<span class="hljs-string">&quot;Name&quot;</span>)<br> fmt<span class="hljs-selector-class">.Printf</span>(<span class="hljs-string">&quot;the Name of g = [%s]\n&quot;</span>, field1<span class="hljs-selector-class">.String</span>()) <span class="hljs-comment">// the Name of g = [Jordan]</span><br> field2 = vg<span class="hljs-selector-class">.FieldByName</span>(<span class="hljs-string">&quot;age&quot;</span>)<br> fmt<span class="hljs-selector-class">.Printf</span>(<span class="hljs-string">&quot;the age of g = [%d]\n&quot;</span>, field2<span class="hljs-selector-class">.Int</span>()) <span class="hljs-comment">// the age of g = [40]</span><br><br> nAge = reflect<span class="hljs-selector-class">.NewAt</span>(field2<span class="hljs-selector-class">.Type</span>(), unsafe<span class="hljs-selector-class">.Pointer</span>(field2<span class="hljs-selector-class">.UnsafeAddr</span>()))<span class="hljs-selector-class">.Elem</span>()<br> nAge<span class="hljs-selector-class">.SetInt</span>(<span class="hljs-number">50</span>)<br> fmt<span class="hljs-selector-class">.Printf</span>(<span class="hljs-string">&quot;after set, g is [%#v]\n&quot;</span>, g) <span class="hljs-comment">// after set, g is [main.Foo&#123;Name:&quot;Jordan&quot;, age:50&#125;]</span><br><br> <span class="hljs-comment">// 接口底层动态类型为基本类型变量</span><br> <span class="hljs-selector-tag">var</span> n = <span class="hljs-number">5</span><br> <span class="hljs-selector-tag">i</span> = &amp;n<br> vi = reflect<span class="hljs-selector-class">.ValueOf</span>(i)<span class="hljs-selector-class">.Elem</span>()<br> fmt<span class="hljs-selector-class">.Printf</span>(<span class="hljs-string">&quot;i = [%d], vi = [%d]\n&quot;</span>, n, vi<span class="hljs-selector-class">.Int</span>()) <span class="hljs-comment">// i = [5], vi = [5]</span><br> vi<span class="hljs-selector-class">.SetInt</span>(<span class="hljs-number">10</span>)<br> fmt<span class="hljs-selector-class">.Printf</span>(<span class="hljs-string">&quot;after set, n is [%d]\n&quot;</span>, n) <span class="hljs-comment">// after set, n is [10]</span><br><br> <span class="hljs-comment">// channel</span><br> <span class="hljs-selector-tag">var</span> ch = make(chan int, <span class="hljs-number">100</span>)<br> vch := reflect<span class="hljs-selector-class">.ValueOf</span>(ch)<br> vch<span class="hljs-selector-class">.Send</span>(reflect<span class="hljs-selector-class">.ValueOf</span>(<span class="hljs-number">22</span>))<br><br> j := &lt;-ch<br> fmt<span class="hljs-selector-class">.Printf</span>(<span class="hljs-string">&quot;recv [%d] from channel\n&quot;</span>, j) <span class="hljs-comment">// recv [22] from channel</span><br><br> ch &lt;- <span class="hljs-number">33</span><br> vj, ok := vch<span class="hljs-selector-class">.Recv</span>()<br> fmt<span class="hljs-selector-class">.Printf</span>(<span class="hljs-string">&quot;recv [%d] ok[%t]\n&quot;</span>, vj<span class="hljs-selector-class">.Int</span>(), ok) <span class="hljs-comment">// recv [33] ok[true]</span><br>&#125;<br></code></pre></td></tr></table></figure>
 
 <p>从上述示例，我们可以得到如下一些信息：</p>
 <ul>
@@ -171,41 +312,41 @@
 <li><p>对于结构体中的非导出字段(unexported field)，我们可以读取其值，但无法直接修改其值。在上面的示例中，我们通过下面的unsafe手段实现了对其的赋值：</p>
 </li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">nAge &#x3D; reflect.NewAt(field2.Type(), unsafe.Pointer(field2.UnsafeAddr())).Elem()</span><br><span class="line">nAge.SetInt(50)</span><br></pre></td></tr></table></figure>
+<figure class="highlight reasonml"><table><tr><td class="code"><pre><code class="hljs reasonml">nAge = reflect.<span class="hljs-constructor">NewAt(<span class="hljs-params">field2</span>.Type()</span>, unsafe.<span class="hljs-constructor">Pointer(<span class="hljs-params">field2</span>.UnsafeAddr()</span>)).<span class="hljs-constructor">Elem()</span><br>nAge.<span class="hljs-constructor">SetInt(50)</span><br></code></pre></td></tr></table></figure>
 <p>我们通过reflect.NewAt创建了一个新Value实例，该实例表示指向field2地址的指针。然后通过Elem方法，我们得到该指针Value指向的对象的Value：nAge，实际就是field2变量。然后通过nAge设置的新值也将反映在field2的值上。这和上面基本类型那个示例中的vpi和vi的功用类似。</p>
 <h2 id="3-获取系统资源描述符的值"><a href="#3-获取系统资源描述符的值" class="headerlink" title="3. 获取系统资源描述符的值"></a>3. 获取系统资源描述符的值</h2><p>reflect包的一大功用就是获取一些被封装在底层的系统资源描述符的值，比如：socket描述符、文件描述符。</p>
 <h3 id="a-文件描述符"><a href="#a-文件描述符" class="headerlink" title="a) 文件描述符"></a>a) 文件描述符</h3><p>os.File提供了Fd方法用于获取文件对应的os底层的文件描述符的值。我们也可以使用反射来实现同样的功能：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; github.com&#x2F;bigwhite&#x2F;experiments&#x2F;blob&#x2F;master&#x2F;vars-in-reflect&#x2F;system-resource&#x2F;file_fd.go</span><br><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line"> &quot;fmt&quot;</span><br><span class="line"> &quot;os&quot;</span><br><span class="line"> &quot;reflect&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func fileFD(f *os.File) int &#123;</span><br><span class="line"> file :&#x3D; reflect.ValueOf(f).Elem().FieldByName(&quot;file&quot;).Elem()</span><br><span class="line"> pfdVal :&#x3D; file.FieldByName(&quot;pfd&quot;)</span><br><span class="line"> return int(pfdVal.FieldByName(&quot;Sysfd&quot;).Int())</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line"> fileName :&#x3D; os.Args[1]</span><br><span class="line"> f, err :&#x3D; os.Open(fileName)</span><br><span class="line"> if err !&#x3D; nil &#123;</span><br><span class="line">  panic(err)</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"> defer f.Close()</span><br><span class="line"></span><br><span class="line"> fmt.Printf(&quot;file descriptor is %d\n&quot;, f.Fd())</span><br><span class="line"> fmt.Printf(&quot;file descriptor in reflect is %d\n&quot;, fileFD(f))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight stylus"><table><tr><td class="code"><pre><code class="hljs stylus"><span class="hljs-comment">// github.com/bigwhite/experiments/blob/master/vars-in-reflect/system-resource/file_fd.go</span><br>package main<br><br>import (<br> <span class="hljs-string">&quot;fmt&quot;</span><br> <span class="hljs-string">&quot;os&quot;</span><br> <span class="hljs-string">&quot;reflect&quot;</span><br>)<br><br>func fileFD(f *os.File) int &#123;<br> file := reflect<span class="hljs-selector-class">.ValueOf</span>(f)<span class="hljs-selector-class">.Elem</span>()<span class="hljs-selector-class">.FieldByName</span>(<span class="hljs-string">&quot;file&quot;</span>)<span class="hljs-selector-class">.Elem</span>()<br> pfdVal := file<span class="hljs-selector-class">.FieldByName</span>(<span class="hljs-string">&quot;pfd&quot;</span>)<br> return int(pfdVal<span class="hljs-selector-class">.FieldByName</span>(<span class="hljs-string">&quot;Sysfd&quot;</span>)<span class="hljs-selector-class">.Int</span>())<br>&#125;<br><br>func <span class="hljs-selector-tag">main</span>() &#123;<br> fileName := os<span class="hljs-selector-class">.Args</span><span class="hljs-selector-attr">[1]</span><br> f, err := os<span class="hljs-selector-class">.Open</span>(fileName)<br> <span class="hljs-keyword">if</span> err != nil &#123;<br>  panic(err)<br> &#125;<br><br> defer f<span class="hljs-selector-class">.Close</span>()<br><br> fmt<span class="hljs-selector-class">.Printf</span>(<span class="hljs-string">&quot;file descriptor is %d\n&quot;</span>, f<span class="hljs-selector-class">.Fd</span>())<br> fmt<span class="hljs-selector-class">.Printf</span>(<span class="hljs-string">&quot;file descriptor in reflect is %d\n&quot;</span>, fileFD(f))<br>&#125;<br></code></pre></td></tr></table></figure>
 
 <p>执行上述示例：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$go build file_fd.go </span><br><span class="line">$.&#x2F;file_fd file_fd.go</span><br><span class="line">file descriptor is 3</span><br><span class="line">file descriptor in reflect is 3</span><br></pre></td></tr></table></figure>
+<figure class="highlight vim"><table><tr><td class="code"><pre><code class="hljs vim">$<span class="hljs-keyword">go</span> build file_fd.<span class="hljs-keyword">go</span> <br>$./file_fd file_fd.<span class="hljs-keyword">go</span><br><span class="hljs-keyword">file</span> descriptor <span class="hljs-keyword">is</span> <span class="hljs-number">3</span><br><span class="hljs-keyword">file</span> descriptor in reflect <span class="hljs-keyword">is</span> <span class="hljs-number">3</span><br></code></pre></td></tr></table></figure>
 
 <p>我们看到通过reflect获取到的fd值与通过Fd方法得到的值是一致的。</p>
 <p>下面我们可以基于上面对读写基本类型和复合类型变量的理解来简单分析一下fileFD函数的实现：</p>
 <p>os.File的定义如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&#x2F;&#x2F; $GOROOT&#x2F;src&#x2F;os&#x2F;types.go</span><br><span class="line"></span><br><span class="line">type File struct &#123;</span><br><span class="line">        *file &#x2F;&#x2F; os specific</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight awk"><table><tr><td class="code"><pre><code class="hljs awk"><br><span class="hljs-regexp">//</span> <span class="hljs-variable">$GOROOT</span><span class="hljs-regexp">/src/</span>os/types.go<br><br>type File struct &#123;<br>        *file <span class="hljs-regexp">//</span> os specific<br>&#125;<br></code></pre></td></tr></table></figure>
 <p>为了通过反射获取到未导出指针变量file，我们使用下面反射语句：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">file :&#x3D; reflect.ValueOf(f).Elem().FieldByName(&quot;file&quot;).Elem()</span><br></pre></td></tr></table></figure>
+<figure class="highlight css"><table><tr><td class="code"><pre><code class="hljs css">file := reflect.<span class="hljs-built_in">ValueOf</span>(f).<span class="hljs-built_in">Elem</span>().<span class="hljs-built_in">FieldByName</span>(<span class="hljs-string">&quot;file&quot;</span>).<span class="hljs-built_in">Elem</span>()<br></code></pre></td></tr></table></figure>
 <p>有了上面的Value实例file，我们就可以继续反射os.file结构了。os.file结构是因os而异的，以linux/mac的unix为例，os.file的结构如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; $GOROOT&#x2F;src&#x2F;os&#x2F;file_unix.go</span><br><span class="line"></span><br><span class="line">type file struct &#123;</span><br><span class="line">        pfd         poll.FD</span><br><span class="line">        name        string</span><br><span class="line">        dirinfo     *dirInfo &#x2F;&#x2F; nil unless directory being read</span><br><span class="line">        nonblock    bool     &#x2F;&#x2F; whether we set nonblocking mode</span><br><span class="line">        stdoutOrErr bool     &#x2F;&#x2F; whether this is stdout or stderr</span><br><span class="line">        appendMode  bool     &#x2F;&#x2F; whether file is opened for appending</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight awk"><table><tr><td class="code"><pre><code class="hljs awk"><span class="hljs-regexp">//</span> <span class="hljs-variable">$GOROOT</span><span class="hljs-regexp">/src/</span>os/file_unix.go<br><br>type file struct &#123;<br>        pfd         poll.FD<br>        name        string<br>        dirinfo     *dirInfo <span class="hljs-regexp">//</span> nil unless directory being read<br>        nonblock    bool     <span class="hljs-regexp">//</span> whether we set nonblocking mode<br>        stdoutOrErr bool     <span class="hljs-regexp">//</span> whether this is stdout or stderr<br>        appendMode  bool     <span class="hljs-regexp">//</span> whether file is opened <span class="hljs-keyword">for</span> appending<br>&#125;<br></code></pre></td></tr></table></figure>
 
 <p>于是我们继续反射：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pfdVal :&#x3D; file.FieldByName(&quot;pfd&quot;)</span><br></pre></td></tr></table></figure>
+<figure class="highlight applescript"><table><tr><td class="code"><pre><code class="hljs applescript">pfdVal := <span class="hljs-built_in">file</span>.FieldByName(<span class="hljs-string">&quot;pfd&quot;</span>)<br></code></pre></td></tr></table></figure>
 
 <p>而poll.FD的结构如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; $GOROOT&#x2F;src&#x2F;internal&#x2F;poll&#x2F;fd_unix.go</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; field of a larger type representing a network connection or OS file.</span><br><span class="line">type FD struct &#123;</span><br><span class="line">        &#x2F;&#x2F; Lock sysfd and serialize access to Read and Write methods.</span><br><span class="line">        fdmu fdMutex</span><br><span class="line"></span><br><span class="line">        &#x2F;&#x2F; System file descriptor. Immutable until Close.</span><br><span class="line">        Sysfd int</span><br><span class="line"></span><br><span class="line">        &#x2F;&#x2F; I&#x2F;O poller.</span><br><span class="line">        pd pollDesc</span><br><span class="line"></span><br><span class="line">        &#x2F;&#x2F; Writev cache.</span><br><span class="line">        iovecs *[]syscall.Iovec </span><br><span class="line">    </span><br><span class="line">        &#x2F;&#x2F; Semaphore signaled when file is closed.</span><br><span class="line">        csema uint32</span><br><span class="line"></span><br><span class="line">        &#x2F;&#x2F; Non-zero if this file has been set to blocking mode.</span><br><span class="line">        isBlocking uint32</span><br><span class="line"></span><br><span class="line">        &#x2F;&#x2F; Whether this is a streaming descriptor, as opposed to a</span><br><span class="line">        &#x2F;&#x2F; packet-based descriptor like a UDP socket. Immutable.</span><br><span class="line">        IsStream bool</span><br><span class="line"></span><br><span class="line">        &#x2F;&#x2F; Whether a zero byte read indicates EOF. This is false for a</span><br><span class="line">        &#x2F;&#x2F; message based socket connection.</span><br><span class="line">        ZeroReadIsEOF bool</span><br><span class="line"></span><br><span class="line">        &#x2F;&#x2F; Whether this is a file rather than a network socket.</span><br><span class="line">        isFile bool</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight awk"><table><tr><td class="code"><pre><code class="hljs awk"><span class="hljs-regexp">//</span> <span class="hljs-variable">$GOROOT</span><span class="hljs-regexp">/src/i</span>nternal<span class="hljs-regexp">/poll/</span>fd_unix.go<br><br><span class="hljs-regexp">//</span> field of a larger type representing a network connection or OS file.<br>type FD struct &#123;<br>        <span class="hljs-regexp">//</span> Lock sysfd and serialize access to Read and Write methods.<br>        fdmu fdMutex<br><br>        <span class="hljs-regexp">//</span> System file descriptor. Immutable until Close.<br>        Sysfd int<br><br>        <span class="hljs-regexp">//</span> I/O poller.<br>        pd pollDesc<br><br>        <span class="hljs-regexp">//</span> Writev cache.<br>        iovecs *[]syscall.Iovec <br>    <br>        <span class="hljs-regexp">//</span> Semaphore signaled when file is closed.<br>        csema uint32<br><br>        <span class="hljs-regexp">//</span> Non-zero <span class="hljs-keyword">if</span> this file has been set to blocking mode.<br>        isBlocking uint32<br><br>        <span class="hljs-regexp">//</span> Whether this is a streaming descriptor, as opposed to a<br>        <span class="hljs-regexp">//</span> packet-based descriptor like a UDP socket. Immutable.<br>        IsStream bool<br><br>        <span class="hljs-regexp">//</span> Whether a zero byte read indicates EOF. This is false <span class="hljs-keyword">for</span> a<br>        <span class="hljs-regexp">//</span> message based socket connection.<br>        ZeroReadIsEOF bool<br><br>        <span class="hljs-regexp">//</span> Whether this is a file rather than a network socket.<br>        isFile bool<br>&#125;<br></code></pre></td></tr></table></figure>
 
 <p>这其中的Sysfd记录的就是系统的文件描述符的值，于是通过下面语句即可得到该文件描述符的值：</p>
 <h3 id="b-socket描述符"><a href="#b-socket描述符" class="headerlink" title="b) socket描述符"></a>b) socket描述符</h3><p>unix下一切皆文件！socket描述符也是一个文件描述符，并且Go并没有在标准库中直接提供获取socket文件描述符的API。我们只能通过反射获取。看下面示例：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; github.com&#x2F;bigwhite&#x2F;experiments&#x2F;blob&#x2F;master&#x2F;vars-in-reflect&#x2F;system-resource&#x2F;socket_fd.go</span><br><span class="line"></span><br><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line"> &quot;fmt&quot;</span><br><span class="line"> &quot;log&quot;</span><br><span class="line"> &quot;net&quot;</span><br><span class="line"> &quot;reflect&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func socketFD(conn net.Conn) int &#123;</span><br><span class="line"> tcpConn :&#x3D; reflect.ValueOf(conn).Elem().FieldByName(&quot;conn&quot;)</span><br><span class="line"> fdVal :&#x3D; tcpConn.FieldByName(&quot;fd&quot;)</span><br><span class="line"> pfdVal :&#x3D; fdVal.Elem().FieldByName(&quot;pfd&quot;)</span><br><span class="line"> return int(pfdVal.FieldByName(&quot;Sysfd&quot;).Int())</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line"></span><br><span class="line"> ln, err :&#x3D; net.Listen(&quot;tcp&quot;, &quot;:8080&quot;)</span><br><span class="line"> if err !&#x3D; nil &#123;</span><br><span class="line">  panic(err)</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"> for &#123;</span><br><span class="line">  conn, err :&#x3D; ln.Accept()</span><br><span class="line">  if err !&#x3D; nil &#123;</span><br><span class="line">   if ne, ok :&#x3D; err.(net.Error); ok &amp;&amp; ne.Temporary() &#123;</span><br><span class="line">    log.Printf(&quot;accept temp err: %v&quot;, ne)</span><br><span class="line">    continue</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   log.Printf(&quot;accept err: %v&quot;, err)</span><br><span class="line">   return</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  fmt.Printf(&quot;conn fd is [%d]\n&quot;, socketFD(conn))</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<figure class="highlight go"><table><tr><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// github.com/bigwhite/experiments/blob/master/vars-in-reflect/system-resource/socket_fd.go</span><br><br><span class="hljs-keyword">package</span> main<br><br><span class="hljs-keyword">import</span> (<br> <span class="hljs-string">&quot;fmt&quot;</span><br> <span class="hljs-string">&quot;log&quot;</span><br> <span class="hljs-string">&quot;net&quot;</span><br> <span class="hljs-string">&quot;reflect&quot;</span><br>)<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">socketFD</span><span class="hljs-params">(conn net.Conn)</span> <span class="hljs-title">int</span></span> &#123;<br> tcpConn := reflect.ValueOf(conn).Elem().FieldByName(<span class="hljs-string">&quot;conn&quot;</span>)<br> fdVal := tcpConn.FieldByName(<span class="hljs-string">&quot;fd&quot;</span>)<br> pfdVal := fdVal.Elem().FieldByName(<span class="hljs-string">&quot;pfd&quot;</span>)<br> <span class="hljs-keyword">return</span> <span class="hljs-keyword">int</span>(pfdVal.FieldByName(<span class="hljs-string">&quot;Sysfd&quot;</span>).Int())<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br><br> ln, err := net.Listen(<span class="hljs-string">&quot;tcp&quot;</span>, <span class="hljs-string">&quot;:8080&quot;</span>)<br> <span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>  <span class="hljs-built_in">panic</span>(err)<br> &#125;<br><br> <span class="hljs-keyword">for</span> &#123;<br>  conn, err := ln.Accept()<br>  <span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>   <span class="hljs-keyword">if</span> ne, ok := err.(net.Error); ok &amp;&amp; ne.Temporary() &#123;<br>    log.Printf(<span class="hljs-string">&quot;accept temp err: %v&quot;</span>, ne)<br>    <span class="hljs-keyword">continue</span><br>   &#125;<br><br>   log.Printf(<span class="hljs-string">&quot;accept err: %v&quot;</span>, err)<br>   <span class="hljs-keyword">return</span><br>  &#125;<br><br>  fmt.Printf(<span class="hljs-string">&quot;conn fd is [%d]\n&quot;</span>, socketFD(conn))<br> &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
 
 <p>我们看到socketFD的实现与fileFD的实现有些类似，我们从net.Conn一步步反射得到底层的Sysfd。</p>
 <p>传给socketFD的实参实质是一个TCPConn实例，通过reflect.ValueOf(conn).Elem()我们可以获取到该实例在反射世界的Value</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; $GOROOT&#x2F;src&#x2F;net&#x2F;tcpsock.go</span><br><span class="line"></span><br><span class="line">type TCPConn struct &#123;</span><br><span class="line">        conn</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight awk"><table><tr><td class="code"><pre><code class="hljs awk"><span class="hljs-regexp">//</span> <span class="hljs-variable">$GOROOT</span><span class="hljs-regexp">/src/</span>net/tcpsock.go<br><br>type TCPConn struct &#123;<br>        conn<br>&#125;<br></code></pre></td></tr></table></figure>
 <p>然后再通过FieldByName(“conn”)得到TCPConn结构中字段conn在反射世界中的Value。net.conn结构如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; $GOROOT&#x2F;src&#x2F;net&#x2F;net.go</span><br><span class="line">type conn struct &#123;</span><br><span class="line">        fd *netFD</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight awk"><table><tr><td class="code"><pre><code class="hljs awk"><span class="hljs-regexp">//</span> <span class="hljs-variable">$GOROOT</span><span class="hljs-regexp">/src/</span>net/net.go<br>type conn struct &#123;<br>        fd *netFD<br>&#125;<br></code></pre></td></tr></table></figure>
 <p>起哄的netFD是一个os相关的结构，以linux/mac为例，其结构如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; $GOROOT&#x2F;src&#x2F;net&#x2F;fd_posix.go</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; Network file descriptor.</span><br><span class="line">type netFD struct &#123;</span><br><span class="line">        pfd poll.FD</span><br><span class="line"></span><br><span class="line">        &#x2F;&#x2F; immutable until Close</span><br><span class="line">        family      int</span><br><span class="line">        sotype      int</span><br><span class="line">        isConnected bool &#x2F;&#x2F; handshake completed or use of association with peer</span><br><span class="line">        net         string</span><br><span class="line">        laddr       Addr</span><br><span class="line">        raddr       Addr</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight awk"><table><tr><td class="code"><pre><code class="hljs awk"><span class="hljs-regexp">//</span> <span class="hljs-variable">$GOROOT</span><span class="hljs-regexp">/src/</span>net/fd_posix.go<br><br><span class="hljs-regexp">//</span> Network file descriptor.<br>type netFD struct &#123;<br>        pfd poll.FD<br><br>        <span class="hljs-regexp">//</span> immutable until Close<br>        family      int<br>        sotype      int<br>        isConnected bool <span class="hljs-regexp">//</span> handshake completed or use of association with peer<br>        net         string<br>        laddr       Addr<br>        raddr       Addr<br>&#125;<br></code></pre></td></tr></table></figure>
 <p>我们又看到了poll.FD类型字段pfd，再往下的反射就和fileFD一致了。</p>
 <p>本文涉及的源码可以在这里[5]下载：<a target="_blank" rel="noopener" href="https://github.com/bigwhite/experiments/blob/master/vars-in-reflect">https://github.com/bigwhite/experiments/blob/master/vars-in-reflect</a></p>
 <h3 id="推荐阅读"><a href="#推荐阅读" class="headerlink" title="推荐阅读"></a>推荐阅读</h3><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzAxMTA4Njc0OQ==&mid=2651441623&idx=3&sn=01b89022a4a890549604d4946ac617c3&chksm=80bb1725b7cc9e3379997c0237fc2aae39f21846c6b6d1d06c051f23f00ac144464161b3759b&scene=21#wechat_redirect">花开并蒂—站在Go接口之上的反射分析</a></p>
@@ -220,89 +361,138 @@
 <p>[8]<br>我爱发短信: <a target="_blank" rel="noopener" href="https://51smspush.com/">https://51smspush.com/</a></p>
 <p>[9]<br>链接地址: <a target="_blank" rel="noopener" href="https://m.do.co/c/bff6eed92687">https://m.do.co/c/bff6eed92687</a></p>
 
-            </div>
-          
-
-    
-      <footer class="post-footer">
-		
-		<div class="post-tags">
-		  
-			<a href="/tags/reflect/">reflect</a>
-		  
-			<a href="/tags/%E5%8F%8D%E5%B0%84/">反射</a>
-		  
-		</div>
-		
-
-        
-        
-  <nav class="post-nav">
-    
-      <a class="prev" href="/2021/08/22/Go-interface-%E5%8E%9F%E7%90%86%E5%89%96%E6%9E%90-%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2/">
-        <i class="iconfont icon-left"></i>
-        <span class="prev-text nav-default">Go-interface-原理剖析--类型转换</span>
-        <span class="prev-text nav-mobile">Prev</span>
-      </a>
-    
-    
-      <a class="next" href="/2021/08/22/Go%E8%AF%AD%E8%A8%80%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-1-%E6%90%AD%E5%BB%BAgRPC-HTTP%E7%9A%84%E5%8F%8C%E9%87%8D%E7%BD%91%E5%85%B3%E6%9C%8D%E5%8A%A1/">
-        <span class="next-text nav-default">Go语言微服务框架-1.搭建gRPC+HTTP的双重网关服务</span>
-        <span class="prev-text nav-mobile">Next</span>
-        <i class="iconfont icon-right"></i>
-      </a>
-    
-  </nav>
-
-        
-  <div class="comments" id="comments">
-    
-  </div>
-
-
-      </footer>
-    
-  </article>
-
     </div>
+</div>
+<style>
+    #noneimg img {
+        display: none;
+        z-index: 109;
+        width: 600px !important;
+        border-radius: 0px;
+        position: fixed;
+        box-shadow: 0 0 0px #c3c3c300 !important;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto !important;
+    }
 
-      </div>
+    @media screen and (max-width:600px) {
+        #noneimg img {
+            width: 88%
+        }
+    }
+</style>
+<script>
+    $(function () { $('#article').click(function (e) { if (e.target.tagName == "IMG") { if ($('#nonediv').length == 0) { let MImg = `<div id='noneimg'><img src='${e.target.currentSrc}'></div>`; let MDiv = "<div id='nonediv' style='cursor: pointer;display: none; position: fixed;left: 0;top: 0; right: 0;bottom: 0;background-color: #333;opacity:0.5;z-index: 108;'></div>"; $('#article').append(MDiv); $('#article').append(MImg); $("#nonediv").fadeIn("slow"); $("#noneimg img").fadeIn("slow") } } else { if ($('#nonediv').length !== 0) { $("#noneimg ").fadeOut("slow"); $("#nonediv").fadeOut("slow"); setTimeout(function () { $('#nonediv').remove(); $('#noneimg').remove() }, 500) } } }); $('.article-content').addClass('content-move') });
+</script>
+<div class="Last-Next">
+    
+    <a href="/2021/08/22/Go-interface-%E5%8E%9F%E7%90%86%E5%89%96%E6%9E%90-%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2/">
+        <div class="last">
+            <span>上一篇</span>
+            <p>Go-interface-原理剖析--类型转换</p>
+        </div>
+    </a>
+    
 
-      <footer id="colophon"><span class="copyright-year">
     
-        &copy;
+    <a href="/2021/08/22/Go%E8%AF%AD%E8%A8%80%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-1-%E6%90%AD%E5%BB%BAgRPC-HTTP%E7%9A%84%E5%8F%8C%E9%87%8D%E7%BD%91%E5%85%B3%E6%9C%8D%E5%8A%A1/">
+        <div class="next">
+            <span>下一篇</span>
+            <p>Go语言微服务框架-1.搭建gRPC+HTTP的双重网关服务</p>
+        </div>
+    </a>
     
-        2014 -
-    
-    2021
-    <span class="footer-author">Russshare.</span>
-    <span class="power-by">
-        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+</div>
+		
+<link rel="stylesheet" href="/css/food.css">
+
+<div class="footer">
+	<div class="Copyright">
+		©2021 By CHANGEQ. 主题：<a
+			style="text-decoration: none;display: contents; color: #898F9F;"
+			target="_blank" rel="noopener" href="https://github.com/qiaobug/hexo-theme-quiet">Quiet</a>
+	</div>
+	<div class="contact">
+		
+		<a target="_blank" rel="noopener" href="https://github.com/qiaobug">
+			<img src="https://cdn.jsdelivr.net/gh/duogongneng/MyBlogImg/imggithub.png" alt="Quiet主题">
+		</a>
+		
+	</div>
+</div>
+
+<script src="/js/jquery.min.js"></script>
+
+
+<script src="/js/gotop.js"></script>
+
+
+<style type="text/css">
+    @media screen and (min-width: 600px) {
+        .goTop>span {
+            display: block;
+            border-radius: 50%;
+            width: 66px;
+            height: 66px;
+            cursor: pointer;
+            opacity: 0.8;
+            background: rgba(18, 24, 58, 0.06);
+            text-align: center;
+            border: 1px solid rgba(18, 24, 58, 0.06);
+
+            transition: border .5s;
+            -moz-transition: border .5s;
+            /* Firefox 4 */
+            -webkit-transition: border .5s;
+            /* Safari 和 Chrome */
+            -o-transition: border .5s;
+            /* Opera */
+        }
+
+        .goTop>span:hover {
+            border: 1px solid #6680B3;
+        }
+
+
+        .goTop {
+            position: fixed;
+            right: 30px;
+            bottom: 80px;
+        }
+
+        .goTop>span>svg {
+            width: 30px;
+            height: 30px;
+            margin-top: 17.5px;
+            opacity: 0.7;
+        }
+
+    }
+
+    @media screen and (max-width: 600px) {
+        .goTop {
+            display: none;
+        }
+    }
+</style>
+<div class="goTop" id="js-go_top">
+    <span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <g>
+                <path d="M13 12v8h-2v-8H4l8-8 8 8z"></path>
+            </g>
+        </svg>
     </span>
-</span>
+</div>
+<script>
+    $('#js-go_top').gotoTop({ offset: 500, speed: 300, animationShow: { 'transform': 'translate(0,0)', 'transition': 'transform .5s ease-in-out' }, animationHide: { 'transform': 'translate(100px,0)', 'transition': 'transform .5s ease-in-out' } });
+</script>
+<script>
+	console.log('\n %c Hexo-Quiet 主题 %c https://github.com/QiaoBug/hexo-theme-quiet \n', 'color: #fadfa3; background: #030307; padding:5px 0;', 'background: #fadfa3; padding:5px 0;')
+</script>
+	</body>
 
-      </footer>
-
-      <div class="back-to-top" id="back-to-top">
-        <i class="iconfont icon-up"></i>
-      </div>
-    </div>
-    
-
-
-    
-
-
-
-
-  
-    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
-  
-
-  
-
-    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
-<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
-
-  </body>
 </html>

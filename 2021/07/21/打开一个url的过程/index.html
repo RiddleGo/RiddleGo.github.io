@@ -1,141 +1,282 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
-  <head>
-    
-<meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+<html>
+
+	<head>
+		
+<title>打开一个url的过程-Quiet</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="shortcut icon" type="image/x-icon" href="/image/favicon.ico">
 
 
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="keywords" content="HTTP,计算机网络,">
+<meta name="description" content="">
 
 
-
-  <meta name="description" content="打开一个url的过程"/>
-
+<script src="/js/jquery.min.js"></script>
 
 
+	<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+</head>
 
-  <meta name="keywords" content="HTTP,计算机网络," />
-
-
-
-
-
-  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+	<body>
+		
+<link rel="stylesheet" href="/css/page.css">
 
 
+<link rel="stylesheet" href="/css/page_cente.css">
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+<link rel="stylesheet" href="/css/atom-one-dark.css">
 
 
+<link rel="stylesheet" href="/css/header.css">
 
-<link rel="canonical" href="https://riddlego.github.io/2021/07/21/打开一个url的过程/"/>
-
-
-<meta name="description" content="原文链接很干货满满详细的一篇文章，谢谢前辈。 前言：最近面试美团，嗷呜面试官问我这个题，我老熟悉了，可是啊我当时懵逼状态没有get到他的点，就说了个吧域名转换成ip地址然后通过ip到了服务器，然后将资源再返回给客户端，晕了晕了。应该就是想引出TCP\IP的问题，可惜这个面试官的点我是一个都没有get到，嘤嘤嘤。  正文引言打开浏览器，在地址栏输入URL，回车，出现网页内容。整个过程发生了什么？其中">
-<meta property="og:type" content="article">
-<meta property="og:title" content="打开一个url的过程">
-<meta property="og:url" content="https://riddlego.github.io/2021/07/21/%E6%89%93%E5%BC%80%E4%B8%80%E4%B8%AAurl%E7%9A%84%E8%BF%87%E7%A8%8B/index.html">
-<meta property="og:site_name" content="RiddleGo">
-<meta property="og:description" content="原文链接很干货满满详细的一篇文章，谢谢前辈。 前言：最近面试美团，嗷呜面试官问我这个题，我老熟悉了，可是啊我当时懵逼状态没有get到他的点，就说了个吧域名转换成ip地址然后通过ip到了服务器，然后将资源再返回给客户端，晕了晕了。应该就是想引出TCP\IP的问题，可惜这个面试官的点我是一个都没有get到，嘤嘤嘤。  正文引言打开浏览器，在地址栏输入URL，回车，出现网页内容。整个过程发生了什么？其中">
-<meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2021-07-21T11:40:59.000Z">
-<meta property="article:modified_time" content="2021-07-21T12:39:05.814Z">
-<meta property="article:author" content="Russshare">
-<meta property="article:tag" content="HTTP">
-<meta property="article:tag" content="计算机网络">
-<meta name="twitter:card" content="summary">
-
-
-<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
-<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
-
-
-
-
-
-<script type="text/javascript">
-  var themeConfig = {
-    fancybox: {
-      enable: false
-    },
-  };
-</script>
-
-
-
-
-  
-
-
-
-    <title> 打开一个url的过程 - RiddleGo </title>
-  <meta name="generator" content="Hexo 5.4.0"></head>
-
-  <body>
-    <div id="page">
-      <header id="masthead"><div class="site-header-inner">
-    <h1 class="site-title">
-        <a href="/." class="logo">RiddleGo</a>
-    </h1>
-
-    <nav id="nav-top">
+	<div class="header">
+		<div class="header-top">
+			<div class="h-left">
+				<a href="/">
+					<img src="/image/logo.png" alt="Quiet">
+				</a>
+			</div>
+			<div class="h-right">
+				<ul>
+					
+						
+								<li>
+									<a href="/">
+										HOME
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/archives">
+										ARCHIVE
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/categories">
+										CATEGORIES
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/tags">
+										TAGS
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/links">
+										LINKS
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/about">
+										ABOUT
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+				</ul>
+			</div>
+			<div class="h-right-close">
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+					<path fill="none" d="M0 0h24v24H0z" />
+					<path d="M3 4h18v2H3V4zm0 7h18v2H3v-2zm0 7h18v2H3v-2z" fill="rgba(68,68,68,1)" />
+				</svg>
+			</div>
+		</div>
+	</div>
+	<div class="sidebar">
+    <div class="topo">
+        <h2>CHANGEQ</h2>
+    </div>
+    <ul>
         
-            <ul id="menu-top" class="nav-top-items">
-                
-                    <li class="menu-item">
-                        <a href="/archives">
-                            
-                            
-                                Archives
-                            
-                        </a>
-                    </li>
-                
-                    <li class="menu-item">
-                        <a href="/about">
-                            
-                            
-                                About
-                            
-                        </a>
-                    </li>
-                
-            </ul>
+        <li>
+            <a href="/">HOME</a>
+        </li>
         
-  </nav>
+        <li>
+            <a href="/archives">ARCHIVE</a>
+        </li>
+        
+        <li>
+            <a href="/categories">CATEGORIES</a>
+        </li>
+        
+        <li>
+            <a href="/tags">TAGS</a>
+        </li>
+        
+        <li>
+            <a href="/links">LINKS</a>
+        </li>
+        
+        <li>
+            <a href="/about">ABOUT</a>
+        </li>
+        
+    </ul>
+    <div class="my_foot">
+        
+        <a target="_blank" rel="noopener" href="https://github.com/qiaobug">
+            <img src="https://cdn.jsdelivr.net/gh/duogongneng/MyBlogImg/imggithub.png" alt="Quiet主题">
+        </a>
+        
+    </div>
 </div>
+<div class='shelter'
+    style='cursor: pointer;display: none; position: fixed;left: 0;top: 0; right: 0;bottom: 0;background-color: #333;opacity:0.5;z-index: 108;'>
+</div>
+<style>
+    .sidebar {
+        width: 0;
+        height: 100%;
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        background: #fff;
+        z-index: 999;
+        text-align: center;
+        box-shadow: -6px 0 20px rgba(98, 94, 94, .815)
+    }
 
-      </header>
-      <div id="content">
-        
-    <div id="primary">
-        
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          打开一个url的过程
-        
-      </h1>
+    .topo {
+        width: 100%;
+        height: 200px;
+        background: url(https://api.ixiaowai.cn/gqapi/gqapi.php) no-repeat;
+        background-size: 100% 100%;
+        position: relative;
+        display: flex;
+        align-items: flex-end
+    }
 
-      <time class="post-time">
-          7月 21 2021
-      </time>
-    </header>
+    .topo h2 {
+        color: #fff;
+        z-index: 1;
+        position: relative;
+        margin: 0 0 10px 10px;
+        font-size: 1.2em;
+        box-sizing: border-box
+    }
 
+    .topo:before {
+        content: '';
+        background-image: url(/image/pattern.png);
+        background-repeat: repeat;
+        height: 100%;
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 100%;
+        z-index: 1
+    }
 
+    .sidebar ul {
+        width: 100%;
+        margin-top: 50px
+    }
 
-    
-            <div class="post-content">
-            <p><a target="_blank" rel="noopener" href="https://blog.csdn.net/u012862311/article/details/78753232">原文链接</a><br>很干货满满详细的一篇文章，谢谢前辈。</p>
+    .sidebar ul li {
+        height: 50px;
+        list-style: none;
+        font-size: 1.2em;
+        text-align: right;
+        margin-right: 10px
+    }
+
+    .sidebar ul li a {
+        display: grid;
+        color: #5d606a;
+        text-overflow: ellipsis;
+        width: 100%;
+        text-decoration: none
+    }
+
+    .my_foot {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        position: absolute;
+        bottom: 0
+    }
+
+    .my_foot a {
+        text-decoration: none;
+        margin-right: 10px;
+        display: inline-block
+    }
+
+    .my_foot a img {
+        width: 30px;
+        height: 30px
+    }
+</style>
+
+<script>
+    $(function () { $('.h-right-close>svg').click(function () { $('.sidebar').animate({ width: "66%" }, 500); $('.shelter').fadeIn("slow") }); $('.shelter').click(function (e) { $('.sidebar').animate({ width: "0" }, 500); $('.shelter').fadeOut("slow") }) })
+</script>
+		<script>
+			$(function () { $(window).scroll(function () { if ($(document).scrollTop() > 100) { $(".header-top").removeClass("header-move2"); $('.header-top').addClass('header-move1') } else { $(".header-top").removeClass("header-move1"); $('.header-top').addClass('header-move2') } }) });
+		</script>
+<div class="header-bg ">
+    <div class="bg-content">
+        <ul class="tag">
+            
+            
+            <li><a href="/tags/HTTP">HTTP</a></li>
+            
+            <li><a href="/tags/计算机网络">计算机网络</a></li>
+            
+            
+        </ul>
+        <h1>打开一个url的过程</h1>
+        <div class="article-info">
+            <div class="article-author">
+                
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+                    <g>
+                        <path fill="#12183A"
+                            d="M6.187 15.265A6.47 6.47 0 0 0 10 16.5a6.47 6.47 0 0 0 3.813-1.235A4.99 4.99 0 0 0 10 13.5a4.99 4.99 0 0 0-3.813 1.765zM5.082 14.25A6.485 6.485 0 0 1 10 12c1.965 0 3.726.872 4.918 2.25a6.5 6.5 0 1 0-9.836 0zM10 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0-1.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z">
+                        </path>
+                    </g>
+                </svg>
+                
+                <span> <a href="">CHANGEQ</a></span>
+                <p>2021-07-21 19:40:59</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="article-content">
+    <div id="article" class="content">
+        <p><a target="_blank" rel="noopener" href="https://blog.csdn.net/u012862311/article/details/78753232">原文链接</a><br>很干货满满详细的一篇文章，谢谢前辈。</p>
 <h2 id="前言："><a href="#前言：" class="headerlink" title="前言："></a>前言：</h2><p>最近面试美团，嗷呜面试官问我这个题，我老熟悉了，可是啊我当时懵逼状态没有get到他的点，就说了个吧域名转换成ip地址然后通过ip到了服务器，然后将资源再返回给客户端，晕了晕了。应该就是想引出TCP\IP的问题，可惜这个面试官的点我是一个都没有get到，嘤嘤嘤。 </p>
 <h2 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h2><h3 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h3><p>打开浏览器，在地址栏输入URL，回车，出现网页内容。整个过程发生了什么？其中的原理是什么？以下进行整理和总结。</p>
 <p>整个过程可以概括为几下几个部分：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">域名解析成IP地址；</span><br><span class="line"></span><br><span class="line">与目的主机进行TCP连接（三次握手）；---建立链接</span><br><span class="line"></span><br><span class="line">发送与收取数据（浏览器与目的主机开始HTTP访问过程）；建立了TCP链接就建立HTTP链接</span><br><span class="line"></span><br><span class="line">与目的主机断开TCP连接（四次挥手）；---断开链接</span><br></pre></td></tr></table></figure>
+<figure class="highlight ada"><table><tr><td class="code"><pre><code class="hljs ada">域名解析成IP地址；<br><br>与目的主机进行TCP连接（三次握手）；<span class="hljs-comment">---建立链接</span><br><br>发送与收取数据（浏览器与目的主机开始HTTP访问过程）；建立了TCP链接就建立HTTP链接<br><br>与目的主机断开TCP连接（四次挥手）；<span class="hljs-comment">---断开链接</span><br></code></pre></td></tr></table></figure>
 <h3 id="正文-1"><a href="#正文-1" class="headerlink" title="正文"></a>正文</h3><p>下面详细介绍其中的原理：</p>
 <h4 id="1-域名解析成IP地址"><a href="#1-域名解析成IP地址" class="headerlink" title="1. 域名解析成IP地址"></a>1. 域名解析成IP地址</h4><p>访问目标地址有两种方式：</p>
 <h5 id="①使用目标IP地址访问。"><a href="#①使用目标IP地址访问。" class="headerlink" title="①使用目标IP地址访问。"></a>①使用目标IP地址访问。</h5><p>由于IP地址是一堆数字不方便记忆，于是有了域名这种字符型标识。</p>
@@ -207,9 +348,9 @@
 <p>Status-Code表示服务器发回的响应状态代码；</p>
 <p>Reason-Phrase表示状态代码的文本描述。</p>
 <p>状态代码有三位数字组成，第一个数字定义了响应的类别，且有五种可能取值：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1xx：指示信息--表示请求已接收，继续处理</span><br><span class="line">2xx：成功--表示请求已被成功接收、理解、接受</span><br><span class="line">3xx：重定向--要完成请求必须进行更进一步的操作</span><br><span class="line">4xx：客户端错误--请求有语法错误或请求无法实现</span><br><span class="line">5xx：服务器端错误--服务器未能实现合法的请求</span><br></pre></td></tr></table></figure>
+<figure class="highlight ada"><table><tr><td class="code"><pre><code class="hljs ada"><span class="hljs-number">1</span>xx：指示信息<span class="hljs-comment">--表示请求已接收，继续处理</span><br><span class="hljs-number">2</span>xx：成功<span class="hljs-comment">--表示请求已被成功接收、理解、接受</span><br><span class="hljs-number">3</span>xx：重定向<span class="hljs-comment">--要完成请求必须进行更进一步的操作</span><br><span class="hljs-number">4</span>xx：客户端错误<span class="hljs-comment">--请求有语法错误或请求无法实现</span><br><span class="hljs-number">5</span>xx：服务器端错误<span class="hljs-comment">--服务器未能实现合法的请求</span><br></code></pre></td></tr></table></figure>
 <p>常见状态代码、状态描述、说明：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">200 OK      &#x2F;&#x2F;客户端请求成功</span><br><span class="line">400 Bad Request  &#x2F;&#x2F;客户端请求有语法错误，不能被服务器所理解</span><br><span class="line">401 Unauthorized &#x2F;&#x2F;请求未经授权，这个状态代码必须和WWW-Authenticate报头域一起使用 </span><br><span class="line">403 Forbidden  &#x2F;&#x2F;服务器收到请求，但是拒绝提供服务</span><br><span class="line">404 Not Found  &#x2F;&#x2F;请求资源不存在，eg：输入了错误的URL</span><br><span class="line">500 Internal Server Error &#x2F;&#x2F;服务器发生不可预期的错误</span><br><span class="line">503 Server Unavailable  &#x2F;&#x2F;服务器当前不能处理客户端的请求，一段时间</span><br><span class="line">后可能恢复正常</span><br></pre></td></tr></table></figure>
+<figure class="highlight awk"><table><tr><td class="code"><pre><code class="hljs awk"><span class="hljs-number">200</span> OK      <span class="hljs-regexp">//</span>客户端请求成功<br><span class="hljs-number">400</span> Bad Request  <span class="hljs-regexp">//</span>客户端请求有语法错误，不能被服务器所理解<br><span class="hljs-number">401</span> Unauthorized <span class="hljs-regexp">//</span>请求未经授权，这个状态代码必须和WWW-Authenticate报头域一起使用 <br><span class="hljs-number">403</span> Forbidden  <span class="hljs-regexp">//</span>服务器收到请求，但是拒绝提供服务<br><span class="hljs-number">404</span> Not Found  <span class="hljs-regexp">//</span>请求资源不存在，eg：输入了错误的URL<br><span class="hljs-number">500</span> Internal Server Error <span class="hljs-regexp">//</span>服务器发生不可预期的错误<br><span class="hljs-number">503</span> Server Unavailable  <span class="hljs-regexp">//</span>服务器当前不能处理客户端的请求，一段时间<br>后可能恢复正常<br></code></pre></td></tr></table></figure>
 
 <h5 id="消息报头"><a href="#消息报头" class="headerlink" title="消息报头"></a>消息报头</h5><p>常用的请求报头</p>
 <p><strong>Accept</strong></p>
@@ -232,7 +373,7 @@
 <p>User-Agent请求报头域允许客户端将它的操作系统、浏览器和其它属性告诉服务器。这个报头域不是必需的。</p>
 <h5 id="常用的响应报头"><a href="#常用的响应报头" class="headerlink" title="常用的响应报头"></a>常用的响应报头</h5><p><strong>Location</strong><br>Location响应报头域用于重定向接受者到一个新的位置。Location响应报头域常用在更换域名的时候。</p>
 <p><strong>Server</strong><br>Server响应报头域包含了服务器用来处理请求的软件信息。与User-Agent请求报头域是相对应的。下面是Server响应报头域的一个例子：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Server：Apache-Coyote&#x2F;1.1</span><br></pre></td></tr></table></figure>
+<figure class="highlight apache"><table><tr><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">Server</span>：Apache-Coyote/<span class="hljs-number">1</span>.<span class="hljs-number">1</span><br></code></pre></td></tr></table></figure>
 
 <p><strong>WWW-Authenticate</strong></p>
 <p>WWW-Authenticate响应报头域必须被包含在401（未授权的）响应消息中，客户端收到401响应消息时候，并发送Authorization报头域请求服务器对其进行验证时，服务端响应报头就包含该报头域。</p>
@@ -257,89 +398,138 @@
 <p>连接建立后进行HTTP访问，传输并获取网页内容；</p>
 <p>传输完后与目的主机四次挥手来断开TCP连接。</p>
 
-            </div>
-          
-
-    
-      <footer class="post-footer">
-		
-		<div class="post-tags">
-		  
-			<a href="/tags/HTTP/">HTTP</a>
-		  
-			<a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
-		  
-		</div>
-		
-
-        
-        
-  <nav class="post-nav">
-    
-      <a class="prev" href="/2021/07/21/golang%E4%B8%AD%E7%9A%84slice/">
-        <i class="iconfont icon-left"></i>
-        <span class="prev-text nav-default">golang中的slice</span>
-        <span class="prev-text nav-mobile">Prev</span>
-      </a>
-    
-    
-      <a class="next" href="/2021/07/21/what-is-restful/">
-        <span class="next-text nav-default">what-is-restful</span>
-        <span class="prev-text nav-mobile">Next</span>
-        <i class="iconfont icon-right"></i>
-      </a>
-    
-  </nav>
-
-        
-  <div class="comments" id="comments">
-    
-  </div>
-
-
-      </footer>
-    
-  </article>
-
     </div>
+</div>
+<style>
+    #noneimg img {
+        display: none;
+        z-index: 109;
+        width: 600px !important;
+        border-radius: 0px;
+        position: fixed;
+        box-shadow: 0 0 0px #c3c3c300 !important;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto !important;
+    }
 
-      </div>
+    @media screen and (max-width:600px) {
+        #noneimg img {
+            width: 88%
+        }
+    }
+</style>
+<script>
+    $(function () { $('#article').click(function (e) { if (e.target.tagName == "IMG") { if ($('#nonediv').length == 0) { let MImg = `<div id='noneimg'><img src='${e.target.currentSrc}'></div>`; let MDiv = "<div id='nonediv' style='cursor: pointer;display: none; position: fixed;left: 0;top: 0; right: 0;bottom: 0;background-color: #333;opacity:0.5;z-index: 108;'></div>"; $('#article').append(MDiv); $('#article').append(MImg); $("#nonediv").fadeIn("slow"); $("#noneimg img").fadeIn("slow") } } else { if ($('#nonediv').length !== 0) { $("#noneimg ").fadeOut("slow"); $("#nonediv").fadeOut("slow"); setTimeout(function () { $('#nonediv').remove(); $('#noneimg').remove() }, 500) } } }); $('.article-content').addClass('content-move') });
+</script>
+<div class="Last-Next">
+    
+    <a href="/2021/07/21/golang%E4%B8%AD%E7%9A%84slice/">
+        <div class="last">
+            <span>上一篇</span>
+            <p>golang中的slice</p>
+        </div>
+    </a>
+    
 
-      <footer id="colophon"><span class="copyright-year">
     
-        &copy;
+    <a href="/2021/07/21/what-is-restful/">
+        <div class="next">
+            <span>下一篇</span>
+            <p>what-is-restful</p>
+        </div>
+    </a>
     
-        2014 -
-    
-    2021
-    <span class="footer-author">Russshare.</span>
-    <span class="power-by">
-        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+</div>
+		
+<link rel="stylesheet" href="/css/food.css">
+
+<div class="footer">
+	<div class="Copyright">
+		©2021 By CHANGEQ. 主题：<a
+			style="text-decoration: none;display: contents; color: #898F9F;"
+			target="_blank" rel="noopener" href="https://github.com/qiaobug/hexo-theme-quiet">Quiet</a>
+	</div>
+	<div class="contact">
+		
+		<a target="_blank" rel="noopener" href="https://github.com/qiaobug">
+			<img src="https://cdn.jsdelivr.net/gh/duogongneng/MyBlogImg/imggithub.png" alt="Quiet主题">
+		</a>
+		
+	</div>
+</div>
+
+<script src="/js/jquery.min.js"></script>
+
+
+<script src="/js/gotop.js"></script>
+
+
+<style type="text/css">
+    @media screen and (min-width: 600px) {
+        .goTop>span {
+            display: block;
+            border-radius: 50%;
+            width: 66px;
+            height: 66px;
+            cursor: pointer;
+            opacity: 0.8;
+            background: rgba(18, 24, 58, 0.06);
+            text-align: center;
+            border: 1px solid rgba(18, 24, 58, 0.06);
+
+            transition: border .5s;
+            -moz-transition: border .5s;
+            /* Firefox 4 */
+            -webkit-transition: border .5s;
+            /* Safari 和 Chrome */
+            -o-transition: border .5s;
+            /* Opera */
+        }
+
+        .goTop>span:hover {
+            border: 1px solid #6680B3;
+        }
+
+
+        .goTop {
+            position: fixed;
+            right: 30px;
+            bottom: 80px;
+        }
+
+        .goTop>span>svg {
+            width: 30px;
+            height: 30px;
+            margin-top: 17.5px;
+            opacity: 0.7;
+        }
+
+    }
+
+    @media screen and (max-width: 600px) {
+        .goTop {
+            display: none;
+        }
+    }
+</style>
+<div class="goTop" id="js-go_top">
+    <span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <g>
+                <path d="M13 12v8h-2v-8H4l8-8 8 8z"></path>
+            </g>
+        </svg>
     </span>
-</span>
+</div>
+<script>
+    $('#js-go_top').gotoTop({ offset: 500, speed: 300, animationShow: { 'transform': 'translate(0,0)', 'transition': 'transform .5s ease-in-out' }, animationHide: { 'transform': 'translate(100px,0)', 'transition': 'transform .5s ease-in-out' } });
+</script>
+<script>
+	console.log('\n %c Hexo-Quiet 主题 %c https://github.com/QiaoBug/hexo-theme-quiet \n', 'color: #fadfa3; background: #030307; padding:5px 0;', 'background: #fadfa3; padding:5px 0;')
+</script>
+	</body>
 
-      </footer>
-
-      <div class="back-to-top" id="back-to-top">
-        <i class="iconfont icon-up"></i>
-      </div>
-    </div>
-    
-
-
-    
-
-
-
-
-  
-    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
-  
-
-  
-
-    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
-<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
-
-  </body>
 </html>

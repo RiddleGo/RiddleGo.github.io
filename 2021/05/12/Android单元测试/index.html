@@ -1,147 +1,276 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
-  <head>
-    
-<meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+<html>
+
+	<head>
+		
+<title>Android单元测试-Quiet</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="shortcut icon" type="image/x-icon" href="/image/favicon.ico">
 
 
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="keywords" content="Android,">
+<meta name="description" content="">
 
 
-
-  <meta name="description" content="Android单元测试"/>
-
+<script src="/js/jquery.min.js"></script>
 
 
+	<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+</head>
 
-  <meta name="keywords" content="Android," />
-
-
-
-
-
-  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+	<body>
+		
+<link rel="stylesheet" href="/css/page.css">
 
 
+<link rel="stylesheet" href="/css/page_cente.css">
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+<link rel="stylesheet" href="/css/atom-one-dark.css">
 
 
+<link rel="stylesheet" href="/css/header.css">
 
-<link rel="canonical" href="https://riddlego.github.io/2021/05/12/Android单元测试/"/>
-
-
-<meta name="description" content="Android单元测试：JUnit框架的使用本文转自唯鹿 边学习  边记笔记 1 1.前言网上有许多关于单元测试的好处，这里我就不去说了。我写单元测试的理由很简单粗暴，就是图一个方便。试想一下这个场景：我们在写一个新功能，每写一部分，我们就安装到手机上查看一下，这个过程中你要点击到对应的页面，做对应的操作，最后才能反馈给你结果。如果达到了预期效果，那么恭喜你。可是一旦这次失败了，是不是又要重复这一">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Android单元测试">
-<meta property="og:url" content="https://riddlego.github.io/2021/05/12/Android%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95/index.html">
-<meta property="og:site_name" content="RiddleGo">
-<meta property="og:description" content="Android单元测试：JUnit框架的使用本文转自唯鹿 边学习  边记笔记 1 1.前言网上有许多关于单元测试的好处，这里我就不去说了。我写单元测试的理由很简单粗暴，就是图一个方便。试想一下这个场景：我们在写一个新功能，每写一部分，我们就安装到手机上查看一下，这个过程中你要点击到对应的页面，做对应的操作，最后才能反馈给你结果。如果达到了预期效果，那么恭喜你。可是一旦这次失败了，是不是又要重复这一">
-<meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/OneNet_APP/AndroidTest01.jpg">
-<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/OneNet_APP/AndroidTest02.jpg">
-<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/OneNet_APP/AndroidTest03.jpg">
-<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/OneNet_APP/AndroidTest04.jpg">
-<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/OneNet_APP/AndroidTest05.jpg">
-<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/OneNet_APP/AndroidTest06.jpg">
-<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/OneNet_APP/AndroidTest07.jpg">
-<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/OneNet_APP/AndroidTest08.jpg">
-<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/OneNet_APP/AndroidTest09.jpg">
-<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/OneNet_APP/AndroidTest10.jpg">
-<meta property="article:published_time" content="2021-05-12T10:18:09.000Z">
-<meta property="article:modified_time" content="2021-05-12T13:48:04.000Z">
-<meta property="article:author" content="Russshare">
-<meta property="article:tag" content="Android">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/OneNet_APP/AndroidTest01.jpg">
-
-
-<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
-<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
-
-
-
-
-
-<script type="text/javascript">
-  var themeConfig = {
-    fancybox: {
-      enable: false
-    },
-  };
-</script>
-
-
-
-
-  
-
-
-
-    <title> Android单元测试 - RiddleGo </title>
-  <meta name="generator" content="Hexo 5.4.0"></head>
-
-  <body>
-    <div id="page">
-      <header id="masthead"><div class="site-header-inner">
-    <h1 class="site-title">
-        <a href="/." class="logo">RiddleGo</a>
-    </h1>
-
-    <nav id="nav-top">
+	<div class="header">
+		<div class="header-top">
+			<div class="h-left">
+				<a href="/">
+					<img src="/image/logo.png" alt="Quiet">
+				</a>
+			</div>
+			<div class="h-right">
+				<ul>
+					
+						
+								<li>
+									<a href="/">
+										HOME
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/archives">
+										ARCHIVE
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/categories">
+										CATEGORIES
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/tags">
+										TAGS
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/links">
+										LINKS
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/about">
+										ABOUT
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+				</ul>
+			</div>
+			<div class="h-right-close">
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+					<path fill="none" d="M0 0h24v24H0z" />
+					<path d="M3 4h18v2H3V4zm0 7h18v2H3v-2zm0 7h18v2H3v-2z" fill="rgba(68,68,68,1)" />
+				</svg>
+			</div>
+		</div>
+	</div>
+	<div class="sidebar">
+    <div class="topo">
+        <h2>CHANGEQ</h2>
+    </div>
+    <ul>
         
-            <ul id="menu-top" class="nav-top-items">
-                
-                    <li class="menu-item">
-                        <a href="/archives">
-                            
-                            
-                                Archives
-                            
-                        </a>
-                    </li>
-                
-                    <li class="menu-item">
-                        <a href="/about">
-                            
-                            
-                                About
-                            
-                        </a>
-                    </li>
-                
-            </ul>
+        <li>
+            <a href="/">HOME</a>
+        </li>
         
-  </nav>
+        <li>
+            <a href="/archives">ARCHIVE</a>
+        </li>
+        
+        <li>
+            <a href="/categories">CATEGORIES</a>
+        </li>
+        
+        <li>
+            <a href="/tags">TAGS</a>
+        </li>
+        
+        <li>
+            <a href="/links">LINKS</a>
+        </li>
+        
+        <li>
+            <a href="/about">ABOUT</a>
+        </li>
+        
+    </ul>
+    <div class="my_foot">
+        
+        <a target="_blank" rel="noopener" href="https://github.com/qiaobug">
+            <img src="https://cdn.jsdelivr.net/gh/duogongneng/MyBlogImg/imggithub.png" alt="Quiet主题">
+        </a>
+        
+    </div>
 </div>
+<div class='shelter'
+    style='cursor: pointer;display: none; position: fixed;left: 0;top: 0; right: 0;bottom: 0;background-color: #333;opacity:0.5;z-index: 108;'>
+</div>
+<style>
+    .sidebar {
+        width: 0;
+        height: 100%;
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        background: #fff;
+        z-index: 999;
+        text-align: center;
+        box-shadow: -6px 0 20px rgba(98, 94, 94, .815)
+    }
 
-      </header>
-      <div id="content">
-        
-    <div id="primary">
-        
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          Android单元测试
-        
-      </h1>
+    .topo {
+        width: 100%;
+        height: 200px;
+        background: url(https://api.ixiaowai.cn/gqapi/gqapi.php) no-repeat;
+        background-size: 100% 100%;
+        position: relative;
+        display: flex;
+        align-items: flex-end
+    }
 
-      <time class="post-time">
-          5月 12 2021
-      </time>
-    </header>
+    .topo h2 {
+        color: #fff;
+        z-index: 1;
+        position: relative;
+        margin: 0 0 10px 10px;
+        font-size: 1.2em;
+        box-sizing: border-box
+    }
 
+    .topo:before {
+        content: '';
+        background-image: url(/image/pattern.png);
+        background-repeat: repeat;
+        height: 100%;
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 100%;
+        z-index: 1
+    }
 
+    .sidebar ul {
+        width: 100%;
+        margin-top: 50px
+    }
 
-    
-            <div class="post-content">
-            <h1 id="Android单元测试：JUnit框架的使用"><a href="#Android单元测试：JUnit框架的使用" class="headerlink" title="Android单元测试：JUnit框架的使用"></a>Android单元测试：JUnit框架的使用</h1><p><a target="_blank" rel="noopener" href="https://weilu.blog.csdn.net/article/details/78243176?utm_medium=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromMachineLearnPai2~default-2.control&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromMachineLearnPai2~default-2.control">本文转自唯鹿</a></p>
+    .sidebar ul li {
+        height: 50px;
+        list-style: none;
+        font-size: 1.2em;
+        text-align: right;
+        margin-right: 10px
+    }
+
+    .sidebar ul li a {
+        display: grid;
+        color: #5d606a;
+        text-overflow: ellipsis;
+        width: 100%;
+        text-decoration: none
+    }
+
+    .my_foot {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        position: absolute;
+        bottom: 0
+    }
+
+    .my_foot a {
+        text-decoration: none;
+        margin-right: 10px;
+        display: inline-block
+    }
+
+    .my_foot a img {
+        width: 30px;
+        height: 30px
+    }
+</style>
+
+<script>
+    $(function () { $('.h-right-close>svg').click(function () { $('.sidebar').animate({ width: "66%" }, 500); $('.shelter').fadeIn("slow") }); $('.shelter').click(function (e) { $('.sidebar').animate({ width: "0" }, 500); $('.shelter').fadeOut("slow") }) })
+</script>
+		<script>
+			$(function () { $(window).scroll(function () { if ($(document).scrollTop() > 100) { $(".header-top").removeClass("header-move2"); $('.header-top').addClass('header-move1') } else { $(".header-top").removeClass("header-move1"); $('.header-top').addClass('header-move2') } }) });
+		</script>
+<div class="header-bg ">
+    <div class="bg-content">
+        <ul class="tag">
+            
+            
+            <li><a href="/tags/Android">Android</a></li>
+            
+            
+        </ul>
+        <h1>Android单元测试</h1>
+        <div class="article-info">
+            <div class="article-author">
+                
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+                    <g>
+                        <path fill="#12183A"
+                            d="M6.187 15.265A6.47 6.47 0 0 0 10 16.5a6.47 6.47 0 0 0 3.813-1.235A4.99 4.99 0 0 0 10 13.5a4.99 4.99 0 0 0-3.813 1.765zM5.082 14.25A6.485 6.485 0 0 1 10 12c1.965 0 3.726.872 4.918 2.25a6.5 6.5 0 1 0-9.836 0zM10 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0-1.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z">
+                        </path>
+                    </g>
+                </svg>
+                
+                <span> <a href="">CHANGEQ</a></span>
+                <p>2021-05-12 18:18:09</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="article-content">
+    <div id="article" class="content">
+        <h1 id="Android单元测试：JUnit框架的使用"><a href="#Android单元测试：JUnit框架的使用" class="headerlink" title="Android单元测试：JUnit框架的使用"></a>Android单元测试：JUnit框架的使用</h1><p><a target="_blank" rel="noopener" href="https://weilu.blog.csdn.net/article/details/78243176?utm_medium=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromMachineLearnPai2~default-2.control&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromMachineLearnPai2~default-2.control">本文转自唯鹿</a></p>
 <p>边学习  边记笔记</p>
 <h3 id="1-1-前言"><a href="#1-1-前言" class="headerlink" title="1 1.前言"></a>1 1.前言</h3><p>网上有许多关于单元测试的好处，这里我就不去说了。我写单元测试的理由很简单粗暴，就是图一个方便。<br>试想一下这个场景：我们在写一个新功能，每写一部分，我们就安装到手机上查看一下，这个过程中你要点击到对应的页面，做对应的操作，最后才能反馈给你结果。如果达到了预期效果，那么恭喜你。可是一旦这次失败了，是不是又要重复这一过程？是不是感到很麻烦？很费时间？如果你想早点写完下班，那么你就需要掌握单元测试。因为它能大大的缩短你自我验证的时间。</p>
 <h3 id="2-准备工作"><a href="#2-准备工作" class="headerlink" title="2.准备工作"></a>2.准备工作</h3><p>我们新建一个项目，模板代码会默认在build文件中添加JUnit的依赖，而单元测试代码是放在src/test/java下面的，如下图：</p>
@@ -149,7 +278,7 @@
 <p>用鼠标右键点击测试方法，选择菜单中的“Run”选项就可以执行对应的单元测试。我执行了图中的测试代码，可以看到执行方法只用了6毫秒，整个过程不到2秒。</p>
 <h3 id="3-JUnit介绍"><a href="#3-JUnit介绍" class="headerlink" title="3.JUnit介绍"></a>3.JUnit介绍</h3><p>JUnit是Java最基础的测试框架，主要的作用就是断言。</p>
 <p>使用时在app的build文件中添加依赖。注意：用于测试环境框架一律是testCompile开头。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">dependencies &#123;</span><br><span class="line">    testCompile &#39;junit:junit:4.12&#39;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight nginx"><table><tr><td class="code"><pre><code class="hljs nginx"><span class="hljs-section">dependencies</span> &#123;<br>    <span class="hljs-attribute">testCompile</span> <span class="hljs-string">&#x27;junit:junit:4.12&#x27;</span><br>&#125;<br></code></pre></td></tr></table></figure>
 
 <p>Assert类中主要方法如下：</p>
 <table>
@@ -297,7 +426,7 @@ public static String stampToDate(long lt)&#123;
 <p><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/OneNet_APP/AndroidTest06.jpg"></p>
 <p>上图就是一个简单的例子，可以看到连续执行了三次测试，其中第二次测试没有抛出异常，测试失败！</p>
 <h4 id="3-assertThat用法"><a href="#3-assertThat用法" class="headerlink" title="3.assertThat用法"></a>3.assertThat用法</h4><p>上面我们所用到的一些基本的断言，如果我们没有设置失败时的输出信息，那么在断言失败时只会抛出AssertionError，无法知道到底是哪一部分出错。而assertThat就帮我们解决了这一点。它的可读性更好。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">assertThat(T actual, Matcher&lt;? super T&gt; matcher);</span><br><span class="line"></span><br><span class="line">assertThat(String reason, T actual, Matcher&lt;? super T&gt; matcher); </span><br></pre></td></tr></table></figure>
+<figure class="highlight reasonml"><table><tr><td class="code"><pre><code class="hljs reasonml"><span class="hljs-keyword">assert</span><span class="hljs-constructor">That(T <span class="hljs-params">actual</span>, Matcher&lt;? <span class="hljs-params">super</span> T&gt; <span class="hljs-params">matcher</span>)</span>;<br><br><span class="hljs-keyword">assert</span><span class="hljs-constructor">That(String <span class="hljs-params">reason</span>, T <span class="hljs-params">actual</span>, Matcher&lt;? <span class="hljs-params">super</span> T&gt; <span class="hljs-params">matcher</span>)</span>; <br></code></pre></td></tr></table></figure>
 
 <p>其中reason为断言失败时的输出信息，actual为断言的值，matcher为断言的匹配器。</p>
 <p>常用的匹配器整理：</p>
@@ -409,7 +538,7 @@ public static String stampToDate(long lt)&#123;
 <p><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/OneNet_APP/AndroidTest07.jpg"></p>
 <p>当然了匹配器也是可以自定义的。这里我自定义一个字符串是否是手机号码的匹配器来演示一下。</p>
 <p>只需要继承BaseMatcher抽象类，实现matches与describeTo方法。代码如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">public class IsMobilePhoneMatcher extends BaseMatcher&lt;String&gt; &#123;</span><br><span class="line"></span><br><span class="line">    &#x2F;**</span><br><span class="line">     * 进行断言判定，返回true则断言成功，否则断言失败</span><br><span class="line">     *&#x2F;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public boolean matches(Object item) &#123;</span><br><span class="line">        if (item &#x3D;&#x3D; null) &#123;</span><br><span class="line">            return false;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        Pattern pattern &#x3D; Pattern.compile(&quot;(1|861)(3|5|7|8)\\d&#123;9&#125;$*&quot;);</span><br><span class="line">        Matcher matcher &#x3D; pattern.matcher((String) item);</span><br><span class="line"></span><br><span class="line">        return matcher.find();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    &#x2F;**</span><br><span class="line">     * 给期待断言成功的对象增加描述</span><br><span class="line">     *&#x2F;</span><br><span class="line">    @Override</span><br><span class="line">    public void describeTo(Description description) &#123;</span><br><span class="line">        description.appendText(&quot;预计此字符串是手机号码！&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    &#x2F;**</span><br><span class="line">     * 给断言失败的对象增加描述</span><br><span class="line">     *&#x2F;</span><br><span class="line">    @Override</span><br><span class="line">    public void describeMismatch(Object item, Description description) &#123;</span><br><span class="line">        description.appendText(item.toString() + &quot;不是手机号码！&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight typescript"><table><tr><td class="code"><pre><code class="hljs typescript"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">IsMobilePhoneMatcher</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">BaseMatcher</span>&lt;<span class="hljs-title">String</span>&gt; </span>&#123;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 进行断言判定，返回true则断言成功，否则断言失败</span><br><span class="hljs-comment">     */</span><br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-built_in">boolean</span> <span class="hljs-function"><span class="hljs-title">matches</span>(<span class="hljs-params"><span class="hljs-built_in">Object</span> item</span>)</span> &#123;<br>        <span class="hljs-keyword">if</span> (item == <span class="hljs-literal">null</span>) &#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>        &#125;<br><br>        Pattern pattern = Pattern.compile(<span class="hljs-string">&quot;(1|861)(3|5|7|8)\\d&#123;9&#125;$*&quot;</span>);<br>        Matcher matcher = pattern.matcher((<span class="hljs-built_in">String</span>) item);<br><br>        <span class="hljs-keyword">return</span> matcher.find();<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 给期待断言成功的对象增加描述</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-built_in">void</span> <span class="hljs-function"><span class="hljs-title">describeTo</span>(<span class="hljs-params">Description description</span>)</span> &#123;<br>        description.appendText(<span class="hljs-string">&quot;预计此字符串是手机号码！&quot;</span>);<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 给断言失败的对象增加描述</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-built_in">void</span> <span class="hljs-function"><span class="hljs-title">describeMismatch</span>(<span class="hljs-params"><span class="hljs-built_in">Object</span> item, Description description</span>)</span> &#123;<br>        description.appendText(item.toString() + <span class="hljs-string">&quot;不是手机号码！&quot;</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 
 <p>执行单元测试如下：</p>
 <p>正确的手机号码测试成功：</p>
@@ -418,93 +547,144 @@ public static String stampToDate(long lt)&#123;
 <p><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/OneNet_APP/AndroidTest09.jpg"></p>
 <h4 id="5-Rule用法"><a href="#5-Rule用法" class="headerlink" title="5.@Rule用法"></a>5.@Rule用法</h4><p>还记得一开始我们在@Before与@After注解的方法中加入”测试开始”的提示信息吗？假如我们一直需要这样的提示，那是不是需要每次在测试类中去实现它。这样就会比较麻烦。这时你就可以使用@Rule来解决这个问题，它甚至比@Before与@After还要强大。</p>
 <p>自定义@Rule很简单，就是实现TestRule 接口，实现apply方法。代码如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">public class MyRule implements TestRule &#123;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public Statement apply(final Statement base, final Description description) &#123;</span><br><span class="line"></span><br><span class="line">        return new Statement() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void evaluate() throws Throwable &#123;</span><br><span class="line">                &#x2F;&#x2F; evaluate前执行方法相当于@Before</span><br><span class="line">                String methodName &#x3D; description.getMethodName(); &#x2F;&#x2F; 获取测试方法的名字</span><br><span class="line">                System.out.println(methodName + &quot;测试开始！&quot;);</span><br><span class="line"></span><br><span class="line">                base.evaluate();  &#x2F;&#x2F; 运行的测试方法</span><br><span class="line"></span><br><span class="line">                &#x2F;&#x2F; evaluate后执行方法相当于@After</span><br><span class="line">                System.out.println(methodName + &quot;测试结束！&quot;);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight gradle"><table><tr><td class="code"><pre><code class="hljs gradle"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> MyRule <span class="hljs-keyword">implements</span> TestRule &#123;<br><br>    @Override<br>    <span class="hljs-keyword">public</span> Statement apply(<span class="hljs-keyword">final</span> Statement base, <span class="hljs-keyword">final</span> <span class="hljs-keyword">Description</span> <span class="hljs-keyword">description</span>) &#123;<br><br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Statement() &#123;<br>            @Override<br>            <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> evaluate() <span class="hljs-keyword">throws</span> Throwable &#123;<br>                <span class="hljs-comment">// evaluate前执行方法相当于@Before</span><br>                String methodName = <span class="hljs-keyword">description</span>.getMethodName(); <span class="hljs-comment">// 获取测试方法的名字</span><br>                System.out.<span class="hljs-keyword">println</span>(methodName + <span class="hljs-string">&quot;测试开始！&quot;</span>);<br><br>                base.evaluate();  <span class="hljs-comment">// 运行的测试方法</span><br><br>                <span class="hljs-comment">// evaluate后执行方法相当于@After</span><br>                System.out.<span class="hljs-keyword">println</span>(methodName + <span class="hljs-string">&quot;测试结束！&quot;</span>);<br>            &#125;<br>        &#125;;<br>    &#125;<br><br>&#125;<br></code></pre></td></tr></table></figure>
 
 <p>我们使用一下我们自定义的MyRule，效果如图：</p>
 <p><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/OneNet_APP/AndroidTest10.jpg"></p>
 <p>在新建项目的时候，就选择 other==&gt;Anroid Test Project==&gt; 这样就不用配置这些一大堆烦人AndroidManifest.xml了</p>
 
-            </div>
-          
-
-    
-      <footer class="post-footer">
-		
-		<div class="post-tags">
-		  
-			<a href="/tags/Android/">Android</a>
-		  
-		</div>
-		
-
-        
-        
-  <nav class="post-nav">
-    
-      <a class="prev" href="/2021/05/14/Body-Senser-APP/">
-        <i class="iconfont icon-left"></i>
-        <span class="prev-text nav-default">Body Senser APP</span>
-        <span class="prev-text nav-mobile">Prev</span>
-      </a>
-    
-    
-      <a class="next" href="/2021/05/12/AD7747-CC2530/">
-        <span class="next-text nav-default">AD7747_CC2530</span>
-        <span class="prev-text nav-mobile">Next</span>
-        <i class="iconfont icon-right"></i>
-      </a>
-    
-  </nav>
-
-        
-  <div class="comments" id="comments">
-    
-  </div>
-
-
-      </footer>
-    
-  </article>
-
     </div>
+</div>
+<style>
+    #noneimg img {
+        display: none;
+        z-index: 109;
+        width: 600px !important;
+        border-radius: 0px;
+        position: fixed;
+        box-shadow: 0 0 0px #c3c3c300 !important;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto !important;
+    }
 
-      </div>
+    @media screen and (max-width:600px) {
+        #noneimg img {
+            width: 88%
+        }
+    }
+</style>
+<script>
+    $(function () { $('#article').click(function (e) { if (e.target.tagName == "IMG") { if ($('#nonediv').length == 0) { let MImg = `<div id='noneimg'><img src='${e.target.currentSrc}'></div>`; let MDiv = "<div id='nonediv' style='cursor: pointer;display: none; position: fixed;left: 0;top: 0; right: 0;bottom: 0;background-color: #333;opacity:0.5;z-index: 108;'></div>"; $('#article').append(MDiv); $('#article').append(MImg); $("#nonediv").fadeIn("slow"); $("#noneimg img").fadeIn("slow") } } else { if ($('#nonediv').length !== 0) { $("#noneimg ").fadeOut("slow"); $("#nonediv").fadeOut("slow"); setTimeout(function () { $('#nonediv').remove(); $('#noneimg').remove() }, 500) } } }); $('.article-content').addClass('content-move') });
+</script>
+<div class="Last-Next">
+    
+    <a href="/2021/05/14/Body-Senser-APP/">
+        <div class="last">
+            <span>上一篇</span>
+            <p>Body Senser APP</p>
+        </div>
+    </a>
+    
 
-      <footer id="colophon"><span class="copyright-year">
     
-        &copy;
+    <a href="/2021/05/12/AD7747-CC2530/">
+        <div class="next">
+            <span>下一篇</span>
+            <p>AD7747_CC2530</p>
+        </div>
+    </a>
     
-        2014 -
-    
-    2021
-    <span class="footer-author">Russshare.</span>
-    <span class="power-by">
-        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+</div>
+		
+<link rel="stylesheet" href="/css/food.css">
+
+<div class="footer">
+	<div class="Copyright">
+		©2021 By CHANGEQ. 主题：<a
+			style="text-decoration: none;display: contents; color: #898F9F;"
+			target="_blank" rel="noopener" href="https://github.com/qiaobug/hexo-theme-quiet">Quiet</a>
+	</div>
+	<div class="contact">
+		
+		<a target="_blank" rel="noopener" href="https://github.com/qiaobug">
+			<img src="https://cdn.jsdelivr.net/gh/duogongneng/MyBlogImg/imggithub.png" alt="Quiet主题">
+		</a>
+		
+	</div>
+</div>
+
+<script src="/js/jquery.min.js"></script>
+
+
+<script src="/js/gotop.js"></script>
+
+
+<style type="text/css">
+    @media screen and (min-width: 600px) {
+        .goTop>span {
+            display: block;
+            border-radius: 50%;
+            width: 66px;
+            height: 66px;
+            cursor: pointer;
+            opacity: 0.8;
+            background: rgba(18, 24, 58, 0.06);
+            text-align: center;
+            border: 1px solid rgba(18, 24, 58, 0.06);
+
+            transition: border .5s;
+            -moz-transition: border .5s;
+            /* Firefox 4 */
+            -webkit-transition: border .5s;
+            /* Safari 和 Chrome */
+            -o-transition: border .5s;
+            /* Opera */
+        }
+
+        .goTop>span:hover {
+            border: 1px solid #6680B3;
+        }
+
+
+        .goTop {
+            position: fixed;
+            right: 30px;
+            bottom: 80px;
+        }
+
+        .goTop>span>svg {
+            width: 30px;
+            height: 30px;
+            margin-top: 17.5px;
+            opacity: 0.7;
+        }
+
+    }
+
+    @media screen and (max-width: 600px) {
+        .goTop {
+            display: none;
+        }
+    }
+</style>
+<div class="goTop" id="js-go_top">
+    <span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <g>
+                <path d="M13 12v8h-2v-8H4l8-8 8 8z"></path>
+            </g>
+        </svg>
     </span>
-</span>
+</div>
+<script>
+    $('#js-go_top').gotoTop({ offset: 500, speed: 300, animationShow: { 'transform': 'translate(0,0)', 'transition': 'transform .5s ease-in-out' }, animationHide: { 'transform': 'translate(100px,0)', 'transition': 'transform .5s ease-in-out' } });
+</script>
+<script>
+	console.log('\n %c Hexo-Quiet 主题 %c https://github.com/QiaoBug/hexo-theme-quiet \n', 'color: #fadfa3; background: #030307; padding:5px 0;', 'background: #fadfa3; padding:5px 0;')
+</script>
+	</body>
 
-      </footer>
-
-      <div class="back-to-top" id="back-to-top">
-        <i class="iconfont icon-up"></i>
-      </div>
-    </div>
-    
-
-
-    
-
-
-
-
-  
-    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
-  
-
-  
-
-    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
-<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
-
-  </body>
 </html>

@@ -1,147 +1,280 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
-  <head>
-    
-<meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+<html>
+
+	<head>
+		
+<title>CC2530的内存使用-Quiet</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="shortcut icon" type="image/x-icon" href="/image/favicon.ico">
 
 
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="keywords" content="cc2530,单片机,BUG,">
+<meta name="description" content="">
 
 
-
-  <meta name="description" content="CC2530的内存使用"/>
-
+<script src="/js/jquery.min.js"></script>
 
 
+	<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+</head>
 
-  <meta name="keywords" content="cc2530,单片机,BUG," />
-
-
-
-
-
-  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+	<body>
+		
+<link rel="stylesheet" href="/css/page.css">
 
 
+<link rel="stylesheet" href="/css/page_cente.css">
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+<link rel="stylesheet" href="/css/atom-one-dark.css">
 
 
+<link rel="stylesheet" href="/css/header.css">
 
-<link rel="canonical" href="https://riddlego.github.io/2021/06/24/CC2530的内存使用/"/>
-
-
-<meta name="description" content="前言：看过我前面帖子的铁子应该知道我最近在做一个关于测电容的项目，但是啊这玩意要写个固件，然后cc2530一编译就给我报错，nnd，于是我第一次是将这个固件分成了四部分写进去，但是就一直循环在哪里出不去。我当时就纳闷了，也不至于内存这么小啊，结果一百度，发现其实这256的flash不输stm32，于是总算是找到了问题所在。 认识cc2530的内存结构内容转自 一、CC2530代码空间介绍  CC2">
-<meta property="og:type" content="article">
-<meta property="og:title" content="CC2530的内存使用">
-<meta property="og:url" content="https://riddlego.github.io/2021/06/24/CC2530%E7%9A%84%E5%86%85%E5%AD%98%E4%BD%BF%E7%94%A8/index.html">
-<meta property="og:site_name" content="RiddleGo">
-<meta property="og:description" content="前言：看过我前面帖子的铁子应该知道我最近在做一个关于测电容的项目，但是啊这玩意要写个固件，然后cc2530一编译就给我报错，nnd，于是我第一次是将这个固件分成了四部分写进去，但是就一直循环在哪里出不去。我当时就纳闷了，也不至于内存这么小啊，结果一百度，发现其实这256的flash不输stm32，于是总算是找到了问题所在。 认识cc2530的内存结构内容转自 一、CC2530代码空间介绍  CC2">
-<meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/CC2530NeiCun/01.png">
-<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/CC2530NeiCun/02.png">
-<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/CC2530NeiCun/03.png">
-<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/CC2530NeiCun/08.png">
-<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/CC2530NeiCun/09.png">
-<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/CC2530NeiCun/11.png">
-<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/CC2530NeiCun/12.png">
-<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/CC2530NeiCun/13.png">
-<meta property="article:published_time" content="2021-06-24T01:14:10.000Z">
-<meta property="article:modified_time" content="2021-07-18T09:55:21.750Z">
-<meta property="article:author" content="Russshare">
-<meta property="article:tag" content="cc2530">
-<meta property="article:tag" content="单片机">
-<meta property="article:tag" content="BUG">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/CC2530NeiCun/01.png">
-
-
-<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
-<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
-
-
-
-
-
-<script type="text/javascript">
-  var themeConfig = {
-    fancybox: {
-      enable: false
-    },
-  };
-</script>
-
-
-
-
-  
-
-
-
-    <title> CC2530的内存使用 - RiddleGo </title>
-  <meta name="generator" content="Hexo 5.4.0"></head>
-
-  <body>
-    <div id="page">
-      <header id="masthead"><div class="site-header-inner">
-    <h1 class="site-title">
-        <a href="/." class="logo">RiddleGo</a>
-    </h1>
-
-    <nav id="nav-top">
+	<div class="header">
+		<div class="header-top">
+			<div class="h-left">
+				<a href="/">
+					<img src="/image/logo.png" alt="Quiet">
+				</a>
+			</div>
+			<div class="h-right">
+				<ul>
+					
+						
+								<li>
+									<a href="/">
+										HOME
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/archives">
+										ARCHIVE
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/categories">
+										CATEGORIES
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/tags">
+										TAGS
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/links">
+										LINKS
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/about">
+										ABOUT
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+				</ul>
+			</div>
+			<div class="h-right-close">
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+					<path fill="none" d="M0 0h24v24H0z" />
+					<path d="M3 4h18v2H3V4zm0 7h18v2H3v-2zm0 7h18v2H3v-2z" fill="rgba(68,68,68,1)" />
+				</svg>
+			</div>
+		</div>
+	</div>
+	<div class="sidebar">
+    <div class="topo">
+        <h2>CHANGEQ</h2>
+    </div>
+    <ul>
         
-            <ul id="menu-top" class="nav-top-items">
-                
-                    <li class="menu-item">
-                        <a href="/archives">
-                            
-                            
-                                Archives
-                            
-                        </a>
-                    </li>
-                
-                    <li class="menu-item">
-                        <a href="/about">
-                            
-                            
-                                About
-                            
-                        </a>
-                    </li>
-                
-            </ul>
+        <li>
+            <a href="/">HOME</a>
+        </li>
         
-  </nav>
+        <li>
+            <a href="/archives">ARCHIVE</a>
+        </li>
+        
+        <li>
+            <a href="/categories">CATEGORIES</a>
+        </li>
+        
+        <li>
+            <a href="/tags">TAGS</a>
+        </li>
+        
+        <li>
+            <a href="/links">LINKS</a>
+        </li>
+        
+        <li>
+            <a href="/about">ABOUT</a>
+        </li>
+        
+    </ul>
+    <div class="my_foot">
+        
+        <a target="_blank" rel="noopener" href="https://github.com/qiaobug">
+            <img src="https://cdn.jsdelivr.net/gh/duogongneng/MyBlogImg/imggithub.png" alt="Quiet主题">
+        </a>
+        
+    </div>
 </div>
+<div class='shelter'
+    style='cursor: pointer;display: none; position: fixed;left: 0;top: 0; right: 0;bottom: 0;background-color: #333;opacity:0.5;z-index: 108;'>
+</div>
+<style>
+    .sidebar {
+        width: 0;
+        height: 100%;
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        background: #fff;
+        z-index: 999;
+        text-align: center;
+        box-shadow: -6px 0 20px rgba(98, 94, 94, .815)
+    }
 
-      </header>
-      <div id="content">
-        
-    <div id="primary">
-        
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          CC2530的内存使用
-        
-      </h1>
+    .topo {
+        width: 100%;
+        height: 200px;
+        background: url(https://api.ixiaowai.cn/gqapi/gqapi.php) no-repeat;
+        background-size: 100% 100%;
+        position: relative;
+        display: flex;
+        align-items: flex-end
+    }
 
-      <time class="post-time">
-          6月 24 2021
-      </time>
-    </header>
+    .topo h2 {
+        color: #fff;
+        z-index: 1;
+        position: relative;
+        margin: 0 0 10px 10px;
+        font-size: 1.2em;
+        box-sizing: border-box
+    }
 
+    .topo:before {
+        content: '';
+        background-image: url(/image/pattern.png);
+        background-repeat: repeat;
+        height: 100%;
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 100%;
+        z-index: 1
+    }
 
+    .sidebar ul {
+        width: 100%;
+        margin-top: 50px
+    }
 
-    
-            <div class="post-content">
-            <h3 id="前言："><a href="#前言：" class="headerlink" title="前言："></a>前言：</h3><p>看过我前面帖子的铁子应该知道我最近在做一个关于测电容的项目，但是啊这玩意要写个固件，然后cc2530一编译就给我报错，nnd，于是我第一次是将这个固件分成了四部分写进去，但是就一直循环在哪里出不去。<br>我当时就纳闷了，也不至于内存这么小啊，结果一百度，发现其实这256的flash不输stm32，于是总算是找到了问题所在。</p>
+    .sidebar ul li {
+        height: 50px;
+        list-style: none;
+        font-size: 1.2em;
+        text-align: right;
+        margin-right: 10px
+    }
+
+    .sidebar ul li a {
+        display: grid;
+        color: #5d606a;
+        text-overflow: ellipsis;
+        width: 100%;
+        text-decoration: none
+    }
+
+    .my_foot {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        position: absolute;
+        bottom: 0
+    }
+
+    .my_foot a {
+        text-decoration: none;
+        margin-right: 10px;
+        display: inline-block
+    }
+
+    .my_foot a img {
+        width: 30px;
+        height: 30px
+    }
+</style>
+
+<script>
+    $(function () { $('.h-right-close>svg').click(function () { $('.sidebar').animate({ width: "66%" }, 500); $('.shelter').fadeIn("slow") }); $('.shelter').click(function (e) { $('.sidebar').animate({ width: "0" }, 500); $('.shelter').fadeOut("slow") }) })
+</script>
+		<script>
+			$(function () { $(window).scroll(function () { if ($(document).scrollTop() > 100) { $(".header-top").removeClass("header-move2"); $('.header-top').addClass('header-move1') } else { $(".header-top").removeClass("header-move1"); $('.header-top').addClass('header-move2') } }) });
+		</script>
+<div class="header-bg ">
+    <div class="bg-content">
+        <ul class="tag">
+            
+            
+            <li><a href="/tags/cc2530">cc2530</a></li>
+            
+            <li><a href="/tags/单片机">单片机</a></li>
+            
+            <li><a href="/tags/BUG">BUG</a></li>
+            
+            
+        </ul>
+        <h1>CC2530的内存使用</h1>
+        <div class="article-info">
+            <div class="article-author">
+                
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+                    <g>
+                        <path fill="#12183A"
+                            d="M6.187 15.265A6.47 6.47 0 0 0 10 16.5a6.47 6.47 0 0 0 3.813-1.235A4.99 4.99 0 0 0 10 13.5a4.99 4.99 0 0 0-3.813 1.765zM5.082 14.25A6.485 6.485 0 0 1 10 12c1.965 0 3.726.872 4.918 2.25a6.5 6.5 0 1 0-9.836 0zM10 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0-1.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z">
+                        </path>
+                    </g>
+                </svg>
+                
+                <span> <a href="">CHANGEQ</a></span>
+                <p>2021-06-24 09:14:10</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="article-content">
+    <div id="article" class="content">
+        <h3 id="前言："><a href="#前言：" class="headerlink" title="前言："></a>前言：</h3><p>看过我前面帖子的铁子应该知道我最近在做一个关于测电容的项目，但是啊这玩意要写个固件，然后cc2530一编译就给我报错，nnd，于是我第一次是将这个固件分成了四部分写进去，但是就一直循环在哪里出不去。<br>我当时就纳闷了，也不至于内存这么小啊，结果一百度，发现其实这256的flash不输stm32，于是总算是找到了问题所在。</p>
 <p>认识cc2530的内存结构<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_34258078/article/details/86198728">内容转自</a></p>
 <h3 id="一、CC2530代码空间介绍"><a href="#一、CC2530代码空间介绍" class="headerlink" title="一、CC2530代码空间介绍"></a>一、CC2530代码空间介绍</h3><pre><code>  CC2530-F256有着256K的Flash，其代码存储空间如图2-2（来自CC2530User‘s Guide）所看到的，可是51单片机仅仅支持64K的訪问空间。
 </code></pre>
@@ -155,10 +288,10 @@
 <p><strong>注：</strong></p>
 <p>CC2530 ROM的不同地址：</p>
 <p><strong>物理地址：</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0x00000~0x3FFFF</span><br></pre></td></tr></table></figure>
+<figure class="highlight apache"><table><tr><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">0x00000</span>~<span class="hljs-number">0</span>x<span class="hljs-number">3</span>FFFF<br></code></pre></td></tr></table></figure>
 
 <p><strong>Bank地址：</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">Bank0：0x00000~0x07FFF</span><br><span class="line"></span><br><span class="line">Bank1：0x18000~0x1FFFF</span><br><span class="line"></span><br><span class="line">Bank2：0x28000~0x2FFFF</span><br><span class="line"></span><br><span class="line">Bank3：0x38000~0x3FFFF</span><br><span class="line"></span><br><span class="line">Bank4：0x48000~0x4FFFF</span><br><span class="line"></span><br><span class="line">Bank5：0x58000~0x5FFFF</span><br><span class="line"></span><br><span class="line">Bank6：0x68000~0x6FFFF</span><br><span class="line"></span><br><span class="line">Bank7：0x78000~0x7FFFF</span><br></pre></td></tr></table></figure>
+<figure class="highlight apache"><table><tr><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">Bank0</span>：<span class="hljs-number">0</span>x<span class="hljs-number">00000</span>~<span class="hljs-number">0</span>x<span class="hljs-number">07</span>FFF<br><br><span class="hljs-attribute">Bank1</span>：<span class="hljs-number">0</span>x<span class="hljs-number">18000</span>~<span class="hljs-number">0</span>x<span class="hljs-number">1</span>FFFF<br><br><span class="hljs-attribute">Bank2</span>：<span class="hljs-number">0</span>x<span class="hljs-number">28000</span>~<span class="hljs-number">0</span>x<span class="hljs-number">2</span>FFFF<br><br><span class="hljs-attribute">Bank3</span>：<span class="hljs-number">0</span>x<span class="hljs-number">38000</span>~<span class="hljs-number">0</span>x<span class="hljs-number">3</span>FFFF<br><br><span class="hljs-attribute">Bank4</span>：<span class="hljs-number">0</span>x<span class="hljs-number">48000</span>~<span class="hljs-number">0</span>x<span class="hljs-number">4</span>FFFF<br><br><span class="hljs-attribute">Bank5</span>：<span class="hljs-number">0</span>x<span class="hljs-number">58000</span>~<span class="hljs-number">0</span>x<span class="hljs-number">5</span>FFFF<br><br><span class="hljs-attribute">Bank6</span>：<span class="hljs-number">0</span>x<span class="hljs-number">68000</span>~<span class="hljs-number">0</span>x<span class="hljs-number">6</span>FFFF<br><br><span class="hljs-attribute">Bank7</span>：<span class="hljs-number">0</span>x<span class="hljs-number">78000</span>~<span class="hljs-number">0</span>x<span class="hljs-number">7</span>FFFF<br></code></pre></td></tr></table></figure>
 <h3 id="二、CC2530存储空间使用"><a href="#二、CC2530存储空间使用" class="headerlink" title="二、CC2530存储空间使用"></a>二、CC2530存储空间使用</h3><pre><code>    IAR中CC2530的有两种代码模式，Near和Banked。当中Banked模式是ZStack使用的模式，ZStack的ROM使用大约在100多KB。当中Near是普通的51单片机模式，仅仅支持64KB的訪问范围。
 
                                Target Set
@@ -170,7 +303,7 @@
 </code></pre>
 <p><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/CC2530NeiCun/09.png">                                </p>
 <p>測试代码例如以下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">__code const char code0_buf[10000]@0x48000 &#x3D; &#123;0, 1&#125;;</span><br><span class="line"> </span><br><span class="line">#pragma location&#x3D;&quot;BANK4&quot;</span><br><span class="line">void demo1_code()</span><br><span class="line">&#123;</span><br><span class="line">	TRACE(&quot;FMAP: %02x\r\n&quot;, FMAP);</span><br><span class="line">	TRACE(&quot;%02x %02x\r\n&quot;, code0_buf[0], code0_buf[1]);</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">__code const char code1_buf[10000]@0x58000 &#x3D; &#123;2, 3&#125;;</span><br><span class="line"> </span><br><span class="line">#pragma location&#x3D;&quot;BANK5&quot;</span><br><span class="line">void demo2_code()</span><br><span class="line">&#123;</span><br><span class="line">	TRACE(&quot;FMAP: %02x\r\n&quot;, FMAP);</span><br><span class="line">	TRACE(&quot;%02x %02x\r\n&quot;, code1_buf[0], code1_buf[1]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><code class="hljs cpp">__code <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> code0_buf[<span class="hljs-number">10000</span>]@<span class="hljs-number">0x48000</span> = &#123;<span class="hljs-number">0</span>, <span class="hljs-number">1</span>&#125;;<br> <br><span class="hljs-meta">#<span class="hljs-meta-keyword">pragma</span> location=<span class="hljs-meta-string">&quot;BANK4&quot;</span></span><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">demo1_code</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>	<span class="hljs-built_in">TRACE</span>(<span class="hljs-string">&quot;FMAP: %02x\r\n&quot;</span>, FMAP);<br>	<span class="hljs-built_in">TRACE</span>(<span class="hljs-string">&quot;%02x %02x\r\n&quot;</span>, code0_buf[<span class="hljs-number">0</span>], code0_buf[<span class="hljs-number">1</span>]);<br>&#125;<br> <br>__code <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> code1_buf[<span class="hljs-number">10000</span>]@<span class="hljs-number">0x58000</span> = &#123;<span class="hljs-number">2</span>, <span class="hljs-number">3</span>&#125;;<br> <br><span class="hljs-meta">#<span class="hljs-meta-keyword">pragma</span> location=<span class="hljs-meta-string">&quot;BANK5&quot;</span></span><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">demo2_code</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>	<span class="hljs-built_in">TRACE</span>(<span class="hljs-string">&quot;FMAP: %02x\r\n&quot;</span>, FMAP);<br>	<span class="hljs-built_in">TRACE</span>(<span class="hljs-string">&quot;%02x %02x\r\n&quot;</span>, code1_buf[<span class="hljs-number">0</span>], code1_buf[<span class="hljs-number">1</span>]);<br>&#125;<br></code></pre></td></tr></table></figure>
 
 <pre><code>    当中BANK5，BANK4是连接配置文件”lnk51ew_CC2530F256_banked.xcl“定义的segment。执行结果例如以下：
 
@@ -191,11 +324,11 @@
 <p><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/CC2530NeiCun/13.png"></p>
 <p>这个printf函数是可以编译通过的</p>
 <ol>
-<li>包含头文件<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">       #include &lt;stdio.h&gt;</span><br></pre></td></tr></table></figure></li>
-<li> 重定义putchar函数<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">        int putchar (int c)</span><br><span class="line">        &#123; </span><br><span class="line">             U0DBUF &#x3D; c; </span><br><span class="line">             while(!UTX0IF); </span><br><span class="line">             UTX0IF &#x3D; 0; </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">             return c; </span><br><span class="line">       &#125; </span><br></pre></td></tr></table></figure></li>
+<li>包含头文件<figure class="highlight arduino"><table><tr><td class="code"><pre><code class="hljs arduino">       <span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span><br></code></pre></td></tr></table></figure></li>
+<li> 重定义putchar函数<figure class="highlight arduino"><table><tr><td class="code"><pre><code class="hljs arduino">        <span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">putchar</span> <span class="hljs-params">(<span class="hljs-keyword">int</span> c)</span></span><br><span class="hljs-function">        </span>&#123; <br>             U0DBUF = c; <br>             <span class="hljs-keyword">while</span>(!UTX0IF); <br>             UTX0IF = <span class="hljs-number">0</span>; <br><br><br>             <span class="hljs-keyword">return</span> c; <br>       &#125; <br></code></pre></td></tr></table></figure></li>
 </ol>
 <p>但是我们上面将code model和配置文件改为banked,需要重新修改一下putchar函数，否则编译出错</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">__near_func int putchar(int c)</span><br><span class="line">        &#123; </span><br><span class="line">             U0DBUF &#x3D; c; </span><br><span class="line">             while(!UTX0IF); </span><br><span class="line">             UTX0IF &#x3D; 0; </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">             return c; </span><br><span class="line">       &#125; </span><br></pre></td></tr></table></figure>
+<figure class="highlight arduino"><table><tr><td class="code"><pre><code class="hljs arduino"><span class="hljs-function">__near_func <span class="hljs-keyword">int</span> <span class="hljs-title">putchar</span><span class="hljs-params">(<span class="hljs-keyword">int</span> c)</span></span><br><span class="hljs-function">        </span>&#123; <br>             U0DBUF = c; <br>             <span class="hljs-keyword">while</span>(!UTX0IF); <br>             UTX0IF = <span class="hljs-number">0</span>; <br><br><br>             <span class="hljs-keyword">return</span> c; <br>       &#125; <br></code></pre></td></tr></table></figure>
 
 
 <h4 id="3-2-问题二"><a href="#3-2-问题二" class="headerlink" title="3.2 问题二"></a>3.2 问题二</h4><p><strong>Fatal Error[e72]: Segment BANKED_CODE must be defined in a segment definition option (-Z, -b or -P)</strong></p>
@@ -206,91 +339,138 @@
 <p>选择banked的xcl文件即可，具体的文件可根据所用的芯片型号来选择。</p>
 <p><em><strong>以上就是本次全部内容，希望对你有所帮助！！！</strong></em></p>
 
-            </div>
-          
-
-    
-      <footer class="post-footer">
-		
-		<div class="post-tags">
-		  
-			<a href="/tags/cc2530/">cc2530</a>
-		  
-			<a href="/tags/%E5%8D%95%E7%89%87%E6%9C%BA/">单片机</a>
-		  
-			<a href="/tags/BUG/">BUG</a>
-		  
-		</div>
-		
-
-        
-        
-  <nav class="post-nav">
-    
-      <a class="prev" href="/2021/06/24/%E5%85%B3%E4%BA%8ELinux%E2%80%94shell%E4%BD%A0%E5%BF%85%E9%A1%BB%E7%9F%A5%E9%81%93%E7%9A%84/">
-        <i class="iconfont icon-left"></i>
-        <span class="prev-text nav-default">关于Linux—shell你必须知道的</span>
-        <span class="prev-text nav-mobile">Prev</span>
-      </a>
-    
-    
-      <a class="next" href="/2021/06/21/Zigbee%E8%B7%AF%E7%94%B1%E5%88%86%E6%9E%90/">
-        <span class="next-text nav-default">Zigbee路由分析</span>
-        <span class="prev-text nav-mobile">Next</span>
-        <i class="iconfont icon-right"></i>
-      </a>
-    
-  </nav>
-
-        
-  <div class="comments" id="comments">
-    
-  </div>
-
-
-      </footer>
-    
-  </article>
-
     </div>
+</div>
+<style>
+    #noneimg img {
+        display: none;
+        z-index: 109;
+        width: 600px !important;
+        border-radius: 0px;
+        position: fixed;
+        box-shadow: 0 0 0px #c3c3c300 !important;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto !important;
+    }
 
-      </div>
+    @media screen and (max-width:600px) {
+        #noneimg img {
+            width: 88%
+        }
+    }
+</style>
+<script>
+    $(function () { $('#article').click(function (e) { if (e.target.tagName == "IMG") { if ($('#nonediv').length == 0) { let MImg = `<div id='noneimg'><img src='${e.target.currentSrc}'></div>`; let MDiv = "<div id='nonediv' style='cursor: pointer;display: none; position: fixed;left: 0;top: 0; right: 0;bottom: 0;background-color: #333;opacity:0.5;z-index: 108;'></div>"; $('#article').append(MDiv); $('#article').append(MImg); $("#nonediv").fadeIn("slow"); $("#noneimg img").fadeIn("slow") } } else { if ($('#nonediv').length !== 0) { $("#noneimg ").fadeOut("slow"); $("#nonediv").fadeOut("slow"); setTimeout(function () { $('#nonediv').remove(); $('#noneimg').remove() }, 500) } } }); $('.article-content').addClass('content-move') });
+</script>
+<div class="Last-Next">
+    
+    <a href="/2021/06/24/%E5%85%B3%E4%BA%8ELinux%E2%80%94shell%E4%BD%A0%E5%BF%85%E9%A1%BB%E7%9F%A5%E9%81%93%E7%9A%84/">
+        <div class="last">
+            <span>上一篇</span>
+            <p>关于Linux—shell你必须知道的</p>
+        </div>
+    </a>
+    
 
-      <footer id="colophon"><span class="copyright-year">
     
-        &copy;
+    <a href="/2021/06/21/Zigbee%E8%B7%AF%E7%94%B1%E5%88%86%E6%9E%90/">
+        <div class="next">
+            <span>下一篇</span>
+            <p>Zigbee路由分析</p>
+        </div>
+    </a>
     
-        2014 -
-    
-    2021
-    <span class="footer-author">Russshare.</span>
-    <span class="power-by">
-        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+</div>
+		
+<link rel="stylesheet" href="/css/food.css">
+
+<div class="footer">
+	<div class="Copyright">
+		©2021 By CHANGEQ. 主题：<a
+			style="text-decoration: none;display: contents; color: #898F9F;"
+			target="_blank" rel="noopener" href="https://github.com/qiaobug/hexo-theme-quiet">Quiet</a>
+	</div>
+	<div class="contact">
+		
+		<a target="_blank" rel="noopener" href="https://github.com/qiaobug">
+			<img src="https://cdn.jsdelivr.net/gh/duogongneng/MyBlogImg/imggithub.png" alt="Quiet主题">
+		</a>
+		
+	</div>
+</div>
+
+<script src="/js/jquery.min.js"></script>
+
+
+<script src="/js/gotop.js"></script>
+
+
+<style type="text/css">
+    @media screen and (min-width: 600px) {
+        .goTop>span {
+            display: block;
+            border-radius: 50%;
+            width: 66px;
+            height: 66px;
+            cursor: pointer;
+            opacity: 0.8;
+            background: rgba(18, 24, 58, 0.06);
+            text-align: center;
+            border: 1px solid rgba(18, 24, 58, 0.06);
+
+            transition: border .5s;
+            -moz-transition: border .5s;
+            /* Firefox 4 */
+            -webkit-transition: border .5s;
+            /* Safari 和 Chrome */
+            -o-transition: border .5s;
+            /* Opera */
+        }
+
+        .goTop>span:hover {
+            border: 1px solid #6680B3;
+        }
+
+
+        .goTop {
+            position: fixed;
+            right: 30px;
+            bottom: 80px;
+        }
+
+        .goTop>span>svg {
+            width: 30px;
+            height: 30px;
+            margin-top: 17.5px;
+            opacity: 0.7;
+        }
+
+    }
+
+    @media screen and (max-width: 600px) {
+        .goTop {
+            display: none;
+        }
+    }
+</style>
+<div class="goTop" id="js-go_top">
+    <span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <g>
+                <path d="M13 12v8h-2v-8H4l8-8 8 8z"></path>
+            </g>
+        </svg>
     </span>
-</span>
+</div>
+<script>
+    $('#js-go_top').gotoTop({ offset: 500, speed: 300, animationShow: { 'transform': 'translate(0,0)', 'transition': 'transform .5s ease-in-out' }, animationHide: { 'transform': 'translate(100px,0)', 'transition': 'transform .5s ease-in-out' } });
+</script>
+<script>
+	console.log('\n %c Hexo-Quiet 主题 %c https://github.com/QiaoBug/hexo-theme-quiet \n', 'color: #fadfa3; background: #030307; padding:5px 0;', 'background: #fadfa3; padding:5px 0;')
+</script>
+	</body>
 
-      </footer>
-
-      <div class="back-to-top" id="back-to-top">
-        <i class="iconfont icon-up"></i>
-      </div>
-    </div>
-    
-
-
-    
-
-
-
-
-  
-    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
-  
-
-  
-
-    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
-<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
-
-  </body>
 </html>

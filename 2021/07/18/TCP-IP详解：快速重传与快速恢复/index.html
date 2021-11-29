@@ -1,142 +1,278 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
-  <head>
-    
-<meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+<html>
+
+	<head>
+		
+<title>TCP-IP详解：快速重传与快速恢复-Quiet</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="shortcut icon" type="image/x-icon" href="/image/favicon.ico">
 
 
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="keywords" content="快速重传,快速恢复,">
+<meta name="description" content="">
 
 
-
-  <meta name="description" content="TCP-IP详解：快速重传与快速恢复"/>
-
+<script src="/js/jquery.min.js"></script>
 
 
+	<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+</head>
 
-  <meta name="keywords" content="快速重传,快速恢复," />
-
-
-
-
-
-  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+	<body>
+		
+<link rel="stylesheet" href="/css/page.css">
 
 
+<link rel="stylesheet" href="/css/page_cente.css">
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+<link rel="stylesheet" href="/css/atom-one-dark.css">
 
 
+<link rel="stylesheet" href="/css/header.css">
 
-<link rel="canonical" href="https://riddlego.github.io/2021/07/18/TCP-IP详解：快速重传与快速恢复/"/>
-
-
-<meta name="description" content="前言：前面有在文章里面提到过，但是这里还是再详细的看一下这个部分。（内容来自两篇帖子，看两遍记忆加倍。）1、快重传快重传算法首先要求接收方每收到一个失序的报文段就立即发出重复确认（为的是使发送方及早的知道有报文段没有到达对方）而不要等到自己发送数据时才捎带确认。 快重传算法规定，发送方只要一连收到三个重复确认就应当立即重传对方尚未收到的报文段，而不必继续等待为其设置的重传计时器到期。  2、快恢复">
-<meta property="og:type" content="article">
-<meta property="og:title" content="TCP-IP详解：快速重传与快速恢复">
-<meta property="og:url" content="https://riddlego.github.io/2021/07/18/TCP-IP%E8%AF%A6%E8%A7%A3%EF%BC%9A%E5%BF%AB%E9%80%9F%E9%87%8D%E4%BC%A0%E4%B8%8E%E5%BF%AB%E9%80%9F%E6%81%A2%E5%A4%8D/index.html">
-<meta property="og:site_name" content="RiddleGo">
-<meta property="og:description" content="前言：前面有在文章里面提到过，但是这里还是再详细的看一下这个部分。（内容来自两篇帖子，看两遍记忆加倍。）1、快重传快重传算法首先要求接收方每收到一个失序的报文段就立即发出重复确认（为的是使发送方及早的知道有报文段没有到达对方）而不要等到自己发送数据时才捎带确认。 快重传算法规定，发送方只要一连收到三个重复确认就应当立即重传对方尚未收到的报文段，而不必继续等待为其设置的重传计时器到期。  2、快恢复">
-<meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/%E5%BF%AB%E4%BC%A0.png">
-<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/%E5%BF%AB%E4%BC%A001.png">
-<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/%E5%BF%AB%E4%BC%A002.png">
-<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/%E5%BF%AB%E4%BC%A004.png">
-<meta property="article:published_time" content="2021-07-18T10:22:49.000Z">
-<meta property="article:modified_time" content="2021-07-18T10:30:20.071Z">
-<meta property="article:author" content="Russshare">
-<meta property="article:tag" content="快速重传">
-<meta property="article:tag" content="快速恢复">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/%E5%BF%AB%E4%BC%A0.png">
-
-
-<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
-<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
-
-
-
-
-
-<script type="text/javascript">
-  var themeConfig = {
-    fancybox: {
-      enable: false
-    },
-  };
-</script>
-
-
-
-
-  
-
-
-
-    <title> TCP-IP详解：快速重传与快速恢复 - RiddleGo </title>
-  <meta name="generator" content="Hexo 5.4.0"></head>
-
-  <body>
-    <div id="page">
-      <header id="masthead"><div class="site-header-inner">
-    <h1 class="site-title">
-        <a href="/." class="logo">RiddleGo</a>
-    </h1>
-
-    <nav id="nav-top">
+	<div class="header">
+		<div class="header-top">
+			<div class="h-left">
+				<a href="/">
+					<img src="/image/logo.png" alt="Quiet">
+				</a>
+			</div>
+			<div class="h-right">
+				<ul>
+					
+						
+								<li>
+									<a href="/">
+										HOME
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/archives">
+										ARCHIVE
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/categories">
+										CATEGORIES
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/tags">
+										TAGS
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/links">
+										LINKS
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/about">
+										ABOUT
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+				</ul>
+			</div>
+			<div class="h-right-close">
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+					<path fill="none" d="M0 0h24v24H0z" />
+					<path d="M3 4h18v2H3V4zm0 7h18v2H3v-2zm0 7h18v2H3v-2z" fill="rgba(68,68,68,1)" />
+				</svg>
+			</div>
+		</div>
+	</div>
+	<div class="sidebar">
+    <div class="topo">
+        <h2>CHANGEQ</h2>
+    </div>
+    <ul>
         
-            <ul id="menu-top" class="nav-top-items">
-                
-                    <li class="menu-item">
-                        <a href="/archives">
-                            
-                            
-                                Archives
-                            
-                        </a>
-                    </li>
-                
-                    <li class="menu-item">
-                        <a href="/about">
-                            
-                            
-                                About
-                            
-                        </a>
-                    </li>
-                
-            </ul>
+        <li>
+            <a href="/">HOME</a>
+        </li>
         
-  </nav>
+        <li>
+            <a href="/archives">ARCHIVE</a>
+        </li>
+        
+        <li>
+            <a href="/categories">CATEGORIES</a>
+        </li>
+        
+        <li>
+            <a href="/tags">TAGS</a>
+        </li>
+        
+        <li>
+            <a href="/links">LINKS</a>
+        </li>
+        
+        <li>
+            <a href="/about">ABOUT</a>
+        </li>
+        
+    </ul>
+    <div class="my_foot">
+        
+        <a target="_blank" rel="noopener" href="https://github.com/qiaobug">
+            <img src="https://cdn.jsdelivr.net/gh/duogongneng/MyBlogImg/imggithub.png" alt="Quiet主题">
+        </a>
+        
+    </div>
 </div>
+<div class='shelter'
+    style='cursor: pointer;display: none; position: fixed;left: 0;top: 0; right: 0;bottom: 0;background-color: #333;opacity:0.5;z-index: 108;'>
+</div>
+<style>
+    .sidebar {
+        width: 0;
+        height: 100%;
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        background: #fff;
+        z-index: 999;
+        text-align: center;
+        box-shadow: -6px 0 20px rgba(98, 94, 94, .815)
+    }
 
-      </header>
-      <div id="content">
-        
-    <div id="primary">
-        
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          TCP-IP详解：快速重传与快速恢复
-        
-      </h1>
+    .topo {
+        width: 100%;
+        height: 200px;
+        background: url(https://api.ixiaowai.cn/gqapi/gqapi.php) no-repeat;
+        background-size: 100% 100%;
+        position: relative;
+        display: flex;
+        align-items: flex-end
+    }
 
-      <time class="post-time">
-          7月 18 2021
-      </time>
-    </header>
+    .topo h2 {
+        color: #fff;
+        z-index: 1;
+        position: relative;
+        margin: 0 0 10px 10px;
+        font-size: 1.2em;
+        box-sizing: border-box
+    }
 
+    .topo:before {
+        content: '';
+        background-image: url(/image/pattern.png);
+        background-repeat: repeat;
+        height: 100%;
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 100%;
+        z-index: 1
+    }
 
+    .sidebar ul {
+        width: 100%;
+        margin-top: 50px
+    }
 
-    
-            <div class="post-content">
-            <h3 id="前言：前面有在文章里面提到过，但是这里还是再详细的看一下这个部分。（内容来自两篇帖子，看两遍记忆加倍。）"><a href="#前言：前面有在文章里面提到过，但是这里还是再详细的看一下这个部分。（内容来自两篇帖子，看两遍记忆加倍。）" class="headerlink" title="前言：前面有在文章里面提到过，但是这里还是再详细的看一下这个部分。（内容来自两篇帖子，看两遍记忆加倍。）"></a>前言：前面有在文章里面提到过，但是这里还是再详细的看一下这个部分。（内容来自两篇帖子，看两遍记忆加倍。）</h3><h3 id="1、快重传"><a href="#1、快重传" class="headerlink" title="1、快重传"></a>1、快重传</h3><p>快重传算法首先要求接收方每收到一个失序的报文段就立即发出重复确认（为的是使发送方及早的知道有报文段没有到达对方）而不要等到自己发送数据时才捎带确认。</p>
+    .sidebar ul li {
+        height: 50px;
+        list-style: none;
+        font-size: 1.2em;
+        text-align: right;
+        margin-right: 10px
+    }
+
+    .sidebar ul li a {
+        display: grid;
+        color: #5d606a;
+        text-overflow: ellipsis;
+        width: 100%;
+        text-decoration: none
+    }
+
+    .my_foot {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        position: absolute;
+        bottom: 0
+    }
+
+    .my_foot a {
+        text-decoration: none;
+        margin-right: 10px;
+        display: inline-block
+    }
+
+    .my_foot a img {
+        width: 30px;
+        height: 30px
+    }
+</style>
+
+<script>
+    $(function () { $('.h-right-close>svg').click(function () { $('.sidebar').animate({ width: "66%" }, 500); $('.shelter').fadeIn("slow") }); $('.shelter').click(function (e) { $('.sidebar').animate({ width: "0" }, 500); $('.shelter').fadeOut("slow") }) })
+</script>
+		<script>
+			$(function () { $(window).scroll(function () { if ($(document).scrollTop() > 100) { $(".header-top").removeClass("header-move2"); $('.header-top').addClass('header-move1') } else { $(".header-top").removeClass("header-move1"); $('.header-top').addClass('header-move2') } }) });
+		</script>
+<div class="header-bg ">
+    <div class="bg-content">
+        <ul class="tag">
+            
+            
+            <li><a href="/tags/快速重传">快速重传</a></li>
+            
+            <li><a href="/tags/快速恢复">快速恢复</a></li>
+            
+            
+        </ul>
+        <h1>TCP-IP详解：快速重传与快速恢复</h1>
+        <div class="article-info">
+            <div class="article-author">
+                
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+                    <g>
+                        <path fill="#12183A"
+                            d="M6.187 15.265A6.47 6.47 0 0 0 10 16.5a6.47 6.47 0 0 0 3.813-1.235A4.99 4.99 0 0 0 10 13.5a4.99 4.99 0 0 0-3.813 1.765zM5.082 14.25A6.485 6.485 0 0 1 10 12c1.965 0 3.726.872 4.918 2.25a6.5 6.5 0 1 0-9.836 0zM10 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0-1.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z">
+                        </path>
+                    </g>
+                </svg>
+                
+                <span> <a href="">CHANGEQ</a></span>
+                <p>2021-07-18 18:22:49</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="article-content">
+    <div id="article" class="content">
+        <h3 id="前言：前面有在文章里面提到过，但是这里还是再详细的看一下这个部分。（内容来自两篇帖子，看两遍记忆加倍。）"><a href="#前言：前面有在文章里面提到过，但是这里还是再详细的看一下这个部分。（内容来自两篇帖子，看两遍记忆加倍。）" class="headerlink" title="前言：前面有在文章里面提到过，但是这里还是再详细的看一下这个部分。（内容来自两篇帖子，看两遍记忆加倍。）"></a>前言：前面有在文章里面提到过，但是这里还是再详细的看一下这个部分。（内容来自两篇帖子，看两遍记忆加倍。）</h3><h3 id="1、快重传"><a href="#1、快重传" class="headerlink" title="1、快重传"></a>1、快重传</h3><p>快重传算法首先要求接收方每收到一个失序的报文段就立即发出重复确认（为的是使发送方及早的知道有报文段没有到达对方）而不要等到自己发送数据时才捎带确认。</p>
 <p>快重传算法规定，发送方只要一连收到三个重复确认就应当立即重传对方尚未收到的报文段，而不必继续等待为其设置的重传计时器到期。</p>
 <p><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/%E5%BF%AB%E4%BC%A0.png"></p>
 <h3 id="2、快恢复"><a href="#2、快恢复" class="headerlink" title="2、快恢复"></a>2、快恢复</h3><p>（1）当发送方连续收到三个重复确认时，就执行“乘法减小”算法，把慢开始门限减半。这是为了预防网络发生拥塞，但不执行慢开始算法。</p>
@@ -146,19 +282,19 @@
 <p>当采用快恢复算法时，慢开始算法只是在TCP连接建立时和网络超时时才使用。</p>
 <p>实际上接收方的缓存空间总是有限的，接收方根据自己的接收能力设定了接收窗口rwnd,并把这个窗口值写入TCP首部中的窗口字段，传送给发送方。因此，从接收方对发送方的流量控制的角度考虑，发送方的发送窗口一定不能超过对方给出的接收窗口值rwnd.那么，发送方的窗口的上限值应当取为接收方窗口rwnd和拥塞窗口cwnd这两个变量中较小的一个。</p>
 <p>发送方窗口的上限值 = Min [rwnd  ,cwnd]</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">当rwnd &lt; cwnd 时，是接收方的接收能力限制发送方窗口的最大值</span><br><span class="line"></span><br><span class="line">当rwnd &gt; cwnd 时，则是网络的拥塞限制发送方窗口的最大值</span><br></pre></td></tr></table></figure>
+<figure class="highlight bnf"><table><tr><td class="code"><pre><code class="hljs bnf">当rwnd <span class="hljs-attribute">&lt; cwnd 时，是接收方的接收能力限制发送方窗口的最大值</span><br><span class="hljs-attribute"></span><br><span class="hljs-attribute">当rwnd &gt;</span> cwnd 时，则是网络的拥塞限制发送方窗口的最大值<br></code></pre></td></tr></table></figure>
 
 
 <h2 id="再看一遍"><a href="#再看一遍" class="headerlink" title="再看一遍"></a>再看一遍</h2><h3 id="快速重传算法"><a href="#快速重传算法" class="headerlink" title="快速重传算法"></a>快速重传算法</h3><p>快速重传算法在之前的文章中有介绍，如果收到一个out-of-order的报文段时， TCP需要立刻产生一个ACK，这个ACK不应该被延时，目的在于让对方知道收到一个失序的报文，并告诉对方自己希望收到的报文seq，我们不知道这个重复的ACK的原因，因为还是会等待少量的重复ACK到来，如果连续收到3个或者3个以上的dup ACK，就被判断这个报文被丢失了，于是就需要立即重传丢失的数据段，这个地方不用等待定时器溢出。更详细的介绍可以参考：TCP-IP详解：超时重传机制</p>
 <h3 id="快速恢复算法"><a href="#快速恢复算法" class="headerlink" title="快速恢复算法"></a>快速恢复算法</h3><p>TCP Reno这个算法定义在RFC5681。快速重传和快速恢复算法一般同时使用。快速恢复算法是认为，你还有3个Duplicated Acks说明网络也不那么糟糕，所以没有必要像RTO超时那么强烈，并不需要重新回到慢启动进行，这样可能降低效率。所以协议栈会做如下工作</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1.  cwnd &#x3D; cwnd&#x2F;2 </span><br><span class="line"></span><br><span class="line">2. sshthresh &#x3D; cwnd </span><br></pre></td></tr></table></figure>
+<figure class="highlight ini"><table><tr><td class="code"><pre><code class="hljs ini"><span class="hljs-attr">1.  cwnd</span> = cwnd/<span class="hljs-number">2</span> <br><br><span class="hljs-attr">2. sshthresh</span> = cwnd <br></code></pre></td></tr></table></figure>
 <p>然后启动快速恢复算法：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">1. 设置cwnd &#x3D; ssthresh＋ACK个数＊MSS（一般情况下会是3个dup ACK）</span><br><span class="line"></span><br><span class="line">2. 重传丢失的数据包（对于重传丢失的那个数据包，可以参考TCP-IP详解：SACK选项）</span><br><span class="line"></span><br><span class="line">3. 如果只收到Dup ACK，那么cwnd &#x3D; cwnd + 1， 并且在允许的条件下发送一个报文段</span><br><span class="line"></span><br><span class="line">4. 如果收到新的ACK, 设置cwnd &#x3D; ssthresh， 进入拥塞避免阶段</span><br></pre></td></tr></table></figure>
+<figure class="highlight markdown"><table><tr><td class="code"><pre><code class="hljs markdown"><span class="hljs-bullet">1.</span> 设置cwnd = ssthresh＋ACK个数＊MSS（一般情况下会是3个dup ACK）<br><br><span class="hljs-bullet">2.</span> 重传丢失的数据包（对于重传丢失的那个数据包，可以参考TCP-IP详解：SACK选项）<br><br><span class="hljs-bullet">3.</span> 如果只收到Dup ACK，那么cwnd = cwnd + 1， 并且在允许的条件下发送一个报文段<br><br><span class="hljs-bullet">4.</span> 如果收到新的ACK, 设置cwnd = ssthresh， 进入拥塞避免阶段<br></code></pre></td></tr></table></figure>
 
 <h3 id="TCP-Reno算法"><a href="#TCP-Reno算法" class="headerlink" title="TCP Reno算法"></a>TCP Reno算法</h3><p>其实TCP Reno算法就是在慢启动和拥塞避免的基础上增加了快速重传和快速恢复算法，避免了在拥塞不严重的状况下，过大的减小拥塞窗口，降低TCP的传输效率,这个算法的示意图如下，可以看到cwnd在遇到3个dup ACK的时候 cwnd减半，进入快速恢复模式.<br><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/%E5%BF%AB%E4%BC%A002.png"></p>
 <p>这个算法存在的一个问题是，多个报文同时丢失的情况下会出现性能问题，系统会多次执行快速重传和快速恢复算法，多次降低cwnd的值，降低了传输的效率。</p>
 <p>可以看下Reno丢失2个包的状况了</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">1. cwnd &#x3D; 10 </span><br><span class="line"></span><br><span class="line">2. 发送数据包，但是3包和6包丢失</span><br><span class="line"></span><br><span class="line">3. 收到数据包1的ACK， cwnd &#x3D; 11</span><br><span class="line"></span><br><span class="line">4. 收到数据包2的ACK,  cwnd &#x3D; 11</span><br><span class="line"></span><br><span class="line">5. 收到数据包2的Dup ACK，cwnd &#x3D; 11</span><br><span class="line"></span><br><span class="line">6. 收到数据包2的Dup ACK, cwnd &#x3D; 11</span><br><span class="line"></span><br><span class="line">7. 收到数据包2的dup ACK, cwnd &#x3D; 11 ， 3个dup ACK，启动快速重传算法，立即发送数据包3，然后进入快速恢复阶段</span><br><span class="line"></span><br><span class="line">8. ssh &#x3D; 11&#x2F;2 &#x3D; 5  cwnd &#x3D; 5+3 &#x3D; 8</span><br><span class="line"></span><br><span class="line">9. 收到一个dup ACK cwnd + 1  直到收到一个新的ACK，cwnd &#x3D; ssh &#x3D; 5  进入拥塞避免阶段</span><br><span class="line"></span><br><span class="line">10. 可是又连续收到dup ACK，进行快速重传，cwnd又要减半进入快速恢复阶段.... </span><br></pre></td></tr></table></figure>
+<figure class="highlight apache"><table><tr><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">1</span>. cwnd = <span class="hljs-number">10</span> <br><br><span class="hljs-attribute">2</span>. 发送数据包，但是<span class="hljs-number">3</span>包和<span class="hljs-number">6</span>包丢失<br><br><span class="hljs-attribute">3</span>. 收到数据包<span class="hljs-number">1</span>的ACK， cwnd = <span class="hljs-number">11</span><br><br><span class="hljs-attribute">4</span>. 收到数据包<span class="hljs-number">2</span>的ACK,  cwnd = <span class="hljs-number">11</span><br><br><span class="hljs-attribute">5</span>. 收到数据包<span class="hljs-number">2</span>的Dup ACK，cwnd = <span class="hljs-number">11</span><br><br><span class="hljs-attribute">6</span>. 收到数据包<span class="hljs-number">2</span>的Dup ACK, cwnd = <span class="hljs-number">11</span><br><br><span class="hljs-attribute">7</span>. 收到数据包<span class="hljs-number">2</span>的dup ACK, cwnd = <span class="hljs-number">11</span> ， <span class="hljs-number">3</span>个dup ACK，启动快速重传算法，立即发送数据包<span class="hljs-number">3</span>，然后进入快速恢复阶段<br><br><span class="hljs-attribute">8</span>. ssh = <span class="hljs-number">11</span>/<span class="hljs-number">2</span> = <span class="hljs-number">5</span>  cwnd = <span class="hljs-number">5</span>+<span class="hljs-number">3</span> = <span class="hljs-number">8</span><br><br><span class="hljs-attribute">9</span>. 收到一个dup ACK cwnd + <span class="hljs-number">1</span>  直到收到一个新的ACK，cwnd = ssh = <span class="hljs-number">5</span>  进入拥塞避免阶段<br><br><span class="hljs-attribute">10</span>. 可是又连续收到dup ACK，进行快速重传，cwnd又要减半进入快速恢复阶段.... <br></code></pre></td></tr></table></figure>
 
 <p><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/%E5%BF%AB%E4%BC%A004.png"></p>
 <h3 id="TCP-New-Reno"><a href="#TCP-New-Reno" class="headerlink" title="TCP New Reno"></a>TCP New Reno</h3><p>这个算法是Reno算法的改进，没有使用SACK机制<br>当sender这边收到了3个Duplicated Acks，进入Fast Retransimit模式，开始重传重复Acks指示的那个包。</p>
@@ -166,89 +302,138 @@
 <p>————————————————<br>版权声明：本文为CSDN博主「CQ小子」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。<br>原文链接：<a target="_blank" rel="noopener" href="https://blog.csdn.net/wdscq1234/article/details/52529994">https://blog.csdn.net/wdscq1234/article/details/52529994</a></p>
 <p>————————————————<br>版权声明：本文为CSDN博主「Sunny_Oo」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。<br>原文链接：<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_36953135/article/details/77506009">https://blog.csdn.net/qq_36953135/article/details/77506009</a></p>
 
-            </div>
-          
-
-    
-      <footer class="post-footer">
-		
-		<div class="post-tags">
-		  
-			<a href="/tags/%E5%BF%AB%E9%80%9F%E9%87%8D%E4%BC%A0/">快速重传</a>
-		  
-			<a href="/tags/%E5%BF%AB%E9%80%9F%E6%81%A2%E5%A4%8D/">快速恢复</a>
-		  
-		</div>
-		
-
-        
-        
-  <nav class="post-nav">
-    
-      <a class="prev" href="/2021/07/18/TCP-IP%E8%AF%A6%E8%A7%A3%EF%BC%9ATCP%E6%B5%81%E9%87%8F%E6%8E%A7%E5%88%B6%E3%80%81%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6/">
-        <i class="iconfont icon-left"></i>
-        <span class="prev-text nav-default">TCP-IP详解：TCP流量控制、拥塞控制</span>
-        <span class="prev-text nav-mobile">Prev</span>
-      </a>
-    
-    
-      <a class="next" href="/2021/07/18/TCP%E7%9A%84%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E4%B8%8E%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B/">
-        <span class="next-text nav-default">TCP的三次握手与四次挥手</span>
-        <span class="prev-text nav-mobile">Next</span>
-        <i class="iconfont icon-right"></i>
-      </a>
-    
-  </nav>
-
-        
-  <div class="comments" id="comments">
-    
-  </div>
-
-
-      </footer>
-    
-  </article>
-
     </div>
+</div>
+<style>
+    #noneimg img {
+        display: none;
+        z-index: 109;
+        width: 600px !important;
+        border-radius: 0px;
+        position: fixed;
+        box-shadow: 0 0 0px #c3c3c300 !important;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto !important;
+    }
 
-      </div>
+    @media screen and (max-width:600px) {
+        #noneimg img {
+            width: 88%
+        }
+    }
+</style>
+<script>
+    $(function () { $('#article').click(function (e) { if (e.target.tagName == "IMG") { if ($('#nonediv').length == 0) { let MImg = `<div id='noneimg'><img src='${e.target.currentSrc}'></div>`; let MDiv = "<div id='nonediv' style='cursor: pointer;display: none; position: fixed;left: 0;top: 0; right: 0;bottom: 0;background-color: #333;opacity:0.5;z-index: 108;'></div>"; $('#article').append(MDiv); $('#article').append(MImg); $("#nonediv").fadeIn("slow"); $("#noneimg img").fadeIn("slow") } } else { if ($('#nonediv').length !== 0) { $("#noneimg ").fadeOut("slow"); $("#nonediv").fadeOut("slow"); setTimeout(function () { $('#nonediv').remove(); $('#noneimg').remove() }, 500) } } }); $('.article-content').addClass('content-move') });
+</script>
+<div class="Last-Next">
+    
+    <a href="/2021/07/18/TCP-IP%E8%AF%A6%E8%A7%A3%EF%BC%9ATCP%E6%B5%81%E9%87%8F%E6%8E%A7%E5%88%B6%E3%80%81%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6/">
+        <div class="last">
+            <span>上一篇</span>
+            <p>TCP-IP详解：TCP流量控制、拥塞控制</p>
+        </div>
+    </a>
+    
 
-      <footer id="colophon"><span class="copyright-year">
     
-        &copy;
+    <a href="/2021/07/18/TCP%E7%9A%84%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E4%B8%8E%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B/">
+        <div class="next">
+            <span>下一篇</span>
+            <p>TCP的三次握手与四次挥手</p>
+        </div>
+    </a>
     
-        2014 -
-    
-    2021
-    <span class="footer-author">Russshare.</span>
-    <span class="power-by">
-        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+</div>
+		
+<link rel="stylesheet" href="/css/food.css">
+
+<div class="footer">
+	<div class="Copyright">
+		©2021 By CHANGEQ. 主题：<a
+			style="text-decoration: none;display: contents; color: #898F9F;"
+			target="_blank" rel="noopener" href="https://github.com/qiaobug/hexo-theme-quiet">Quiet</a>
+	</div>
+	<div class="contact">
+		
+		<a target="_blank" rel="noopener" href="https://github.com/qiaobug">
+			<img src="https://cdn.jsdelivr.net/gh/duogongneng/MyBlogImg/imggithub.png" alt="Quiet主题">
+		</a>
+		
+	</div>
+</div>
+
+<script src="/js/jquery.min.js"></script>
+
+
+<script src="/js/gotop.js"></script>
+
+
+<style type="text/css">
+    @media screen and (min-width: 600px) {
+        .goTop>span {
+            display: block;
+            border-radius: 50%;
+            width: 66px;
+            height: 66px;
+            cursor: pointer;
+            opacity: 0.8;
+            background: rgba(18, 24, 58, 0.06);
+            text-align: center;
+            border: 1px solid rgba(18, 24, 58, 0.06);
+
+            transition: border .5s;
+            -moz-transition: border .5s;
+            /* Firefox 4 */
+            -webkit-transition: border .5s;
+            /* Safari 和 Chrome */
+            -o-transition: border .5s;
+            /* Opera */
+        }
+
+        .goTop>span:hover {
+            border: 1px solid #6680B3;
+        }
+
+
+        .goTop {
+            position: fixed;
+            right: 30px;
+            bottom: 80px;
+        }
+
+        .goTop>span>svg {
+            width: 30px;
+            height: 30px;
+            margin-top: 17.5px;
+            opacity: 0.7;
+        }
+
+    }
+
+    @media screen and (max-width: 600px) {
+        .goTop {
+            display: none;
+        }
+    }
+</style>
+<div class="goTop" id="js-go_top">
+    <span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <g>
+                <path d="M13 12v8h-2v-8H4l8-8 8 8z"></path>
+            </g>
+        </svg>
     </span>
-</span>
+</div>
+<script>
+    $('#js-go_top').gotoTop({ offset: 500, speed: 300, animationShow: { 'transform': 'translate(0,0)', 'transition': 'transform .5s ease-in-out' }, animationHide: { 'transform': 'translate(100px,0)', 'transition': 'transform .5s ease-in-out' } });
+</script>
+<script>
+	console.log('\n %c Hexo-Quiet 主题 %c https://github.com/QiaoBug/hexo-theme-quiet \n', 'color: #fadfa3; background: #030307; padding:5px 0;', 'background: #fadfa3; padding:5px 0;')
+</script>
+	</body>
 
-      </footer>
-
-      <div class="back-to-top" id="back-to-top">
-        <i class="iconfont icon-up"></i>
-      </div>
-    </div>
-    
-
-
-    
-
-
-
-
-  
-    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
-  
-
-  
-
-    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
-<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
-
-  </body>
 </html>

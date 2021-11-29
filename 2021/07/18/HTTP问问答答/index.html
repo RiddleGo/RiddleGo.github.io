@@ -1,147 +1,278 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
-  <head>
-    
-<meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+<html>
+
+	<head>
+		
+<title>HTTP问问答答-Quiet</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="shortcut icon" type="image/x-icon" href="/image/favicon.ico">
 
 
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="keywords" content="HTTP,面试,">
+<meta name="description" content="">
 
 
-
-  <meta name="description" content="HTTP问问答答"/>
-
+<script src="/js/jquery.min.js"></script>
 
 
+	<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+</head>
 
-  <meta name="keywords" content="HTTP,面试," />
-
-
-
-
-
-  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+	<body>
+		
+<link rel="stylesheet" href="/css/page.css">
 
 
+<link rel="stylesheet" href="/css/page_cente.css">
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+<link rel="stylesheet" href="/css/atom-one-dark.css">
 
 
+<link rel="stylesheet" href="/css/header.css">
 
-<link rel="canonical" href="https://riddlego.github.io/2021/07/18/HTTP问问答答/"/>
-
-
-<meta name="description" content="前言最近如果有机会的话可能要面试，如果没有，那当我没说。但是一直学习的就是偏应用型的，就是用的时候去查，很多基础的理论知识倒是不求甚解。于是就在这里做个总结blablabla 1、HTTP有哪些方法？1.1 HTTP1.0定义了三种请求方法： GET, POST 和 HEAD方法GET: 通常用于请求服务器发送某些资源 POST: 发送数据给服务器 HEAD: 请求资源的头部信息, 并且这些头部与">
-<meta property="og:type" content="article">
-<meta property="og:title" content="HTTP问问答答">
-<meta property="og:url" content="https://riddlego.github.io/2021/07/18/HTTP%E9%97%AE%E9%97%AE%E7%AD%94%E7%AD%94/index.html">
-<meta property="og:site_name" content="RiddleGo">
-<meta property="og:description" content="前言最近如果有机会的话可能要面试，如果没有，那当我没说。但是一直学习的就是偏应用型的，就是用的时候去查，很多基础的理论知识倒是不求甚解。于是就在这里做个总结blablabla 1、HTTP有哪些方法？1.1 HTTP1.0定义了三种请求方法： GET, POST 和 HEAD方法GET: 通常用于请求服务器发送某些资源 POST: 发送数据给服务器 HEAD: 请求资源的头部信息, 并且这些头部与">
-<meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/http01.png">
-<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/http02.png">
-<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/http023.png">
-<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/http03.png">
-<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/HTTP05.png">
-<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/http04.png">
-<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/http06.png">
-<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/http07.png">
-<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/http08.png">
-<meta property="article:published_time" content="2021-07-18T09:31:56.000Z">
-<meta property="article:modified_time" content="2021-08-26T12:30:26.395Z">
-<meta property="article:author" content="Russshare">
-<meta property="article:tag" content="HTTP">
-<meta property="article:tag" content="面试">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/http01.png">
-
-
-<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
-<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
-
-
-
-
-
-<script type="text/javascript">
-  var themeConfig = {
-    fancybox: {
-      enable: false
-    },
-  };
-</script>
-
-
-
-
-  
-
-
-
-    <title> HTTP问问答答 - RiddleGo </title>
-  <meta name="generator" content="Hexo 5.4.0"></head>
-
-  <body>
-    <div id="page">
-      <header id="masthead"><div class="site-header-inner">
-    <h1 class="site-title">
-        <a href="/." class="logo">RiddleGo</a>
-    </h1>
-
-    <nav id="nav-top">
+	<div class="header">
+		<div class="header-top">
+			<div class="h-left">
+				<a href="/">
+					<img src="/image/logo.png" alt="Quiet">
+				</a>
+			</div>
+			<div class="h-right">
+				<ul>
+					
+						
+								<li>
+									<a href="/">
+										HOME
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/archives">
+										ARCHIVE
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/categories">
+										CATEGORIES
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/tags">
+										TAGS
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/links">
+										LINKS
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/about">
+										ABOUT
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+				</ul>
+			</div>
+			<div class="h-right-close">
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+					<path fill="none" d="M0 0h24v24H0z" />
+					<path d="M3 4h18v2H3V4zm0 7h18v2H3v-2zm0 7h18v2H3v-2z" fill="rgba(68,68,68,1)" />
+				</svg>
+			</div>
+		</div>
+	</div>
+	<div class="sidebar">
+    <div class="topo">
+        <h2>CHANGEQ</h2>
+    </div>
+    <ul>
         
-            <ul id="menu-top" class="nav-top-items">
-                
-                    <li class="menu-item">
-                        <a href="/archives">
-                            
-                            
-                                Archives
-                            
-                        </a>
-                    </li>
-                
-                    <li class="menu-item">
-                        <a href="/about">
-                            
-                            
-                                About
-                            
-                        </a>
-                    </li>
-                
-            </ul>
+        <li>
+            <a href="/">HOME</a>
+        </li>
         
-  </nav>
+        <li>
+            <a href="/archives">ARCHIVE</a>
+        </li>
+        
+        <li>
+            <a href="/categories">CATEGORIES</a>
+        </li>
+        
+        <li>
+            <a href="/tags">TAGS</a>
+        </li>
+        
+        <li>
+            <a href="/links">LINKS</a>
+        </li>
+        
+        <li>
+            <a href="/about">ABOUT</a>
+        </li>
+        
+    </ul>
+    <div class="my_foot">
+        
+        <a target="_blank" rel="noopener" href="https://github.com/qiaobug">
+            <img src="https://cdn.jsdelivr.net/gh/duogongneng/MyBlogImg/imggithub.png" alt="Quiet主题">
+        </a>
+        
+    </div>
 </div>
+<div class='shelter'
+    style='cursor: pointer;display: none; position: fixed;left: 0;top: 0; right: 0;bottom: 0;background-color: #333;opacity:0.5;z-index: 108;'>
+</div>
+<style>
+    .sidebar {
+        width: 0;
+        height: 100%;
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        background: #fff;
+        z-index: 999;
+        text-align: center;
+        box-shadow: -6px 0 20px rgba(98, 94, 94, .815)
+    }
 
-      </header>
-      <div id="content">
-        
-    <div id="primary">
-        
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          HTTP问问答答
-        
-      </h1>
+    .topo {
+        width: 100%;
+        height: 200px;
+        background: url(https://api.ixiaowai.cn/gqapi/gqapi.php) no-repeat;
+        background-size: 100% 100%;
+        position: relative;
+        display: flex;
+        align-items: flex-end
+    }
 
-      <time class="post-time">
-          7月 18 2021
-      </time>
-    </header>
+    .topo h2 {
+        color: #fff;
+        z-index: 1;
+        position: relative;
+        margin: 0 0 10px 10px;
+        font-size: 1.2em;
+        box-sizing: border-box
+    }
 
+    .topo:before {
+        content: '';
+        background-image: url(/image/pattern.png);
+        background-repeat: repeat;
+        height: 100%;
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 100%;
+        z-index: 1
+    }
 
+    .sidebar ul {
+        width: 100%;
+        margin-top: 50px
+    }
 
-    
-            <div class="post-content">
-            <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>最近如果有机会的话可能要面试，如果没有，那当我没说。<br>但是一直学习的就是偏应用型的，就是用的时候去查，很多基础的理论知识倒是不求甚解。<br>于是就在这里做个总结blablabla</p>
+    .sidebar ul li {
+        height: 50px;
+        list-style: none;
+        font-size: 1.2em;
+        text-align: right;
+        margin-right: 10px
+    }
+
+    .sidebar ul li a {
+        display: grid;
+        color: #5d606a;
+        text-overflow: ellipsis;
+        width: 100%;
+        text-decoration: none
+    }
+
+    .my_foot {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        position: absolute;
+        bottom: 0
+    }
+
+    .my_foot a {
+        text-decoration: none;
+        margin-right: 10px;
+        display: inline-block
+    }
+
+    .my_foot a img {
+        width: 30px;
+        height: 30px
+    }
+</style>
+
+<script>
+    $(function () { $('.h-right-close>svg').click(function () { $('.sidebar').animate({ width: "66%" }, 500); $('.shelter').fadeIn("slow") }); $('.shelter').click(function (e) { $('.sidebar').animate({ width: "0" }, 500); $('.shelter').fadeOut("slow") }) })
+</script>
+		<script>
+			$(function () { $(window).scroll(function () { if ($(document).scrollTop() > 100) { $(".header-top").removeClass("header-move2"); $('.header-top').addClass('header-move1') } else { $(".header-top").removeClass("header-move1"); $('.header-top').addClass('header-move2') } }) });
+		</script>
+<div class="header-bg ">
+    <div class="bg-content">
+        <ul class="tag">
+            
+            
+            <li><a href="/tags/HTTP">HTTP</a></li>
+            
+            <li><a href="/tags/面试">面试</a></li>
+            
+            
+        </ul>
+        <h1>HTTP问问答答</h1>
+        <div class="article-info">
+            <div class="article-author">
+                
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+                    <g>
+                        <path fill="#12183A"
+                            d="M6.187 15.265A6.47 6.47 0 0 0 10 16.5a6.47 6.47 0 0 0 3.813-1.235A4.99 4.99 0 0 0 10 13.5a4.99 4.99 0 0 0-3.813 1.765zM5.082 14.25A6.485 6.485 0 0 1 10 12c1.965 0 3.726.872 4.918 2.25a6.5 6.5 0 1 0-9.836 0zM10 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0-1.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z">
+                        </path>
+                    </g>
+                </svg>
+                
+                <span> <a href="">CHANGEQ</a></span>
+                <p>2021-07-18 17:31:56</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="article-content">
+    <div id="article" class="content">
+        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>最近如果有机会的话可能要面试，如果没有，那当我没说。<br>但是一直学习的就是偏应用型的，就是用的时候去查，很多基础的理论知识倒是不求甚解。<br>于是就在这里做个总结blablabla</p>
 <h3 id="1、HTTP有哪些方法？"><a href="#1、HTTP有哪些方法？" class="headerlink" title="1、HTTP有哪些方法？"></a>1、HTTP有哪些方法？</h3><h4 id="1-1-HTTP1-0定义了三种请求方法：-GET-POST-和-HEAD方法"><a href="#1-1-HTTP1-0定义了三种请求方法：-GET-POST-和-HEAD方法" class="headerlink" title="1.1 HTTP1.0定义了三种请求方法： GET, POST 和 HEAD方法"></a>1.1 HTTP1.0定义了三种请求方法： GET, POST 和 HEAD方法</h4><p>GET: 通常用于请求服务器发送某些资源</p>
 <p>POST: 发送数据给服务器</p>
 <p>HEAD: 请求资源的头部信息, 并且这些头部与 HTTP GET 方法请求时返回的一致. 该请求方法的一个使用场景是在下载一个大文件前先获取其大小再决定是否要下载, 以此可以节约带宽资源</p>
@@ -162,14 +293,14 @@
 <p><strong>而PUT <a target="_blank" rel="noopener" href="https://www.jianshu.com/articles/820357430%E7%9A%84%E8%AF%AD%E4%B9%89%E6%98%AF%E6%9B%B4%E6%96%B0%E5%AF%B9%E5%BA%94%E6%96%87%E7%AB%A0%E4%B8%8B%E7%9A%84%E8%B5%84%E6%BA%90%EF%BC%88%E6%AF%94%E5%A6%82%E4%BF%AE%E6%94%B9%E4%BD%9C%E8%80%85%E5%90%8D%E7%A7%B0%E7%AD%89%EF%BC%89%EF%BC%8C%E8%BF%99%E4%B8%AAURI%E6%8C%87%E5%90%91%E7%9A%84%E5%B0%B1%E6%98%AF%E5%8D%95%E4%B8%80%E8%B5%84%E6%BA%90%EF%BC%8C%E8%80%8C%E4%B8%94%E6%98%AF%E5%B9%82%E7%AD%89%E7%9A%84%EF%BC%8C%E6%AF%94%E5%A6%82%E4%BD%A0%E6%8A%8A%E3%80%8E%E5%88%98%E5%BE%B7%E5%8D%8E%E3%80%8F%E4%BF%AE%E6%94%B9%E6%88%90%E3%80%8E%E8%94%A1%E5%BE%90%E5%9D%A4%E3%80%8F%EF%BC%8C%E6%8F%90%E4%BA%A4%E5%A4%9A%E5%B0%91%E6%AC%A1%E9%83%BD%E6%98%AF%E4%BF%AE%E6%94%B9%E6%88%90%E3%80%8E%E8%94%A1%E5%BE%90%E5%9D%A4%E3%80%8F">https://www.jianshu.com/articles/820357430的语义是更新对应文章下的资源（比如修改作者名称等），这个URI指向的就是单一资源，而且是幂等的，比如你把『刘德华』修改成『蔡徐坤』，提交多少次都是修改成『蔡徐坤』</a></strong></p>
 <h3 id="4、PUT和PATCH都是给服务器发送修改资源，有什么区别？"><a href="#4、PUT和PATCH都是给服务器发送修改资源，有什么区别？" class="headerlink" title="4、PUT和PATCH都是给服务器发送修改资源，有什么区别？"></a>4、PUT和PATCH都是给服务器发送修改资源，有什么区别？</h3><p>PUT和PATCH都是更新资源，而PATCH用来对已知资源进行局部更新。</p>
 <p>比如我们有一篇文章的地址<a target="_blank" rel="noopener" href="https://www.jianshu.com/articles/820357430,%E8%BF%99%E7%AF%87%E6%96%87%E7%AB%A0%E7%9A%84%E5%8F%AF%E4%BB%A5%E8%A1%A8%E7%A4%BA%E4%B8%BA%EF%BC%9A">https://www.jianshu.com/articles/820357430,这篇文章的可以表示为：</a></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">article &#x3D; &#123;</span><br><span class="line">    author: &#39;dxy&#39;,</span><br><span class="line">    creationDate: &#39;2019-6-12&#39;,</span><br><span class="line">    content: &#39;我写文章像蔡徐坤&#39;,</span><br><span class="line">    id: 820357430</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight properties"><table><tr><td class="code"><pre><code class="hljs properties"><span class="hljs-attr">article</span> = <span class="hljs-string">&#123;</span><br>    <span class="hljs-attr">author</span>: <span class="hljs-string">&#x27;dxy&#x27;,</span><br>    <span class="hljs-attr">creationDate</span>: <span class="hljs-string">&#x27;2019-6-12&#x27;,</span><br>    <span class="hljs-attr">content</span>: <span class="hljs-string">&#x27;我写文章像蔡徐坤&#x27;,</span><br>    <span class="hljs-attr">id</span>: <span class="hljs-string">820357430</span><br><span class="hljs-attr">&#125;</span><br></code></pre></td></tr></table></figure>
 <p>当我们要修改文章的作者时，我们可以直接发送PUT <a target="_blank" rel="noopener" href="https://www.jianshu.com/articles/820357430%EF%BC%8C%E8%BF%99%E4%B8%AA%E6%97%B6%E5%80%99%E7%9A%84%E6%95%B0%E6%8D%AE%E5%BA%94%E8%AF%A5%E6%98%AF">https://www.jianshu.com/articles/820357430，这个时候的数据应该是</a>:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    author:&#39;蔡徐坤&#39;,</span><br><span class="line">    creationDate: &#39;2019-6-12&#39;,</span><br><span class="line">    content: &#39;我写文章像蔡徐坤&#39;,</span><br><span class="line">    id: 820357430</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight 1c"><table><tr><td class="code"><pre><code class="hljs 1c">&#123;<br>    author:&#x27;蔡徐坤&#x27;,<br>    creationDate: &#x27;<span class="hljs-number">2019</span>-6-12&#x27;,<br>    content: &#x27;我写文章像蔡徐坤&#x27;,<br>    id: <span class="hljs-number">820357430</span><br>&#125;<br></code></pre></td></tr></table></figure>
 <p>这种直接覆盖资源的修改方式应该用put，但是你觉得每次都带有这么多无用的信息，那么可以发送PATCH <a target="_blank" rel="noopener" href="https://www.jianshu.com/articles/820357430%EF%BC%8C%E8%BF%99%E4%B8%AA%E6%97%B6%E5%80%99%E5%8F%AA%E9%9C%80%E8%A6%81">https://www.jianshu.com/articles/820357430，这个时候只需要</a>:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    author:&#39;蔡徐坤&#39;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight css"><table><tr><td class="code"><pre><code class="hljs css">&#123;<br>    author:<span class="hljs-string">&#x27;蔡徐坤&#x27;</span>,<br>&#125;<br></code></pre></td></tr></table></figure>
 
 <h3 id="5、http的请求报文是什么样的？"><a href="#5、http的请求报文是什么样的？" class="headerlink" title="5、http的请求报文是什么样的？"></a>5、http的请求报文是什么样的？</h3><p>请求报文有4部分组成:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">请求行</span><br><span class="line"></span><br><span class="line">请求头部</span><br><span class="line"></span><br><span class="line">空行</span><br><span class="line"></span><br><span class="line">请求体</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><code class="hljs plain">请求行<br><br>请求头部<br><br>空行<br><br>请求体<br></code></pre></td></tr></table></figure>
 
 <p><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/http01.png"></p>
 <ul>
@@ -184,7 +315,7 @@
 </ul>
 <p><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/http02.png"><br><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/http023.png"></p>
 <h3 id="6、http的响应报文是什么样的？"><a href="#6、http的响应报文是什么样的？" class="headerlink" title="6、http的响应报文是什么样的？"></a>6、http的响应报文是什么样的？</h3><p>响应报文有4部分组成:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">响应行</span><br><span class="line"></span><br><span class="line">响应头</span><br><span class="line"></span><br><span class="line">空行</span><br><span class="line"></span><br><span class="line">响应体</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><code class="hljs plain">响应行<br><br>响应头<br><br>空行<br><br>响应体<br></code></pre></td></tr></table></figure>
 <p><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/http03.png"></p>
 <ul>
 <li>响应行： 由协议版本，状态码和状态码的原因短语组成，例如HTTP/1.1 200 OK。</li>
@@ -192,23 +323,23 @@
 <li>响应体：服务器响应的数据</li>
 </ul>
 <h3 id="7、聊一聊HTTP的部首有哪些？"><a href="#7、聊一聊HTTP的部首有哪些？" class="headerlink" title="7、聊一聊HTTP的部首有哪些？"></a>7、聊一聊HTTP的部首有哪些？</h3><p><strong>通用首部字段</strong>（General Header Fields）：请求报文和响应报文两方都会使用的首部</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">Cache-Control  控制缓存 ✨</span><br><span class="line"></span><br><span class="line">Connection 连接管理、逐条首部 ✨</span><br><span class="line"></span><br><span class="line">Upgrade  升级为其他协议</span><br><span class="line"></span><br><span class="line">via 代理服务器的相关信息</span><br><span class="line"></span><br><span class="line">Wraning 错误和警告通知</span><br><span class="line"></span><br><span class="line">Transfor-Encoding 报文主体的传输编码格式 ✨</span><br><span class="line"></span><br><span class="line">Trailer 报文末端的首部一览</span><br><span class="line"></span><br><span class="line">Pragma 报文指令</span><br><span class="line"></span><br><span class="line">Date 创建报文的日期</span><br></pre></td></tr></table></figure>
+<figure class="highlight lasso"><table><tr><td class="code"><pre><code class="hljs lasso"><span class="hljs-keyword">Cache</span><span class="hljs-params">-Control</span>  控制缓存 ✨<br><br>Connection 连接管理、逐条首部 ✨<br><br>Upgrade  升级为其他协议<br><br>via 代理服务器的相关信息<br><br>Wraning 错误和警告通知<br><br>Transfor<span class="hljs-params">-Encoding</span> 报文主体的传输编码格式 ✨<br><br>Trailer 报文末端的首部一览<br><br>Pragma 报文指令<br><br><span class="hljs-built_in">Date</span> 创建报文的日期<br></code></pre></td></tr></table></figure>
 <p><strong>请求首部字段</strong>（Reauest Header Fields）:客户端向服务器发送请求的报文时使用的首部</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">Accept 客户端或者代理能够处理的媒体类型 ✨</span><br><span class="line"></span><br><span class="line">Accept-Encoding 优先可处理的编码格式</span><br><span class="line"></span><br><span class="line">Accept-Language 优先可处理的自然语言</span><br><span class="line"></span><br><span class="line">Accept-Charset 优先可以处理的字符集</span><br><span class="line"></span><br><span class="line">If-Match 比较实体标记（ETage） ✨</span><br><span class="line"></span><br><span class="line">If-None-Match 比较实体标记（ETage）与 If-Match相反 ✨</span><br><span class="line"></span><br><span class="line">If-Modified-Since 比较资源更新时间（Last-Modified）✨</span><br><span class="line"></span><br><span class="line">If-Unmodified-Since比较资源更新时间（Last-Modified），与 If-Modified-Since相反 ✨</span><br><span class="line"></span><br><span class="line">If-Rnages 资源未更新时发送实体byte的范围请求</span><br><span class="line"></span><br><span class="line">Range 实体的字节范围请求 ✨</span><br><span class="line"></span><br><span class="line">Authorization web的认证信息 ✨</span><br><span class="line"></span><br><span class="line">Proxy-Authorization 代理服务器要求web认证信息</span><br><span class="line"></span><br><span class="line">Host 请求资源所在服务器 ✨</span><br><span class="line"></span><br><span class="line">From 用户的邮箱地址</span><br><span class="line"></span><br><span class="line">User-Agent 客户端程序信息 ✨</span><br><span class="line"></span><br><span class="line">Max-Forwrads 最大的逐跳次数</span><br><span class="line"></span><br><span class="line">TE 传输编码的优先级</span><br><span class="line"></span><br><span class="line">Referer 请求原始放的url</span><br><span class="line"></span><br><span class="line">Expect 期待服务器的特定行为</span><br></pre></td></tr></table></figure>
+<figure class="highlight mathematica"><table><tr><td class="code"><pre><code class="hljs mathematica"><span class="hljs-variable">Accept</span> 客户端或者代理能够处理的媒体类型 ✨<br><br><span class="hljs-variable">Accept</span><span class="hljs-operator">-</span><span class="hljs-variable">Encoding</span> 优先可处理的编码格式<br><br><span class="hljs-variable">Accept</span><span class="hljs-operator">-</span><span class="hljs-built_in">Language</span> 优先可处理的自然语言<br><br><span class="hljs-variable">Accept</span><span class="hljs-operator">-</span><span class="hljs-variable">Charset</span> 优先可以处理的字符集<br><br><span class="hljs-built_in">If</span><span class="hljs-operator">-</span><span class="hljs-variable">Match</span> 比较实体标记（<span class="hljs-variable">ETage</span>） ✨<br><br><span class="hljs-built_in">If</span><span class="hljs-operator">-</span><span class="hljs-built_in">None</span><span class="hljs-operator">-</span><span class="hljs-variable">Match</span> 比较实体标记（<span class="hljs-variable">ETage</span>）与 <span class="hljs-built_in">If</span><span class="hljs-operator">-</span><span class="hljs-variable">Match</span>相反 ✨<br><br><span class="hljs-built_in">If</span><span class="hljs-operator">-</span><span class="hljs-variable">Modified</span><span class="hljs-operator">-</span><span class="hljs-variable">Since</span> 比较资源更新时间（<span class="hljs-built_in">Last</span><span class="hljs-operator">-</span><span class="hljs-variable">Modified</span>）✨<br><br><span class="hljs-built_in">If</span><span class="hljs-operator">-</span><span class="hljs-variable">Unmodified</span><span class="hljs-operator">-</span><span class="hljs-variable">Since</span>比较资源更新时间（<span class="hljs-built_in">Last</span><span class="hljs-operator">-</span><span class="hljs-variable">Modified</span>），与 <span class="hljs-built_in">If</span><span class="hljs-operator">-</span><span class="hljs-variable">Modified</span><span class="hljs-operator">-</span><span class="hljs-variable">Since</span>相反 ✨<br><br><span class="hljs-built_in">If</span><span class="hljs-operator">-</span><span class="hljs-variable">Rnages</span> 资源未更新时发送实体<span class="hljs-variable">byte</span>的范围请求<br><br><span class="hljs-built_in">Range</span> 实体的字节范围请求 ✨<br><br><span class="hljs-variable">Authorization</span> <span class="hljs-variable">web</span>的认证信息 ✨<br><br><span class="hljs-variable">Proxy</span><span class="hljs-operator">-</span><span class="hljs-variable">Authorization</span> 代理服务器要求<span class="hljs-variable">web</span>认证信息<br><br><span class="hljs-variable">Host</span> 请求资源所在服务器 ✨<br><br><span class="hljs-variable">From</span> 用户的邮箱地址<br><br><span class="hljs-variable">User</span><span class="hljs-operator">-</span><span class="hljs-variable">Agent</span> 客户端程序信息 ✨<br><br><span class="hljs-built_in">Max</span><span class="hljs-operator">-</span><span class="hljs-variable">Forwrads</span> 最大的逐跳次数<br><br><span class="hljs-variable">TE</span> 传输编码的优先级<br><br><span class="hljs-variable">Referer</span> 请求原始放的<span class="hljs-variable">url</span><br><br><span class="hljs-variable">Expect</span> 期待服务器的特定行为<br></code></pre></td></tr></table></figure>
 <p><strong>响应首部字段</strong>（Response Header Fields）:从服务器向客户端响应时使用的字段</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">Accept-Ranges 能接受的字节范围</span><br><span class="line"></span><br><span class="line">Age 推算资源创建经过时间</span><br><span class="line"></span><br><span class="line">Location 令客户端重定向的URI ✨</span><br><span class="line"></span><br><span class="line">vary  代理服务器的缓存信息</span><br><span class="line"></span><br><span class="line">ETag 能够表示资源唯一资源的字符串 ✨</span><br><span class="line"></span><br><span class="line">WWW-Authenticate 服务器要求客户端的验证信息</span><br><span class="line"></span><br><span class="line">Proxy-Authenticate 代理服务器要求客户端的验证信息</span><br><span class="line"></span><br><span class="line">Server 服务器的信息 ✨</span><br><span class="line"></span><br><span class="line">Retry-After 和状态码503 一起使用的首部字段，表示下次请求服务器的时间</span><br></pre></td></tr></table></figure>
+<figure class="highlight pgsql"><table><tr><td class="code"><pre><code class="hljs pgsql">Accept-Ranges 能接受的字节范围<br><br>Age 推算资源创建经过时间<br><br><span class="hljs-keyword">Location</span> 令客户端重定向的URI ✨<br><br>vary  代理服务器的缓存信息<br><br>ETag 能够表示资源唯一资源的字符串 ✨<br><br>WWW-Authenticate 服务器要求客户端的验证信息<br><br>Proxy-Authenticate 代理服务器要求客户端的验证信息<br><br><span class="hljs-keyword">Server</span> 服务器的信息 ✨<br><br>Retry-<span class="hljs-keyword">After</span> 和状态码<span class="hljs-number">503</span> 一起使用的首部字段，表示下次请求服务器的时间<br></code></pre></td></tr></table></figure>
 <p><strong>实体首部字段</strong>（Entiy Header Fields）:针对请求报文和响应报文的实体部分使用首部(我觉的这个就是主体里面的)</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">Allow 资源可支持http请求的方法 ✨</span><br><span class="line"></span><br><span class="line">Content-Language 实体的资源语言</span><br><span class="line"></span><br><span class="line">Content-Encoding 实体的编码格式</span><br><span class="line"></span><br><span class="line">Content-Length 实体的大小（字节）</span><br><span class="line"></span><br><span class="line">Content-Type 实体媒体类型</span><br><span class="line"></span><br><span class="line">Content-MD5 实体报文的摘要</span><br><span class="line"></span><br><span class="line">Content-Location 代替资源的yri</span><br><span class="line"></span><br><span class="line">Content-Rnages 实体主体的位置返回</span><br><span class="line"></span><br><span class="line">Last-Modified 资源最后的修改资源 ✨</span><br><span class="line"></span><br><span class="line">Expires 实体主体的过期资源 ✨</span><br></pre></td></tr></table></figure>
+<figure class="highlight css"><table><tr><td class="code"><pre><code class="hljs css">Allow 资源可支持http请求的方法 ✨<br><br><span class="hljs-attribute">Content</span>-Language 实体的资源语言<br><br><span class="hljs-attribute">Content</span>-Encoding 实体的编码格式<br><br><span class="hljs-attribute">Content</span>-Length 实体的大小（字节）<br><br><span class="hljs-attribute">Content</span>-Type 实体媒体类型<br><br><span class="hljs-attribute">Content</span>-MD5 实体报文的摘要<br><br><span class="hljs-attribute">Content</span>-Location 代替资源的yri<br><br><span class="hljs-attribute">Content</span>-Rnages 实体主体的位置返回<br><br>Last-Modified 资源最后的修改资源 ✨<br><br>Expires 实体主体的过期资源 ✨<br></code></pre></td></tr></table></figure>
 <h3 id="8、聊一聊HTTP的状态码有哪些？"><a href="#8、聊一聊HTTP的状态码有哪些？" class="headerlink" title="8、聊一聊HTTP的状态码有哪些？"></a>8、聊一聊HTTP的状态码有哪些？</h3><p><strong>2XX 成功</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">200 OK，表示从客户端发来的请求在服务器端被正确处理 ✨</span><br><span class="line"></span><br><span class="line">201 Created 请求已经被实现，而且有一个新的资源已经依据请求的需要而建立</span><br><span class="line"></span><br><span class="line">202 Accepted 请求已接受，但是还没执行，不保证完成请求</span><br><span class="line"></span><br><span class="line">204 No content，表示请求成功，但响应报文不含实体的主体部分</span><br><span class="line"></span><br><span class="line">206 Partial Content，进行范围请求 ✨</span><br></pre></td></tr></table></figure>
+<figure class="highlight basic"><table><tr><td class="code"><pre><code class="hljs basic"><span class="hljs-symbol">200 </span>OK，表示从客户端发来的请求在服务器端被正确处理 ✨<br><br><span class="hljs-symbol">201 </span>Created 请求已经被实现，而且有一个新的资源已经依据请求的需要而建立<br><br><span class="hljs-symbol">202 </span>Accepted 请求已接受，但是还没执行，不保证完成请求<br><br><span class="hljs-symbol">204 </span>No content，表示请求成功，但响应报文不含实体的主体部分<br><br><span class="hljs-symbol">206 </span>Partial Content，进行范围请求 ✨<br></code></pre></td></tr></table></figure>
 
 <p><strong>3XX 重定向</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">301 moved permanently，永久性重定向，表示资源已被分配了新的 URL</span><br><span class="line"></span><br><span class="line">302 found，临时性重定向，表示资源临时被分配了新的 URL ✨</span><br><span class="line"></span><br><span class="line">303 see other，表示资源存在着另一个 URL，应使用 GET 方法定向获取资源</span><br><span class="line"></span><br><span class="line">304 not modified，表示服务器允许访问资源，但因发生请求未满足条件的情况</span><br><span class="line"></span><br><span class="line">307 temporary redirect，临时重定向，和302含义相同</span><br></pre></td></tr></table></figure>
+<figure class="highlight basic"><table><tr><td class="code"><pre><code class="hljs basic"><span class="hljs-symbol">301 </span>moved permanently，永久性重定向，表示资源已被分配了新的 URL<br><br><span class="hljs-symbol">302 </span>found，临时性重定向，表示资源临时被分配了新的 URL ✨<br><br><span class="hljs-symbol">303 </span>see other，表示资源存在着另一个 URL，应使用 <span class="hljs-keyword">GET</span> 方法定向获取资源<br><br><span class="hljs-symbol">304 </span><span class="hljs-keyword">not</span> modified，表示服务器允许访问资源，但因发生请求未满足条件的情况<br><br><span class="hljs-symbol">307 </span>temporary redirect，临时重定向，和<span class="hljs-number">302</span>含义相同<br></code></pre></td></tr></table></figure>
 
 <p><strong>4XX 客户端错误</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">400 bad request，请求报文存在语法错误 ✨</span><br><span class="line"></span><br><span class="line">401 unauthorized，表示发送的请求需要有通过 HTTP 认证的认证信息 ✨</span><br><span class="line"></span><br><span class="line">403 forbidden，表示对请求资源的访问被服务器拒绝 ✨</span><br><span class="line"></span><br><span class="line">404 not found，表示在服务器上没有找到请求的资源 ✨</span><br><span class="line"></span><br><span class="line">408 Request timeout, 客户端请求超时</span><br><span class="line"></span><br><span class="line">409 Confict, 请求的资源可能引起冲突</span><br></pre></td></tr></table></figure>
+<figure class="highlight basic"><table><tr><td class="code"><pre><code class="hljs basic"><span class="hljs-symbol">400 </span>bad request，请求报文存在语法错误 ✨<br><br><span class="hljs-symbol">401 </span>unauthorized，表示发送的请求需要有通过 HTTP 认证的认证信息 ✨<br><br><span class="hljs-symbol">403 </span>forbidden，表示对请求资源的访问被服务器拒绝 ✨<br><br><span class="hljs-symbol">404 </span><span class="hljs-keyword">not</span> found，表示在服务器上没有找到请求的资源 ✨<br><br><span class="hljs-symbol">408 </span>Request timeout, 客户端请求超时<br><br><span class="hljs-symbol">409 </span>Confict, 请求的资源可能引起冲突<br></code></pre></td></tr></table></figure>
 <p><strong>5XX 服务器错误</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">500 internal sever error，表示服务器端在执行请求时发生了错误 ✨</span><br><span class="line"></span><br><span class="line">501 Not Implemented 请求超出服务器能力范围，例如服务器不支持当前请求所需要的某个功能，或者请求是服务器不支持的某个方法</span><br><span class="line"></span><br><span class="line">503 service unavailable，表明服务器暂时处于超负载或正在停机维护，无法处理请求</span><br><span class="line"></span><br><span class="line">505 http version not supported 服务器不支持，或者拒绝支持在请求中使用的 HTTP 版本</span><br></pre></td></tr></table></figure>
+<figure class="highlight basic"><table><tr><td class="code"><pre><code class="hljs basic"><span class="hljs-symbol">500 </span>internal sever <span class="hljs-keyword">error</span>，表示服务器端在执行请求时发生了错误 ✨<br><br><span class="hljs-symbol">501 </span><span class="hljs-keyword">Not</span> Implemented 请求超出服务器能力范围，例如服务器不支持当前请求所需要的某个功能，或者请求是服务器不支持的某个方法<br><br><span class="hljs-symbol">503 </span>service unavailable，表明服务器暂时处于超负载或正在停机维护，无法处理请求<br><br><span class="hljs-symbol">505 </span>http version <span class="hljs-keyword">not</span> supported 服务器不支持，或者拒绝支持在请求中使用的 HTTP 版本<br></code></pre></td></tr></table></figure>
 
 <h3 id="9、同样是重定向307，303，302的区别？"><a href="#9、同样是重定向307，303，302的区别？" class="headerlink" title="9、同样是重定向307，303，302的区别？"></a>9、同样是重定向307，303，302的区别？</h3><p>302是http1.0的协议状态码，在http1.1版本的时候为了细化302状态码又出来了两个303和307。</p>
 <p>303明确表示客户端应当采用get方法获取资源，他会把POST请求变为GET请求进行重定向。 307会遵照浏览器标准，不会从post变为get。</p>
@@ -253,7 +384,7 @@
 <li><p>每个新的首部键－值对要么被追加到当前表的末尾，要么替换表中之前的值。</p>
 </li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">你可以理解为只发送差异数据，而不是全部发送，从而减少头部的信息量</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><code class="hljs plain">你可以理解为只发送差异数据，而不是全部发送，从而减少头部的信息量<br></code></pre></td></tr></table></figure>
 <p><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/http07.png"></p>
 <h4 id="13-4-多路复用"><a href="#13-4-多路复用" class="headerlink" title="13.4 多路复用"></a>13.4 多路复用</h4><p>HTTP 1.x 中，如果想并发多个请求，必须使用多个 TCP 链接，且浏览器为了控制资源，还会对单个域名有 6-8个的TCP链接请求限制。</p>
 <p>HTTP2中：</p>
@@ -264,89 +395,138 @@
 </ul>
 <p><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/http08.png"></p>
 
-            </div>
-          
-
-    
-      <footer class="post-footer">
-		
-		<div class="post-tags">
-		  
-			<a href="/tags/HTTP/">HTTP</a>
-		  
-			<a href="/tags/%E9%9D%A2%E8%AF%95/">面试</a>
-		  
-		</div>
-		
-
-        
-        
-  <nav class="post-nav">
-    
-      <a class="prev" href="/2021/07/18/Web%E8%B5%84%E6%BA%90%E4%BB%8B%E7%BB%8D%E3%80%81%E9%9D%99%E6%80%81%E8%B5%84%E6%BA%90%E5%92%8C%E5%8A%A8%E6%80%81%E8%B5%84%E6%BA%90%E7%9A%84%E5%8C%BA%E5%88%AB%E3%80%81Web%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%A7%8D%E7%B1%BB%E6%B1%87%E6%80%BB/">
-        <i class="iconfont icon-left"></i>
-        <span class="prev-text nav-default">Web资源介绍、静态资源和动态资源的区别、Web服务器种类汇总</span>
-        <span class="prev-text nav-mobile">Prev</span>
-      </a>
-    
-    
-      <a class="next" href="/2021/07/18/http%E8%AF%B7%E6%B1%82%E5%A4%B4%E4%B8%ADReferer%E7%9A%84%E5%90%AB%E4%B9%89%E5%92%8C%E4%BD%9C%E7%94%A8/">
-        <span class="next-text nav-default">http请求头中Referer的含义和作用</span>
-        <span class="prev-text nav-mobile">Next</span>
-        <i class="iconfont icon-right"></i>
-      </a>
-    
-  </nav>
-
-        
-  <div class="comments" id="comments">
-    
-  </div>
-
-
-      </footer>
-    
-  </article>
-
     </div>
+</div>
+<style>
+    #noneimg img {
+        display: none;
+        z-index: 109;
+        width: 600px !important;
+        border-radius: 0px;
+        position: fixed;
+        box-shadow: 0 0 0px #c3c3c300 !important;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto !important;
+    }
 
-      </div>
+    @media screen and (max-width:600px) {
+        #noneimg img {
+            width: 88%
+        }
+    }
+</style>
+<script>
+    $(function () { $('#article').click(function (e) { if (e.target.tagName == "IMG") { if ($('#nonediv').length == 0) { let MImg = `<div id='noneimg'><img src='${e.target.currentSrc}'></div>`; let MDiv = "<div id='nonediv' style='cursor: pointer;display: none; position: fixed;left: 0;top: 0; right: 0;bottom: 0;background-color: #333;opacity:0.5;z-index: 108;'></div>"; $('#article').append(MDiv); $('#article').append(MImg); $("#nonediv").fadeIn("slow"); $("#noneimg img").fadeIn("slow") } } else { if ($('#nonediv').length !== 0) { $("#noneimg ").fadeOut("slow"); $("#nonediv").fadeOut("slow"); setTimeout(function () { $('#nonediv').remove(); $('#noneimg').remove() }, 500) } } }); $('.article-content').addClass('content-move') });
+</script>
+<div class="Last-Next">
+    
+    <a href="/2021/07/18/Web%E8%B5%84%E6%BA%90%E4%BB%8B%E7%BB%8D%E3%80%81%E9%9D%99%E6%80%81%E8%B5%84%E6%BA%90%E5%92%8C%E5%8A%A8%E6%80%81%E8%B5%84%E6%BA%90%E7%9A%84%E5%8C%BA%E5%88%AB%E3%80%81Web%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%A7%8D%E7%B1%BB%E6%B1%87%E6%80%BB/">
+        <div class="last">
+            <span>上一篇</span>
+            <p>Web资源介绍、静态资源和动态资源的区别、Web服务器种类汇总</p>
+        </div>
+    </a>
+    
 
-      <footer id="colophon"><span class="copyright-year">
     
-        &copy;
+    <a href="/2021/07/18/http%E8%AF%B7%E6%B1%82%E5%A4%B4%E4%B8%ADReferer%E7%9A%84%E5%90%AB%E4%B9%89%E5%92%8C%E4%BD%9C%E7%94%A8/">
+        <div class="next">
+            <span>下一篇</span>
+            <p>http请求头中Referer的含义和作用</p>
+        </div>
+    </a>
     
-        2014 -
-    
-    2021
-    <span class="footer-author">Russshare.</span>
-    <span class="power-by">
-        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+</div>
+		
+<link rel="stylesheet" href="/css/food.css">
+
+<div class="footer">
+	<div class="Copyright">
+		©2021 By CHANGEQ. 主题：<a
+			style="text-decoration: none;display: contents; color: #898F9F;"
+			target="_blank" rel="noopener" href="https://github.com/qiaobug/hexo-theme-quiet">Quiet</a>
+	</div>
+	<div class="contact">
+		
+		<a target="_blank" rel="noopener" href="https://github.com/qiaobug">
+			<img src="https://cdn.jsdelivr.net/gh/duogongneng/MyBlogImg/imggithub.png" alt="Quiet主题">
+		</a>
+		
+	</div>
+</div>
+
+<script src="/js/jquery.min.js"></script>
+
+
+<script src="/js/gotop.js"></script>
+
+
+<style type="text/css">
+    @media screen and (min-width: 600px) {
+        .goTop>span {
+            display: block;
+            border-radius: 50%;
+            width: 66px;
+            height: 66px;
+            cursor: pointer;
+            opacity: 0.8;
+            background: rgba(18, 24, 58, 0.06);
+            text-align: center;
+            border: 1px solid rgba(18, 24, 58, 0.06);
+
+            transition: border .5s;
+            -moz-transition: border .5s;
+            /* Firefox 4 */
+            -webkit-transition: border .5s;
+            /* Safari 和 Chrome */
+            -o-transition: border .5s;
+            /* Opera */
+        }
+
+        .goTop>span:hover {
+            border: 1px solid #6680B3;
+        }
+
+
+        .goTop {
+            position: fixed;
+            right: 30px;
+            bottom: 80px;
+        }
+
+        .goTop>span>svg {
+            width: 30px;
+            height: 30px;
+            margin-top: 17.5px;
+            opacity: 0.7;
+        }
+
+    }
+
+    @media screen and (max-width: 600px) {
+        .goTop {
+            display: none;
+        }
+    }
+</style>
+<div class="goTop" id="js-go_top">
+    <span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <g>
+                <path d="M13 12v8h-2v-8H4l8-8 8 8z"></path>
+            </g>
+        </svg>
     </span>
-</span>
+</div>
+<script>
+    $('#js-go_top').gotoTop({ offset: 500, speed: 300, animationShow: { 'transform': 'translate(0,0)', 'transition': 'transform .5s ease-in-out' }, animationHide: { 'transform': 'translate(100px,0)', 'transition': 'transform .5s ease-in-out' } });
+</script>
+<script>
+	console.log('\n %c Hexo-Quiet 主题 %c https://github.com/QiaoBug/hexo-theme-quiet \n', 'color: #fadfa3; background: #030307; padding:5px 0;', 'background: #fadfa3; padding:5px 0;')
+</script>
+	</body>
 
-      </footer>
-
-      <div class="back-to-top" id="back-to-top">
-        <i class="iconfont icon-up"></i>
-      </div>
-    </div>
-    
-
-
-    
-
-
-
-
-  
-    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
-  
-
-  
-
-    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
-<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
-
-  </body>
 </html>

@@ -1,146 +1,286 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
-  <head>
-    
-<meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+<html>
+
+	<head>
+		
+<title>Go语言微服务框架-5.GORM库的适配sqlmock的单元测试-Quiet</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="shortcut icon" type="image/x-icon" href="/image/favicon.ico">
 
 
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="keywords" content="GORM,">
+<meta name="description" content="">
 
 
-
-  <meta name="description" content="Go语言微服务框架-5.GORM库的适配sqlmock的单元测试"/>
-
+<script src="/js/jquery.min.js"></script>
 
 
+	<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+</head>
 
-  <meta name="keywords" content="GORM," />
-
-
-
-
-
-  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+	<body>
+		
+<link rel="stylesheet" href="/css/page.css">
 
 
+<link rel="stylesheet" href="/css/page_cente.css">
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+<link rel="stylesheet" href="/css/atom-one-dark.css">
 
 
+<link rel="stylesheet" href="/css/header.css">
 
-<link rel="canonical" href="https://riddlego.github.io/2021/09/05/Go语言微服务框架-5-GORM库的适配sqlmock的单元测试/"/>
-
-
-<meta name="description" content="原文全部来自，请移步原文阅读，这里就是边看边复制的笔记，点击进入原文 随着GORM库的引入，我们在数据库持久化上已经有了解决方案。但上一篇我们使用的GORM过于简单，应用到实际的项目中局限性很大。 与此同时，我们也缺乏一个有效的手段来验证自己编写的相关代码。如果依靠连接到真实的MySQL去验证功能，那成本实在太高。那么，这里我们就引入一个经典的sqlmock框架，并配合对数据库相关代码的修改，来实">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Go语言微服务框架-5.GORM库的适配sqlmock的单元测试">
-<meta property="og:url" content="https://riddlego.github.io/2021/09/05/Go%E8%AF%AD%E8%A8%80%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-5-GORM%E5%BA%93%E7%9A%84%E9%80%82%E9%85%8Dsqlmock%E7%9A%84%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95/index.html">
-<meta property="og:site_name" content="RiddleGo">
-<meta property="og:description" content="原文全部来自，请移步原文阅读，这里就是边看边复制的笔记，点击进入原文 随着GORM库的引入，我们在数据库持久化上已经有了解决方案。但上一篇我们使用的GORM过于简单，应用到实际的项目中局限性很大。 与此同时，我们也缺乏一个有效的手段来验证自己编写的相关代码。如果依靠连接到真实的MySQL去验证功能，那成本实在太高。那么，这里我们就引入一个经典的sqlmock框架，并配合对数据库相关代码的修改，来实">
-<meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2021-09-05T04:19:18.000Z">
-<meta property="article:modified_time" content="2021-09-05T07:51:30.598Z">
-<meta property="article:author" content="Russshare">
-<meta property="article:tag" content="GORM">
-<meta name="twitter:card" content="summary">
-
-
-<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
-<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
-
-
-
-
-
-<script type="text/javascript">
-  var themeConfig = {
-    fancybox: {
-      enable: false
-    },
-  };
-</script>
-
-
-
-
-  
-
-
-
-    <title> Go语言微服务框架-5.GORM库的适配sqlmock的单元测试 - RiddleGo </title>
-  <meta name="generator" content="Hexo 5.4.0"></head>
-
-  <body>
-    <div id="page">
-      <header id="masthead"><div class="site-header-inner">
-    <h1 class="site-title">
-        <a href="/." class="logo">RiddleGo</a>
-    </h1>
-
-    <nav id="nav-top">
+	<div class="header">
+		<div class="header-top">
+			<div class="h-left">
+				<a href="/">
+					<img src="/image/logo.png" alt="Quiet">
+				</a>
+			</div>
+			<div class="h-right">
+				<ul>
+					
+						
+								<li>
+									<a href="/">
+										HOME
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/archives">
+										ARCHIVE
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/categories">
+										CATEGORIES
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/tags">
+										TAGS
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/links">
+										LINKS
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/about">
+										ABOUT
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+				</ul>
+			</div>
+			<div class="h-right-close">
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+					<path fill="none" d="M0 0h24v24H0z" />
+					<path d="M3 4h18v2H3V4zm0 7h18v2H3v-2zm0 7h18v2H3v-2z" fill="rgba(68,68,68,1)" />
+				</svg>
+			</div>
+		</div>
+	</div>
+	<div class="sidebar">
+    <div class="topo">
+        <h2>CHANGEQ</h2>
+    </div>
+    <ul>
         
-            <ul id="menu-top" class="nav-top-items">
-                
-                    <li class="menu-item">
-                        <a href="/archives">
-                            
-                            
-                                Archives
-                            
-                        </a>
-                    </li>
-                
-                    <li class="menu-item">
-                        <a href="/about">
-                            
-                            
-                                About
-                            
-                        </a>
-                    </li>
-                
-            </ul>
+        <li>
+            <a href="/">HOME</a>
+        </li>
         
-  </nav>
+        <li>
+            <a href="/archives">ARCHIVE</a>
+        </li>
+        
+        <li>
+            <a href="/categories">CATEGORIES</a>
+        </li>
+        
+        <li>
+            <a href="/tags">TAGS</a>
+        </li>
+        
+        <li>
+            <a href="/links">LINKS</a>
+        </li>
+        
+        <li>
+            <a href="/about">ABOUT</a>
+        </li>
+        
+    </ul>
+    <div class="my_foot">
+        
+        <a target="_blank" rel="noopener" href="https://github.com/qiaobug">
+            <img src="https://cdn.jsdelivr.net/gh/duogongneng/MyBlogImg/imggithub.png" alt="Quiet主题">
+        </a>
+        
+    </div>
 </div>
+<div class='shelter'
+    style='cursor: pointer;display: none; position: fixed;left: 0;top: 0; right: 0;bottom: 0;background-color: #333;opacity:0.5;z-index: 108;'>
+</div>
+<style>
+    .sidebar {
+        width: 0;
+        height: 100%;
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        background: #fff;
+        z-index: 999;
+        text-align: center;
+        box-shadow: -6px 0 20px rgba(98, 94, 94, .815)
+    }
 
-      </header>
-      <div id="content">
-        
-    <div id="primary">
-        
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          Go语言微服务框架-5.GORM库的适配sqlmock的单元测试
-        
-      </h1>
+    .topo {
+        width: 100%;
+        height: 200px;
+        background: url(https://api.ixiaowai.cn/gqapi/gqapi.php) no-repeat;
+        background-size: 100% 100%;
+        position: relative;
+        display: flex;
+        align-items: flex-end
+    }
 
-      <time class="post-time">
-          9月 05 2021
-      </time>
-    </header>
+    .topo h2 {
+        color: #fff;
+        z-index: 1;
+        position: relative;
+        margin: 0 0 10px 10px;
+        font-size: 1.2em;
+        box-sizing: border-box
+    }
 
+    .topo:before {
+        content: '';
+        background-image: url(/image/pattern.png);
+        background-repeat: repeat;
+        height: 100%;
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 100%;
+        z-index: 1
+    }
 
+    .sidebar ul {
+        width: 100%;
+        margin-top: 50px
+    }
 
-    
-            <div class="post-content">
-            <p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/3YI50zoRbBb_VuFB-ZzEvg">原文全部来自，请移步原文阅读，这里就是边看边复制的笔记，点击进入原文</a></p>
+    .sidebar ul li {
+        height: 50px;
+        list-style: none;
+        font-size: 1.2em;
+        text-align: right;
+        margin-right: 10px
+    }
+
+    .sidebar ul li a {
+        display: grid;
+        color: #5d606a;
+        text-overflow: ellipsis;
+        width: 100%;
+        text-decoration: none
+    }
+
+    .my_foot {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        position: absolute;
+        bottom: 0
+    }
+
+    .my_foot a {
+        text-decoration: none;
+        margin-right: 10px;
+        display: inline-block
+    }
+
+    .my_foot a img {
+        width: 30px;
+        height: 30px
+    }
+</style>
+
+<script>
+    $(function () { $('.h-right-close>svg').click(function () { $('.sidebar').animate({ width: "66%" }, 500); $('.shelter').fadeIn("slow") }); $('.shelter').click(function (e) { $('.sidebar').animate({ width: "0" }, 500); $('.shelter').fadeOut("slow") }) })
+</script>
+		<script>
+			$(function () { $(window).scroll(function () { if ($(document).scrollTop() > 100) { $(".header-top").removeClass("header-move2"); $('.header-top').addClass('header-move1') } else { $(".header-top").removeClass("header-move1"); $('.header-top').addClass('header-move2') } }) });
+		</script>
+<div class="header-bg ">
+    <div class="bg-content">
+        <ul class="tag">
+            
+            
+            <li><a href="/tags/GORM">GORM</a></li>
+            
+            
+        </ul>
+        <h1>Go语言微服务框架-5.GORM库的适配sqlmock的单元测试</h1>
+        <div class="article-info">
+            <div class="article-author">
+                
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+                    <g>
+                        <path fill="#12183A"
+                            d="M6.187 15.265A6.47 6.47 0 0 0 10 16.5a6.47 6.47 0 0 0 3.813-1.235A4.99 4.99 0 0 0 10 13.5a4.99 4.99 0 0 0-3.813 1.765zM5.082 14.25A6.485 6.485 0 0 1 10 12c1.965 0 3.726.872 4.918 2.25a6.5 6.5 0 1 0-9.836 0zM10 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0-1.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z">
+                        </path>
+                    </g>
+                </svg>
+                
+                <span> <a href="">CHANGEQ</a></span>
+                <p>2021-09-05 12:19:18</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="article-content">
+    <div id="article" class="content">
+        <p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/3YI50zoRbBb_VuFB-ZzEvg">原文全部来自，请移步原文阅读，这里就是边看边复制的笔记，点击进入原文</a></p>
 <p>随着GORM库的引入，我们在数据库持久化上已经有了解决方案。但上一篇我们使用的GORM过于简单，应用到实际的项目中局限性很大。</p>
 <p>与此同时，我们也缺乏一个有效的手段来验证自己编写的相关代码。如果依靠连接到真实的MySQL去验证功能，那成本实在太高。那么，这里我们就引入一个经典<strong>的sqlmock框架</strong>，并配合对数据库相关代码的修改，来实现相关代码的可测试性。</p>
 <h2 id="v0-4-1：GORM库的适配sqlmock的单元测试"><a href="#v0-4-1：GORM库的适配sqlmock的单元测试" class="headerlink" title="v0.4.1：GORM库的适配sqlmock的单元测试"></a>v0.4.1：GORM库的适配sqlmock的单元测试</h2><p>项目链接 <a target="_blank" rel="noopener" href="https://github.com/Junedayday/micro_web_service/tree/v0.4.1">https://github.com/Junedayday/micro_web_service/tree/v0.4.1</a></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">由于主要是针对GORM的小改动，所以增加了一个小版本号</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><code class="hljs plain">由于主要是针对GORM的小改动，所以增加了一个小版本号<br></code></pre></td></tr></table></figure>
 
 <h2 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h2><p>利用sqlmock工具，并对数据库相关代码进行修改，实现单元测试。</p>
 <h2 id="关键技术点"><a href="#关键技术点" class="headerlink" title="关键技术点"></a>关键技术点</h2><p>Order相关代码的改造</p>
 <p>引入sqlmock到测试代码</p>
 <p>注意点讲解</p>
-<h2 id="目录构造"><a href="#目录构造" class="headerlink" title="目录构造"></a>目录构造</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">--- micro_web_service            项目目录</span><br><span class="line"> |-- gen                            从idl文件夹中生成的文件，不可手动修改</span><br><span class="line">    |-- idl                             对应idl文件夹</span><br><span class="line">       |-- demo                             对应idl&#x2F;demo服务</span><br><span class="line">          |-- demo.pb.go                        demo.proto的基础结构</span><br><span class="line">          |-- demo.pb.gw.go                     demo.proto的HTTP接口，对应gRPC-Gateway</span><br><span class="line">          |-- demo_grpc.pb.go                   demo.proto的gRPC接口代码</span><br><span class="line"> |-- idl                            原始的idl定义</span><br><span class="line">    |-- demo                            业务package定义</span><br><span class="line">       |-- demo.proto                       protobuffer的原始定义</span><br><span class="line"> |-- internal                       项目的内部代码，不对外暴露</span><br><span class="line">    |-- config                          配置相关的文件夹</span><br><span class="line">       |-- viper.go                         viper的相关加载逻辑</span><br><span class="line">    |-- dao                             Data Access Object层</span><br><span class="line">       |-- order.go                         更新：OrderO对象，订单表</span><br><span class="line">       |-- order_test.go                    新增：Order的单元测试</span><br><span class="line">    |-- mysql                           MySQL连接</span><br><span class="line">       |-- init.go                          初始化连接到MySQL的工作</span><br><span class="line">    |-- server                          服务器的实现</span><br><span class="line">       |-- demo.go                          server中对demo这个服务的接口实现</span><br><span class="line">       |-- server.go                        server的定义，须实现对应服务的方法</span><br><span class="line">     |-- zlog                            封装日志的文件夹</span><br><span class="line">        |-- zap.go                           zap封装的代码实现</span><br><span class="line"> |-- buf.gen.yaml                   buf生成代码的定义</span><br><span class="line"> |-- buf.yaml                       buf工具安装所需的工具</span><br><span class="line"> |-- gen.sh                         buf生成的shell脚本</span><br><span class="line"> |-- go.mod                         Go Module文件</span><br><span class="line"> |-- main.go                        项目启动的main函数</span><br></pre></td></tr></table></figure>
+<h2 id="目录构造"><a href="#目录构造" class="headerlink" title="目录构造"></a>目录构造</h2><figure class="highlight coq"><table><tr><td class="code"><pre><code class="hljs coq">--- micro_web_service            项目目录<br> |<span class="hljs-type">-- gen</span>                            从idl文件夹中生成的文件，不可手动修改<br>    |<span class="hljs-type">-- idl</span>                             对应idl文件夹<br>       |<span class="hljs-type">-- demo</span>                             对应idl/demo服务<br>          |<span class="hljs-type">-- demo</span>.pb.go                        demo.proto的基础结构<br>          |<span class="hljs-type">-- demo</span>.pb.gw.go                     demo.proto的HTTP接口，对应gRPC-Gateway<br>          |<span class="hljs-type">-- demo_grpc</span>.pb.go                   demo.proto的gRPC接口代码<br> |<span class="hljs-type">-- idl</span>                            原始的idl定义<br>    |<span class="hljs-type">-- demo</span>                            业务package定义<br>       |<span class="hljs-type">-- demo</span>.proto                       protobuffer的原始定义<br> |<span class="hljs-type">-- internal</span>                       项目的内部代码，不对外暴露<br>    |<span class="hljs-type">-- config</span>                          配置相关的文件夹<br>       |<span class="hljs-type">-- viper</span>.go                         viper的相关加载逻辑<br>    |<span class="hljs-type">-- dao</span>                             Data Access Object层<br>       |<span class="hljs-type">-- order</span>.go                         更新：OrderO对象，订单表<br>       |<span class="hljs-type">-- order_test</span>.go                    新增：Order的单元测试<br>    |<span class="hljs-type">-- mysql</span>                           MySQL连接<br>       |<span class="hljs-type">-- init</span>.go                          初始化连接到MySQL的工作<br>    |<span class="hljs-type">-- server</span>                          服务器的实现<br>       |<span class="hljs-type">-- demo</span>.go                          server中对demo这个服务的接口实现<br>       |<span class="hljs-type">-- server</span>.go                        server的定义，须实现对应服务的方法<br>     |<span class="hljs-type">-- zlog</span>                            封装日志的文件夹<br>        |<span class="hljs-type">-- zap</span>.go                           zap封装的代码实现<br> |<span class="hljs-type">-- buf</span>.gen.yaml                   buf生成代码的定义<br> |<span class="hljs-type">-- buf</span>.yaml                       buf工具安装所需的工具<br> |<span class="hljs-type">-- gen</span>.sh                         buf生成的shell脚本<br> |<span class="hljs-type">-- go</span>.<span class="hljs-keyword">mod</span>                         Go <span class="hljs-keyword">Module</span>文件<br> |<span class="hljs-type">-- main</span>.go                        项目启动的main函数<br></code></pre></td></tr></table></figure>
 
 <h2 id="1-Order相关代码的改造"><a href="#1-Order相关代码的改造" class="headerlink" title="1.Order相关代码的改造"></a>1.Order相关代码的改造</h2><p>我们要对Order相关的代码进行改造，来满足以下两个点：</p>
 <ul>
@@ -149,10 +289,10 @@
 <li><p>2—灵活的更新方法，可以支持对指定条件、指定字段的更新</p>
 </li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;*</span><br><span class="line">  gorm.io&#x2F;gorm 指的是gorm V2版本，详细可参考 https:&#x2F;&#x2F;gorm.io&#x2F;zh_CN&#x2F;docs&#x2F;v2_release_note.html</span><br><span class="line">  github.com&#x2F;jinzhu&#x2F;gorm 一般指V1版本</span><br><span class="line">*&#x2F;</span><br><span class="line"></span><br><span class="line">type OrderRepo struct &#123;</span><br><span class="line"> db *gorm.DB</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 将gorm.DB作为一个参数，在初始化时赋值：方便测试时，放一个mock的db</span><br><span class="line">func NewOrderRepo(db *gorm.DB) *OrderRepo &#123;</span><br><span class="line"> return &amp;OrderRepo&#123;db: db&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; Order针对的是 orders 表中的一行数据</span><br><span class="line">type Order struct &#123;</span><br><span class="line"> Id    int64</span><br><span class="line"> Name  string</span><br><span class="line"> Price float32</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; OrderFields 作为一个 数据库Order对象+fields字段的组合</span><br><span class="line">&#x2F;&#x2F; fields用来指定Order中的哪些字段生效</span><br><span class="line">type OrderFields struct &#123;</span><br><span class="line"> order  *Order</span><br><span class="line"> fields []interface&#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func NewOrderFields(order *Order, fields []interface&#123;&#125;) *OrderFields &#123;</span><br><span class="line"> return &amp;OrderFields&#123;</span><br><span class="line">  order:  order,</span><br><span class="line">  fields: fields,</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func (repo *OrderRepo) AddOrder(order *Order) (err error) &#123;</span><br><span class="line"> err &#x3D; repo.db.Create(order).Error</span><br><span class="line"> return</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func (repo *OrderRepo) QueryOrders(pageNumber, pageSize int, condition *OrderFields) (orders []Order, err error) &#123;</span><br><span class="line"> db :&#x3D; repo.db</span><br><span class="line"> &#x2F;&#x2F; condition非nil的话，追加条件</span><br><span class="line"> if condition !&#x3D; nil &#123;</span><br><span class="line">  &#x2F;&#x2F; 这里的field指定了order中生效的字段，这些字段会被放在SQL的where条件中</span><br><span class="line">  db &#x3D; db.Where(condition.order, condition.fields...)</span><br><span class="line"> &#125;</span><br><span class="line"> err &#x3D; db.</span><br><span class="line">  Limit(pageSize).</span><br><span class="line">  Offset((pageNumber - 1) * pageSize).</span><br><span class="line">  Find(&amp;orders).Error</span><br><span class="line"> return</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func (repo *OrderRepo) UpdateOrder(updated, condition *OrderFields) (err error) &#123;</span><br><span class="line"> if updated &#x3D;&#x3D; nil || len(updated.fields) &#x3D;&#x3D; 0 &#123;</span><br><span class="line">  return errors.New(&quot;update must choose certain fields&quot;)</span><br><span class="line"> &#125; else if condition &#x3D;&#x3D; nil &#123;</span><br><span class="line">  return errors.New(&quot;update must include where condition&quot;)</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"> err &#x3D; repo.db.</span><br><span class="line">  Model(&amp;Order&#123;&#125;).</span><br><span class="line">  &#x2F;&#x2F; 这里的field指定了order中被更新的字段</span><br><span class="line">  Select(updated.fields[0], updated.fields[1:]...).</span><br><span class="line">  &#x2F;&#x2F; 这里的field指定了被更新的where条件中的字段</span><br><span class="line">  Where(condition.order, condition.fields...).</span><br><span class="line">  Updates(updated.order).</span><br><span class="line">  Error</span><br><span class="line"> return</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight stata"><table><tr><td class="code"><pre><code class="hljs stata"><span class="hljs-comment">/*</span><br><span class="hljs-comment">  gorm.io/gorm 指的是gorm V2版本，详细可参考 https://gorm.io/zh_CN/docs/v2_release_note.html</span><br><span class="hljs-comment">  github.com/jinzhu/gorm 一般指V1版本</span><br><span class="hljs-comment">*/</span><br><br><span class="hljs-keyword">type</span> OrderRepo struct &#123;<br> <span class="hljs-keyword">db</span> *gorm.<span class="hljs-keyword">DB</span><br>&#125;<br><br><span class="hljs-comment">// 将gorm.DB作为一个参数，在初始化时赋值：方便测试时，放一个mock的db</span><br>func NewOrderRepo(<span class="hljs-keyword">db</span> *gorm.<span class="hljs-keyword">DB</span>) *OrderRepo &#123;<br> <span class="hljs-keyword">return</span> &amp;OrderRepo&#123;<span class="hljs-keyword">db</span>: <span class="hljs-keyword">db</span>&#125;<br>&#125;<br><br><span class="hljs-comment">// Order针对的是 orders 表中的一行数据</span><br><span class="hljs-keyword">type</span> <span class="hljs-keyword">Order</span> struct &#123;<br> Id    int64<br> Name  string<br> Price float32<br>&#125;<br><br><span class="hljs-comment">// OrderFields 作为一个 数据库Order对象+fields字段的组合</span><br><span class="hljs-comment">// fields用来指定Order中的哪些字段生效</span><br><span class="hljs-keyword">type</span> OrderFields struct &#123;<br> <span class="hljs-keyword">order</span>  *<span class="hljs-keyword">Order</span><br> fields []interface&#123;&#125;<br>&#125;<br><br>func NewOrderFields(<span class="hljs-keyword">order</span> *<span class="hljs-keyword">Order</span>, fields []interface&#123;&#125;) *OrderFields &#123;<br> <span class="hljs-keyword">return</span> &amp;OrderFields&#123;<br>  <span class="hljs-keyword">order</span>:  <span class="hljs-keyword">order</span>,<br>  fields: fields,<br> &#125;<br>&#125;<br><br>func (repo *OrderRepo) AddOrder(<span class="hljs-keyword">order</span> *<span class="hljs-keyword">Order</span>) (<span class="hljs-keyword">err</span> <span class="hljs-keyword">error</span>) &#123;<br> <span class="hljs-keyword">err</span> = repo.<span class="hljs-keyword">db</span>.Create(<span class="hljs-keyword">order</span>).<span class="hljs-keyword">Error</span><br> <span class="hljs-keyword">return</span><br>&#125;<br><br>func (repo *OrderRepo) QueryOrders(pageNumber, pageSize int, condition *OrderFields) (orders []<span class="hljs-keyword">Order</span>, <span class="hljs-keyword">err</span> <span class="hljs-keyword">error</span>) &#123;<br> <span class="hljs-keyword">db</span> := repo.<span class="hljs-keyword">db</span><br> <span class="hljs-comment">// condition非nil的话，追加条件</span><br> <span class="hljs-keyword">if</span> condition != nil &#123;<br>  <span class="hljs-comment">// 这里的field指定了order中生效的字段，这些字段会被放在SQL的where条件中</span><br>  <span class="hljs-keyword">db</span> = <span class="hljs-keyword">db</span>.Where(condition.<span class="hljs-keyword">order</span>, condition.fields...)<br> &#125;<br> <span class="hljs-keyword">err</span> = <span class="hljs-keyword">db</span>.<br>  Limit(pageSize).<br>  Offset((pageNumber - 1) * pageSize).<br>  Find(&amp;orders).<span class="hljs-keyword">Error</span><br> <span class="hljs-keyword">return</span><br>&#125;<br><br>func (repo *OrderRepo) UpdateOrder(updated, condition *OrderFields) (<span class="hljs-keyword">err</span> <span class="hljs-keyword">error</span>) &#123;<br> <span class="hljs-keyword">if</span> updated == nil || len(updated.fields) == 0 &#123;<br>  <span class="hljs-keyword">return</span> errors.New(<span class="hljs-string">&quot;update must choose certain fields&quot;</span>)<br> &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> condition == nil &#123;<br>  <span class="hljs-keyword">return</span> errors.New(<span class="hljs-string">&quot;update must include where condition&quot;</span>)<br> &#125;<br><br> <span class="hljs-keyword">err</span> = repo.<span class="hljs-keyword">db</span>.<br>  Model(&amp;<span class="hljs-keyword">Order</span>&#123;&#125;).<br>  <span class="hljs-comment">// 这里的field指定了order中被更新的字段</span><br>  Select(updated.fields[0], updated.fields[1:]...).<br>  <span class="hljs-comment">// 这里的field指定了被更新的where条件中的字段</span><br>  Where(condition.<span class="hljs-keyword">order</span>, condition.fields...).<br>  Updates(updated.<span class="hljs-keyword">order</span>).<br>  <span class="hljs-keyword">Error</span><br> <span class="hljs-keyword">return</span><br>&#125;<br></code></pre></td></tr></table></figure>
 
 <h2 id="2-引入sqlmock到测试代码"><a href="#2-引入sqlmock到测试代码" class="headerlink" title="2.引入sqlmock到测试代码"></a>2.引入sqlmock到测试代码</h2><p>sqlmock是检查数据库最常用的工具，我们先不管它使用起来的复杂性，先来看看怎么实现对应的测试代码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 注意，我们使用的是gorm 2.0，网上很多例子其实是针对1.0的</span><br><span class="line">var (</span><br><span class="line"> DB   *gorm.DB</span><br><span class="line"> mock sqlmock.Sqlmock</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; TestMain是在当前package下，最先运行的一个函数，常用于初始化</span><br><span class="line">func TestMain(m *testing.M) &#123;</span><br><span class="line"> var (</span><br><span class="line">  db  *sql.DB</span><br><span class="line">  err error</span><br><span class="line"> )</span><br><span class="line"></span><br><span class="line"> db, mock, err &#x3D; sqlmock.New(sqlmock.QueryMatcherOption(sqlmock.QueryMatcherEqual))</span><br><span class="line"> if err !&#x3D; nil &#123;</span><br><span class="line">  panic(err)</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"> DB, err &#x3D; gorm.Open(mysql.New(mysql.Config&#123;</span><br><span class="line">  Conn:                      db,</span><br><span class="line">  SkipInitializeWithVersion: true,</span><br><span class="line"> &#125;), &amp;gorm.Config&#123;&#125;)</span><br><span class="line"> if err !&#x3D; nil &#123;</span><br><span class="line">  panic(err)</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"> &#x2F;&#x2F; m.Run 是真正调用下面各个Test函数的入口</span><br><span class="line"> os.Exit(m.Run())</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;*</span><br><span class="line">  sqlmock 对语法限制比较大，下面的sql语句必须精确匹配（包括符号和空格）</span><br><span class="line">*&#x2F;</span><br><span class="line"></span><br><span class="line">func TestOrderRepo_AddOrder(t *testing.T) &#123;</span><br><span class="line"> var order &#x3D; &amp;Order&#123;Name: &quot;order1&quot;, Price: 1.1&#125;</span><br><span class="line"> orderRepo :&#x3D; NewOrderRepo(DB)</span><br><span class="line"></span><br><span class="line"> mock.ExpectBegin()</span><br><span class="line"> mock.ExpectExec(&quot;INSERT INTO &#96;orders&#96; (&#96;name&#96;,&#96;price&#96;) VALUES (?,?)&quot;).</span><br><span class="line">  WithArgs(order.Name, order.Price).</span><br><span class="line">  WillReturnResult(sqlmock.NewResult(1, 1))</span><br><span class="line"> mock.ExpectCommit()</span><br><span class="line"> err :&#x3D; orderRepo.AddOrder(order)</span><br><span class="line"> assert.Nil(t, err)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func TestOrderRepo_QueryOrders(t *testing.T) &#123;</span><br><span class="line"> var orders &#x3D; []Order&#123;</span><br><span class="line">  &#123;1, &quot;name1&quot;, 1.0&#125;,</span><br><span class="line">  &#123;2, &quot;name2&quot;, 1.0&#125;,</span><br><span class="line"> &#125;</span><br><span class="line"> page, size :&#x3D; 2, 10</span><br><span class="line"> orderRepo :&#x3D; NewOrderRepo(DB)</span><br><span class="line"> condition :&#x3D; NewOrderFields(&amp;Order&#123;Price: 1.0&#125;, []interface&#123;&#125;&#123;&quot;price&quot;&#125;)</span><br><span class="line"></span><br><span class="line"> mock.ExpectQuery(</span><br><span class="line">  &quot;SELECT * FROM &#96;orders&#96; WHERE &#96;orders&#96;.&#96;price&#96; &#x3D; ? LIMIT 10 OFFSET 10&quot;).</span><br><span class="line">  WithArgs(condition.order.Price).</span><br><span class="line">  WillReturnRows(</span><br><span class="line">   sqlmock.NewRows([]string&#123;&quot;id&quot;, &quot;name&quot;, &quot;price&quot;&#125;).</span><br><span class="line">    AddRow(orders[0].Id, orders[0].Name, orders[0].Price).</span><br><span class="line">    AddRow(orders[1].Id, orders[1].Name, orders[1].Price))</span><br><span class="line"></span><br><span class="line"> ret, err :&#x3D; orderRepo.QueryOrders(page, size, condition)</span><br><span class="line"> assert.Nil(t, err)</span><br><span class="line"> assert.Equal(t, orders, ret)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func TestOrderRepo_UpdateOrder(t *testing.T) &#123;</span><br><span class="line"> orderRepo :&#x3D; NewOrderRepo(DB)</span><br><span class="line"> &#x2F;&#x2F; 表示要更新的字段为Order对象中的id,name两个字段</span><br><span class="line"> updated :&#x3D; NewOrderFields(&amp;Order&#123;Id: 1, Name: &quot;test_name&quot;&#125;, []interface&#123;&#125;&#123;&quot;id&quot;, &quot;name&quot;&#125;)</span><br><span class="line"> &#x2F;&#x2F; 表示更新的条件为Order对象中的price字段</span><br><span class="line"> condition :&#x3D; NewOrderFields(&amp;Order&#123;Price: 1.0&#125;, []interface&#123;&#125;&#123;&quot;price&quot;&#125;)</span><br><span class="line"></span><br><span class="line"> mock.ExpectBegin()</span><br><span class="line"> mock.ExpectExec(</span><br><span class="line">  &quot;UPDATE &#96;orders&#96; SET &#96;id&#96;&#x3D;?,&#96;name&#96;&#x3D;? WHERE &#96;orders&#96;.&#96;price&#96; &#x3D; ?&quot;).</span><br><span class="line">  WithArgs(updated.order.Id, updated.order.Name, condition.order.Price).</span><br><span class="line">  WillReturnResult(sqlmock.NewResult(1, 1))</span><br><span class="line"> mock.ExpectCommit()</span><br><span class="line"></span><br><span class="line"> err :&#x3D; orderRepo.UpdateOrder(updated, condition)</span><br><span class="line"> assert.Nil(t, err)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight stata"><table><tr><td class="code"><pre><code class="hljs stata"><span class="hljs-comment">// 注意，我们使用的是gorm 2.0，网上很多例子其实是针对1.0的</span><br><span class="hljs-keyword">var</span> (<br> <span class="hljs-keyword">DB</span>   *gorm.<span class="hljs-keyword">DB</span><br> mock sqlmock.Sqlmock<br>)<br><br><span class="hljs-comment">// TestMain是在当前package下，最先运行的一个函数，常用于初始化</span><br>func TestMain(<span class="hljs-keyword">m</span> *testing.<span class="hljs-keyword">M</span>) &#123;<br> <span class="hljs-keyword">var</span> (<br>  <span class="hljs-keyword">db</span>  *sql.<span class="hljs-keyword">DB</span><br>  <span class="hljs-keyword">err</span> <span class="hljs-keyword">error</span><br> )<br><br> <span class="hljs-keyword">db</span>, mock, <span class="hljs-keyword">err</span> = sqlmock.New(sqlmock.QueryMatcherOption(sqlmock.QueryMatcherEqual))<br> <span class="hljs-keyword">if</span> <span class="hljs-keyword">err</span> != nil &#123;<br>  panic(<span class="hljs-keyword">err</span>)<br> &#125;<br><br> <span class="hljs-keyword">DB</span>, <span class="hljs-keyword">err</span> = gorm.<span class="hljs-keyword">Open</span>(mysql.New(mysql.Config&#123;<br>  Conn:                      <span class="hljs-keyword">db</span>,<br>  SkipInitializeWithVersion: true,<br> &#125;), &amp;gorm.Config&#123;&#125;)<br> <span class="hljs-keyword">if</span> <span class="hljs-keyword">err</span> != nil &#123;<br>  panic(<span class="hljs-keyword">err</span>)<br> &#125;<br><br> <span class="hljs-comment">// m.Run 是真正调用下面各个Test函数的入口</span><br> os.<span class="hljs-keyword">Exit</span>(<span class="hljs-keyword">m</span>.<span class="hljs-keyword">Run</span>())<br>&#125;<br><br><span class="hljs-comment">/*</span><br><span class="hljs-comment">  sqlmock 对语法限制比较大，下面的sql语句必须精确匹配（包括符号和空格）</span><br><span class="hljs-comment">*/</span><br><br>func TestOrderRepo_AddOrder(t *testing.T) &#123;<br> <span class="hljs-keyword">var</span> <span class="hljs-keyword">order</span> = &amp;<span class="hljs-keyword">Order</span>&#123;Name: <span class="hljs-string">&quot;order1&quot;</span>, Price: 1.1&#125;<br> orderRepo := NewOrderRepo(<span class="hljs-keyword">DB</span>)<br><br> mock.ExpectBegin()<br> mock.ExpectExec(<span class="hljs-string">&quot;INSERT INTO `orders` (`name`,`price`) VALUES (?,?)&quot;</span>).<br>  WithArgs(<span class="hljs-keyword">order</span>.Name, <span class="hljs-keyword">order</span>.Price).<br>  WillReturnResult(sqlmock.NewResult(1, 1))<br> mock.ExpectCommit()<br> <span class="hljs-keyword">err</span> := orderRepo.AddOrder(<span class="hljs-keyword">order</span>)<br> <span class="hljs-keyword">assert</span>.Nil(t, <span class="hljs-keyword">err</span>)<br>&#125;<br><br>func TestOrderRepo_QueryOrders(t *testing.T) &#123;<br> <span class="hljs-keyword">var</span> orders = []<span class="hljs-keyword">Order</span>&#123;<br>  &#123;1, <span class="hljs-string">&quot;name1&quot;</span>, 1.0&#125;,<br>  &#123;2, <span class="hljs-string">&quot;name2&quot;</span>, 1.0&#125;,<br> &#125;<br> page, size := 2, 10<br> orderRepo := NewOrderRepo(<span class="hljs-keyword">DB</span>)<br> condition := NewOrderFields(&amp;<span class="hljs-keyword">Order</span>&#123;Price: 1.0&#125;, []interface&#123;&#125;&#123;<span class="hljs-string">&quot;price&quot;</span>&#125;)<br><br> mock.ExpectQuery(<br>  <span class="hljs-string">&quot;SELECT * FROM `orders` WHERE `orders`.`price` = ? LIMIT 10 OFFSET 10&quot;</span>).<br>  WithArgs(condition.<span class="hljs-keyword">order</span>.Price).<br>  WillReturnRows(<br>   sqlmock.NewRows([]string&#123;<span class="hljs-string">&quot;id&quot;</span>, <span class="hljs-string">&quot;name&quot;</span>, <span class="hljs-string">&quot;price&quot;</span>&#125;).<br>    AddRow(orders[0].Id, orders[0].Name, orders[0].Price).<br>    AddRow(orders[1].Id, orders[1].Name, orders[1].Price))<br><br> <span class="hljs-keyword">ret</span>, <span class="hljs-keyword">err</span> := orderRepo.QueryOrders(page, size, condition)<br> <span class="hljs-keyword">assert</span>.Nil(t, <span class="hljs-keyword">err</span>)<br> <span class="hljs-keyword">assert</span>.Equal(t, orders, <span class="hljs-keyword">ret</span>)<br>&#125;<br><br>func TestOrderRepo_UpdateOrder(t *testing.T) &#123;<br> orderRepo := NewOrderRepo(<span class="hljs-keyword">DB</span>)<br> <span class="hljs-comment">// 表示要更新的字段为Order对象中的id,name两个字段</span><br> updated := NewOrderFields(&amp;<span class="hljs-keyword">Order</span>&#123;Id: 1, Name: <span class="hljs-string">&quot;test_name&quot;</span>&#125;, []interface&#123;&#125;&#123;<span class="hljs-string">&quot;id&quot;</span>, <span class="hljs-string">&quot;name&quot;</span>&#125;)<br> <span class="hljs-comment">// 表示更新的条件为Order对象中的price字段</span><br> condition := NewOrderFields(&amp;<span class="hljs-keyword">Order</span>&#123;Price: 1.0&#125;, []interface&#123;&#125;&#123;<span class="hljs-string">&quot;price&quot;</span>&#125;)<br><br> mock.ExpectBegin()<br> mock.ExpectExec(<br>  <span class="hljs-string">&quot;UPDATE `orders` SET `id`=?,`name`=? WHERE `orders`.`price` = ?&quot;</span>).<br>  WithArgs(updated.<span class="hljs-keyword">order</span>.Id, updated.<span class="hljs-keyword">order</span>.Name, condition.<span class="hljs-keyword">order</span>.Price).<br>  WillReturnResult(sqlmock.NewResult(1, 1))<br> mock.ExpectCommit()<br><br> <span class="hljs-keyword">err</span> := orderRepo.UpdateOrder(updated, condition)<br> <span class="hljs-keyword">assert</span>.Nil(t, <span class="hljs-keyword">err</span>)<br>&#125;<br></code></pre></td></tr></table></figure>
 
 <h2 id="3-注意点讲解"><a href="#3-注意点讲解" class="headerlink" title="3.注意点讲解"></a>3.注意点讲解</h2><p>虽然添加了注释，我这边依旧讲一下修改的重点：</p>
 <ul>
@@ -172,89 +312,140 @@
 </ul>
 <p>接下来的模块，我会逐渐对2、3两点进行补充，而第1点需要有选择性地实现，我也会结合具体的场景进行分享。</p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>通过这一个小版本，我们让DAO这个与数据库交互模块的代码更具<strong>可读性（从调用侧可以清楚地了解到要做什么）、健壮性（单元测试）和可扩展性（对后续字段的扩展也很容易支持）。</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Github: https:&#x2F;&#x2F;github.com&#x2F;Junedayday&#x2F;code_reading</span><br><span class="line"></span><br><span class="line">Blog: http:&#x2F;&#x2F;junes.tech&#x2F;</span><br><span class="line"></span><br><span class="line">Bilibili: https:&#x2F;&#x2F;space.bilibili.com&#x2F;293775192</span><br><span class="line"></span><br><span class="line">公众号: golangcoding</span><br></pre></td></tr></table></figure>
-
-            </div>
-          
-
-    
-      <footer class="post-footer">
-		
-		<div class="post-tags">
-		  
-			<a href="/tags/GORM/">GORM</a>
-		  
-		</div>
-		
-
-        
-        
-  <nav class="post-nav">
-    
-      <a class="prev" href="/2021/09/05/Go-%E5%BA%95%E5%B1%82/">
-        <i class="iconfont icon-left"></i>
-        <span class="prev-text nav-default">Go-底层</span>
-        <span class="prev-text nav-mobile">Prev</span>
-      </a>
-    
-    
-      <a class="next" href="/2021/09/04/Go-%E6%8F%92%E4%BB%B6%E5%8A%9F%E8%83%BD%E7%9A%84%E5%AE%9E%E7%8E%B0%E6%96%B9%E5%BC%8F/">
-        <span class="next-text nav-default">Go-插件功能的实现方式</span>
-        <span class="prev-text nav-mobile">Next</span>
-        <i class="iconfont icon-right"></i>
-      </a>
-    
-  </nav>
-
-        
-  <div class="comments" id="comments">
-    
-  </div>
-
-
-      </footer>
-    
-  </article>
+<figure class="highlight awk"><table><tr><td class="code"><pre><code class="hljs awk">Github: https:<span class="hljs-regexp">//gi</span>thub.com<span class="hljs-regexp">/Junedayday/</span>code_reading<br><br>Blog: http:<span class="hljs-regexp">//</span>junes.tech/<br><br>Bilibili: https:<span class="hljs-regexp">//</span>space.bilibili.com/<span class="hljs-number">293775192</span><br><br>公众号: golangcoding<br></code></pre></td></tr></table></figure>
 
     </div>
+</div>
+<style>
+    #noneimg img {
+        display: none;
+        z-index: 109;
+        width: 600px !important;
+        border-radius: 0px;
+        position: fixed;
+        box-shadow: 0 0 0px #c3c3c300 !important;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto !important;
+    }
 
-      </div>
+    @media screen and (max-width:600px) {
+        #noneimg img {
+            width: 88%
+        }
+    }
+</style>
+<script>
+    $(function () { $('#article').click(function (e) { if (e.target.tagName == "IMG") { if ($('#nonediv').length == 0) { let MImg = `<div id='noneimg'><img src='${e.target.currentSrc}'></div>`; let MDiv = "<div id='nonediv' style='cursor: pointer;display: none; position: fixed;left: 0;top: 0; right: 0;bottom: 0;background-color: #333;opacity:0.5;z-index: 108;'></div>"; $('#article').append(MDiv); $('#article').append(MImg); $("#nonediv").fadeIn("slow"); $("#noneimg img").fadeIn("slow") } } else { if ($('#nonediv').length !== 0) { $("#noneimg ").fadeOut("slow"); $("#nonediv").fadeOut("slow"); setTimeout(function () { $('#nonediv').remove(); $('#noneimg').remove() }, 500) } } }); $('.article-content').addClass('content-move') });
+</script>
+<div class="Last-Next">
+    
+    <a href="/2021/09/05/Go-%E5%BA%95%E5%B1%82/">
+        <div class="last">
+            <span>上一篇</span>
+            <p>Go-底层</p>
+        </div>
+    </a>
+    
 
-      <footer id="colophon"><span class="copyright-year">
     
-        &copy;
+    <a href="/2021/09/04/Go-%E6%8F%92%E4%BB%B6%E5%8A%9F%E8%83%BD%E7%9A%84%E5%AE%9E%E7%8E%B0%E6%96%B9%E5%BC%8F/">
+        <div class="next">
+            <span>下一篇</span>
+            <p>Go-插件功能的实现方式</p>
+        </div>
+    </a>
     
-        2014 -
-    
-    2021
-    <span class="footer-author">Russshare.</span>
-    <span class="power-by">
-        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+</div>
+		
+<link rel="stylesheet" href="/css/food.css">
+
+<div class="footer">
+	<div class="Copyright">
+		©2021 By CHANGEQ. 主题：<a
+			style="text-decoration: none;display: contents; color: #898F9F;"
+			target="_blank" rel="noopener" href="https://github.com/qiaobug/hexo-theme-quiet">Quiet</a>
+	</div>
+	<div class="contact">
+		
+		<a target="_blank" rel="noopener" href="https://github.com/qiaobug">
+			<img src="https://cdn.jsdelivr.net/gh/duogongneng/MyBlogImg/imggithub.png" alt="Quiet主题">
+		</a>
+		
+	</div>
+</div>
+
+<script src="/js/jquery.min.js"></script>
+
+
+<script src="/js/gotop.js"></script>
+
+
+<style type="text/css">
+    @media screen and (min-width: 600px) {
+        .goTop>span {
+            display: block;
+            border-radius: 50%;
+            width: 66px;
+            height: 66px;
+            cursor: pointer;
+            opacity: 0.8;
+            background: rgba(18, 24, 58, 0.06);
+            text-align: center;
+            border: 1px solid rgba(18, 24, 58, 0.06);
+
+            transition: border .5s;
+            -moz-transition: border .5s;
+            /* Firefox 4 */
+            -webkit-transition: border .5s;
+            /* Safari 和 Chrome */
+            -o-transition: border .5s;
+            /* Opera */
+        }
+
+        .goTop>span:hover {
+            border: 1px solid #6680B3;
+        }
+
+
+        .goTop {
+            position: fixed;
+            right: 30px;
+            bottom: 80px;
+        }
+
+        .goTop>span>svg {
+            width: 30px;
+            height: 30px;
+            margin-top: 17.5px;
+            opacity: 0.7;
+        }
+
+    }
+
+    @media screen and (max-width: 600px) {
+        .goTop {
+            display: none;
+        }
+    }
+</style>
+<div class="goTop" id="js-go_top">
+    <span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <g>
+                <path d="M13 12v8h-2v-8H4l8-8 8 8z"></path>
+            </g>
+        </svg>
     </span>
-</span>
+</div>
+<script>
+    $('#js-go_top').gotoTop({ offset: 500, speed: 300, animationShow: { 'transform': 'translate(0,0)', 'transition': 'transform .5s ease-in-out' }, animationHide: { 'transform': 'translate(100px,0)', 'transition': 'transform .5s ease-in-out' } });
+</script>
+<script>
+	console.log('\n %c Hexo-Quiet 主题 %c https://github.com/QiaoBug/hexo-theme-quiet \n', 'color: #fadfa3; background: #030307; padding:5px 0;', 'background: #fadfa3; padding:5px 0;')
+</script>
+	</body>
 
-      </footer>
-
-      <div class="back-to-top" id="back-to-top">
-        <i class="iconfont icon-up"></i>
-      </div>
-    </div>
-    
-
-
-    
-
-
-
-
-  
-    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
-  
-
-  
-
-    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
-<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
-
-  </body>
 </html>

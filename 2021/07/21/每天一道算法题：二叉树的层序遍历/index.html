@@ -1,221 +1,411 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
-  <head>
-    
-<meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+<html>
+
+	<head>
+		
+<title>每天一道算法题：二叉树的层序遍历-Quiet</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="shortcut icon" type="image/x-icon" href="/image/favicon.ico">
 
 
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="keywords" content="面试,算法,">
+<meta name="description" content="">
 
 
-
-  <meta name="description" content="每天一道算法题：二叉树的层序遍历"/>
-
+<script src="/js/jquery.min.js"></script>
 
 
+	<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+</head>
 
-  <meta name="keywords" content="面试,算法," />
-
-
-
-
-
-  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+	<body>
+		
+<link rel="stylesheet" href="/css/page.css">
 
 
+<link rel="stylesheet" href="/css/page_cente.css">
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+<link rel="stylesheet" href="/css/atom-one-dark.css">
 
 
+<link rel="stylesheet" href="/css/header.css">
 
-<link rel="canonical" href="https://riddlego.github.io/2021/07/21/每天一道算法题：二叉树的层序遍历/"/>
+	<div class="header">
+		<div class="header-top">
+			<div class="h-left">
+				<a href="/">
+					<img src="/image/logo.png" alt="Quiet">
+				</a>
+			</div>
+			<div class="h-right">
+				<ul>
+					
+						
+								<li>
+									<a href="/">
+										HOME
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/archives">
+										ARCHIVE
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/categories">
+										CATEGORIES
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/tags">
+										TAGS
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/links">
+										LINKS
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/about">
+										ABOUT
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+				</ul>
+			</div>
+			<div class="h-right-close">
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+					<path fill="none" d="M0 0h24v24H0z" />
+					<path d="M3 4h18v2H3V4zm0 7h18v2H3v-2zm0 7h18v2H3v-2z" fill="rgba(68,68,68,1)" />
+				</svg>
+			</div>
+		</div>
+	</div>
+	<div class="sidebar">
+    <div class="topo">
+        <h2>CHANGEQ</h2>
+    </div>
+    <ul>
+        
+        <li>
+            <a href="/">HOME</a>
+        </li>
+        
+        <li>
+            <a href="/archives">ARCHIVE</a>
+        </li>
+        
+        <li>
+            <a href="/categories">CATEGORIES</a>
+        </li>
+        
+        <li>
+            <a href="/tags">TAGS</a>
+        </li>
+        
+        <li>
+            <a href="/links">LINKS</a>
+        </li>
+        
+        <li>
+            <a href="/about">ABOUT</a>
+        </li>
+        
+    </ul>
+    <div class="my_foot">
+        
+        <a target="_blank" rel="noopener" href="https://github.com/qiaobug">
+            <img src="https://cdn.jsdelivr.net/gh/duogongneng/MyBlogImg/imggithub.png" alt="Quiet主题">
+        </a>
+        
+    </div>
+</div>
+<div class='shelter'
+    style='cursor: pointer;display: none; position: fixed;left: 0;top: 0; right: 0;bottom: 0;background-color: #333;opacity:0.5;z-index: 108;'>
+</div>
+<style>
+    .sidebar {
+        width: 0;
+        height: 100%;
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        background: #fff;
+        z-index: 999;
+        text-align: center;
+        box-shadow: -6px 0 20px rgba(98, 94, 94, .815)
+    }
 
+    .topo {
+        width: 100%;
+        height: 200px;
+        background: url(https://api.ixiaowai.cn/gqapi/gqapi.php) no-repeat;
+        background-size: 100% 100%;
+        position: relative;
+        display: flex;
+        align-items: flex-end
+    }
 
-<meta name="description" content="描述给定一个二叉树，返回该二叉树层序遍历的结果，（从左到右，一层一层地遍历）例如：给定的二叉树是{3,9,20,#,#,15,7}, 123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869pack">
-<meta property="og:type" content="article">
-<meta property="og:title" content="每天一道算法题：二叉树的层序遍历">
-<meta property="og:url" content="https://riddlego.github.io/2021/07/21/%E6%AF%8F%E5%A4%A9%E4%B8%80%E9%81%93%E7%AE%97%E6%B3%95%E9%A2%98%EF%BC%9A%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E5%B1%82%E5%BA%8F%E9%81%8D%E5%8E%86/index.html">
-<meta property="og:site_name" content="RiddleGo">
-<meta property="og:description" content="描述给定一个二叉树，返回该二叉树层序遍历的结果，（从左到右，一层一层地遍历）例如：给定的二叉树是{3,9,20,#,#,15,7}, 123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869pack">
-<meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2021-07-21T12:56:16.000Z">
-<meta property="article:modified_time" content="2021-07-24T14:47:03.867Z">
-<meta property="article:author" content="Russshare">
-<meta property="article:tag" content="面试">
-<meta property="article:tag" content="算法">
-<meta name="twitter:card" content="summary">
+    .topo h2 {
+        color: #fff;
+        z-index: 1;
+        position: relative;
+        margin: 0 0 10px 10px;
+        font-size: 1.2em;
+        box-sizing: border-box
+    }
 
+    .topo:before {
+        content: '';
+        background-image: url(/image/pattern.png);
+        background-repeat: repeat;
+        height: 100%;
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 100%;
+        z-index: 1
+    }
 
-<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
-<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+    .sidebar ul {
+        width: 100%;
+        margin-top: 50px
+    }
 
+    .sidebar ul li {
+        height: 50px;
+        list-style: none;
+        font-size: 1.2em;
+        text-align: right;
+        margin-right: 10px
+    }
 
+    .sidebar ul li a {
+        display: grid;
+        color: #5d606a;
+        text-overflow: ellipsis;
+        width: 100%;
+        text-decoration: none
+    }
 
+    .my_foot {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        position: absolute;
+        bottom: 0
+    }
 
+    .my_foot a {
+        text-decoration: none;
+        margin-right: 10px;
+        display: inline-block
+    }
 
-<script type="text/javascript">
-  var themeConfig = {
-    fancybox: {
-      enable: false
-    },
-  };
+    .my_foot a img {
+        width: 30px;
+        height: 30px
+    }
+</style>
+
+<script>
+    $(function () { $('.h-right-close>svg').click(function () { $('.sidebar').animate({ width: "66%" }, 500); $('.shelter').fadeIn("slow") }); $('.shelter').click(function (e) { $('.sidebar').animate({ width: "0" }, 500); $('.shelter').fadeOut("slow") }) })
 </script>
-
-
-
-
-  
-
-
-
-    <title> 每天一道算法题：二叉树的层序遍历 - RiddleGo </title>
-  <meta name="generator" content="Hexo 5.4.0"></head>
-
-  <body>
-    <div id="page">
-      <header id="masthead"><div class="site-header-inner">
-    <h1 class="site-title">
-        <a href="/." class="logo">RiddleGo</a>
-    </h1>
-
-    <nav id="nav-top">
-        
-            <ul id="menu-top" class="nav-top-items">
+		<script>
+			$(function () { $(window).scroll(function () { if ($(document).scrollTop() > 100) { $(".header-top").removeClass("header-move2"); $('.header-top').addClass('header-move1') } else { $(".header-top").removeClass("header-move1"); $('.header-top').addClass('header-move2') } }) });
+		</script>
+<div class="header-bg ">
+    <div class="bg-content">
+        <ul class="tag">
+            
+            
+            <li><a href="/tags/面试">面试</a></li>
+            
+            <li><a href="/tags/算法">算法</a></li>
+            
+            
+        </ul>
+        <h1>每天一道算法题：二叉树的层序遍历</h1>
+        <div class="article-info">
+            <div class="article-author">
                 
-                    <li class="menu-item">
-                        <a href="/archives">
-                            
-                            
-                                Archives
-                            
-                        </a>
-                    </li>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+                    <g>
+                        <path fill="#12183A"
+                            d="M6.187 15.265A6.47 6.47 0 0 0 10 16.5a6.47 6.47 0 0 0 3.813-1.235A4.99 4.99 0 0 0 10 13.5a4.99 4.99 0 0 0-3.813 1.765zM5.082 14.25A6.485 6.485 0 0 1 10 12c1.965 0 3.726.872 4.918 2.25a6.5 6.5 0 1 0-9.836 0zM10 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0-1.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z">
+                        </path>
+                    </g>
+                </svg>
                 
-                    <li class="menu-item">
-                        <a href="/about">
-                            
-                            
-                                About
-                            
-                        </a>
-                    </li>
-                
-            </ul>
-        
-  </nav>
+                <span> <a href="">CHANGEQ</a></span>
+                <p>2021-07-21 20:56:16</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="article-content">
+    <div id="article" class="content">
+        <p>描述<br>给定一个二叉树，返回该二叉树层序遍历的结果，（从左到右，一层一层地遍历）<br>例如：<br>给定的二叉树是{3,9,20,#,#,15,7},</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><code class="hljs go"><br><span class="hljs-keyword">package</span> main<br> <br><span class="hljs-keyword">import</span> <span class="hljs-string">&quot;fmt&quot;</span><br> <br><span class="hljs-keyword">type</span> TreeNode <span class="hljs-keyword">struct</span> &#123;<br>     Val <span class="hljs-keyword">int</span><br>     Left *TreeNode<br>     Right *TreeNode<br>&#125;<br> <br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">levelOrder</span><span class="hljs-params">(root *TreeNode)</span> [][]<span class="hljs-title">int</span></span> &#123;<br>	res := [][]<span class="hljs-keyword">int</span>&#123;&#125;<br>  <span class="hljs-comment">//先进行异常判断</span><br>	<span class="hljs-keyword">if</span> root == <span class="hljs-literal">nil</span>&#123;<br>		<span class="hljs-keyword">return</span> res<br>	&#125;<br><br>  <span class="hljs-comment">//创建一个队列  先进先处</span><br>	<span class="hljs-comment">//层序遍历就是每访问一个结点就把它的子结点加入队列的尾部</span><br><br>  <span class="hljs-keyword">var</span> queue = []*TreeNode&#123;root&#125;<br><br>	<span class="hljs-keyword">var</span> level <span class="hljs-keyword">int</span><br>	<br>  <span class="hljs-comment">//只要我队列不为空 说明就还有需要遍历的元素</span><br><br>  <span class="hljs-keyword">for</span> <span class="hljs-built_in">len</span>(queue) &gt; <span class="hljs-number">0</span> &#123;<br>    <span class="hljs-comment">//获取当前队列的长度  这就是我要遍历的个数</span><br>		counter := <span class="hljs-built_in">len</span>(queue)<br>    <span class="hljs-comment">//给这个层级创建一个数组  res是一个二维的数组哦</span><br>		res = <span class="hljs-built_in">append</span>(res,[]<span class="hljs-keyword">int</span>&#123;&#125;)<br>		<span class="hljs-comment">//</span><br>    <span class="hljs-keyword">for</span> <span class="hljs-number">0</span> &lt; counter &#123;<br>			counter--<br>			<span class="hljs-comment">//当队列中的结点有子结点  就把子结点加入队列</span><br>      <span class="hljs-keyword">if</span> queue[<span class="hljs-number">0</span>].Left != <span class="hljs-literal">nil</span> &#123;<br>				queue = <span class="hljs-built_in">append</span>(queue, queue[<span class="hljs-number">0</span>].Left)<br>			&#125;<br>			<span class="hljs-keyword">if</span> queue[<span class="hljs-number">0</span>].Right != <span class="hljs-literal">nil</span> &#123;<br>				queue = <span class="hljs-built_in">append</span>(queue, queue[<span class="hljs-number">0</span>].Right)<br>			&#125;<br><br>      <span class="hljs-comment">//将值加入本个层级对应的数组</span><br>			res[level] = <span class="hljs-built_in">append</span>(res[level], queue[<span class="hljs-number">0</span>].Val)<br>      <span class="hljs-comment">//遍历了一个结点 处理好了他的子结点以后 将这个结点  扔出队列</span><br>			queue = queue[<span class="hljs-number">1</span>:]<br>		&#125;<br>    <span class="hljs-comment">//遍历完这一个层级 加一 到下一个层级</span><br>		level++<br>	&#125;<br><br>  <span class="hljs-comment">//当最后一个层级 队列中没有加进去结点  遍历完就完了  然后跳出循环  返回结果</span><br>  <span class="hljs-comment">//两个循环  一个是整个队列是否还有元素  一个是  遍历当前有元素的队列  并把他们的结点的子结点加入到队列</span><br>	<span class="hljs-keyword">return</span> res<br>&#125;<br> <br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>  <span class="hljs-comment">//构建二叉树</span><br>	node1 := &amp;TreeNode&#123;<span class="hljs-number">3</span>, <span class="hljs-literal">nil</span>, <span class="hljs-literal">nil</span>&#125;<br>	node1.Left = &amp;TreeNode&#123;<span class="hljs-number">9</span>, <span class="hljs-literal">nil</span>, <span class="hljs-literal">nil</span>&#125;<br>	node1.Right = &amp;TreeNode&#123;<span class="hljs-number">20</span>, <span class="hljs-literal">nil</span>, <span class="hljs-literal">nil</span>&#125;<br>	node1.Right.Left = &amp;TreeNode&#123;<span class="hljs-number">15</span>, <span class="hljs-literal">nil</span>, <span class="hljs-literal">nil</span>&#125;<br>	node1.Right.Right = &amp;TreeNode&#123;<span class="hljs-number">7</span>, <span class="hljs-literal">nil</span>, <span class="hljs-literal">nil</span>&#125;<br> <br>	res := levelOrder(node1)<br>	fmt.Printf(<span class="hljs-string">&quot;res is: %v\n&quot;</span>, res)<br>&#125;<br><br></code></pre></td></tr></table></figure>
+    </div>
+</div>
+<style>
+    #noneimg img {
+        display: none;
+        z-index: 109;
+        width: 600px !important;
+        border-radius: 0px;
+        position: fixed;
+        box-shadow: 0 0 0px #c3c3c300 !important;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto !important;
+    }
+
+    @media screen and (max-width:600px) {
+        #noneimg img {
+            width: 88%
+        }
+    }
+</style>
+<script>
+    $(function () { $('#article').click(function (e) { if (e.target.tagName == "IMG") { if ($('#nonediv').length == 0) { let MImg = `<div id='noneimg'><img src='${e.target.currentSrc}'></div>`; let MDiv = "<div id='nonediv' style='cursor: pointer;display: none; position: fixed;left: 0;top: 0; right: 0;bottom: 0;background-color: #333;opacity:0.5;z-index: 108;'></div>"; $('#article').append(MDiv); $('#article').append(MImg); $("#nonediv").fadeIn("slow"); $("#noneimg img").fadeIn("slow") } } else { if ($('#nonediv').length !== 0) { $("#noneimg ").fadeOut("slow"); $("#nonediv").fadeOut("slow"); setTimeout(function () { $('#nonediv').remove(); $('#noneimg').remove() }, 500) } } }); $('.article-content').addClass('content-move') });
+</script>
+<div class="Last-Next">
+    
+    <a href="/2021/07/21/JWT%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/">
+        <div class="last">
+            <span>上一篇</span>
+            <p>JWT入门教程</p>
+        </div>
+    </a>
+    
+
+    
+    <a href="/2021/07/21/gin%E6%A1%86%E6%9E%B6%EF%BC%88%E4%B8%80%EF%BC%89-%E5%88%9D%E5%A7%8Bgin/">
+        <div class="next">
+            <span>下一篇</span>
+            <p>gin框架（一）:初始gin</p>
+        </div>
+    </a>
+    
+</div>
+		
+<link rel="stylesheet" href="/css/food.css">
+
+<div class="footer">
+	<div class="Copyright">
+		©2021 By CHANGEQ. 主题：<a
+			style="text-decoration: none;display: contents; color: #898F9F;"
+			target="_blank" rel="noopener" href="https://github.com/qiaobug/hexo-theme-quiet">Quiet</a>
+	</div>
+	<div class="contact">
+		
+		<a target="_blank" rel="noopener" href="https://github.com/qiaobug">
+			<img src="https://cdn.jsdelivr.net/gh/duogongneng/MyBlogImg/imggithub.png" alt="Quiet主题">
+		</a>
+		
+	</div>
 </div>
 
-      </header>
-      <div id="content">
-        
-    <div id="primary">
-        
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          每天一道算法题：二叉树的层序遍历
-        
-      </h1>
-
-      <time class="post-time">
-          7月 21 2021
-      </time>
-    </header>
+<script src="/js/jquery.min.js"></script>
 
 
-
-    
-            <div class="post-content">
-            <p>描述<br>给定一个二叉树，返回该二叉树层序遍历的结果，（从左到右，一层一层地遍历）<br>例如：<br>给定的二叉树是{3,9,20,#,#,15,7},</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">package main</span><br><span class="line"> </span><br><span class="line">import &quot;fmt&quot;</span><br><span class="line"> </span><br><span class="line">type TreeNode struct &#123;</span><br><span class="line">     Val int</span><br><span class="line">     Left *TreeNode</span><br><span class="line">     Right *TreeNode</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">func levelOrder(root *TreeNode) [][]int &#123;</span><br><span class="line">	res :&#x3D; [][]int&#123;&#125;</span><br><span class="line">  &#x2F;&#x2F;先进行异常判断</span><br><span class="line">	if root &#x3D;&#x3D; nil&#123;</span><br><span class="line">		return res</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">  &#x2F;&#x2F;创建一个队列  先进先处</span><br><span class="line">	&#x2F;&#x2F;层序遍历就是每访问一个结点就把它的子结点加入队列的尾部</span><br><span class="line"></span><br><span class="line">  var queue &#x3D; []*TreeNode&#123;root&#125;</span><br><span class="line"></span><br><span class="line">	var level int</span><br><span class="line">	</span><br><span class="line">  &#x2F;&#x2F;只要我队列不为空 说明就还有需要遍历的元素</span><br><span class="line"></span><br><span class="line">  for len(queue) &gt; 0 &#123;</span><br><span class="line">    &#x2F;&#x2F;获取当前队列的长度  这就是我要遍历的个数</span><br><span class="line">		counter :&#x3D; len(queue)</span><br><span class="line">    &#x2F;&#x2F;给这个层级创建一个数组  res是一个二维的数组哦</span><br><span class="line">		res &#x3D; append(res,[]int&#123;&#125;)</span><br><span class="line">		&#x2F;&#x2F;</span><br><span class="line">    for 0 &lt; counter &#123;</span><br><span class="line">			counter--</span><br><span class="line">			&#x2F;&#x2F;当队列中的结点有子结点  就把子结点加入队列</span><br><span class="line">      if queue[0].Left !&#x3D; nil &#123;</span><br><span class="line">				queue &#x3D; append(queue, queue[0].Left)</span><br><span class="line">			&#125;</span><br><span class="line">			if queue[0].Right !&#x3D; nil &#123;</span><br><span class="line">				queue &#x3D; append(queue, queue[0].Right)</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">      &#x2F;&#x2F;将值加入本个层级对应的数组</span><br><span class="line">			res[level] &#x3D; append(res[level], queue[0].Val)</span><br><span class="line">      &#x2F;&#x2F;遍历了一个结点 处理好了他的子结点以后 将这个结点  扔出队列</span><br><span class="line">			queue &#x3D; queue[1:]</span><br><span class="line">		&#125;</span><br><span class="line">    &#x2F;&#x2F;遍历完这一个层级 加一 到下一个层级</span><br><span class="line">		level++</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">  &#x2F;&#x2F;当最后一个层级 队列中没有加进去结点  遍历完就完了  然后跳出循环  返回结果</span><br><span class="line">  &#x2F;&#x2F;两个循环  一个是整个队列是否还有元素  一个是  遍历当前有元素的队列  并把他们的结点的子结点加入到队列</span><br><span class="line">	return res</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">func main() &#123;</span><br><span class="line">  &#x2F;&#x2F;构建二叉树</span><br><span class="line">	node1 :&#x3D; &amp;TreeNode&#123;3, nil, nil&#125;</span><br><span class="line">	node1.Left &#x3D; &amp;TreeNode&#123;9, nil, nil&#125;</span><br><span class="line">	node1.Right &#x3D; &amp;TreeNode&#123;20, nil, nil&#125;</span><br><span class="line">	node1.Right.Left &#x3D; &amp;TreeNode&#123;15, nil, nil&#125;</span><br><span class="line">	node1.Right.Right &#x3D; &amp;TreeNode&#123;7, nil, nil&#125;</span><br><span class="line"> </span><br><span class="line">	res :&#x3D; levelOrder(node1)</span><br><span class="line">	fmt.Printf(&quot;res is: %v\n&quot;, res)</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-            </div>
-          
-
-    
-      <footer class="post-footer">
-		
-		<div class="post-tags">
-		  
-			<a href="/tags/%E9%9D%A2%E8%AF%95/">面试</a>
-		  
-			<a href="/tags/%E7%AE%97%E6%B3%95/">算法</a>
-		  
-		</div>
-		
-
-        
-        
-  <nav class="post-nav">
-    
-      <a class="prev" href="/2021/07/21/JWT%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/">
-        <i class="iconfont icon-left"></i>
-        <span class="prev-text nav-default">JWT入门教程</span>
-        <span class="prev-text nav-mobile">Prev</span>
-      </a>
-    
-    
-      <a class="next" href="/2021/07/21/gin%E6%A1%86%E6%9E%B6%EF%BC%88%E4%B8%80%EF%BC%89-%E5%88%9D%E5%A7%8Bgin/">
-        <span class="next-text nav-default">gin框架（一）:初始gin</span>
-        <span class="prev-text nav-mobile">Next</span>
-        <i class="iconfont icon-right"></i>
-      </a>
-    
-  </nav>
-
-        
-  <div class="comments" id="comments">
-    
-  </div>
+<script src="/js/gotop.js"></script>
 
 
-      </footer>
-    
-  </article>
+<style type="text/css">
+    @media screen and (min-width: 600px) {
+        .goTop>span {
+            display: block;
+            border-radius: 50%;
+            width: 66px;
+            height: 66px;
+            cursor: pointer;
+            opacity: 0.8;
+            background: rgba(18, 24, 58, 0.06);
+            text-align: center;
+            border: 1px solid rgba(18, 24, 58, 0.06);
 
-    </div>
+            transition: border .5s;
+            -moz-transition: border .5s;
+            /* Firefox 4 */
+            -webkit-transition: border .5s;
+            /* Safari 和 Chrome */
+            -o-transition: border .5s;
+            /* Opera */
+        }
 
-      </div>
+        .goTop>span:hover {
+            border: 1px solid #6680B3;
+        }
 
-      <footer id="colophon"><span class="copyright-year">
-    
-        &copy;
-    
-        2014 -
-    
-    2021
-    <span class="footer-author">Russshare.</span>
-    <span class="power-by">
-        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+
+        .goTop {
+            position: fixed;
+            right: 30px;
+            bottom: 80px;
+        }
+
+        .goTop>span>svg {
+            width: 30px;
+            height: 30px;
+            margin-top: 17.5px;
+            opacity: 0.7;
+        }
+
+    }
+
+    @media screen and (max-width: 600px) {
+        .goTop {
+            display: none;
+        }
+    }
+</style>
+<div class="goTop" id="js-go_top">
+    <span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <g>
+                <path d="M13 12v8h-2v-8H4l8-8 8 8z"></path>
+            </g>
+        </svg>
     </span>
-</span>
+</div>
+<script>
+    $('#js-go_top').gotoTop({ offset: 500, speed: 300, animationShow: { 'transform': 'translate(0,0)', 'transition': 'transform .5s ease-in-out' }, animationHide: { 'transform': 'translate(100px,0)', 'transition': 'transform .5s ease-in-out' } });
+</script>
+<script>
+	console.log('\n %c Hexo-Quiet 主题 %c https://github.com/QiaoBug/hexo-theme-quiet \n', 'color: #fadfa3; background: #030307; padding:5px 0;', 'background: #fadfa3; padding:5px 0;')
+</script>
+	</body>
 
-      </footer>
-
-      <div class="back-to-top" id="back-to-top">
-        <i class="iconfont icon-up"></i>
-      </div>
-    </div>
-    
-
-
-    
-
-
-
-
-  
-    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
-  
-
-  
-
-    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
-<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
-
-  </body>
 </html>

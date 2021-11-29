@@ -1,154 +1,294 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
-  <head>
-    
-<meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+<html>
+
+	<head>
+		
+<title>剑指offer05-Quiet</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="shortcut icon" type="image/x-icon" href="/image/favicon.ico">
 
 
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="keywords" content="剑指offer,">
+<meta name="description" content="">
 
 
-
-  <meta name="description" content="剑指offer05"/>
-
+<script src="/js/jquery.min.js"></script>
 
 
+	<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+</head>
 
-  <meta name="keywords" content="剑指offer," />
-
-
-
-
-
-  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+	<body>
+		
+<link rel="stylesheet" href="/css/page.css">
 
 
+<link rel="stylesheet" href="/css/page_cente.css">
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+<link rel="stylesheet" href="/css/atom-one-dark.css">
 
 
+<link rel="stylesheet" href="/css/header.css">
 
-<link rel="canonical" href="https://riddlego.github.io/2021/08/03/剑指offer05/"/>
-
-
-<meta name="description" content="05. 替换空格请实现一个函数，把字符串 s 中的每个空格替换成”%20”。 示例 1： 输入：s &#x3D; “We are happy.”输出：”We%20are%20happy.” 123限制：0 &lt;&#x3D; s 的长度 &lt;&#x3D; 10000  这个玩意吧说简单确实简单，呵呵这样想，那你就年轻了，小伙子有没有想到字符串能不能本地改变的事情，反正我没有。 方法一、创建一个新的，然">
-<meta property="og:type" content="article">
-<meta property="og:title" content="剑指offer05">
-<meta property="og:url" content="https://riddlego.github.io/2021/08/03/%E5%89%91%E6%8C%87offer05/index.html">
-<meta property="og:site_name" content="RiddleGo">
-<meta property="og:description" content="05. 替换空格请实现一个函数，把字符串 s 中的每个空格替换成”%20”。 示例 1： 输入：s &#x3D; “We are happy.”输出：”We%20are%20happy.” 123限制：0 &lt;&#x3D; s 的长度 &lt;&#x3D; 10000  这个玩意吧说简单确实简单，呵呵这样想，那你就年轻了，小伙子有没有想到字符串能不能本地改变的事情，反正我没有。 方法一、创建一个新的，然">
-<meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2021-08-02T16:15:29.000Z">
-<meta property="article:modified_time" content="2021-08-02T16:19:14.395Z">
-<meta property="article:author" content="Russshare">
-<meta property="article:tag" content="剑指offer">
-<meta name="twitter:card" content="summary">
-
-
-<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
-<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
-
-
-
-
-
-<script type="text/javascript">
-  var themeConfig = {
-    fancybox: {
-      enable: false
-    },
-  };
-</script>
-
-
-
-
-  
-
-
-
-    <title> 剑指offer05 - RiddleGo </title>
-  <meta name="generator" content="Hexo 5.4.0"></head>
-
-  <body>
-    <div id="page">
-      <header id="masthead"><div class="site-header-inner">
-    <h1 class="site-title">
-        <a href="/." class="logo">RiddleGo</a>
-    </h1>
-
-    <nav id="nav-top">
+	<div class="header">
+		<div class="header-top">
+			<div class="h-left">
+				<a href="/">
+					<img src="/image/logo.png" alt="Quiet">
+				</a>
+			</div>
+			<div class="h-right">
+				<ul>
+					
+						
+								<li>
+									<a href="/">
+										HOME
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/archives">
+										ARCHIVE
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/categories">
+										CATEGORIES
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/tags">
+										TAGS
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/links">
+										LINKS
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/about">
+										ABOUT
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+				</ul>
+			</div>
+			<div class="h-right-close">
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+					<path fill="none" d="M0 0h24v24H0z" />
+					<path d="M3 4h18v2H3V4zm0 7h18v2H3v-2zm0 7h18v2H3v-2z" fill="rgba(68,68,68,1)" />
+				</svg>
+			</div>
+		</div>
+	</div>
+	<div class="sidebar">
+    <div class="topo">
+        <h2>CHANGEQ</h2>
+    </div>
+    <ul>
         
-            <ul id="menu-top" class="nav-top-items">
-                
-                    <li class="menu-item">
-                        <a href="/archives">
-                            
-                            
-                                Archives
-                            
-                        </a>
-                    </li>
-                
-                    <li class="menu-item">
-                        <a href="/about">
-                            
-                            
-                                About
-                            
-                        </a>
-                    </li>
-                
-            </ul>
+        <li>
+            <a href="/">HOME</a>
+        </li>
         
-  </nav>
+        <li>
+            <a href="/archives">ARCHIVE</a>
+        </li>
+        
+        <li>
+            <a href="/categories">CATEGORIES</a>
+        </li>
+        
+        <li>
+            <a href="/tags">TAGS</a>
+        </li>
+        
+        <li>
+            <a href="/links">LINKS</a>
+        </li>
+        
+        <li>
+            <a href="/about">ABOUT</a>
+        </li>
+        
+    </ul>
+    <div class="my_foot">
+        
+        <a target="_blank" rel="noopener" href="https://github.com/qiaobug">
+            <img src="https://cdn.jsdelivr.net/gh/duogongneng/MyBlogImg/imggithub.png" alt="Quiet主题">
+        </a>
+        
+    </div>
 </div>
+<div class='shelter'
+    style='cursor: pointer;display: none; position: fixed;left: 0;top: 0; right: 0;bottom: 0;background-color: #333;opacity:0.5;z-index: 108;'>
+</div>
+<style>
+    .sidebar {
+        width: 0;
+        height: 100%;
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        background: #fff;
+        z-index: 999;
+        text-align: center;
+        box-shadow: -6px 0 20px rgba(98, 94, 94, .815)
+    }
 
-      </header>
-      <div id="content">
-        
-    <div id="primary">
-        
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          剑指offer05
-        
-      </h1>
+    .topo {
+        width: 100%;
+        height: 200px;
+        background: url(https://api.ixiaowai.cn/gqapi/gqapi.php) no-repeat;
+        background-size: 100% 100%;
+        position: relative;
+        display: flex;
+        align-items: flex-end
+    }
 
-      <time class="post-time">
-          8月 03 2021
-      </time>
-    </header>
+    .topo h2 {
+        color: #fff;
+        z-index: 1;
+        position: relative;
+        margin: 0 0 10px 10px;
+        font-size: 1.2em;
+        box-sizing: border-box
+    }
 
+    .topo:before {
+        content: '';
+        background-image: url(/image/pattern.png);
+        background-repeat: repeat;
+        height: 100%;
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 100%;
+        z-index: 1
+    }
 
+    .sidebar ul {
+        width: 100%;
+        margin-top: 50px
+    }
 
-    
-            <div class="post-content">
-            <h2 id="05-替换空格"><a href="#05-替换空格" class="headerlink" title="05. 替换空格"></a>05. 替换空格</h2><p>请实现一个函数，把字符串 s 中的每个空格替换成”%20”。</p>
+    .sidebar ul li {
+        height: 50px;
+        list-style: none;
+        font-size: 1.2em;
+        text-align: right;
+        margin-right: 10px
+    }
+
+    .sidebar ul li a {
+        display: grid;
+        color: #5d606a;
+        text-overflow: ellipsis;
+        width: 100%;
+        text-decoration: none
+    }
+
+    .my_foot {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        position: absolute;
+        bottom: 0
+    }
+
+    .my_foot a {
+        text-decoration: none;
+        margin-right: 10px;
+        display: inline-block
+    }
+
+    .my_foot a img {
+        width: 30px;
+        height: 30px
+    }
+</style>
+
+<script>
+    $(function () { $('.h-right-close>svg').click(function () { $('.sidebar').animate({ width: "66%" }, 500); $('.shelter').fadeIn("slow") }); $('.shelter').click(function (e) { $('.sidebar').animate({ width: "0" }, 500); $('.shelter').fadeOut("slow") }) })
+</script>
+		<script>
+			$(function () { $(window).scroll(function () { if ($(document).scrollTop() > 100) { $(".header-top").removeClass("header-move2"); $('.header-top').addClass('header-move1') } else { $(".header-top").removeClass("header-move1"); $('.header-top').addClass('header-move2') } }) });
+		</script>
+<div class="header-bg ">
+    <div class="bg-content">
+        <ul class="tag">
+            
+            
+            <li><a href="/tags/剑指offer">剑指offer</a></li>
+            
+            
+        </ul>
+        <h1>剑指offer05</h1>
+        <div class="article-info">
+            <div class="article-author">
+                
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+                    <g>
+                        <path fill="#12183A"
+                            d="M6.187 15.265A6.47 6.47 0 0 0 10 16.5a6.47 6.47 0 0 0 3.813-1.235A4.99 4.99 0 0 0 10 13.5a4.99 4.99 0 0 0-3.813 1.765zM5.082 14.25A6.485 6.485 0 0 1 10 12c1.965 0 3.726.872 4.918 2.25a6.5 6.5 0 1 0-9.836 0zM10 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0-1.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z">
+                        </path>
+                    </g>
+                </svg>
+                
+                <span> <a href="">CHANGEQ</a></span>
+                <p>2021-08-03 00:15:29</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="article-content">
+    <div id="article" class="content">
+        <h2 id="05-替换空格"><a href="#05-替换空格" class="headerlink" title="05. 替换空格"></a>05. 替换空格</h2><p>请实现一个函数，把字符串 s 中的每个空格替换成”%20”。</p>
 <p>示例 1：</p>
 <p>输入：s = “We are happy.”<br>输出：”We%20are%20happy.”</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">限制：</span><br><span class="line"></span><br><span class="line">0 &lt;&#x3D; s 的长度 &lt;&#x3D; 10000</span><br></pre></td></tr></table></figure>
+<figure class="highlight fix"><table><tr><td class="code"><pre><code class="hljs fix"><span class="hljs-attr">限制：</span><br><span class="hljs-attr"></span><br><span class="hljs-attr">0 &lt;</span>=<span class="hljs-string"> s 的长度 &lt;= 10000</span><br></code></pre></td></tr></table></figure>
 
 <p>这个玩意吧说简单确实简单，呵呵这样想，那你就年轻了，小伙子有没有想到字符串能不能本地改变的事情，反正我没有。</p>
 <h3 id="方法一、创建一个新的，然后遍历添加替换。-这个适合字符串不能改变的—python或者java中strbuilder"><a href="#方法一、创建一个新的，然后遍历添加替换。-这个适合字符串不能改变的—python或者java中strbuilder" class="headerlink" title="方法一、创建一个新的，然后遍历添加替换。 这个适合字符串不能改变的—python或者java中strbuilder"></a>方法一、创建一个新的，然后遍历添加替换。 这个适合字符串不能改变的—python或者java中strbuilder</h3><p><strong>算法流程：</strong></p>
 <p>初始化一个 list (Python) / StringBuilder (Java) ，记为 res ；<br>遍历列表 s 中的每个字符 c ：<br>当 c 为空格时：向 res 后添加字符串 “%20” ；<br>当 c 不为空格时：向 res 后添加字符 c ；<br>将列表 res 转化为字符串并返回。</p>
 <p><strong>复杂度分析：</strong><br>时间复杂度 O(N)O(N) ： 遍历使用 O(N) ，每轮添加（修改）字符操作使用 O(1) ；<br>空间复杂度 O(N) ： Python 新建的 list 和 Java 新建的 StringBuilder 都使用了线性大小的额外空间。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">class Solution:</span><br><span class="line">  def replaceNum(self, s:str) -&gt;str:</span><br><span class="line">    res &#x3D; []</span><br><span class="line">    for c in s:</span><br><span class="line">      if (c &#x3D;&#x3D; &#39; &#39;):</span><br><span class="line">        res.append(&quot;%20&quot;)</span><br><span class="line">      else:</span><br><span class="line">        res.append(c)</span><br><span class="line">    return res</span><br></pre></td></tr></table></figure>
+<figure class="highlight vim"><table><tr><td class="code"><pre><code class="hljs vim">class Solution:<br>  def replaceNum(self, <span class="hljs-variable">s:str</span>) -&gt;str:<br>    <span class="hljs-keyword">res</span> = []<br>    <span class="hljs-keyword">for</span> <span class="hljs-keyword">c</span> in <span class="hljs-variable">s:</span><br>      <span class="hljs-keyword">if</span> (<span class="hljs-keyword">c</span> == <span class="hljs-string">&#x27; &#x27;</span>):<br>        <span class="hljs-keyword">res</span>.<span class="hljs-keyword">append</span>(<span class="hljs-string">&quot;%20&quot;</span>)<br>      <span class="hljs-keyword">else</span>:<br>        <span class="hljs-keyword">res</span>.<span class="hljs-keyword">append</span>(<span class="hljs-keyword">c</span>)<br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">res</span><br></code></pre></td></tr></table></figure>
 <p>但是其实如果说这样遍历就有点简单了，面试可能要求你做一个in-place的方法，那么这个时候可以利用到python中的<strong>replace方法</strong></p>
 <p><strong>replace方法：</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">函数原型</span><br><span class="line">str.replace(old, new[, max])</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">参数</span><br><span class="line">old -- 将被替换的子字符串。</span><br><span class="line">new -- 新字符串，用于替换old子字符串。</span><br><span class="line">max -- 可选字符串, 替换不超过 max 次</span><br><span class="line"></span><br><span class="line">返回值</span><br><span class="line">返回字符串中的 old（旧字符串） 替换成 new(新字符串)后生成的新字符串，</span><br><span class="line"></span><br><span class="line">如果指定第三个参数max，则替换不超过 max 次。</span><br></pre></td></tr></table></figure>
+<figure class="highlight livecodeserver"><table><tr><td class="code"><pre><code class="hljs livecodeserver">函数原型<br>str.<span class="hljs-built_in">replace</span>(old, <span class="hljs-built_in">new</span>[, <span class="hljs-built_in">max</span>])<br><br><br>参数<br>old <span class="hljs-comment">-- 将被替换的子字符串。</span><br><span class="hljs-built_in">new</span> <span class="hljs-comment">-- 新字符串，用于替换old子字符串。</span><br><span class="hljs-built_in">max</span> <span class="hljs-comment">-- 可选字符串, 替换不超过 max 次</span><br><br>返回值<br>返回字符串中的 old（旧字符串） 替换成 <span class="hljs-built_in">new</span>(新字符串)后生成的新字符串，<br><br>如果指定第三个参数<span class="hljs-built_in">max</span>，则替换不超过 <span class="hljs-built_in">max</span> 次。<br></code></pre></td></tr></table></figure>
 <p>整个栗子看一下</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">#!&#x2F;usr&#x2F;bin&#x2F;python</span><br><span class="line"> </span><br><span class="line">str &#x3D; &quot;this is string example....wow!!! this is really string&quot;;</span><br><span class="line">print str.replace(&quot;is&quot;, &quot;was&quot;);</span><br><span class="line">print str.replace(&quot;is&quot;, &quot;was&quot;, 3);</span><br><span class="line"></span><br><span class="line">#输出</span><br><span class="line">thwas was string example....wow!!! thwas was really string</span><br><span class="line">thwas was string example....wow!!! thwas is really string</span><br></pre></td></tr></table></figure>
+<figure class="highlight d"><table><tr><td class="code"><pre><code class="hljs d"><span class="hljs-meta">#!/usr/bin/python</span><br> <br>str = <span class="hljs-string">&quot;this is string example....wow!!! this is really string&quot;</span>;<br>print str.replace(<span class="hljs-string">&quot;is&quot;</span>, <span class="hljs-string">&quot;was&quot;</span>);<br>print str.replace(<span class="hljs-string">&quot;is&quot;</span>, <span class="hljs-string">&quot;was&quot;</span>, <span class="hljs-number">3</span>);<br><br>#输出<br>thwas was <span class="hljs-built_in">string</span> example....wow!!! thwas was really <span class="hljs-built_in">string</span><br>thwas was <span class="hljs-built_in">string</span> example....wow!!! thwas <span class="hljs-keyword">is</span> really <span class="hljs-built_in">string</span><br></code></pre></td></tr></table></figure>
 
 <p>所以咱们这道题直接这个方法，面试时候也可以整处理，不过力扣我就不知道能不能用了。</p>
 <h3 id="如果是java"><a href="#如果是java" class="headerlink" title="如果是java"></a>如果是java</h3><p>这里其实如果你用的java，你把这道题做出来以后，肯定还会问你一些问题，不过在这之前先把力扣的答案整上来。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">class Solution&#123;</span><br><span class="line">  public String replaceSpace(String s)&#123;</span><br><span class="line">    for(Character c : s.toCharArray())</span><br><span class="line">    &#123;</span><br><span class="line">      if (c &#x3D;&#x3D; &#39;&#39;)&#123;</span><br><span class="line">        res.append(&quot;%20&quot;);</span><br><span class="line">      &#125;else&#123;</span><br><span class="line">        res.append(c);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return res.toString();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight typescript"><table><tr><td class="code"><pre><code class="hljs typescript"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Solution</span></span>&#123;<br>  <span class="hljs-keyword">public</span> <span class="hljs-built_in">String</span> <span class="hljs-function"><span class="hljs-title">replaceSpace</span>(<span class="hljs-params"><span class="hljs-built_in">String</span> s</span>)</span>&#123;<br>    <span class="hljs-keyword">for</span>(Character c : s.toCharArray())<br>    &#123;<br>      <span class="hljs-keyword">if</span> (c == <span class="hljs-string">&#x27;&#x27;</span>)&#123;<br>        res.append(<span class="hljs-string">&quot;%20&quot;</span>);<br>      &#125;<span class="hljs-keyword">else</span>&#123;<br>        res.append(c);<br>      &#125;<br>    &#125;<br>    <span class="hljs-keyword">return</span> res.toString();<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 
 
 <p>肯定会问你 string-stringbuilder-stringbuffer的区别，还会问你string能不能改变这个鸟问题。</p>
@@ -161,102 +301,153 @@
 <p><strong>在 C++ 语言中， string 被设计成「可变」的类型<a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/28442719/are-c-strings-mutable-unlike-java-strings">参考资料</a>，因此可以在不新建字符串的情况下实现原地修改。</strong></p>
 <p>由于需要将空格替换为 “%20” ，字符串的总字符数增加，因此需要扩展原字符串 s 的长度，计算公式为：新字符串长度 = 原字符串长度 + 2 * 空格个数 ，示例如下图所示。</p>
 <p><strong>算法流程：</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">初始化：空格数量 count ，字符串 s 的长度 len ；</span><br><span class="line">统计空格数量：遍历 s ，遇空格则 count++ ；</span><br><span class="line">修改 s 长度：添加完 &quot;%20&quot; 后的字符串长度应为 len + 2 * count ；</span><br><span class="line">倒序遍历修改：i 指向原字符串尾部元素， j 指向新字符串尾部元素；**当 i &#x3D; j 时跳出（代表左方已没有空格，无需继续遍历）；**（因为你想嘛，如果有空格的话这个时候对应的下表一定是不一样的，因为新的数组长度是加了空格的，如果有空格，那一定被空格挤到了不属于他本来的位置。）</span><br><span class="line"></span><br><span class="line">当 s[i] 不为空格时：执行 s[j] &#x3D; s[i] ；</span><br><span class="line">当 s[i] 为空格时：将字符串闭区间 [j-2, j] 的元素修改为 &quot;%20&quot; ；由于修改了 3 个元素，因此需要 j -&#x3D; 2 ；</span><br><span class="line">返回值：已修改的字符串 s ；</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<figure class="highlight mipsasm"><table><tr><td class="code"><pre><code class="hljs mipsasm">初始化：空格数量 <span class="hljs-built_in">count</span> ，字符串 s 的长度 len ；<br>统计空格数量：遍历 s ，遇空格则 <span class="hljs-built_in">count</span>++ ；<br>修改 s 长度：添加完 <span class="hljs-string">&quot;%20&quot;</span> 后的字符串长度应为 len + <span class="hljs-number">2</span> * <span class="hljs-built_in">count</span> ；<br>倒序遍历修改：i 指向原字符串尾部元素， <span class="hljs-keyword">j </span>指向新字符串尾部元素；**当 i = <span class="hljs-keyword">j </span>时跳出（代表左方已没有空格，无需继续遍历）；**（因为你想嘛，如果有空格的话这个时候对应的下表一定是不一样的，因为新的数组长度是加了空格的，如果有空格，那一定被空格挤到了不属于他本来的位置。）<br><br>当 s[i] 不为空格时：执行 s[<span class="hljs-keyword">j] </span>= s[i] ；<br>当 s[i] 为空格时：将字符串闭区间 [<span class="hljs-keyword">j-2, </span><span class="hljs-keyword">j] </span>的元素修改为 <span class="hljs-string">&quot;%20&quot;</span> ；由于修改了 <span class="hljs-number">3</span> 个元素，因此需要 <span class="hljs-keyword">j </span>-= <span class="hljs-number">2</span> ；<br>返回值：已修改的字符串 s ；<br><br></code></pre></td></tr></table></figure>
 
 <p><strong>代码实现</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">class Solution&#123;</span><br><span class="line">  public:</span><br><span class="line">    string replaceSpace(string s)&#123;</span><br><span class="line">      int count&#x3D;0, len&#x3D;s.size();</span><br><span class="line">      &#x2F;&#x2F;统计空格数量</span><br><span class="line">      for (char c: s)&#123;</span><br><span class="line">        if c &#x3D;&#x3D; &#39; &#39;&#123;</span><br><span class="line">          count++;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      &#x2F;&#x2F;修改字符串长度</span><br><span class="line">      s.resize(len+2*count);</span><br><span class="line">      for i &#x3D; len-1,j&#x3D;s.size()-1;i&lt;j;i--,j--&#123;</span><br><span class="line">        if s[i]!&#x3D;&#39; &#39;&#123;</span><br><span class="line">          s[j]&#x3D;s[i];</span><br><span class="line">        &#125;else&#123;</span><br><span class="line">          s[j]&#x3D;&#39;0&#39;;</span><br><span class="line">          s[j-1]&#x3D;&#39;2&#39;;</span><br><span class="line">          s[j-2]&#x3D;&#39;%&#39;;</span><br><span class="line">          j&#x3D;j-2;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      return s;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<figure class="highlight arduino"><table><tr><td class="code"><pre><code class="hljs arduino"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Solution</span>&#123;</span><br>  <span class="hljs-keyword">public</span>:<br>    <span class="hljs-function">string <span class="hljs-title">replaceSpace</span><span class="hljs-params">(string s)</span></span>&#123;<br>      <span class="hljs-keyword">int</span> count=<span class="hljs-number">0</span>, len=s.<span class="hljs-built_in">size</span>();<br>      <span class="hljs-comment">//统计空格数量</span><br>      <span class="hljs-keyword">for</span> (<span class="hljs-keyword">char</span> c: s)&#123;<br>        <span class="hljs-keyword">if</span> c == <span class="hljs-string">&#x27; &#x27;</span>&#123;<br>          count++;<br>        &#125;<br>      &#125;<br>      <span class="hljs-comment">//修改字符串长度</span><br>      s.<span class="hljs-built_in">resize</span>(len+<span class="hljs-number">2</span>*count);<br>      <span class="hljs-keyword">for</span> i = len<span class="hljs-number">-1</span>,j=s.<span class="hljs-built_in">size</span>()<span class="hljs-number">-1</span>;i&lt;j;i--,j--&#123;<br>        <span class="hljs-keyword">if</span> s[i]!=<span class="hljs-string">&#x27; &#x27;</span>&#123;<br>          s[j]=s[i];<br>        &#125;<span class="hljs-keyword">else</span>&#123;<br>          s[j]=<span class="hljs-string">&#x27;0&#x27;</span>;<br>          s[j<span class="hljs-number">-1</span>]=<span class="hljs-string">&#x27;2&#x27;</span>;<br>          s[j<span class="hljs-number">-2</span>]=<span class="hljs-string">&#x27;%&#x27;</span>;<br>          j=j<span class="hljs-number">-2</span>;<br>        &#125;<br>      &#125;<br>      <span class="hljs-keyword">return</span> s;<br>    &#125;<br>&#125;;<br></code></pre></td></tr></table></figure>
 
 
 <h3 id="golang"><a href="#golang" class="headerlink" title="golang"></a>golang</h3><p>golang中我可能会创建一个新的切片 去保存，然后修改完毕后转成字符串输出，因为我暂时没有找到简单replace方法和修改长度容量的方法。</p>
 <p>一个字符串是一个不可改变的字节序列。字符串可以包含任意的数据，但是通常是用来包含人类可读的文本。</p>
 <p>len()返回字符串字节数目（不是rune数）。<br>通过索引可以访问某个字节值，索引大于等于0小于len(str)。越界会panic。索引不是不是对应的字符而是对应的字节，因为有有非ASCII的UTF8字符有多个字节。</p>
 <p><a target="_blank" rel="noopener" href="https://studygolang.com/articles/21629">参考文章：golang中的string</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/34de853aa255">golang中的string、编码</a></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">func replaceSpace(s string) string&#123;</span><br><span class="line">  &#x2F;&#x2F;先把原来的转成切片</span><br><span class="line">  c:&#x3D;[]byte(s)</span><br><span class="line">  count:&#x3D;0</span><br><span class="line">  &#x2F;&#x2F;这里记住前面是index，后面才是值</span><br><span class="line">  for _,value :&#x3D; range c&#123;</span><br><span class="line">    if c &#x3D;&#x3D; &#39; &#39;&#123;</span><br><span class="line">      count&#x3D;count+1</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  newStr :&#x3D; make([]byte,len(c)+2*count)</span><br><span class="line">  for i:&#x3D;len(c)-1,j:&#x3D;len(newStr)-1;i&lt;j;i--,j--&#123;</span><br><span class="line">    &#x2F;&#x2F;重复c++那个里面的</span><br><span class="line">    &#x2F;&#x2F;不过我这里就没有直接修改原来的数组</span><br><span class="line">    &#x2F;&#x2F;是直接在新的数组个赋值</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  return string(newStr)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight go"><table><tr><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">replaceSpace</span><span class="hljs-params">(s <span class="hljs-keyword">string</span>)</span> <span class="hljs-title">string</span></span>&#123;<br>  <span class="hljs-comment">//先把原来的转成切片</span><br>  c:=[]<span class="hljs-keyword">byte</span>(s)<br>  count:=<span class="hljs-number">0</span><br>  <span class="hljs-comment">//这里记住前面是index，后面才是值</span><br>  <span class="hljs-keyword">for</span> _,value := <span class="hljs-keyword">range</span> c&#123;<br>    <span class="hljs-keyword">if</span> c == <span class="hljs-string">&#x27; &#x27;</span>&#123;<br>      count=count+<span class="hljs-number">1</span><br>    &#125;<br>  &#125;<br>  newStr := <span class="hljs-built_in">make</span>([]<span class="hljs-keyword">byte</span>,<span class="hljs-built_in">len</span>(c)+<span class="hljs-number">2</span>*count)<br>  <span class="hljs-keyword">for</span> i:=<span class="hljs-built_in">len</span>(c)<span class="hljs-number">-1</span>,j:=<span class="hljs-built_in">len</span>(newStr)<span class="hljs-number">-1</span>;i&lt;j;i--,j--&#123;<br>    <span class="hljs-comment">//重复c++那个里面的</span><br>    <span class="hljs-comment">//不过我这里就没有直接修改原来的数组</span><br>    <span class="hljs-comment">//是直接在新的数组个赋值</span><br>  &#125;<br><br>  <span class="hljs-keyword">return</span> <span class="hljs-keyword">string</span>(newStr)<br>&#125;<br></code></pre></td></tr></table></figure>
 
 <p>好了一道题逼逼赖赖了这么久。</p>
 <p><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/ti-huan-kong-ge-lcof/solution/mian-shi-ti-05-ti-huan-kong-ge-ji-jian-qing-xi-tu-/">答案来自前辈</a></p>
 
-            </div>
-          
-
-    
-      <footer class="post-footer">
-		
-		<div class="post-tags">
-		  
-			<a href="/tags/%E5%89%91%E6%8C%87offer/">剑指offer</a>
-		  
-		</div>
-		
-
-        
-        
-  <nav class="post-nav">
-    
-      <a class="prev" href="/2021/08/03/%E5%89%91%E6%8C%87offer06/">
-        <i class="iconfont icon-left"></i>
-        <span class="prev-text nav-default">剑指offer06</span>
-        <span class="prev-text nav-mobile">Prev</span>
-      </a>
-    
-    
-      <a class="next" href="/2021/08/03/%E5%89%91%E6%8C%87offer04/">
-        <span class="next-text nav-default">剑指offer04</span>
-        <span class="prev-text nav-mobile">Next</span>
-        <i class="iconfont icon-right"></i>
-      </a>
-    
-  </nav>
-
-        
-  <div class="comments" id="comments">
-    
-  </div>
-
-
-      </footer>
-    
-  </article>
-
     </div>
+</div>
+<style>
+    #noneimg img {
+        display: none;
+        z-index: 109;
+        width: 600px !important;
+        border-radius: 0px;
+        position: fixed;
+        box-shadow: 0 0 0px #c3c3c300 !important;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto !important;
+    }
 
-      </div>
+    @media screen and (max-width:600px) {
+        #noneimg img {
+            width: 88%
+        }
+    }
+</style>
+<script>
+    $(function () { $('#article').click(function (e) { if (e.target.tagName == "IMG") { if ($('#nonediv').length == 0) { let MImg = `<div id='noneimg'><img src='${e.target.currentSrc}'></div>`; let MDiv = "<div id='nonediv' style='cursor: pointer;display: none; position: fixed;left: 0;top: 0; right: 0;bottom: 0;background-color: #333;opacity:0.5;z-index: 108;'></div>"; $('#article').append(MDiv); $('#article').append(MImg); $("#nonediv").fadeIn("slow"); $("#noneimg img").fadeIn("slow") } } else { if ($('#nonediv').length !== 0) { $("#noneimg ").fadeOut("slow"); $("#nonediv").fadeOut("slow"); setTimeout(function () { $('#nonediv').remove(); $('#noneimg').remove() }, 500) } } }); $('.article-content').addClass('content-move') });
+</script>
+<div class="Last-Next">
+    
+    <a href="/2021/08/03/%E5%89%91%E6%8C%87offer06/">
+        <div class="last">
+            <span>上一篇</span>
+            <p>剑指offer06</p>
+        </div>
+    </a>
+    
 
-      <footer id="colophon"><span class="copyright-year">
     
-        &copy;
+    <a href="/2021/08/03/%E5%89%91%E6%8C%87offer04/">
+        <div class="next">
+            <span>下一篇</span>
+            <p>剑指offer04</p>
+        </div>
+    </a>
     
-        2014 -
-    
-    2021
-    <span class="footer-author">Russshare.</span>
-    <span class="power-by">
-        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+</div>
+		
+<link rel="stylesheet" href="/css/food.css">
+
+<div class="footer">
+	<div class="Copyright">
+		©2021 By CHANGEQ. 主题：<a
+			style="text-decoration: none;display: contents; color: #898F9F;"
+			target="_blank" rel="noopener" href="https://github.com/qiaobug/hexo-theme-quiet">Quiet</a>
+	</div>
+	<div class="contact">
+		
+		<a target="_blank" rel="noopener" href="https://github.com/qiaobug">
+			<img src="https://cdn.jsdelivr.net/gh/duogongneng/MyBlogImg/imggithub.png" alt="Quiet主题">
+		</a>
+		
+	</div>
+</div>
+
+<script src="/js/jquery.min.js"></script>
+
+
+<script src="/js/gotop.js"></script>
+
+
+<style type="text/css">
+    @media screen and (min-width: 600px) {
+        .goTop>span {
+            display: block;
+            border-radius: 50%;
+            width: 66px;
+            height: 66px;
+            cursor: pointer;
+            opacity: 0.8;
+            background: rgba(18, 24, 58, 0.06);
+            text-align: center;
+            border: 1px solid rgba(18, 24, 58, 0.06);
+
+            transition: border .5s;
+            -moz-transition: border .5s;
+            /* Firefox 4 */
+            -webkit-transition: border .5s;
+            /* Safari 和 Chrome */
+            -o-transition: border .5s;
+            /* Opera */
+        }
+
+        .goTop>span:hover {
+            border: 1px solid #6680B3;
+        }
+
+
+        .goTop {
+            position: fixed;
+            right: 30px;
+            bottom: 80px;
+        }
+
+        .goTop>span>svg {
+            width: 30px;
+            height: 30px;
+            margin-top: 17.5px;
+            opacity: 0.7;
+        }
+
+    }
+
+    @media screen and (max-width: 600px) {
+        .goTop {
+            display: none;
+        }
+    }
+</style>
+<div class="goTop" id="js-go_top">
+    <span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <g>
+                <path d="M13 12v8h-2v-8H4l8-8 8 8z"></path>
+            </g>
+        </svg>
     </span>
-</span>
+</div>
+<script>
+    $('#js-go_top').gotoTop({ offset: 500, speed: 300, animationShow: { 'transform': 'translate(0,0)', 'transition': 'transform .5s ease-in-out' }, animationHide: { 'transform': 'translate(100px,0)', 'transition': 'transform .5s ease-in-out' } });
+</script>
+<script>
+	console.log('\n %c Hexo-Quiet 主题 %c https://github.com/QiaoBug/hexo-theme-quiet \n', 'color: #fadfa3; background: #030307; padding:5px 0;', 'background: #fadfa3; padding:5px 0;')
+</script>
+	</body>
 
-      </footer>
-
-      <div class="back-to-top" id="back-to-top">
-        <i class="iconfont icon-up"></i>
-      </div>
-    </div>
-    
-
-
-    
-
-
-
-
-  
-    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
-  
-
-  
-
-    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
-<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
-
-  </body>
 </html>

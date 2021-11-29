@@ -1,235 +1,422 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
-  <head>
-    
-<meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+<html>
+
+	<head>
+		
+<title>pyqt-QGroupbox-Quiet</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="shortcut icon" type="image/x-icon" href="/image/favicon.ico">
 
 
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="keywords" content="pyqt,python,QGroupbox,">
+<meta name="description" content="">
 
 
-
-  <meta name="description" content="pyqt-QGroupbox"/>
-
+<script src="/js/jquery.min.js"></script>
 
 
+	<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+</head>
 
-  <meta name="keywords" content="pyqt,python,QGroupbox," />
-
-
-
-
-
-  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+	<body>
+		
+<link rel="stylesheet" href="/css/page.css">
 
 
+<link rel="stylesheet" href="/css/page_cente.css">
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+<link rel="stylesheet" href="/css/atom-one-dark.css">
 
 
+<link rel="stylesheet" href="/css/header.css">
 
-<link rel="canonical" href="https://riddlego.github.io/2021/07/28/pyqt-QGroupbox/"/>
-
-
-<meta name="description" content="PyQt5第五部分-高级控件（一）：QGroupBox, QTreeWidget, QListWidget, QTableWidget前言继承关系： 1234567891011QWidget  QGroupBox  QFrame    QAbstractScrollArea      QAbstractItemView        QListView          QListWidget">
-<meta property="og:type" content="article">
-<meta property="og:title" content="pyqt-QGroupbox">
-<meta property="og:url" content="https://riddlego.github.io/2021/07/28/pyqt-QGroupbox/index.html">
-<meta property="og:site_name" content="RiddleGo">
-<meta property="og:description" content="PyQt5第五部分-高级控件（一）：QGroupBox, QTreeWidget, QListWidget, QTableWidget前言继承关系： 1234567891011QWidget  QGroupBox  QFrame    QAbstractScrollArea      QAbstractItemView        QListView          QListWidget">
-<meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/groupbox.png">
-<meta property="article:published_time" content="2021-07-28T15:57:53.000Z">
-<meta property="article:modified_time" content="2021-07-29T06:05:43.848Z">
-<meta property="article:author" content="Russshare">
-<meta property="article:tag" content="pyqt">
-<meta property="article:tag" content="python">
-<meta property="article:tag" content="QGroupbox">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/groupbox.png">
-
-
-<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
-<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
-
-
-
-
-
-<script type="text/javascript">
-  var themeConfig = {
-    fancybox: {
-      enable: false
-    },
-  };
-</script>
-
-
-
-
-  
-
-
-
-    <title> pyqt-QGroupbox - RiddleGo </title>
-  <meta name="generator" content="Hexo 5.4.0"></head>
-
-  <body>
-    <div id="page">
-      <header id="masthead"><div class="site-header-inner">
-    <h1 class="site-title">
-        <a href="/." class="logo">RiddleGo</a>
-    </h1>
-
-    <nav id="nav-top">
+	<div class="header">
+		<div class="header-top">
+			<div class="h-left">
+				<a href="/">
+					<img src="/image/logo.png" alt="Quiet">
+				</a>
+			</div>
+			<div class="h-right">
+				<ul>
+					
+						
+								<li>
+									<a href="/">
+										HOME
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/archives">
+										ARCHIVE
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/categories">
+										CATEGORIES
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/tags">
+										TAGS
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/links">
+										LINKS
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/about">
+										ABOUT
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+				</ul>
+			</div>
+			<div class="h-right-close">
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+					<path fill="none" d="M0 0h24v24H0z" />
+					<path d="M3 4h18v2H3V4zm0 7h18v2H3v-2zm0 7h18v2H3v-2z" fill="rgba(68,68,68,1)" />
+				</svg>
+			</div>
+		</div>
+	</div>
+	<div class="sidebar">
+    <div class="topo">
+        <h2>CHANGEQ</h2>
+    </div>
+    <ul>
         
-            <ul id="menu-top" class="nav-top-items">
-                
-                    <li class="menu-item">
-                        <a href="/archives">
-                            
-                            
-                                Archives
-                            
-                        </a>
-                    </li>
-                
-                    <li class="menu-item">
-                        <a href="/about">
-                            
-                            
-                                About
-                            
-                        </a>
-                    </li>
-                
-            </ul>
+        <li>
+            <a href="/">HOME</a>
+        </li>
         
-  </nav>
+        <li>
+            <a href="/archives">ARCHIVE</a>
+        </li>
+        
+        <li>
+            <a href="/categories">CATEGORIES</a>
+        </li>
+        
+        <li>
+            <a href="/tags">TAGS</a>
+        </li>
+        
+        <li>
+            <a href="/links">LINKS</a>
+        </li>
+        
+        <li>
+            <a href="/about">ABOUT</a>
+        </li>
+        
+    </ul>
+    <div class="my_foot">
+        
+        <a target="_blank" rel="noopener" href="https://github.com/qiaobug">
+            <img src="https://cdn.jsdelivr.net/gh/duogongneng/MyBlogImg/imggithub.png" alt="Quiet主题">
+        </a>
+        
+    </div>
 </div>
+<div class='shelter'
+    style='cursor: pointer;display: none; position: fixed;left: 0;top: 0; right: 0;bottom: 0;background-color: #333;opacity:0.5;z-index: 108;'>
+</div>
+<style>
+    .sidebar {
+        width: 0;
+        height: 100%;
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        background: #fff;
+        z-index: 999;
+        text-align: center;
+        box-shadow: -6px 0 20px rgba(98, 94, 94, .815)
+    }
 
-      </header>
-      <div id="content">
-        
-    <div id="primary">
-        
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          pyqt-QGroupbox
-        
-      </h1>
+    .topo {
+        width: 100%;
+        height: 200px;
+        background: url(https://api.ixiaowai.cn/gqapi/gqapi.php) no-repeat;
+        background-size: 100% 100%;
+        position: relative;
+        display: flex;
+        align-items: flex-end
+    }
 
-      <time class="post-time">
-          7月 28 2021
-      </time>
-    </header>
+    .topo h2 {
+        color: #fff;
+        z-index: 1;
+        position: relative;
+        margin: 0 0 10px 10px;
+        font-size: 1.2em;
+        box-sizing: border-box
+    }
 
+    .topo:before {
+        content: '';
+        background-image: url(/image/pattern.png);
+        background-repeat: repeat;
+        height: 100%;
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 100%;
+        z-index: 1
+    }
 
+    .sidebar ul {
+        width: 100%;
+        margin-top: 50px
+    }
 
-    
-            <div class="post-content">
-            <h2 id="PyQt5第五部分-高级控件（一）：QGroupBox-QTreeWidget-QListWidget-QTableWidget"><a href="#PyQt5第五部分-高级控件（一）：QGroupBox-QTreeWidget-QListWidget-QTableWidget" class="headerlink" title="PyQt5第五部分-高级控件（一）：QGroupBox, QTreeWidget, QListWidget, QTableWidget"></a>PyQt5第五部分-高级控件（一）：QGroupBox, QTreeWidget, QListWidget, QTableWidget</h2><h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>继承关系：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">QWidget</span><br><span class="line">  QGroupBox</span><br><span class="line">  QFrame</span><br><span class="line">    QAbstractScrollArea</span><br><span class="line">      QAbstractItemView</span><br><span class="line">        QListView</span><br><span class="line">          QListWidget</span><br><span class="line">        QTableView</span><br><span class="line">          QTableWidget</span><br><span class="line">        QTreeView</span><br><span class="line">          QTreeWidget</span><br></pre></td></tr></table></figure>
+    .sidebar ul li {
+        height: 50px;
+        list-style: none;
+        font-size: 1.2em;
+        text-align: right;
+        margin-right: 10px
+    }
+
+    .sidebar ul li a {
+        display: grid;
+        color: #5d606a;
+        text-overflow: ellipsis;
+        width: 100%;
+        text-decoration: none
+    }
+
+    .my_foot {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        position: absolute;
+        bottom: 0
+    }
+
+    .my_foot a {
+        text-decoration: none;
+        margin-right: 10px;
+        display: inline-block
+    }
+
+    .my_foot a img {
+        width: 30px;
+        height: 30px
+    }
+</style>
+
+<script>
+    $(function () { $('.h-right-close>svg').click(function () { $('.sidebar').animate({ width: "66%" }, 500); $('.shelter').fadeIn("slow") }); $('.shelter').click(function (e) { $('.sidebar').animate({ width: "0" }, 500); $('.shelter').fadeOut("slow") }) })
+</script>
+		<script>
+			$(function () { $(window).scroll(function () { if ($(document).scrollTop() > 100) { $(".header-top").removeClass("header-move2"); $('.header-top').addClass('header-move1') } else { $(".header-top").removeClass("header-move1"); $('.header-top').addClass('header-move2') } }) });
+		</script>
+<div class="header-bg ">
+    <div class="bg-content">
+        <ul class="tag">
+            
+            
+            <li><a href="/tags/pyqt">pyqt</a></li>
+            
+            <li><a href="/tags/python">python</a></li>
+            
+            <li><a href="/tags/QGroupbox">QGroupbox</a></li>
+            
+            
+        </ul>
+        <h1>pyqt-QGroupbox</h1>
+        <div class="article-info">
+            <div class="article-author">
+                
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+                    <g>
+                        <path fill="#12183A"
+                            d="M6.187 15.265A6.47 6.47 0 0 0 10 16.5a6.47 6.47 0 0 0 3.813-1.235A4.99 4.99 0 0 0 10 13.5a4.99 4.99 0 0 0-3.813 1.765zM5.082 14.25A6.485 6.485 0 0 1 10 12c1.965 0 3.726.872 4.918 2.25a6.5 6.5 0 1 0-9.836 0zM10 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0-1.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z">
+                        </path>
+                    </g>
+                </svg>
+                
+                <span> <a href="">CHANGEQ</a></span>
+                <p>2021-07-28 23:57:53</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="article-content">
+    <div id="article" class="content">
+        <h2 id="PyQt5第五部分-高级控件（一）：QGroupBox-QTreeWidget-QListWidget-QTableWidget"><a href="#PyQt5第五部分-高级控件（一）：QGroupBox-QTreeWidget-QListWidget-QTableWidget" class="headerlink" title="PyQt5第五部分-高级控件（一）：QGroupBox, QTreeWidget, QListWidget, QTableWidget"></a>PyQt5第五部分-高级控件（一）：QGroupBox, QTreeWidget, QListWidget, QTableWidget</h2><h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>继承关系：</p>
+<figure class="highlight ebnf"><table><tr><td class="code"><pre><code class="hljs ebnf"><span class="hljs-attribute">QWidget</span><br><span class="hljs-attribute">  QGroupBox</span><br><span class="hljs-attribute">  QFrame</span><br><span class="hljs-attribute">    QAbstractScrollArea</span><br><span class="hljs-attribute">      QAbstractItemView</span><br><span class="hljs-attribute">        QListView</span><br><span class="hljs-attribute">          QListWidget</span><br><span class="hljs-attribute">        QTableView</span><br><span class="hljs-attribute">          QTableWidget</span><br><span class="hljs-attribute">        QTreeView</span><br><span class="hljs-attribute">          QTreeWidget</span><br></code></pre></td></tr></table></figure>
 
 <p>本文只转载了关于QGroupBox的文字与例子</p>
 <h3 id="1-组合框-QGroupBox"><a href="#1-组合框-QGroupBox" class="headerlink" title="1 组合框 QGroupBox"></a>1 组合框 QGroupBox</h3><p>QGroupBox属于QWidget的一种，可以放置布局，也可以被放进布局中</p>
 <p>一个组合框中只能有1个QRadioButton处于True状态</p>
 <p>QGroupBox不仅可以将布局分成一个个区域显示,而且还能起到隔绝环境的作用,例如在pyqt5中,一个界面中的所用QRadioButton只能选中其中一个,但是将QRadioBox分开布局到QGroupBox中去的话,那么每一个QGroupBox中的QRadioBox就是一个整体,每个QGroupBox只能选中一个QRadioButton,如果一个界面中有多个QGroupBox的话就可以同时选中多个QRadioButton了 </p>
 <p><a target="_blank" rel="noopener" href="https://blog.csdn.net/zZzZzZ__/article/details/100224383">原文链接：</a></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line">import sys</span><br><span class="line">from PyQt5.QtWidgets import QApplication, QWidget, QGroupBox, QRadioButton, QHBoxLayout</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">class Demo(QWidget):</span><br><span class="line">    def __init__(self):</span><br><span class="line">        super(Demo, self).__init__()</span><br><span class="line">        &#39;&#39;&#39;添加两个QGroupBox&#39;&#39;&#39;</span><br><span class="line">        self.groupbox1 &#x3D; QGroupBox(&#39;box1&#39;, self)</span><br><span class="line">        self.groupbox2 &#x3D; QGroupBox(&#39;box2&#39;, self)</span><br><span class="line">        &#39;&#39;&#39;添加6个QRadioButton&#39;&#39;&#39;</span><br><span class="line">        self.one &#x3D; QRadioButton(&#39;one&#39;, self)</span><br><span class="line">        self.two &#x3D; QRadioButton(&#39;two&#39;, self)</span><br><span class="line">        self.radio1 &#x3D; QRadioButton(&#39;radio1&#39;, self)</span><br><span class="line">        self.radio2 &#x3D; QRadioButton(&#39;radio2&#39;, self)</span><br><span class="line">        self.radio3 &#x3D; QRadioButton(&#39;radio3&#39;, self)</span><br><span class="line">        self.radio4 &#x3D; QRadioButton(&#39;radio4&#39;, self)   </span><br><span class="line">        &#39;&#39;&#39;创建两个列表&#39;&#39;&#39;</span><br><span class="line">        self.radio_list &#x3D; [self.radio1, self.radio2, self.radio3, self.radio4]</span><br><span class="line">        self.fun_list &#x3D; [&#39;1&#39;, &#39;2&#39;, &#39;3&#39;, &#39;4&#39;]</span><br><span class="line">        &#39;&#39;&#39;创建3个水平布局&#39;&#39;&#39;</span><br><span class="line">        self.hboxL &#x3D; QHBoxLayout()</span><br><span class="line">        self.hboxR &#x3D; QHBoxLayout()</span><br><span class="line">        self.hboxAll &#x3D; QHBoxLayout()</span><br><span class="line">        &#39;&#39;&#39;初始化layout_init()函数和radio_init()函数&#39;&#39;&#39;</span><br><span class="line">        self.layout_init()</span><br><span class="line">        self.radio_init()</span><br><span class="line">    &#39;&#39;&#39;布局初始化函数&#39;&#39;&#39;</span><br><span class="line">    def layout_init(self):</span><br><span class="line">        self.hboxL.addWidget(self.one)</span><br><span class="line">        self.hboxL.addWidget(self.two)</span><br><span class="line">        self.groupbox1.setLayout(self.hboxL)</span><br><span class="line">        self.hboxR.addWidget(self.radio1)</span><br><span class="line">        self.hboxR.addWidget(self.radio2)</span><br><span class="line">        self.hboxR.addWidget(self.radio3)</span><br><span class="line">        self.hboxR.addWidget(self.radio4)</span><br><span class="line">        self.groupbox2.setLayout(self.hboxR)</span><br><span class="line">        self.hboxAll.addWidget(self.groupbox1)</span><br><span class="line">        self.hboxAll.addWidget(self.groupbox2)</span><br><span class="line">        self.setLayout(self.hboxAll)</span><br><span class="line">    &#39;&#39;&#39;QRadioBox初始化,将名one的QRadioBox初始化为被点击状态&#39;&#39;&#39;</span><br><span class="line">    def radio_init(self):</span><br><span class="line">        self.one.setChecked(True)</span><br><span class="line">        for btn in self.radio_list:</span><br><span class="line">            btn.clicked.connect(self.radioFunc)</span><br><span class="line">    &#39;&#39;&#39;该函数功能为当rdio1到radio4被点击时,判断此时groupbox1中one和two哪个radio被按下</span><br><span class="line">    然后在判断groupbox2中哪个radio被按下,最后打印对应的被按下的按钮&#39;&#39;&#39;</span><br><span class="line">    def radioFunc(self):</span><br><span class="line">        if self.one.isChecked():</span><br><span class="line">            for (I, J) in zip(self.radio_list, self.fun_list): #用一个for循环同时迭代两个列表,即for I in self.radio_list和for J in self.fun_list是同时执行的</span><br><span class="line">                if I.isChecked():</span><br><span class="line">                    print(&#39;one &#39;+J+&#39; was clicked&#39;)</span><br><span class="line">        elif self.two.isChecked():</span><br><span class="line">            for (I, J) in zip(self.radio_list, self.fun_list):</span><br><span class="line">                if I.isChecked():</span><br><span class="line">                    print(&#39;two &#39; + J + &#39; was clicked&#39;)</span><br><span class="line">        else:</span><br><span class="line">            pass</span><br><span class="line"> </span><br><span class="line">if __name__ &#x3D;&#x3D; &#39;__main__&#39;:</span><br><span class="line">    app &#x3D; QApplication(sys.argv)</span><br><span class="line">    demo &#x3D; Demo()</span><br><span class="line">    demo.show()</span><br><span class="line">    sys.exit(app.exec_())</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> sys<br><span class="hljs-keyword">from</span> PyQt5.QtWidgets <span class="hljs-keyword">import</span> QApplication, QWidget, QGroupBox, QRadioButton, QHBoxLayout<br> <br> <br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Demo</span>(<span class="hljs-params">QWidget</span>):</span><br>    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__init__</span>(<span class="hljs-params">self</span>):</span><br>        <span class="hljs-built_in">super</span>(Demo, self).__init__()<br>        <span class="hljs-string">&#x27;&#x27;&#x27;添加两个QGroupBox&#x27;&#x27;&#x27;</span><br>        self.groupbox1 = QGroupBox(<span class="hljs-string">&#x27;box1&#x27;</span>, self)<br>        self.groupbox2 = QGroupBox(<span class="hljs-string">&#x27;box2&#x27;</span>, self)<br>        <span class="hljs-string">&#x27;&#x27;&#x27;添加6个QRadioButton&#x27;&#x27;&#x27;</span><br>        self.one = QRadioButton(<span class="hljs-string">&#x27;one&#x27;</span>, self)<br>        self.two = QRadioButton(<span class="hljs-string">&#x27;two&#x27;</span>, self)<br>        self.radio1 = QRadioButton(<span class="hljs-string">&#x27;radio1&#x27;</span>, self)<br>        self.radio2 = QRadioButton(<span class="hljs-string">&#x27;radio2&#x27;</span>, self)<br>        self.radio3 = QRadioButton(<span class="hljs-string">&#x27;radio3&#x27;</span>, self)<br>        self.radio4 = QRadioButton(<span class="hljs-string">&#x27;radio4&#x27;</span>, self)   <br>        <span class="hljs-string">&#x27;&#x27;&#x27;创建两个列表&#x27;&#x27;&#x27;</span><br>        self.radio_list = [self.radio1, self.radio2, self.radio3, self.radio4]<br>        self.fun_list = [<span class="hljs-string">&#x27;1&#x27;</span>, <span class="hljs-string">&#x27;2&#x27;</span>, <span class="hljs-string">&#x27;3&#x27;</span>, <span class="hljs-string">&#x27;4&#x27;</span>]<br>        <span class="hljs-string">&#x27;&#x27;&#x27;创建3个水平布局&#x27;&#x27;&#x27;</span><br>        self.hboxL = QHBoxLayout()<br>        self.hboxR = QHBoxLayout()<br>        self.hboxAll = QHBoxLayout()<br>        <span class="hljs-string">&#x27;&#x27;&#x27;初始化layout_init()函数和radio_init()函数&#x27;&#x27;&#x27;</span><br>        self.layout_init()<br>        self.radio_init()<br>    <span class="hljs-string">&#x27;&#x27;&#x27;布局初始化函数&#x27;&#x27;&#x27;</span><br>    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">layout_init</span>(<span class="hljs-params">self</span>):</span><br>        self.hboxL.addWidget(self.one)<br>        self.hboxL.addWidget(self.two)<br>        self.groupbox1.setLayout(self.hboxL)<br>        self.hboxR.addWidget(self.radio1)<br>        self.hboxR.addWidget(self.radio2)<br>        self.hboxR.addWidget(self.radio3)<br>        self.hboxR.addWidget(self.radio4)<br>        self.groupbox2.setLayout(self.hboxR)<br>        self.hboxAll.addWidget(self.groupbox1)<br>        self.hboxAll.addWidget(self.groupbox2)<br>        self.setLayout(self.hboxAll)<br>    <span class="hljs-string">&#x27;&#x27;&#x27;QRadioBox初始化,将名one的QRadioBox初始化为被点击状态&#x27;&#x27;&#x27;</span><br>    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">radio_init</span>(<span class="hljs-params">self</span>):</span><br>        self.one.setChecked(<span class="hljs-literal">True</span>)<br>        <span class="hljs-keyword">for</span> btn <span class="hljs-keyword">in</span> self.radio_list:<br>            btn.clicked.connect(self.radioFunc)<br>    <span class="hljs-string">&#x27;&#x27;&#x27;该函数功能为当rdio1到radio4被点击时,判断此时groupbox1中one和two哪个radio被按下</span><br><span class="hljs-string">    然后在判断groupbox2中哪个radio被按下,最后打印对应的被按下的按钮&#x27;&#x27;&#x27;</span><br>    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">radioFunc</span>(<span class="hljs-params">self</span>):</span><br>        <span class="hljs-keyword">if</span> self.one.isChecked():<br>            <span class="hljs-keyword">for</span> (I, J) <span class="hljs-keyword">in</span> <span class="hljs-built_in">zip</span>(self.radio_list, self.fun_list): <span class="hljs-comment">#用一个for循环同时迭代两个列表,即for I in self.radio_list和for J in self.fun_list是同时执行的</span><br>                <span class="hljs-keyword">if</span> I.isChecked():<br>                    <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;one &#x27;</span>+J+<span class="hljs-string">&#x27; was clicked&#x27;</span>)<br>        <span class="hljs-keyword">elif</span> self.two.isChecked():<br>            <span class="hljs-keyword">for</span> (I, J) <span class="hljs-keyword">in</span> <span class="hljs-built_in">zip</span>(self.radio_list, self.fun_list):<br>                <span class="hljs-keyword">if</span> I.isChecked():<br>                    <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;two &#x27;</span> + J + <span class="hljs-string">&#x27; was clicked&#x27;</span>)<br>        <span class="hljs-keyword">else</span>:<br>            <span class="hljs-keyword">pass</span><br> <br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:<br>    app = QApplication(sys.argv)<br>    demo = Demo()<br>    demo.show()<br>    sys.exit(app.exec_())<br></code></pre></td></tr></table></figure>
 <p>效果图<br><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/groupbox.png"></p>
 
-            </div>
-          
-
-    
-      <footer class="post-footer">
-		
-		<div class="post-tags">
-		  
-			<a href="/tags/pyqt/">pyqt</a>
-		  
-			<a href="/tags/python/">python</a>
-		  
-			<a href="/tags/QGroupbox/">QGroupbox</a>
-		  
-		</div>
-		
-
-        
-        
-  <nav class="post-nav">
-    
-      <a class="prev" href="/2021/07/28/pyqt%E4%B8%AD%E7%9A%84layout%E5%B8%83%E5%B1%80/">
-        <i class="iconfont icon-left"></i>
-        <span class="prev-text nav-default">pyqt中的layout布局</span>
-        <span class="prev-text nav-mobile">Prev</span>
-      </a>
-    
-    
-      <a class="next" href="/2021/07/28/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%EF%BC%9A%E5%BC%80%E5%8F%91%E6%A8%A1%E5%BC%8F/">
-        <span class="next-text nav-default">软件工程：开发模式</span>
-        <span class="prev-text nav-mobile">Next</span>
-        <i class="iconfont icon-right"></i>
-      </a>
-    
-  </nav>
-
-        
-  <div class="comments" id="comments">
-    
-  </div>
-
-
-      </footer>
-    
-  </article>
-
     </div>
+</div>
+<style>
+    #noneimg img {
+        display: none;
+        z-index: 109;
+        width: 600px !important;
+        border-radius: 0px;
+        position: fixed;
+        box-shadow: 0 0 0px #c3c3c300 !important;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto !important;
+    }
 
-      </div>
+    @media screen and (max-width:600px) {
+        #noneimg img {
+            width: 88%
+        }
+    }
+</style>
+<script>
+    $(function () { $('#article').click(function (e) { if (e.target.tagName == "IMG") { if ($('#nonediv').length == 0) { let MImg = `<div id='noneimg'><img src='${e.target.currentSrc}'></div>`; let MDiv = "<div id='nonediv' style='cursor: pointer;display: none; position: fixed;left: 0;top: 0; right: 0;bottom: 0;background-color: #333;opacity:0.5;z-index: 108;'></div>"; $('#article').append(MDiv); $('#article').append(MImg); $("#nonediv").fadeIn("slow"); $("#noneimg img").fadeIn("slow") } } else { if ($('#nonediv').length !== 0) { $("#noneimg ").fadeOut("slow"); $("#nonediv").fadeOut("slow"); setTimeout(function () { $('#nonediv').remove(); $('#noneimg').remove() }, 500) } } }); $('.article-content').addClass('content-move') });
+</script>
+<div class="Last-Next">
+    
+    <a href="/2021/07/28/pyqt%E4%B8%AD%E7%9A%84layout%E5%B8%83%E5%B1%80/">
+        <div class="last">
+            <span>上一篇</span>
+            <p>pyqt中的layout布局</p>
+        </div>
+    </a>
+    
 
-      <footer id="colophon"><span class="copyright-year">
     
-        &copy;
+    <a href="/2021/07/28/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%EF%BC%9A%E5%BC%80%E5%8F%91%E6%A8%A1%E5%BC%8F/">
+        <div class="next">
+            <span>下一篇</span>
+            <p>软件工程：开发模式</p>
+        </div>
+    </a>
     
-        2014 -
-    
-    2021
-    <span class="footer-author">Russshare.</span>
-    <span class="power-by">
-        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+</div>
+		
+<link rel="stylesheet" href="/css/food.css">
+
+<div class="footer">
+	<div class="Copyright">
+		©2021 By CHANGEQ. 主题：<a
+			style="text-decoration: none;display: contents; color: #898F9F;"
+			target="_blank" rel="noopener" href="https://github.com/qiaobug/hexo-theme-quiet">Quiet</a>
+	</div>
+	<div class="contact">
+		
+		<a target="_blank" rel="noopener" href="https://github.com/qiaobug">
+			<img src="https://cdn.jsdelivr.net/gh/duogongneng/MyBlogImg/imggithub.png" alt="Quiet主题">
+		</a>
+		
+	</div>
+</div>
+
+<script src="/js/jquery.min.js"></script>
+
+
+<script src="/js/gotop.js"></script>
+
+
+<style type="text/css">
+    @media screen and (min-width: 600px) {
+        .goTop>span {
+            display: block;
+            border-radius: 50%;
+            width: 66px;
+            height: 66px;
+            cursor: pointer;
+            opacity: 0.8;
+            background: rgba(18, 24, 58, 0.06);
+            text-align: center;
+            border: 1px solid rgba(18, 24, 58, 0.06);
+
+            transition: border .5s;
+            -moz-transition: border .5s;
+            /* Firefox 4 */
+            -webkit-transition: border .5s;
+            /* Safari 和 Chrome */
+            -o-transition: border .5s;
+            /* Opera */
+        }
+
+        .goTop>span:hover {
+            border: 1px solid #6680B3;
+        }
+
+
+        .goTop {
+            position: fixed;
+            right: 30px;
+            bottom: 80px;
+        }
+
+        .goTop>span>svg {
+            width: 30px;
+            height: 30px;
+            margin-top: 17.5px;
+            opacity: 0.7;
+        }
+
+    }
+
+    @media screen and (max-width: 600px) {
+        .goTop {
+            display: none;
+        }
+    }
+</style>
+<div class="goTop" id="js-go_top">
+    <span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <g>
+                <path d="M13 12v8h-2v-8H4l8-8 8 8z"></path>
+            </g>
+        </svg>
     </span>
-</span>
+</div>
+<script>
+    $('#js-go_top').gotoTop({ offset: 500, speed: 300, animationShow: { 'transform': 'translate(0,0)', 'transition': 'transform .5s ease-in-out' }, animationHide: { 'transform': 'translate(100px,0)', 'transition': 'transform .5s ease-in-out' } });
+</script>
+<script>
+	console.log('\n %c Hexo-Quiet 主题 %c https://github.com/QiaoBug/hexo-theme-quiet \n', 'color: #fadfa3; background: #030307; padding:5px 0;', 'background: #fadfa3; padding:5px 0;')
+</script>
+	</body>
 
-      </footer>
-
-      <div class="back-to-top" id="back-to-top">
-        <i class="iconfont icon-up"></i>
-      </div>
-    </div>
-    
-
-
-    
-
-
-
-
-  
-    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
-  
-
-  
-
-    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
-<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
-
-  </body>
 </html>

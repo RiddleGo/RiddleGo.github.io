@@ -1,158 +1,296 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
-  <head>
-    
-<meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+<html>
+
+	<head>
+		
+<title>python:函数-Quiet</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="shortcut icon" type="image/x-icon" href="/image/favicon.ico">
 
 
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="keywords" content="函数,">
+<meta name="description" content="">
 
 
-
-  <meta name="description" content="python:函数"/>
-
+<script src="/js/jquery.min.js"></script>
 
 
+	<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+</head>
 
-  <meta name="keywords" content="函数," />
-
-
-
-
-
-  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+	<body>
+		
+<link rel="stylesheet" href="/css/page.css">
 
 
+<link rel="stylesheet" href="/css/page_cente.css">
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+<link rel="stylesheet" href="/css/atom-one-dark.css">
 
 
+<link rel="stylesheet" href="/css/header.css">
 
-<link rel="canonical" href="https://riddlego.github.io/2021/08/06/python-函数/"/>
-
-
-<meta name="description" content="python中函数嵌套、函数作为变量以及闭包的原理嵌套函数：python允许创建嵌套函数。也就是说我们可以在函数里面定义函数，而且现有的作用域和变量生存周期依旧不变。 12345678910#encoding&#x3D;utf-8def outer():    name&#x3D;&quot;python&quot;    def inner():#outer函数内部定义的函数        pr">
-<meta property="og:type" content="article">
-<meta property="og:title" content="python:函数">
-<meta property="og:url" content="https://riddlego.github.io/2021/08/06/python-%E5%87%BD%E6%95%B0/index.html">
-<meta property="og:site_name" content="RiddleGo">
-<meta property="og:description" content="python中函数嵌套、函数作为变量以及闭包的原理嵌套函数：python允许创建嵌套函数。也就是说我们可以在函数里面定义函数，而且现有的作用域和变量生存周期依旧不变。 12345678910#encoding&#x3D;utf-8def outer():    name&#x3D;&quot;python&quot;    def inner():#outer函数内部定义的函数        pr">
-<meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/python%E5%87%BD%E6%95%B0.png">
-<meta property="article:published_time" content="2021-08-06T02:26:41.000Z">
-<meta property="article:modified_time" content="2021-08-06T07:36:59.242Z">
-<meta property="article:author" content="Russshare">
-<meta property="article:tag" content="函数">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/python%E5%87%BD%E6%95%B0.png">
-
-
-<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
-<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
-
-
-
-
-
-<script type="text/javascript">
-  var themeConfig = {
-    fancybox: {
-      enable: false
-    },
-  };
-</script>
-
-
-
-
-  
-
-
-
-    <title> python:函数 - RiddleGo </title>
-  <meta name="generator" content="Hexo 5.4.0"></head>
-
-  <body>
-    <div id="page">
-      <header id="masthead"><div class="site-header-inner">
-    <h1 class="site-title">
-        <a href="/." class="logo">RiddleGo</a>
-    </h1>
-
-    <nav id="nav-top">
+	<div class="header">
+		<div class="header-top">
+			<div class="h-left">
+				<a href="/">
+					<img src="/image/logo.png" alt="Quiet">
+				</a>
+			</div>
+			<div class="h-right">
+				<ul>
+					
+						
+								<li>
+									<a href="/">
+										HOME
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/archives">
+										ARCHIVE
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/categories">
+										CATEGORIES
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/tags">
+										TAGS
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/links">
+										LINKS
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/about">
+										ABOUT
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+				</ul>
+			</div>
+			<div class="h-right-close">
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+					<path fill="none" d="M0 0h24v24H0z" />
+					<path d="M3 4h18v2H3V4zm0 7h18v2H3v-2zm0 7h18v2H3v-2z" fill="rgba(68,68,68,1)" />
+				</svg>
+			</div>
+		</div>
+	</div>
+	<div class="sidebar">
+    <div class="topo">
+        <h2>CHANGEQ</h2>
+    </div>
+    <ul>
         
-            <ul id="menu-top" class="nav-top-items">
-                
-                    <li class="menu-item">
-                        <a href="/archives">
-                            
-                            
-                                Archives
-                            
-                        </a>
-                    </li>
-                
-                    <li class="menu-item">
-                        <a href="/about">
-                            
-                            
-                                About
-                            
-                        </a>
-                    </li>
-                
-            </ul>
+        <li>
+            <a href="/">HOME</a>
+        </li>
         
-  </nav>
+        <li>
+            <a href="/archives">ARCHIVE</a>
+        </li>
+        
+        <li>
+            <a href="/categories">CATEGORIES</a>
+        </li>
+        
+        <li>
+            <a href="/tags">TAGS</a>
+        </li>
+        
+        <li>
+            <a href="/links">LINKS</a>
+        </li>
+        
+        <li>
+            <a href="/about">ABOUT</a>
+        </li>
+        
+    </ul>
+    <div class="my_foot">
+        
+        <a target="_blank" rel="noopener" href="https://github.com/qiaobug">
+            <img src="https://cdn.jsdelivr.net/gh/duogongneng/MyBlogImg/imggithub.png" alt="Quiet主题">
+        </a>
+        
+    </div>
 </div>
+<div class='shelter'
+    style='cursor: pointer;display: none; position: fixed;left: 0;top: 0; right: 0;bottom: 0;background-color: #333;opacity:0.5;z-index: 108;'>
+</div>
+<style>
+    .sidebar {
+        width: 0;
+        height: 100%;
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        background: #fff;
+        z-index: 999;
+        text-align: center;
+        box-shadow: -6px 0 20px rgba(98, 94, 94, .815)
+    }
 
-      </header>
-      <div id="content">
-        
-    <div id="primary">
-        
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          python:函数
-        
-      </h1>
+    .topo {
+        width: 100%;
+        height: 200px;
+        background: url(https://api.ixiaowai.cn/gqapi/gqapi.php) no-repeat;
+        background-size: 100% 100%;
+        position: relative;
+        display: flex;
+        align-items: flex-end
+    }
 
-      <time class="post-time">
-          8月 06 2021
-      </time>
-    </header>
+    .topo h2 {
+        color: #fff;
+        z-index: 1;
+        position: relative;
+        margin: 0 0 10px 10px;
+        font-size: 1.2em;
+        box-sizing: border-box
+    }
 
+    .topo:before {
+        content: '';
+        background-image: url(/image/pattern.png);
+        background-repeat: repeat;
+        height: 100%;
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 100%;
+        z-index: 1
+    }
 
+    .sidebar ul {
+        width: 100%;
+        margin-top: 50px
+    }
 
-    
-            <div class="post-content">
-            <h2 id="python中函数嵌套、函数作为变量以及闭包的原理"><a href="#python中函数嵌套、函数作为变量以及闭包的原理" class="headerlink" title="python中函数嵌套、函数作为变量以及闭包的原理"></a>python中函数嵌套、函数作为变量以及闭包的原理</h2><h3 id="嵌套函数："><a href="#嵌套函数：" class="headerlink" title="嵌套函数："></a>嵌套函数：</h3><p>python允许创建嵌套函数。也就是说我们可以在函数里面定义函数，而且现有的作用域和变量生存周期依旧不变。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">#encoding&#x3D;utf-8</span><br><span class="line"></span><br><span class="line">def outer():</span><br><span class="line">    name&#x3D;&quot;python&quot;</span><br><span class="line"></span><br><span class="line">    def inner():#outer函数内部定义的函数</span><br><span class="line">        print name</span><br><span class="line">    return inner()#返回该内部函数##返回的函数</span><br><span class="line"></span><br><span class="line">outer()</span><br></pre></td></tr></table></figure>
+    .sidebar ul li {
+        height: 50px;
+        list-style: none;
+        font-size: 1.2em;
+        text-align: right;
+        margin-right: 10px
+    }
+
+    .sidebar ul li a {
+        display: grid;
+        color: #5d606a;
+        text-overflow: ellipsis;
+        width: 100%;
+        text-decoration: none
+    }
+
+    .my_foot {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        position: absolute;
+        bottom: 0
+    }
+
+    .my_foot a {
+        text-decoration: none;
+        margin-right: 10px;
+        display: inline-block
+    }
+
+    .my_foot a img {
+        width: 30px;
+        height: 30px
+    }
+</style>
+
+<script>
+    $(function () { $('.h-right-close>svg').click(function () { $('.sidebar').animate({ width: "66%" }, 500); $('.shelter').fadeIn("slow") }); $('.shelter').click(function (e) { $('.sidebar').animate({ width: "0" }, 500); $('.shelter').fadeOut("slow") }) })
+</script>
+		<script>
+			$(function () { $(window).scroll(function () { if ($(document).scrollTop() > 100) { $(".header-top").removeClass("header-move2"); $('.header-top').addClass('header-move1') } else { $(".header-top").removeClass("header-move1"); $('.header-top').addClass('header-move2') } }) });
+		</script>
+<div class="header-bg ">
+    <div class="bg-content">
+        <ul class="tag">
+            
+            
+            <li><a href="/tags/函数">函数</a></li>
+            
+            
+        </ul>
+        <h1>python:函数</h1>
+        <div class="article-info">
+            <div class="article-author">
+                
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+                    <g>
+                        <path fill="#12183A"
+                            d="M6.187 15.265A6.47 6.47 0 0 0 10 16.5a6.47 6.47 0 0 0 3.813-1.235A4.99 4.99 0 0 0 10 13.5a4.99 4.99 0 0 0-3.813 1.765zM5.082 14.25A6.485 6.485 0 0 1 10 12c1.965 0 3.726.872 4.918 2.25a6.5 6.5 0 1 0-9.836 0zM10 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0-1.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z">
+                        </path>
+                    </g>
+                </svg>
+                
+                <span> <a href="">CHANGEQ</a></span>
+                <p>2021-08-06 10:26:41</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="article-content">
+    <div id="article" class="content">
+        <h2 id="python中函数嵌套、函数作为变量以及闭包的原理"><a href="#python中函数嵌套、函数作为变量以及闭包的原理" class="headerlink" title="python中函数嵌套、函数作为变量以及闭包的原理"></a>python中函数嵌套、函数作为变量以及闭包的原理</h2><h3 id="嵌套函数："><a href="#嵌套函数：" class="headerlink" title="嵌套函数："></a>嵌套函数：</h3><p>python允许创建嵌套函数。也就是说我们可以在函数里面定义函数，而且现有的作用域和变量生存周期依旧不变。</p>
+<figure class="highlight pgsql"><table><tr><td class="code"><pre><code class="hljs pgsql"><span class="hljs-meta">#encoding=utf-8</span><br><br>def <span class="hljs-keyword">outer</span>():<br>    <span class="hljs-type">name</span>=&quot;python&quot;<br><br>    def <span class="hljs-keyword">inner</span>():#<span class="hljs-keyword">outer</span>函数内部定义的函数<br>        print <span class="hljs-type">name</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">inner</span>()#返回该内部函数##返回的函数<br><br><span class="hljs-keyword">outer</span>()<br></code></pre></td></tr></table></figure>
 <p>输出结果</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python</span><br></pre></td></tr></table></figure>
+<figure class="highlight ebnf"><table><tr><td class="code"><pre><code class="hljs ebnf"><span class="hljs-attribute">python</span><br></code></pre></td></tr></table></figure>
 <h4 id="理解："><a href="#理解：" class="headerlink" title="理解："></a>理解：</h4><p>在inner函数中，python解析器需要找一个叫name的本地变量，查找失败后会继续在上层的作用域里面寻找，这个上层作用域定义在outer函数里，python函数可以访问封闭作用域。</p>
 <p>对于outer函数中最后一句，返回inner函数调用的结果，需要知道非常重要一点就是，inner也仅仅是一个遵循python变量解析规则的变量名，python解释器会优先在outer的作用域里面对变量名inner查找匹配的变量。</p>
 <p>把恰好是函数标识符的变量inner作为返回值返回回来，<strong>每次函数outer被调用的时候，函数inner都会被重新定义，如果它不被当做变量返回的话，每次执行过后它将不复存在。</strong></p>
 <p>在python里，函数就是对象，它也只是一些普通的值而已。也就是说你可以把函数像参数一样传递给其他的函数或者说从函数了里面返回函数</p>
-<h3 id="return内层函数时不加括号，只返回函数的地址："><a href="#return内层函数时不加括号，只返回函数的地址：" class="headerlink" title="return内层函数时不加括号，只返回函数的地址："></a>return内层函数时不加括号，只返回函数的地址：</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">#encoding&#x3D;utf-8</span><br><span class="line"></span><br><span class="line">def outer():</span><br><span class="line">    name&#x3D;&quot;python&quot;</span><br><span class="line"></span><br><span class="line">    def inner():#outer函数内部定义的函数</span><br><span class="line">        return name</span><br><span class="line">    return inner#返回该内部函数</span><br><span class="line"></span><br><span class="line">print outer()</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">function inner at 0x00000000</span><br></pre></td></tr></table></figure>
+<h3 id="return内层函数时不加括号，只返回函数的地址："><a href="#return内层函数时不加括号，只返回函数的地址：" class="headerlink" title="return内层函数时不加括号，只返回函数的地址："></a>return内层函数时不加括号，只返回函数的地址：</h3><figure class="highlight pgsql"><table><tr><td class="code"><pre><code class="hljs pgsql"><span class="hljs-meta">#encoding=utf-8</span><br><br>def <span class="hljs-keyword">outer</span>():<br>    <span class="hljs-type">name</span>=&quot;python&quot;<br><br>    def <span class="hljs-keyword">inner</span>():#<span class="hljs-keyword">outer</span>函数内部定义的函数<br>        <span class="hljs-keyword">return</span> <span class="hljs-type">name</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">inner</span>#返回该内部函数<br><br>print <span class="hljs-keyword">outer</span>()<br></code></pre></td></tr></table></figure>
+<figure class="highlight ada"><table><tr><td class="code"><pre><code class="hljs ada"><span class="hljs-keyword">function</span> <span class="hljs-title">inner</span> at 0x00000000<br></code></pre></td></tr></table></figure>
 
 <p>此时执行外层函数outer(),返回的是内层函数的函数引用（函数名称）–inner，想要执行内层函数，<strong>需要在outer()后边再加个括号，即outer()()，才会让内层函数执行</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">#encoding&#x3D;utf-8</span><br><span class="line"></span><br><span class="line">def outer():</span><br><span class="line">    name&#x3D;&quot;python&quot;</span><br><span class="line"></span><br><span class="line">    def inner():#outer函数内部定义的函数</span><br><span class="line">        return name</span><br><span class="line">    return inner#返回该内部函数</span><br><span class="line"></span><br><span class="line">print outer()()#注意这里</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">python</span><br></pre></td></tr></table></figure>
+<figure class="highlight ruby"><table><tr><td class="code"><pre><code class="hljs ruby"><span class="hljs-comment">#encoding=utf-8</span><br><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">outer</span><span class="hljs-params">()</span></span><span class="hljs-symbol">:</span><br>    name=<span class="hljs-string">&quot;python&quot;</span><br><br>    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">inner</span><span class="hljs-params">()</span></span><span class="hljs-symbol">:</span><span class="hljs-comment">#outer函数内部定义的函数</span><br>        <span class="hljs-keyword">return</span> name<br>    <span class="hljs-keyword">return</span> inner<span class="hljs-comment">#返回该内部函数</span><br><br>print outer()()<span class="hljs-comment">#注意这里</span><br><br><br>python<br></code></pre></td></tr></table></figure>
 
-<h3 id="函数作为变量："><a href="#函数作为变量：" class="headerlink" title="函数作为变量："></a>函数作为变量：</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">#encoding&#x3D;utf-8</span><br><span class="line"></span><br><span class="line">def add(x,y):</span><br><span class="line">    return x+y</span><br><span class="line"></span><br><span class="line">def sub(x,y):</span><br><span class="line">    return x-y</span><br><span class="line"></span><br><span class="line">def apply(func,x,y):</span><br><span class="line">    return func(x,y)</span><br><span class="line"></span><br><span class="line">print &quot;apply(add,2,1):&quot;,apply(add,2,1)</span><br><span class="line">print &quot;apply(sub,2,1):&quot;,apply(sub,2,1)</span><br></pre></td></tr></table></figure>
+<h3 id="函数作为变量："><a href="#函数作为变量：" class="headerlink" title="函数作为变量："></a>函数作为变量：</h3><figure class="highlight python"><table><tr><td class="code"><pre><code class="hljs python"><span class="hljs-comment">#encoding=utf-8</span><br><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">add</span>(<span class="hljs-params">x,y</span>):</span><br>    <span class="hljs-keyword">return</span> x+y<br><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">sub</span>(<span class="hljs-params">x,y</span>):</span><br>    <span class="hljs-keyword">return</span> x-y<br><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">apply</span>(<span class="hljs-params">func,x,y</span>):</span><br>    <span class="hljs-keyword">return</span> func(x,y)<br><br><span class="hljs-built_in">print</span> <span class="hljs-string">&quot;apply(add,2,1):&quot;</span>,apply(add,<span class="hljs-number">2</span>,<span class="hljs-number">1</span>)<br><span class="hljs-built_in">print</span> <span class="hljs-string">&quot;apply(sub,2,1):&quot;</span>,apply(sub,<span class="hljs-number">2</span>,<span class="hljs-number">1</span>)<br></code></pre></td></tr></table></figure>
 <p><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/python%E5%87%BD%E6%95%B0.png"></p>
 <p>apply函数准备接收一个函数的变量，它也只是一个普通的变量而已，和其他变量一样。然后我们调用传进来的函数：“()代表着调用的操作，并且调用变量包含的值”。</p>
 <p>在函数外，我们也能看到传递函数并没有什么特殊的语法，函数的名称只是和其他变量一样的表标识符而已。</p>
 <h3 id="闭包的理解："><a href="#闭包的理解：" class="headerlink" title="闭包的理解："></a>闭包的理解：</h3><p>先看个例子</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">#encoding&#x3D;utf-8</span><br><span class="line"></span><br><span class="line">def outer():</span><br><span class="line">    name&#x3D;&quot;python&quot;</span><br><span class="line">    def inner():</span><br><span class="line">        print name</span><br><span class="line">    return inner</span><br><span class="line"></span><br><span class="line">res&#x3D;outer()</span><br><span class="line">res()</span><br><span class="line">print res.func_closure#打印闭包里包含哪些外部变量</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python</span><br></pre></td></tr></table></figure>
+<figure class="highlight pgsql"><table><tr><td class="code"><pre><code class="hljs pgsql"><span class="hljs-meta">#encoding=utf-8</span><br><br>def <span class="hljs-keyword">outer</span>():<br>    <span class="hljs-type">name</span>=&quot;python&quot;<br>    def <span class="hljs-keyword">inner</span>():<br>        print <span class="hljs-type">name</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">inner</span><br><br>res=<span class="hljs-keyword">outer</span>()<br>res()<br>print res.func_closure#打印闭包里包含哪些外部变量<br></code></pre></td></tr></table></figure>
+<figure class="highlight ebnf"><table><tr><td class="code"><pre><code class="hljs ebnf"><span class="hljs-attribute">python</span><br></code></pre></td></tr></table></figure>
 
 <p>例中，inner作为一个函数被outer返回，保存在变量res中，并且还能够调用res()。为什么能调用呢？</p>
 <p>通过上面变量的作用域和生存周期我们不难明白，name是函数outer里的一个局部变量，也就是说只有当outer正在运行时，该变量才会存在。</p>
@@ -163,21 +301,21 @@
 <p>这能够通过查看函数的func_closure属性得出结论，这个属性里面包含封闭作用域里面的值（只会包含被捕捉到的值，比如name，如果在outer里面还定义了其他的值，封闭作用域里面是不会有的)</p>
 <p><strong>每次函数outer被调用时，inner函数都会被重新定义，上面每次返回的函数inner结果都一样，因为name没变。</strong></p>
 <p>如下例所示，我们将函数稍微改动一下，结果就不一样了</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">#encoding&#x3D;utf-8</span><br><span class="line"></span><br><span class="line">def outer(name):</span><br><span class="line">    def inner():</span><br><span class="line">        print name</span><br><span class="line">    return inner#注意这里返回的</span><br><span class="line"></span><br><span class="line">res1&#x3D;outer(&quot;python&quot;)#返回闭包</span><br><span class="line">res2&#x3D;outer(&quot;java&quot;)#返回闭包</span><br><span class="line">res1()#执行函数</span><br><span class="line">res2()</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">python</span><br><span class="line">java</span><br></pre></td></tr></table></figure>
+<figure class="highlight axapta"><table><tr><td class="code"><pre><code class="hljs axapta"><span class="hljs-meta">#encoding=utf-8</span><br><br>def <span class="hljs-keyword">outer</span>(name):<br>    def inner():<br>        <span class="hljs-keyword">print</span> name<br>    <span class="hljs-keyword">return</span> inner<span class="hljs-meta">#注意这里返回的</span><br><br>res1=<span class="hljs-keyword">outer</span>(<span class="hljs-string">&quot;python&quot;</span>)<span class="hljs-meta">#返回闭包</span><br>res2=<span class="hljs-keyword">outer</span>(<span class="hljs-string">&quot;java&quot;</span>)<span class="hljs-meta">#返回闭包</span><br>res1()<span class="hljs-meta">#执行函数</span><br>res2()<br></code></pre></td></tr></table></figure>
+<figure class="highlight ebnf"><table><tr><td class="code"><pre><code class="hljs ebnf"><span class="hljs-attribute">python</span><br><span class="hljs-attribute">java</span><br></code></pre></td></tr></table></figure>
 <h4 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h4><p>在之前的例子中</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">def outer():</span><br><span class="line">    name&#x3D;&quot;python&quot;</span><br><span class="line">    def inner():</span><br><span class="line">        print name</span><br><span class="line">    return inner</span><br></pre></td></tr></table></figure>
+<figure class="highlight pgsql"><table><tr><td class="code"><pre><code class="hljs pgsql">def <span class="hljs-keyword">outer</span>():<br>    <span class="hljs-type">name</span>=&quot;python&quot;<br>    def <span class="hljs-keyword">inner</span>():<br>        print <span class="hljs-type">name</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">inner</span><br></code></pre></td></tr></table></figure>
 <p>外层函数后运行后，返回一个函数+函数需要的变量</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">name &#x3D; &quot;python&quot;</span><br><span class="line"></span><br><span class="line">def inner() :</span><br><span class="line"></span><br><span class="line">  print name</span><br></pre></td></tr></table></figure>
+<figure class="highlight pgsql"><table><tr><td class="code"><pre><code class="hljs pgsql"><span class="hljs-type">name</span> = &quot;python&quot;<br><br>def <span class="hljs-keyword">inner</span>() :<br><br>  print <span class="hljs-type">name</span><br></code></pre></td></tr></table></figure>
 <p>上边三行是整体返回的内容</p>
 <p>如果在外层函数再加个外部的整形变量，在里面的函数中引用：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">#encoding&#x3D;utf-8</span><br><span class="line"></span><br><span class="line">def outer():</span><br><span class="line">    name&#x3D;&quot;python&quot;</span><br><span class="line">    nbr&#x3D;12</span><br><span class="line">    def inner():</span><br><span class="line">        print name</span><br><span class="line">        print nbr</span><br><span class="line">    return inner#不加括号就是返回函数对象，不是函数调用</span><br><span class="line"></span><br><span class="line">res&#x3D;outer()</span><br><span class="line">res()#调用inner函数</span><br><span class="line">print res.func_closure#打印闭包里包含哪些外部变量</span><br></pre></td></tr></table></figure>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><code class="hljs routeros"><span class="hljs-comment">#encoding=utf-8</span><br><br>def outer():<br>    <span class="hljs-attribute">name</span>=<span class="hljs-string">&quot;python&quot;</span><br>    <span class="hljs-attribute">nbr</span>=12<br>    def inner():<br>        <span class="hljs-builtin-name">print</span> name<br>        <span class="hljs-builtin-name">print</span> nbr<br>    return inner#不加括号就是返回函数对象，不是函数调用<br><br><span class="hljs-attribute">res</span>=outer()<br>res()#调用inner函数<br><span class="hljs-builtin-name">print</span> res.func_closure#打印闭包里包含哪些外部变量<br></code></pre></td></tr></table></figure>
 <p>结果</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">D:\&gt;python test.py</span><br><span class="line">python</span><br><span class="line">12</span><br><span class="line">(&lt;cell at 0x0000000004E56CA8: str object at 0x0000000004E58760&gt;, &lt;cell at 0x0000000004E56F78: int object at 0x0000000004E362C0&gt;)</span><br></pre></td></tr></table></figure>
+<figure class="highlight x86asm"><table><tr><td class="code"><pre><code class="hljs x86asm"><span class="hljs-symbol">D:</span>\&gt;python <span class="hljs-keyword">test</span><span class="hljs-number">.</span>py<br>python<br><span class="hljs-number">12</span><br>(&lt;cell <span class="hljs-meta">at</span> <span class="hljs-number">0x0000000004E56CA8</span>: <span class="hljs-keyword">str</span> object <span class="hljs-meta">at</span> <span class="hljs-number">0x0000000004E58760</span>&gt;, &lt;cell <span class="hljs-meta">at</span> <span class="hljs-number">0x0000000004E56F78</span>: <span class="hljs-keyword">int</span> object <span class="hljs-meta">at</span> <span class="hljs-number">0x0000000004E362C0</span>&gt;)<br></code></pre></td></tr></table></figure>
 <p>其中res = outer()是把inner函数对象赋值给res，因为没有括号，所以不是调用而是返回个函数对象</p>
 <p>res()是调用inner函数</p>
 <p>print res.func_closure是打印闭包里包含哪些外部变量，可以看到结果里有两个：即python和12</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(&lt;cell at 0x0000000004E56CA8: str object at 0x0000000004E58760&gt;, &lt;cell at 0x0000000004E56F78: int object at 0x0000000004E362C0&gt;)</span><br></pre></td></tr></table></figure>
+<figure class="highlight x86asm"><table><tr><td class="code"><pre><code class="hljs x86asm">(&lt;cell <span class="hljs-meta">at</span> <span class="hljs-number">0x0000000004E56CA8</span>: <span class="hljs-keyword">str</span> object <span class="hljs-meta">at</span> <span class="hljs-number">0x0000000004E58760</span>&gt;, &lt;cell <span class="hljs-meta">at</span> <span class="hljs-number">0x0000000004E56F78</span>: <span class="hljs-keyword">int</span> object <span class="hljs-meta">at</span> <span class="hljs-number">0x0000000004E362C0</span>&gt;)<br></code></pre></td></tr></table></figure>
 
 <h4 id="闭包特点："><a href="#闭包特点：" class="headerlink" title="闭包特点："></a>闭包特点：</h4><p>一个函数返回的函数对象，<strong>这个函数对象执行的话依赖非函数内部的变量值，这个时候，函数返回的实际内容如下：</strong></p>
 <p><strong>1 函数对象</strong><br><strong>2 函数对象需要使用的外部变量和变量值</strong></p>
@@ -188,87 +326,138 @@
 <p>()代表着调用的操作，并且调用变量包含的值</p>
 <p>在函数外，我们也能看到传递函数并没有什么特殊的语法，函数的名称只是和其他变量一样的表标识符而已。</p>
 
-            </div>
-          
-
-    
-      <footer class="post-footer">
-		
-		<div class="post-tags">
-		  
-			<a href="/tags/%E5%87%BD%E6%95%B0/">函数</a>
-		  
-		</div>
-		
-
-        
-        
-  <nav class="post-nav">
-    
-      <a class="prev" href="/2021/08/06/python-init-py%E6%96%87%E4%BB%B6%E7%9A%84%E6%84%8F%E4%B9%89/">
-        <i class="iconfont icon-left"></i>
-        <span class="prev-text nav-default">python:__init__.py文件的意义</span>
-        <span class="prev-text nav-mobile">Prev</span>
-      </a>
-    
-    
-      <a class="next" href="/2021/08/06/python-%E5%9F%BA%E7%A1%80%E7%9A%84%E5%8F%98%E9%87%8F-%E5%8F%98%E9%87%8F%E5%AF%B9%E5%BA%94%E7%9A%84%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0/">
-        <span class="next-text nav-default">python:基础的变量+变量对应的常用函数</span>
-        <span class="prev-text nav-mobile">Next</span>
-        <i class="iconfont icon-right"></i>
-      </a>
-    
-  </nav>
-
-        
-  <div class="comments" id="comments">
-    
-  </div>
-
-
-      </footer>
-    
-  </article>
-
     </div>
+</div>
+<style>
+    #noneimg img {
+        display: none;
+        z-index: 109;
+        width: 600px !important;
+        border-radius: 0px;
+        position: fixed;
+        box-shadow: 0 0 0px #c3c3c300 !important;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto !important;
+    }
 
-      </div>
+    @media screen and (max-width:600px) {
+        #noneimg img {
+            width: 88%
+        }
+    }
+</style>
+<script>
+    $(function () { $('#article').click(function (e) { if (e.target.tagName == "IMG") { if ($('#nonediv').length == 0) { let MImg = `<div id='noneimg'><img src='${e.target.currentSrc}'></div>`; let MDiv = "<div id='nonediv' style='cursor: pointer;display: none; position: fixed;left: 0;top: 0; right: 0;bottom: 0;background-color: #333;opacity:0.5;z-index: 108;'></div>"; $('#article').append(MDiv); $('#article').append(MImg); $("#nonediv").fadeIn("slow"); $("#noneimg img").fadeIn("slow") } } else { if ($('#nonediv').length !== 0) { $("#noneimg ").fadeOut("slow"); $("#nonediv").fadeOut("slow"); setTimeout(function () { $('#nonediv').remove(); $('#noneimg').remove() }, 500) } } }); $('.article-content').addClass('content-move') });
+</script>
+<div class="Last-Next">
+    
+    <a href="/2021/08/06/python-init-py%E6%96%87%E4%BB%B6%E7%9A%84%E6%84%8F%E4%B9%89/">
+        <div class="last">
+            <span>上一篇</span>
+            <p>python:__init__.py文件的意义</p>
+        </div>
+    </a>
+    
 
-      <footer id="colophon"><span class="copyright-year">
     
-        &copy;
+    <a href="/2021/08/06/python-%E5%9F%BA%E7%A1%80%E7%9A%84%E5%8F%98%E9%87%8F-%E5%8F%98%E9%87%8F%E5%AF%B9%E5%BA%94%E7%9A%84%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0/">
+        <div class="next">
+            <span>下一篇</span>
+            <p>python:基础的变量+变量对应的常用函数</p>
+        </div>
+    </a>
     
-        2014 -
-    
-    2021
-    <span class="footer-author">Russshare.</span>
-    <span class="power-by">
-        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+</div>
+		
+<link rel="stylesheet" href="/css/food.css">
+
+<div class="footer">
+	<div class="Copyright">
+		©2021 By CHANGEQ. 主题：<a
+			style="text-decoration: none;display: contents; color: #898F9F;"
+			target="_blank" rel="noopener" href="https://github.com/qiaobug/hexo-theme-quiet">Quiet</a>
+	</div>
+	<div class="contact">
+		
+		<a target="_blank" rel="noopener" href="https://github.com/qiaobug">
+			<img src="https://cdn.jsdelivr.net/gh/duogongneng/MyBlogImg/imggithub.png" alt="Quiet主题">
+		</a>
+		
+	</div>
+</div>
+
+<script src="/js/jquery.min.js"></script>
+
+
+<script src="/js/gotop.js"></script>
+
+
+<style type="text/css">
+    @media screen and (min-width: 600px) {
+        .goTop>span {
+            display: block;
+            border-radius: 50%;
+            width: 66px;
+            height: 66px;
+            cursor: pointer;
+            opacity: 0.8;
+            background: rgba(18, 24, 58, 0.06);
+            text-align: center;
+            border: 1px solid rgba(18, 24, 58, 0.06);
+
+            transition: border .5s;
+            -moz-transition: border .5s;
+            /* Firefox 4 */
+            -webkit-transition: border .5s;
+            /* Safari 和 Chrome */
+            -o-transition: border .5s;
+            /* Opera */
+        }
+
+        .goTop>span:hover {
+            border: 1px solid #6680B3;
+        }
+
+
+        .goTop {
+            position: fixed;
+            right: 30px;
+            bottom: 80px;
+        }
+
+        .goTop>span>svg {
+            width: 30px;
+            height: 30px;
+            margin-top: 17.5px;
+            opacity: 0.7;
+        }
+
+    }
+
+    @media screen and (max-width: 600px) {
+        .goTop {
+            display: none;
+        }
+    }
+</style>
+<div class="goTop" id="js-go_top">
+    <span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <g>
+                <path d="M13 12v8h-2v-8H4l8-8 8 8z"></path>
+            </g>
+        </svg>
     </span>
-</span>
+</div>
+<script>
+    $('#js-go_top').gotoTop({ offset: 500, speed: 300, animationShow: { 'transform': 'translate(0,0)', 'transition': 'transform .5s ease-in-out' }, animationHide: { 'transform': 'translate(100px,0)', 'transition': 'transform .5s ease-in-out' } });
+</script>
+<script>
+	console.log('\n %c Hexo-Quiet 主题 %c https://github.com/QiaoBug/hexo-theme-quiet \n', 'color: #fadfa3; background: #030307; padding:5px 0;', 'background: #fadfa3; padding:5px 0;')
+</script>
+	</body>
 
-      </footer>
-
-      <div class="back-to-top" id="back-to-top">
-        <i class="iconfont icon-up"></i>
-      </div>
-    </div>
-    
-
-
-    
-
-
-
-
-  
-    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
-  
-
-  
-
-    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
-<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
-
-  </body>
 </html>

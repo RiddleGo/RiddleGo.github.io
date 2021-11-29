@@ -1,140 +1,278 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
-  <head>
-    
-<meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+<html>
+
+	<head>
+		
+<title>每天一道算法题：最长公共子串-Quiet</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="shortcut icon" type="image/x-icon" href="/image/favicon.ico">
 
 
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="keywords" content="面试,算法,">
+<meta name="description" content="">
 
 
-
-  <meta name="description" content="每天一道算法题：最长公共子串"/>
-
+<script src="/js/jquery.min.js"></script>
 
 
+	<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+</head>
 
-  <meta name="keywords" content="面试,算法," />
-
-
-
-
-
-  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+	<body>
+		
+<link rel="stylesheet" href="/css/page.css">
 
 
+<link rel="stylesheet" href="/css/page_cente.css">
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+<link rel="stylesheet" href="/css/atom-one-dark.css">
 
 
+<link rel="stylesheet" href="/css/header.css">
 
-<link rel="canonical" href="https://riddlego.github.io/2021/07/26/每天一道算法题：最长公共子串/"/>
-
-
-<meta name="description" content="描述有两个字符串（可能包含空格）,请找出其中最长的公共连续子串,输出其长度。(长度在1000以内) 例如： 输入：abcde bcd 输出：3 回到顶部解析1、把两个字符串分别以行和列组成一个二维矩阵。 2、比较二维矩阵中每个点对应行列字符中否相等，相等的话值设置为1，否则设置为0。 3、通过查找出值为1的最长对角线就能找到最长公共子串。 比如：str&#x3D;acbcbcef，str2&#x3D;abcbced，">
-<meta property="og:type" content="article">
-<meta property="og:title" content="每天一道算法题：最长公共子串">
-<meta property="og:url" content="https://riddlego.github.io/2021/07/26/%E6%AF%8F%E5%A4%A9%E4%B8%80%E9%81%93%E7%AE%97%E6%B3%95%E9%A2%98%EF%BC%9A%E6%9C%80%E9%95%BF%E5%85%AC%E5%85%B1%E5%AD%90%E4%B8%B2/index.html">
-<meta property="og:site_name" content="RiddleGo">
-<meta property="og:description" content="描述有两个字符串（可能包含空格）,请找出其中最长的公共连续子串,输出其长度。(长度在1000以内) 例如： 输入：abcde bcd 输出：3 回到顶部解析1、把两个字符串分别以行和列组成一个二维矩阵。 2、比较二维矩阵中每个点对应行列字符中否相等，相等的话值设置为1，否则设置为0。 3、通过查找出值为1的最长对角线就能找到最长公共子串。 比如：str&#x3D;acbcbcef，str2&#x3D;abcbced，">
-<meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/02listpublic.png">
-<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/03listpublic.png">
-<meta property="article:published_time" content="2021-07-26T14:33:48.000Z">
-<meta property="article:modified_time" content="2021-07-28T11:43:35.443Z">
-<meta property="article:author" content="Russshare">
-<meta property="article:tag" content="面试">
-<meta property="article:tag" content="算法">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/02listpublic.png">
-
-
-<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
-<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
-
-
-
-
-
-<script type="text/javascript">
-  var themeConfig = {
-    fancybox: {
-      enable: false
-    },
-  };
-</script>
-
-
-
-
-  
-
-
-
-    <title> 每天一道算法题：最长公共子串 - RiddleGo </title>
-  <meta name="generator" content="Hexo 5.4.0"></head>
-
-  <body>
-    <div id="page">
-      <header id="masthead"><div class="site-header-inner">
-    <h1 class="site-title">
-        <a href="/." class="logo">RiddleGo</a>
-    </h1>
-
-    <nav id="nav-top">
+	<div class="header">
+		<div class="header-top">
+			<div class="h-left">
+				<a href="/">
+					<img src="/image/logo.png" alt="Quiet">
+				</a>
+			</div>
+			<div class="h-right">
+				<ul>
+					
+						
+								<li>
+									<a href="/">
+										HOME
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/archives">
+										ARCHIVE
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/categories">
+										CATEGORIES
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/tags">
+										TAGS
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/links">
+										LINKS
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/about">
+										ABOUT
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+				</ul>
+			</div>
+			<div class="h-right-close">
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+					<path fill="none" d="M0 0h24v24H0z" />
+					<path d="M3 4h18v2H3V4zm0 7h18v2H3v-2zm0 7h18v2H3v-2z" fill="rgba(68,68,68,1)" />
+				</svg>
+			</div>
+		</div>
+	</div>
+	<div class="sidebar">
+    <div class="topo">
+        <h2>CHANGEQ</h2>
+    </div>
+    <ul>
         
-            <ul id="menu-top" class="nav-top-items">
-                
-                    <li class="menu-item">
-                        <a href="/archives">
-                            
-                            
-                                Archives
-                            
-                        </a>
-                    </li>
-                
-                    <li class="menu-item">
-                        <a href="/about">
-                            
-                            
-                                About
-                            
-                        </a>
-                    </li>
-                
-            </ul>
+        <li>
+            <a href="/">HOME</a>
+        </li>
         
-  </nav>
+        <li>
+            <a href="/archives">ARCHIVE</a>
+        </li>
+        
+        <li>
+            <a href="/categories">CATEGORIES</a>
+        </li>
+        
+        <li>
+            <a href="/tags">TAGS</a>
+        </li>
+        
+        <li>
+            <a href="/links">LINKS</a>
+        </li>
+        
+        <li>
+            <a href="/about">ABOUT</a>
+        </li>
+        
+    </ul>
+    <div class="my_foot">
+        
+        <a target="_blank" rel="noopener" href="https://github.com/qiaobug">
+            <img src="https://cdn.jsdelivr.net/gh/duogongneng/MyBlogImg/imggithub.png" alt="Quiet主题">
+        </a>
+        
+    </div>
 </div>
+<div class='shelter'
+    style='cursor: pointer;display: none; position: fixed;left: 0;top: 0; right: 0;bottom: 0;background-color: #333;opacity:0.5;z-index: 108;'>
+</div>
+<style>
+    .sidebar {
+        width: 0;
+        height: 100%;
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        background: #fff;
+        z-index: 999;
+        text-align: center;
+        box-shadow: -6px 0 20px rgba(98, 94, 94, .815)
+    }
 
-      </header>
-      <div id="content">
-        
-    <div id="primary">
-        
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          每天一道算法题：最长公共子串
-        
-      </h1>
+    .topo {
+        width: 100%;
+        height: 200px;
+        background: url(https://api.ixiaowai.cn/gqapi/gqapi.php) no-repeat;
+        background-size: 100% 100%;
+        position: relative;
+        display: flex;
+        align-items: flex-end
+    }
 
-      <time class="post-time">
-          7月 26 2021
-      </time>
-    </header>
+    .topo h2 {
+        color: #fff;
+        z-index: 1;
+        position: relative;
+        margin: 0 0 10px 10px;
+        font-size: 1.2em;
+        box-sizing: border-box
+    }
 
+    .topo:before {
+        content: '';
+        background-image: url(/image/pattern.png);
+        background-repeat: repeat;
+        height: 100%;
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 100%;
+        z-index: 1
+    }
 
+    .sidebar ul {
+        width: 100%;
+        margin-top: 50px
+    }
 
-    
-            <div class="post-content">
-            <p>描述<br>有两个字符串（可能包含空格）,请找出其中最长的公共连续子串,输出其长度。(长度在1000以内)</p>
+    .sidebar ul li {
+        height: 50px;
+        list-style: none;
+        font-size: 1.2em;
+        text-align: right;
+        margin-right: 10px
+    }
+
+    .sidebar ul li a {
+        display: grid;
+        color: #5d606a;
+        text-overflow: ellipsis;
+        width: 100%;
+        text-decoration: none
+    }
+
+    .my_foot {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        position: absolute;
+        bottom: 0
+    }
+
+    .my_foot a {
+        text-decoration: none;
+        margin-right: 10px;
+        display: inline-block
+    }
+
+    .my_foot a img {
+        width: 30px;
+        height: 30px
+    }
+</style>
+
+<script>
+    $(function () { $('.h-right-close>svg').click(function () { $('.sidebar').animate({ width: "66%" }, 500); $('.shelter').fadeIn("slow") }); $('.shelter').click(function (e) { $('.sidebar').animate({ width: "0" }, 500); $('.shelter').fadeOut("slow") }) })
+</script>
+		<script>
+			$(function () { $(window).scroll(function () { if ($(document).scrollTop() > 100) { $(".header-top").removeClass("header-move2"); $('.header-top').addClass('header-move1') } else { $(".header-top").removeClass("header-move1"); $('.header-top').addClass('header-move2') } }) });
+		</script>
+<div class="header-bg ">
+    <div class="bg-content">
+        <ul class="tag">
+            
+            
+            <li><a href="/tags/面试">面试</a></li>
+            
+            <li><a href="/tags/算法">算法</a></li>
+            
+            
+        </ul>
+        <h1>每天一道算法题：最长公共子串</h1>
+        <div class="article-info">
+            <div class="article-author">
+                
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+                    <g>
+                        <path fill="#12183A"
+                            d="M6.187 15.265A6.47 6.47 0 0 0 10 16.5a6.47 6.47 0 0 0 3.813-1.235A4.99 4.99 0 0 0 10 13.5a4.99 4.99 0 0 0-3.813 1.765zM5.082 14.25A6.485 6.485 0 0 1 10 12c1.965 0 3.726.872 4.918 2.25a6.5 6.5 0 1 0-9.836 0zM10 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0-1.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z">
+                        </path>
+                    </g>
+                </svg>
+                
+                <span> <a href="">CHANGEQ</a></span>
+                <p>2021-07-26 22:33:48</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="article-content">
+    <div id="article" class="content">
+        <p>描述<br>有两个字符串（可能包含空格）,请找出其中最长的公共连续子串,输出其长度。(长度在1000以内)</p>
 <p>例如：</p>
 <p>输入：abcde bcd</p>
 <p>输出：3</p>
@@ -148,103 +286,152 @@
 <p>为了进一步优化算法的效率，我们可以再计算某个二维矩阵的值的时候顺便计算出来当前最长的公共子串的长度，即某个二维矩阵元素的值由record[i][j]=1演变为record[i][j]=1 +record[i-1][j-1]，这样就避免了后续查找对角线长度的操作了。修改后的二维矩阵如下：</p>
 <p><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/03listpublic.png"></p>
 <p>递推公式为：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">当A[i] !&#x3D; B[j]，dp[i][j] &#x3D; 0</span><br><span class="line"></span><br><span class="line">当A[i] &#x3D;&#x3D; B[j]，</span><br><span class="line"></span><br><span class="line">若i &#x3D; 0 || j &#x3D;&#x3D; 0，dp[i][j] &#x3D; 1</span><br><span class="line"></span><br><span class="line">否则 dp[i][j] &#x3D; dp[i - 1][j - 1] + 1</span><br></pre></td></tr></table></figure>
+<figure class="highlight inform7"><table><tr><td class="code"><pre><code class="hljs inform7">当A<span class="hljs-comment">[i]</span> != B<span class="hljs-comment">[j]</span>，dp<span class="hljs-comment">[i]</span><span class="hljs-comment">[j]</span> = 0<br><br>当A<span class="hljs-comment">[i]</span> == B<span class="hljs-comment">[j]</span>，<br><br>若i = 0 || j == 0，dp<span class="hljs-comment">[i]</span><span class="hljs-comment">[j]</span> = 1<br><br>否则 dp<span class="hljs-comment">[i]</span><span class="hljs-comment">[j]</span> = dp<span class="hljs-comment">[i - 1]</span><span class="hljs-comment">[j - 1]</span> + 1<br></code></pre></td></tr></table></figure>
 <p>代码</p>
 <p><strong>暴力法</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">public int getLCS(String s, String s2) &#123;</span><br><span class="line">        if (s &#x3D;&#x3D; null || t &#x3D;&#x3D; null) &#123;</span><br><span class="line">            return 0;</span><br><span class="line">        &#125;</span><br><span class="line">        int l1 &#x3D; s.length();</span><br><span class="line">        int l2 &#x3D; t.length();</span><br><span class="line">        int res &#x3D; 0;</span><br><span class="line">        for (int i &#x3D; 0; i &lt; l1; i++) &#123;</span><br><span class="line">            for (int j &#x3D; 0; j &lt; l2; j++) &#123;</span><br><span class="line">                int m &#x3D; i;</span><br><span class="line">                int k &#x3D; j;</span><br><span class="line">                int len &#x3D; 0;</span><br><span class="line">                while (m &lt; l1 &amp;&amp; k &lt; l2 &amp;&amp; s.charAt(m) &#x3D;&#x3D; t.charAt(k)) &#123;</span><br><span class="line">                    len++;</span><br><span class="line">                    m++;</span><br><span class="line">                    k++;</span><br><span class="line">                &#125;</span><br><span class="line">                res &#x3D; Math.max(res, len);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return res;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight reasonml"><table><tr><td class="code"><pre><code class="hljs reasonml">public <span class="hljs-built_in">int</span> get<span class="hljs-constructor">LCS(String <span class="hljs-params">s</span>, String <span class="hljs-params">s2</span>)</span> &#123;<br>        <span class="hljs-keyword">if</span> (s<span class="hljs-operator"> == </span>null<span class="hljs-operator"> || </span>t<span class="hljs-operator"> == </span>null) &#123;<br>            return <span class="hljs-number">0</span>;<br>        &#125;<br>        <span class="hljs-built_in">int</span> l1 = s.length<span class="hljs-literal">()</span>;<br>        <span class="hljs-built_in">int</span> l2 = t.length<span class="hljs-literal">()</span>;<br>        <span class="hljs-built_in">int</span> res = <span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-built_in">int</span> i = <span class="hljs-number">0</span>; i &lt; l1; i++) &#123;<br>            <span class="hljs-keyword">for</span> (<span class="hljs-built_in">int</span> j = <span class="hljs-number">0</span>; j &lt; l2; j++) &#123;<br>                <span class="hljs-built_in">int</span> m = i;<br>                <span class="hljs-built_in">int</span> k = j;<br>                <span class="hljs-built_in">int</span> len = <span class="hljs-number">0</span>;<br>                <span class="hljs-keyword">while</span> (m &lt; l1<span class="hljs-operator"> &amp;&amp; </span>k &lt; l2<span class="hljs-operator"> &amp;&amp; </span>s.<span class="hljs-built_in">char</span><span class="hljs-constructor">At(<span class="hljs-params">m</span>)</span><span class="hljs-operator"> == </span>t.<span class="hljs-built_in">char</span><span class="hljs-constructor">At(<span class="hljs-params">k</span>)</span>) &#123;<br>                    len++;<br>                    m++;<br>                    k++;<br>                &#125;<br>                res = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Math</span>.</span></span>max(res, len);<br>            &#125;<br>        &#125;<br>        return res;<br>    &#125;<br></code></pre></td></tr></table></figure>
 <p><strong>动态规划</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">public int getLCS(String s, String t) &#123;</span><br><span class="line">        if (s &#x3D;&#x3D; null || t &#x3D;&#x3D; null) &#123;</span><br><span class="line">            return 0;</span><br><span class="line">        &#125;</span><br><span class="line">        int result &#x3D; 0;</span><br><span class="line">        int sLength &#x3D; s.length();</span><br><span class="line">        int tLength &#x3D; t.length();</span><br><span class="line">        int[][] dp &#x3D; new int[sLength][tLength];</span><br><span class="line">        for (int i &#x3D; 0; i &lt; sLength; i++) &#123;</span><br><span class="line">            for (int k &#x3D; 0; k &lt; tLength; k++) &#123;</span><br><span class="line">                if (s.charAt(i) &#x3D;&#x3D; t.charAt(k)) &#123;</span><br><span class="line">                    if (i &#x3D;&#x3D; 0 || k &#x3D;&#x3D; 0) &#123;</span><br><span class="line">                        dp[i][k] &#x3D; 1;</span><br><span class="line">                    &#125; else &#123;</span><br><span class="line">                        dp[i][k] &#x3D; dp[i - 1][k - 1] + 1;</span><br><span class="line">                    &#125;</span><br><span class="line">                    result &#x3D; Math.max(dp[i][k], result);</span><br><span class="line">                &#125; else &#123;</span><br><span class="line">                    dp[i][k] &#x3D; 0;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return result;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight reasonml"><table><tr><td class="code"><pre><code class="hljs reasonml">public <span class="hljs-built_in">int</span> get<span class="hljs-constructor">LCS(String <span class="hljs-params">s</span>, String <span class="hljs-params">t</span>)</span> &#123;<br>        <span class="hljs-keyword">if</span> (s<span class="hljs-operator"> == </span>null<span class="hljs-operator"> || </span>t<span class="hljs-operator"> == </span>null) &#123;<br>            return <span class="hljs-number">0</span>;<br>        &#125;<br>        <span class="hljs-built_in">int</span> result = <span class="hljs-number">0</span>;<br>        <span class="hljs-built_in">int</span> sLength = s.length<span class="hljs-literal">()</span>;<br>        <span class="hljs-built_in">int</span> tLength = t.length<span class="hljs-literal">()</span>;<br>        <span class="hljs-built_in">int</span><span class="hljs-literal">[]</span><span class="hljs-literal">[]</span> dp = <span class="hljs-keyword">new</span> <span class="hljs-built_in">int</span><span class="hljs-literal">[<span class="hljs-identifier">sLength</span>]</span><span class="hljs-literal">[<span class="hljs-identifier">tLength</span>]</span>;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-built_in">int</span> i = <span class="hljs-number">0</span>; i &lt; sLength; i++) &#123;<br>            <span class="hljs-keyword">for</span> (<span class="hljs-built_in">int</span> k = <span class="hljs-number">0</span>; k &lt; tLength; k++) &#123;<br>                <span class="hljs-keyword">if</span> (s.<span class="hljs-built_in">char</span><span class="hljs-constructor">At(<span class="hljs-params">i</span>)</span><span class="hljs-operator"> == </span>t.<span class="hljs-built_in">char</span><span class="hljs-constructor">At(<span class="hljs-params">k</span>)</span>) &#123;<br>                    <span class="hljs-keyword">if</span> (i<span class="hljs-operator"> == </span><span class="hljs-number">0</span><span class="hljs-operator"> || </span>k<span class="hljs-operator"> == </span><span class="hljs-number">0</span>) &#123;<br>                        dp<span class="hljs-literal">[<span class="hljs-identifier">i</span>]</span><span class="hljs-literal">[<span class="hljs-identifier">k</span>]</span> = <span class="hljs-number">1</span>;<br>                    &#125; <span class="hljs-keyword">else</span> &#123;<br>                        dp<span class="hljs-literal">[<span class="hljs-identifier">i</span>]</span><span class="hljs-literal">[<span class="hljs-identifier">k</span>]</span> = dp<span class="hljs-literal">[<span class="hljs-identifier">i</span> - <span class="hljs-number">1</span>]</span><span class="hljs-literal">[<span class="hljs-identifier">k</span> - <span class="hljs-number">1</span>]</span> + <span class="hljs-number">1</span>;<br>                    &#125;<br>                    result = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Math</span>.</span></span>max(dp<span class="hljs-literal">[<span class="hljs-identifier">i</span>]</span><span class="hljs-literal">[<span class="hljs-identifier">k</span>]</span>, result);<br>                &#125; <span class="hljs-keyword">else</span> &#123;<br>                    dp<span class="hljs-literal">[<span class="hljs-identifier">i</span>]</span><span class="hljs-literal">[<span class="hljs-identifier">k</span>]</span> = <span class="hljs-number">0</span>;<br>                &#125;<br>            &#125;<br>        &#125;<br>        return result;<br>    &#125;<br></code></pre></td></tr></table></figure>
 
 <p> <strong>简化一下递推公式</strong>：</p>
 <p>当A[i] != B[j]，dp[i][j] = 0</p>
 <p>否则 dp[i][j] = dp[i - 1][j - 1] + 1</p>
 <p>全部都归结为一个公式即可，二维数组默认值为0</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">public int getLCS(String s, String t) &#123;</span><br><span class="line">        if (s &#x3D;&#x3D; null || t &#x3D;&#x3D; null) &#123;</span><br><span class="line">            return 0;</span><br><span class="line">        &#125;</span><br><span class="line">        int result &#x3D; 0;</span><br><span class="line">        int sLength &#x3D; s.length();</span><br><span class="line">        int tLength &#x3D; t.length();</span><br><span class="line">        int[][] dp &#x3D; new int[sLength + 1][tLength + 1];</span><br><span class="line">        for (int i &#x3D; 1; i &lt;&#x3D; sLength; i++) &#123;</span><br><span class="line">            for (int k &#x3D; 1; k &lt;&#x3D; tLength; k++) &#123;</span><br><span class="line">                if (s.charAt(i - 1) &#x3D;&#x3D; t.charAt(k - 1)) &#123;</span><br><span class="line">                    dp[i][k] &#x3D; dp[i - 1][k - 1] + 1;</span><br><span class="line">                    result &#x3D; Math.max(dp[i][k], result);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">&#x2F;&#x2F;        for (int i &#x3D; 1; i &lt;&#x3D; sLength + 1; i++) &#123;</span><br><span class="line">&#x2F;&#x2F;            for (int k &#x3D; 1; k &lt;&#x3D; tLength + 1; k++) &#123;</span><br><span class="line">&#x2F;&#x2F;                System.out.print(dp[i - 1][k - 1] + &quot; &quot;);</span><br><span class="line">&#x2F;&#x2F;            &#125;</span><br><span class="line">&#x2F;&#x2F;            System.out.println();</span><br><span class="line">&#x2F;&#x2F;        &#125;</span><br><span class="line">        return result;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight reasonml"><table><tr><td class="code"><pre><code class="hljs reasonml">public <span class="hljs-built_in">int</span> get<span class="hljs-constructor">LCS(String <span class="hljs-params">s</span>, String <span class="hljs-params">t</span>)</span> &#123;<br>        <span class="hljs-keyword">if</span> (s<span class="hljs-operator"> == </span>null<span class="hljs-operator"> || </span>t<span class="hljs-operator"> == </span>null) &#123;<br>            return <span class="hljs-number">0</span>;<br>        &#125;<br>        <span class="hljs-built_in">int</span> result = <span class="hljs-number">0</span>;<br>        <span class="hljs-built_in">int</span> sLength = s.length<span class="hljs-literal">()</span>;<br>        <span class="hljs-built_in">int</span> tLength = t.length<span class="hljs-literal">()</span>;<br>        <span class="hljs-built_in">int</span><span class="hljs-literal">[]</span><span class="hljs-literal">[]</span> dp = <span class="hljs-keyword">new</span> <span class="hljs-built_in">int</span><span class="hljs-literal">[<span class="hljs-identifier">sLength</span> + <span class="hljs-number">1</span>]</span><span class="hljs-literal">[<span class="hljs-identifier">tLength</span> + <span class="hljs-number">1</span>]</span>;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-built_in">int</span> i = <span class="hljs-number">1</span>; i &lt;= sLength; i++) &#123;<br>            <span class="hljs-keyword">for</span> (<span class="hljs-built_in">int</span> k = <span class="hljs-number">1</span>; k &lt;= tLength; k++) &#123;<br>                <span class="hljs-keyword">if</span> (s.<span class="hljs-built_in">char</span><span class="hljs-constructor">At(<span class="hljs-params">i</span> - 1)</span><span class="hljs-operator"> == </span>t.<span class="hljs-built_in">char</span><span class="hljs-constructor">At(<span class="hljs-params">k</span> - 1)</span>) &#123;<br>                    dp<span class="hljs-literal">[<span class="hljs-identifier">i</span>]</span><span class="hljs-literal">[<span class="hljs-identifier">k</span>]</span> = dp<span class="hljs-literal">[<span class="hljs-identifier">i</span> - <span class="hljs-number">1</span>]</span><span class="hljs-literal">[<span class="hljs-identifier">k</span> - <span class="hljs-number">1</span>]</span> + <span class="hljs-number">1</span>;<br>                    result = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Math</span>.</span></span>max(dp<span class="hljs-literal">[<span class="hljs-identifier">i</span>]</span><span class="hljs-literal">[<span class="hljs-identifier">k</span>]</span>, result);<br>                &#125;<br>            &#125;<br>        &#125;<br><span class="hljs-comment">//        for (int i = 1; i &lt;= sLength + 1; i++) &#123;</span><br><span class="hljs-comment">//            for (int k = 1; k &lt;= tLength + 1; k++) &#123;</span><br><span class="hljs-comment">//                System.out.print(dp[i - 1][k - 1] + &quot; &quot;);</span><br><span class="hljs-comment">//            &#125;</span><br><span class="hljs-comment">//            System.out.println();</span><br><span class="hljs-comment">//        &#125;</span><br>        return result;<br>    &#125;<br></code></pre></td></tr></table></figure>
 <p>行、列都多一行，更适应公式。</p>
 
-            </div>
-          
-
-    
-      <footer class="post-footer">
-		
-		<div class="post-tags">
-		  
-			<a href="/tags/%E9%9D%A2%E8%AF%95/">面试</a>
-		  
-			<a href="/tags/%E7%AE%97%E6%B3%95/">算法</a>
-		  
-		</div>
-		
-
-        
-        
-  <nav class="post-nav">
-    
-      <a class="prev" href="/2021/07/26/%E6%AF%8F%E5%A4%A9%E4%B8%80%E9%81%93%E7%AE%97%E6%B3%95%E9%A2%98%EF%BC%9A%E4%B8%A4%E4%B8%AA%E9%93%BE%E8%A1%A8%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%85%AC%E5%85%B1%E7%BB%93%E7%82%B9/">
-        <i class="iconfont icon-left"></i>
-        <span class="prev-text nav-default">每天一道算法题：两个链表的第一个公共结点</span>
-        <span class="prev-text nav-mobile">Prev</span>
-      </a>
-    
-    
-      <a class="next" href="/2021/07/26/%E6%AF%8F%E5%A4%A9%E4%B8%80%E9%81%93%E7%AE%97%E6%B3%95%E9%A2%98%EF%BC%9A%E6%8C%89%E4%B9%8B%E5%AD%97%E5%BD%A2%E9%A1%BA%E5%BA%8F%E6%89%93%E5%8D%B0%E4%BA%8C%E5%8F%89%E6%A0%91/">
-        <span class="next-text nav-default">每天一道算法题：按之字形顺序打印二叉树</span>
-        <span class="prev-text nav-mobile">Next</span>
-        <i class="iconfont icon-right"></i>
-      </a>
-    
-  </nav>
-
-        
-  <div class="comments" id="comments">
-    
-  </div>
-
-
-      </footer>
-    
-  </article>
-
     </div>
+</div>
+<style>
+    #noneimg img {
+        display: none;
+        z-index: 109;
+        width: 600px !important;
+        border-radius: 0px;
+        position: fixed;
+        box-shadow: 0 0 0px #c3c3c300 !important;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto !important;
+    }
 
-      </div>
+    @media screen and (max-width:600px) {
+        #noneimg img {
+            width: 88%
+        }
+    }
+</style>
+<script>
+    $(function () { $('#article').click(function (e) { if (e.target.tagName == "IMG") { if ($('#nonediv').length == 0) { let MImg = `<div id='noneimg'><img src='${e.target.currentSrc}'></div>`; let MDiv = "<div id='nonediv' style='cursor: pointer;display: none; position: fixed;left: 0;top: 0; right: 0;bottom: 0;background-color: #333;opacity:0.5;z-index: 108;'></div>"; $('#article').append(MDiv); $('#article').append(MImg); $("#nonediv").fadeIn("slow"); $("#noneimg img").fadeIn("slow") } } else { if ($('#nonediv').length !== 0) { $("#noneimg ").fadeOut("slow"); $("#nonediv").fadeOut("slow"); setTimeout(function () { $('#nonediv').remove(); $('#noneimg').remove() }, 500) } } }); $('.article-content').addClass('content-move') });
+</script>
+<div class="Last-Next">
+    
+    <a href="/2021/07/26/%E6%AF%8F%E5%A4%A9%E4%B8%80%E9%81%93%E7%AE%97%E6%B3%95%E9%A2%98%EF%BC%9A%E4%B8%A4%E4%B8%AA%E9%93%BE%E8%A1%A8%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%85%AC%E5%85%B1%E7%BB%93%E7%82%B9/">
+        <div class="last">
+            <span>上一篇</span>
+            <p>每天一道算法题：两个链表的第一个公共结点</p>
+        </div>
+    </a>
+    
 
-      <footer id="colophon"><span class="copyright-year">
     
-        &copy;
+    <a href="/2021/07/26/%E6%AF%8F%E5%A4%A9%E4%B8%80%E9%81%93%E7%AE%97%E6%B3%95%E9%A2%98%EF%BC%9A%E6%8C%89%E4%B9%8B%E5%AD%97%E5%BD%A2%E9%A1%BA%E5%BA%8F%E6%89%93%E5%8D%B0%E4%BA%8C%E5%8F%89%E6%A0%91/">
+        <div class="next">
+            <span>下一篇</span>
+            <p>每天一道算法题：按之字形顺序打印二叉树</p>
+        </div>
+    </a>
     
-        2014 -
-    
-    2021
-    <span class="footer-author">Russshare.</span>
-    <span class="power-by">
-        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+</div>
+		
+<link rel="stylesheet" href="/css/food.css">
+
+<div class="footer">
+	<div class="Copyright">
+		©2021 By CHANGEQ. 主题：<a
+			style="text-decoration: none;display: contents; color: #898F9F;"
+			target="_blank" rel="noopener" href="https://github.com/qiaobug/hexo-theme-quiet">Quiet</a>
+	</div>
+	<div class="contact">
+		
+		<a target="_blank" rel="noopener" href="https://github.com/qiaobug">
+			<img src="https://cdn.jsdelivr.net/gh/duogongneng/MyBlogImg/imggithub.png" alt="Quiet主题">
+		</a>
+		
+	</div>
+</div>
+
+<script src="/js/jquery.min.js"></script>
+
+
+<script src="/js/gotop.js"></script>
+
+
+<style type="text/css">
+    @media screen and (min-width: 600px) {
+        .goTop>span {
+            display: block;
+            border-radius: 50%;
+            width: 66px;
+            height: 66px;
+            cursor: pointer;
+            opacity: 0.8;
+            background: rgba(18, 24, 58, 0.06);
+            text-align: center;
+            border: 1px solid rgba(18, 24, 58, 0.06);
+
+            transition: border .5s;
+            -moz-transition: border .5s;
+            /* Firefox 4 */
+            -webkit-transition: border .5s;
+            /* Safari 和 Chrome */
+            -o-transition: border .5s;
+            /* Opera */
+        }
+
+        .goTop>span:hover {
+            border: 1px solid #6680B3;
+        }
+
+
+        .goTop {
+            position: fixed;
+            right: 30px;
+            bottom: 80px;
+        }
+
+        .goTop>span>svg {
+            width: 30px;
+            height: 30px;
+            margin-top: 17.5px;
+            opacity: 0.7;
+        }
+
+    }
+
+    @media screen and (max-width: 600px) {
+        .goTop {
+            display: none;
+        }
+    }
+</style>
+<div class="goTop" id="js-go_top">
+    <span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <g>
+                <path d="M13 12v8h-2v-8H4l8-8 8 8z"></path>
+            </g>
+        </svg>
     </span>
-</span>
+</div>
+<script>
+    $('#js-go_top').gotoTop({ offset: 500, speed: 300, animationShow: { 'transform': 'translate(0,0)', 'transition': 'transform .5s ease-in-out' }, animationHide: { 'transform': 'translate(100px,0)', 'transition': 'transform .5s ease-in-out' } });
+</script>
+<script>
+	console.log('\n %c Hexo-Quiet 主题 %c https://github.com/QiaoBug/hexo-theme-quiet \n', 'color: #fadfa3; background: #030307; padding:5px 0;', 'background: #fadfa3; padding:5px 0;')
+</script>
+	</body>
 
-      </footer>
-
-      <div class="back-to-top" id="back-to-top">
-        <i class="iconfont icon-up"></i>
-      </div>
-    </div>
-    
-
-
-    
-
-
-
-
-  
-    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
-  
-
-  
-
-    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
-<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
-
-  </body>
 </html>

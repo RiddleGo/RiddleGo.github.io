@@ -1,139 +1,278 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
-  <head>
-    
-<meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+<html>
+
+	<head>
+		
+<title>interface-Quiet</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="shortcut icon" type="image/x-icon" href="/image/favicon.ico">
 
 
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="keywords" content="interface,接口,">
+<meta name="description" content="">
 
 
-
-  <meta name="description" content="interface"/>
-
+<script src="/js/jquery.min.js"></script>
 
 
+	<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+</head>
 
-  <meta name="keywords" content="interface,接口," />
-
-
-
-
-
-  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+	<body>
+		
+<link rel="stylesheet" href="/css/page.css">
 
 
+<link rel="stylesheet" href="/css/page_cente.css">
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+<link rel="stylesheet" href="/css/atom-one-dark.css">
 
 
+<link rel="stylesheet" href="/css/header.css">
 
-<link rel="canonical" href="https://riddlego.github.io/2021/05/26/interface/"/>
-
-
-<meta name="description" content="Go语言基础之接口—&gt;interface接口前言：接口在golang中的地位很高，以我这样浅薄的经历，都这样说了，那说明真的很重要。在这里作为一个玩过一点java和C++的靓仔，我深刻的感受到谷歌那群大牛的想设计出一种新的语言，采用一种新的方法来实现别的语言的一些特点。每个语言都有着不同的优势场所，就像不同的刀可以做不同的事情，总不能说一个刀干啥都行。 本次的内容来自[李文周的博客]{htt">
-<meta property="og:type" content="article">
-<meta property="og:title" content="interface">
-<meta property="og:url" content="https://riddlego.github.io/2021/05/26/interface/index.html">
-<meta property="og:site_name" content="RiddleGo">
-<meta property="og:description" content="Go语言基础之接口—&gt;interface接口前言：接口在golang中的地位很高，以我这样浅薄的经历，都这样说了，那说明真的很重要。在这里作为一个玩过一点java和C++的靓仔，我深刻的感受到谷歌那群大牛的想设计出一种新的语言，采用一种新的方法来实现别的语言的一些特点。每个语言都有着不同的优势场所，就像不同的刀可以做不同的事情，总不能说一个刀干啥都行。 本次的内容来自[李文周的博客]{htt">
-<meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/interface.png">
-<meta property="article:published_time" content="2021-05-26T01:24:12.000Z">
-<meta property="article:modified_time" content="2021-05-26T02:09:56.000Z">
-<meta property="article:author" content="Russshare">
-<meta property="article:tag" content="interface">
-<meta property="article:tag" content="接口">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/interface.png">
-
-
-<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
-<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
-
-
-
-
-
-<script type="text/javascript">
-  var themeConfig = {
-    fancybox: {
-      enable: false
-    },
-  };
-</script>
-
-
-
-
-  
-
-
-
-    <title> interface - RiddleGo </title>
-  <meta name="generator" content="Hexo 5.4.0"></head>
-
-  <body>
-    <div id="page">
-      <header id="masthead"><div class="site-header-inner">
-    <h1 class="site-title">
-        <a href="/." class="logo">RiddleGo</a>
-    </h1>
-
-    <nav id="nav-top">
+	<div class="header">
+		<div class="header-top">
+			<div class="h-left">
+				<a href="/">
+					<img src="/image/logo.png" alt="Quiet">
+				</a>
+			</div>
+			<div class="h-right">
+				<ul>
+					
+						
+								<li>
+									<a href="/">
+										HOME
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/archives">
+										ARCHIVE
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/categories">
+										CATEGORIES
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/tags">
+										TAGS
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/links">
+										LINKS
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/about">
+										ABOUT
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+				</ul>
+			</div>
+			<div class="h-right-close">
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+					<path fill="none" d="M0 0h24v24H0z" />
+					<path d="M3 4h18v2H3V4zm0 7h18v2H3v-2zm0 7h18v2H3v-2z" fill="rgba(68,68,68,1)" />
+				</svg>
+			</div>
+		</div>
+	</div>
+	<div class="sidebar">
+    <div class="topo">
+        <h2>CHANGEQ</h2>
+    </div>
+    <ul>
         
-            <ul id="menu-top" class="nav-top-items">
-                
-                    <li class="menu-item">
-                        <a href="/archives">
-                            
-                            
-                                Archives
-                            
-                        </a>
-                    </li>
-                
-                    <li class="menu-item">
-                        <a href="/about">
-                            
-                            
-                                About
-                            
-                        </a>
-                    </li>
-                
-            </ul>
+        <li>
+            <a href="/">HOME</a>
+        </li>
         
-  </nav>
+        <li>
+            <a href="/archives">ARCHIVE</a>
+        </li>
+        
+        <li>
+            <a href="/categories">CATEGORIES</a>
+        </li>
+        
+        <li>
+            <a href="/tags">TAGS</a>
+        </li>
+        
+        <li>
+            <a href="/links">LINKS</a>
+        </li>
+        
+        <li>
+            <a href="/about">ABOUT</a>
+        </li>
+        
+    </ul>
+    <div class="my_foot">
+        
+        <a target="_blank" rel="noopener" href="https://github.com/qiaobug">
+            <img src="https://cdn.jsdelivr.net/gh/duogongneng/MyBlogImg/imggithub.png" alt="Quiet主题">
+        </a>
+        
+    </div>
 </div>
+<div class='shelter'
+    style='cursor: pointer;display: none; position: fixed;left: 0;top: 0; right: 0;bottom: 0;background-color: #333;opacity:0.5;z-index: 108;'>
+</div>
+<style>
+    .sidebar {
+        width: 0;
+        height: 100%;
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        background: #fff;
+        z-index: 999;
+        text-align: center;
+        box-shadow: -6px 0 20px rgba(98, 94, 94, .815)
+    }
 
-      </header>
-      <div id="content">
-        
-    <div id="primary">
-        
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          interface
-        
-      </h1>
+    .topo {
+        width: 100%;
+        height: 200px;
+        background: url(https://api.ixiaowai.cn/gqapi/gqapi.php) no-repeat;
+        background-size: 100% 100%;
+        position: relative;
+        display: flex;
+        align-items: flex-end
+    }
 
-      <time class="post-time">
-          5月 26 2021
-      </time>
-    </header>
+    .topo h2 {
+        color: #fff;
+        z-index: 1;
+        position: relative;
+        margin: 0 0 10px 10px;
+        font-size: 1.2em;
+        box-sizing: border-box
+    }
 
+    .topo:before {
+        content: '';
+        background-image: url(/image/pattern.png);
+        background-repeat: repeat;
+        height: 100%;
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 100%;
+        z-index: 1
+    }
 
+    .sidebar ul {
+        width: 100%;
+        margin-top: 50px
+    }
 
-    
-            <div class="post-content">
-            <h2 id="Go语言基础之接口—-gt-interface接口"><a href="#Go语言基础之接口—-gt-interface接口" class="headerlink" title="Go语言基础之接口—&gt;interface接口"></a>Go语言基础之接口—&gt;interface接口</h2><h3 id="前言："><a href="#前言：" class="headerlink" title="前言："></a>前言：</h3><p>接口在golang中的地位很高，以我这样浅薄的经历，都这样说了，那说明真的很重要。在这里作为一个玩过一点java和C++的靓仔，我深刻的感受到谷歌那群大牛的想设计出一种新的语言，采用一种新的方法来实现别的语言的一些特点。每个语言都有着不同的优势场所，就像不同的刀可以做不同的事情，总不能说一个刀干啥都行。</p>
+    .sidebar ul li {
+        height: 50px;
+        list-style: none;
+        font-size: 1.2em;
+        text-align: right;
+        margin-right: 10px
+    }
+
+    .sidebar ul li a {
+        display: grid;
+        color: #5d606a;
+        text-overflow: ellipsis;
+        width: 100%;
+        text-decoration: none
+    }
+
+    .my_foot {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        position: absolute;
+        bottom: 0
+    }
+
+    .my_foot a {
+        text-decoration: none;
+        margin-right: 10px;
+        display: inline-block
+    }
+
+    .my_foot a img {
+        width: 30px;
+        height: 30px
+    }
+</style>
+
+<script>
+    $(function () { $('.h-right-close>svg').click(function () { $('.sidebar').animate({ width: "66%" }, 500); $('.shelter').fadeIn("slow") }); $('.shelter').click(function (e) { $('.sidebar').animate({ width: "0" }, 500); $('.shelter').fadeOut("slow") }) })
+</script>
+		<script>
+			$(function () { $(window).scroll(function () { if ($(document).scrollTop() > 100) { $(".header-top").removeClass("header-move2"); $('.header-top').addClass('header-move1') } else { $(".header-top").removeClass("header-move1"); $('.header-top').addClass('header-move2') } }) });
+		</script>
+<div class="header-bg ">
+    <div class="bg-content">
+        <ul class="tag">
+            
+            
+            <li><a href="/tags/interface">interface</a></li>
+            
+            <li><a href="/tags/接口">接口</a></li>
+            
+            
+        </ul>
+        <h1>interface</h1>
+        <div class="article-info">
+            <div class="article-author">
+                
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+                    <g>
+                        <path fill="#12183A"
+                            d="M6.187 15.265A6.47 6.47 0 0 0 10 16.5a6.47 6.47 0 0 0 3.813-1.235A4.99 4.99 0 0 0 10 13.5a4.99 4.99 0 0 0-3.813 1.765zM5.082 14.25A6.485 6.485 0 0 1 10 12c1.965 0 3.726.872 4.918 2.25a6.5 6.5 0 1 0-9.836 0zM10 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0-1.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z">
+                        </path>
+                    </g>
+                </svg>
+                
+                <span> <a href="">CHANGEQ</a></span>
+                <p>2021-05-26 09:24:12</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="article-content">
+    <div id="article" class="content">
+        <h2 id="Go语言基础之接口—-gt-interface接口"><a href="#Go语言基础之接口—-gt-interface接口" class="headerlink" title="Go语言基础之接口—&gt;interface接口"></a>Go语言基础之接口—&gt;interface接口</h2><h3 id="前言："><a href="#前言：" class="headerlink" title="前言："></a>前言：</h3><p>接口在golang中的地位很高，以我这样浅薄的经历，都这样说了，那说明真的很重要。在这里作为一个玩过一点java和C++的靓仔，我深刻的感受到谷歌那群大牛的想设计出一种新的语言，采用一种新的方法来实现别的语言的一些特点。每个语言都有着不同的优势场所，就像不同的刀可以做不同的事情，总不能说一个刀干啥都行。</p>
 <p>本次的内容来自[李文周的博客]{<a target="_blank" rel="noopener" href="https://www.liwenzhou.com/posts/Go/12_interface/%7D">https://www.liwenzhou.com/posts/Go/12_interface/}</a></p>
 <p>这里就是边复制边研读边做个笔记，谢谢大佬，大家可以去他的博客地址看一下，可以学到很多的东西。</p>
 <h3 id="1、什么是接口"><a href="#1、什么是接口" class="headerlink" title="1、什么是接口"></a>1、什么是接口</h3><p>接口（interface）定义了一个对象的行为规范，只定义规范不实现，由具体的对象来实现规范的细节。</p>
@@ -146,7 +285,7 @@
 <p>对应的python属于duck typing，基本上是类型随便混用，没有静态检查类型匹配情况，只有运行起来找不到相应属性和方法时才报错。比如在python中，有很多file-like的东西，比如StringIO,GzipFile,socket。它们有很多相同的方法，我们把它们当作文件使用。</p>
 <p>又比如list.extend()方法中,我们并不关心它的参数是不是list,只要它是可迭代的,所以它的参数可以是list/tuple/dict/字符串/生成器等.<br>鸭子类型在动态语言中经常使用，非常灵活）</p>
 <h3 id="2、接口类型"><a href="#2、接口类型" class="headerlink" title="2、接口类型"></a>2、接口类型</h3><p>为了保护你的Go语言职业生涯，请牢记接口（interface）是一种类型。<br>interface是一组method的集合，是duck-type programming的一种体现。接口做的事情就像是定义一个协议（规则），只要一台机器有洗衣服和甩干的功能，我就称它为洗衣机。不关心属性（数据），只关心行为（方法）。</p>
-<h3 id="3、为什么要使用接口"><a href="#3、为什么要使用接口" class="headerlink" title="3、为什么要使用接口"></a>3、为什么要使用接口</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">type Cat struct&#123;&#125;</span><br><span class="line"></span><br><span class="line">func (c Cat) Say() string &#123; return &quot;喵喵喵&quot; &#125;</span><br><span class="line"></span><br><span class="line">type Dog struct&#123;&#125;</span><br><span class="line"></span><br><span class="line">func (d Dog) Say() string &#123; return &quot;汪汪汪&quot; &#125;</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line">	c :&#x3D; Cat&#123;&#125;</span><br><span class="line">	fmt.Println(&quot;猫:&quot;, c.Say())</span><br><span class="line">	d :&#x3D; Dog&#123;&#125;</span><br><span class="line">	fmt.Println(&quot;狗:&quot;, d.Say())</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="3、为什么要使用接口"><a href="#3、为什么要使用接口" class="headerlink" title="3、为什么要使用接口"></a>3、为什么要使用接口</h3><figure class="highlight go"><table><tr><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> Cat <span class="hljs-keyword">struct</span>&#123;&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(c Cat)</span> <span class="hljs-title">Say</span><span class="hljs-params">()</span> <span class="hljs-title">string</span></span> &#123; <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;喵喵喵&quot;</span> &#125;<br><br><span class="hljs-keyword">type</span> Dog <span class="hljs-keyword">struct</span>&#123;&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(d Dog)</span> <span class="hljs-title">Say</span><span class="hljs-params">()</span> <span class="hljs-title">string</span></span> &#123; <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;汪汪汪&quot;</span> &#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	c := Cat&#123;&#125;<br>	fmt.Println(<span class="hljs-string">&quot;猫:&quot;</span>, c.Say())<br>	d := Dog&#123;&#125;<br>	fmt.Println(<span class="hljs-string">&quot;狗:&quot;</span>, d.Say())<br>&#125;<br></code></pre></td></tr></table></figure>
 
 <p>上面的代码中定义了猫和狗，然后它们都会叫，你会发现main函数中明显有重复的代码，如果我们后续再加上猪、青蛙等动物的话，我们的代码还会一直重复下去。那我们能不能把它们当成“能叫的动物”来处理呢？</p>
 <p>看到这里如果你有java的基础，说不定你就会想到当时我们构建的类，每个类的通用的方法，我们就把它提出来成一个接口去实现，又或者设计个父类，然后继承以后重写方法。</p>
@@ -156,176 +295,225 @@
 <p>比如销售、行政、程序员都能计算月薪，我们能不能把他们当成“员工”来处理呢？</p>
 <p>Go语言中为了解决类似上面的问题，就设计了接口这个概念。<br>接口区别于我们之前所有的具体类型，接口是一种抽象的类型。当你看到一个接口类型的值时，<strong>你不知道它是什么，唯一知道的是通过它的方法能做什么。</strong></p>
 <h3 id="4、接口的定义"><a href="#4、接口的定义" class="headerlink" title="4、接口的定义"></a>4、接口的定义</h3><p>Go语言提倡面向接口编程。<br>每个接口由数个方法组成，接口的定义格式如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">type 接口类型名 interface&#123;</span><br><span class="line">    方法名1( 参数列表1 ) 返回值列表1</span><br><span class="line">    方法名2( 参数列表2 ) 返回值列表2</span><br><span class="line">    …</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight ada"><table><tr><td class="code"><pre><code class="hljs ada"><span class="hljs-keyword">type</span> <span class="hljs-type">接口类型名 </span><span class="hljs-keyword">interface</span>&#123;<br>    方法名<span class="hljs-number">1</span>( 参数列表<span class="hljs-number">1</span> ) 返回值列表<span class="hljs-number">1</span><br>    方法名<span class="hljs-number">2</span>( 参数列表<span class="hljs-number">2</span> ) 返回值列表<span class="hljs-number">2</span><br>    …<br>&#125;<br></code></pre></td></tr></table></figure>
 <p>其中：</p>
 <p>接口名：使用type将接口定义为自定义的类型名。Go语言的接口在命名时，一般会在单词后面添加er，如有写操作的接口叫Writer，有字符串功能的接口叫Stringer等。接口名最好要能突出该接口的类型含义。</p>
 <p>方法名：当方法名首字母是大写且这个接口类型名首字母也是大写时，这个方法可以被接口所在的包（package）之外的代码访问。<br>参数列表、返回值列表：参数列表和返回值列表中的参数变量名可以省略。</p>
 <p>举个例子：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">type writer interface&#123;</span><br><span class="line">    Write([]byte) error</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight elm"><table><tr><td class="code"><pre><code class="hljs elm"><span class="hljs-keyword">type</span> writer interface&#123;<br>    <span class="hljs-type">Write</span>([]byte) error<br>&#125;<br></code></pre></td></tr></table></figure>
 <p>当你看到这个接口类型的值时，你不知道它是什么，唯一知道的就是可以通过它的Write方法来做一些事情。</p>
 <h3 id="5、实现接口的条件"><a href="#5、实现接口的条件" class="headerlink" title="5、实现接口的条件"></a>5、实现接口的条件</h3><p>一个对象只要全部实现了接口中的方法，那么就实现了这个接口。换句话说，接口就是一个需要实现的方法列表。</p>
 <p>我们来定义一个Sayer接口：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; Sayer 接口</span><br><span class="line">type Sayer interface &#123;</span><br><span class="line">	say()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight ada"><table><tr><td class="code"><pre><code class="hljs ada">// Sayer 接口<br><span class="hljs-keyword">type</span> <span class="hljs-type">Sayer </span><span class="hljs-keyword">interface</span> &#123;<br>	say()<br>&#125;<br></code></pre></td></tr></table></figure>
 
 <p>定义dog和cat两个结构体：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">type dog struct &#123;&#125;</span><br><span class="line"></span><br><span class="line">type cat struct &#123;&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight elm"><table><tr><td class="code"><pre><code class="hljs elm"><span class="hljs-keyword">type</span> dog struct &#123;&#125;<br><br><span class="hljs-keyword">type</span> cat struct &#123;&#125;<br></code></pre></td></tr></table></figure>
 
 <p>因为Sayer接口里只有一个say方法，所以我们只需要给dog和cat 分别实现say方法就可以实现Sayer接口了。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; dog实现了Sayer接口</span><br><span class="line">func (d dog) say() &#123;</span><br><span class="line">	fmt.Println(&quot;汪汪汪&quot;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; cat实现了Sayer接口</span><br><span class="line">func (c cat) say() &#123;</span><br><span class="line">	fmt.Println(&quot;喵喵喵&quot;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight go"><table><tr><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// dog实现了Sayer接口</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(d dog)</span> <span class="hljs-title">say</span><span class="hljs-params">()</span></span> &#123;<br>	fmt.Println(<span class="hljs-string">&quot;汪汪汪&quot;</span>)<br>&#125;<br><br><span class="hljs-comment">// cat实现了Sayer接口</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(c cat)</span> <span class="hljs-title">say</span><span class="hljs-params">()</span></span> &#123;<br>	fmt.Println(<span class="hljs-string">&quot;喵喵喵&quot;</span>)<br>&#125;<br></code></pre></td></tr></table></figure>
 <p>接口的实现就是这么简单，只要实现了接口中的所有方法，就实现了这个接口。</p>
 <h3 id="6、接口类型变量"><a href="#6、接口类型变量" class="headerlink" title="6、接口类型变量"></a>6、接口类型变量</h3><p>那实现了接口有什么用呢？（我当时不了解就在这个地方，看了例子才懂，当然是因为我菜，你不一样，你是天选之子。）</p>
 <p><strong>接口类型变量能够存储所有实现了该接口的实例。 例如上面的示例中，Sayer类型的变量能够存储dog和cat类型的变量。</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">func main() &#123;</span><br><span class="line">	var x Sayer &#x2F;&#x2F; 声明一个Sayer类型的变量x</span><br><span class="line">	a :&#x3D; cat&#123;&#125;  &#x2F;&#x2F; 实例化一个cat</span><br><span class="line">	b :&#x3D; dog&#123;&#125;  &#x2F;&#x2F; 实例化一个dog</span><br><span class="line">	x &#x3D; a       &#x2F;&#x2F; 可以把cat实例直接赋值给x</span><br><span class="line">	x.say()     &#x2F;&#x2F; 喵喵喵</span><br><span class="line">	x &#x3D; b       &#x2F;&#x2F; 可以把dog实例直接赋值给x</span><br><span class="line">	x.say()     &#x2F;&#x2F; 汪汪汪</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight awk"><table><tr><td class="code"><pre><code class="hljs awk"><span class="hljs-keyword">func</span> main() &#123;<br>	var x Sayer <span class="hljs-regexp">//</span> 声明一个Sayer类型的变量x<br>	a := cat&#123;&#125;  <span class="hljs-regexp">//</span> 实例化一个cat<br>	b := dog&#123;&#125;  <span class="hljs-regexp">//</span> 实例化一个dog<br>	x = a       <span class="hljs-regexp">//</span> 可以把cat实例直接赋值给x<br>	x.say()     <span class="hljs-regexp">//</span> 喵喵喵<br>	x = b       <span class="hljs-regexp">//</span> 可以把dog实例直接赋值给x<br>	x.say()     <span class="hljs-regexp">//</span> 汪汪汪<br>&#125;<br></code></pre></td></tr></table></figure>
 <p>看一下这奇形怪状的复制关系，我刚刚开始是极度纳闷，咋个就把一个变量给了另外一个变量，后来我想这就是**”接口类型变量能够存储所有实现了该接口的实例。”**这句话的体现吧.</p>
 <p>Tips： 观察下面的代码，体味此处_的妙用</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 摘自gin框架routergroup.go</span><br><span class="line">type IRouter interface&#123; ... &#125;</span><br><span class="line"></span><br><span class="line">type RouterGroup struct &#123; ... &#125;</span><br><span class="line"></span><br><span class="line">var _ IRouter &#x3D; &amp;RouterGroup&#123;&#125;  &#x2F;&#x2F; 确保RouterGroup实现了接口IRouter</span><br></pre></td></tr></table></figure>
+<figure class="highlight go"><table><tr><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// 摘自gin框架routergroup.go</span><br><span class="hljs-keyword">type</span> IRouter <span class="hljs-keyword">interface</span>&#123; ... &#125;<br><br><span class="hljs-keyword">type</span> RouterGroup <span class="hljs-keyword">struct</span> &#123; ... &#125;<br><br><span class="hljs-keyword">var</span> _ IRouter = &amp;RouterGroup&#123;&#125;  <span class="hljs-comment">// 确保RouterGroup实现了接口IRouter</span><br></code></pre></td></tr></table></figure>
 
 <p>上面我们已经基本上知道了接口的使用，这些都是基础，基础肯定不够，针对不同的场景，我们还得有不同的定制化，于是进入我们的进阶知识课堂吧。</p>
 <h3 id="7、值接收者和指针接收者实现接口的区别"><a href="#7、值接收者和指针接收者实现接口的区别" class="headerlink" title="7、值接收者和指针接收者实现接口的区别"></a>7、值接收者和指针接收者实现接口的区别</h3><p>使用值接收者实现接口和使用指针接收者实现接口有什么区别呢？接下来我们通过一个例子看一下其中的区别。</p>
 <p>我们有一个Mover接口和一个dog结构体。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">type Mover interface &#123;</span><br><span class="line">	move()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">type dog struct &#123;&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="7、1值接收者实现接口"><a href="#7、1值接收者实现接口" class="headerlink" title="7、1值接收者实现接口"></a>7、1值接收者实现接口</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">func (d dog) move() &#123;</span><br><span class="line">	fmt.Println(&quot;狗会动&quot;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight elm"><table><tr><td class="code"><pre><code class="hljs elm"><span class="hljs-keyword">type</span> <span class="hljs-type">Mover</span> interface &#123;<br>	move()<br>&#125;<br><br><span class="hljs-keyword">type</span> dog struct &#123;&#125;<br></code></pre></td></tr></table></figure>
+<h4 id="7、1值接收者实现接口"><a href="#7、1值接收者实现接口" class="headerlink" title="7、1值接收者实现接口"></a>7、1值接收者实现接口</h4><figure class="highlight autoit"><table><tr><td class="code"><pre><code class="hljs autoit"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(d dog)</span> <span class="hljs-title">move</span><span class="hljs-params">()</span> &#123;</span><br>	fmt.Println(<span class="hljs-string">&quot;狗会动&quot;</span>)<br>&#125;<br></code></pre></td></tr></table></figure>
 <p>此时实现接口的是dog类型：<br>func main() {<br>    var x Mover<br>    var wangcai = dog{} // 旺财是dog类型<br>    x = wangcai         // x可以接收dog类型<br>    var fugui = &amp;dog{}  // 富贵是<em>dog类型<br>    x = fugui           // x可以接收</em>dog类型<br>    x.move()<br>}</p>
 <p>从上面的代码中我们可以发现，使用值接收者实现接口之后，不管是dog结构体还是结构体指针<em>dog类型的变量都可以赋值给该接口变量。**因为Go语言中有对指针类型变量求值的语法糖，dog指针fugui内部会自动求值</em>fugui。**</p>
 <h4 id="7、2指针接收者实现接口"><a href="#7、2指针接收者实现接口" class="headerlink" title="7、2指针接收者实现接口"></a>7、2指针接收者实现接口</h4><p>同样的代码我们再来测试一下使用指针接收者有什么区别：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">func (d *dog) move() &#123;</span><br><span class="line">	fmt.Println(&quot;狗会动&quot;)</span><br><span class="line">&#125;</span><br><span class="line">func main() &#123;</span><br><span class="line">	var x Mover</span><br><span class="line">	var wangcai &#x3D; dog&#123;&#125; &#x2F;&#x2F; 旺财是dog类型</span><br><span class="line">	x &#x3D; wangcai         &#x2F;&#x2F; x不可以接收dog类型</span><br><span class="line">	var fugui &#x3D; &amp;dog&#123;&#125;  &#x2F;&#x2F; 富贵是*dog类型</span><br><span class="line">	x &#x3D; fugui           &#x2F;&#x2F; x可以接收*dog类型</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight swift"><table><tr><td class="code"><pre><code class="hljs swift"><span class="hljs-function"><span class="hljs-keyword">func</span> (d <span class="hljs-operator">*</span>dog)</span> move() &#123;<br>	fmt.<span class="hljs-type">Println</span>(<span class="hljs-string">&quot;狗会动&quot;</span>)<br>&#125;<br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span>()</span> &#123;<br>	<span class="hljs-keyword">var</span> x <span class="hljs-type">Mover</span><br>	<span class="hljs-keyword">var</span> wangcai <span class="hljs-operator">=</span> dog&#123;&#125; <span class="hljs-comment">// 旺财是dog类型</span><br>	x <span class="hljs-operator">=</span> wangcai         <span class="hljs-comment">// x不可以接收dog类型</span><br>	<span class="hljs-keyword">var</span> fugui <span class="hljs-operator">=</span> <span class="hljs-operator">&amp;</span>dog&#123;&#125;  <span class="hljs-comment">// 富贵是*dog类型</span><br>	x <span class="hljs-operator">=</span> fugui           <span class="hljs-comment">// x可以接收*dog类型</span><br>&#125;<br></code></pre></td></tr></table></figure>
 <p>此时实现Mover接口的是<em>dog类型，所以不能给x传入dog类型的wangcai，此时x只能存储</em>dog类型的值。</p>
 <p><strong>从上面小小总结：</strong>值接受者实现接口，指针和值都可以接受，但是指针接受者实现接口，那就只能是接受指针类型</p>
 <h4 id="7、3面试题"><a href="#7、3面试题" class="headerlink" title="7、3面试题"></a>7、3面试题</h4><p>注意：这是一道你需要回答“能”或者“不能”的题！</p>
 <p>首先请观察下面的这段代码，然后请回答这段代码能不能通过编译？</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">type People interface &#123;</span><br><span class="line">	Speak(string) string</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">type Student struct&#123;&#125;</span><br><span class="line"></span><br><span class="line">func (stu *Student) Speak(think string) (talk string) &#123;</span><br><span class="line">	if think &#x3D;&#x3D; &quot;sb&quot; &#123;</span><br><span class="line">		talk &#x3D; &quot;你是个大帅比&quot;</span><br><span class="line">	&#125; else &#123;</span><br><span class="line">		talk &#x3D; &quot;您好&quot;</span><br><span class="line">	&#125;</span><br><span class="line">	return</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line"></span><br><span class="line">    &#x2F;&#x2F;var peo PeoPle</span><br><span class="line">    &#x2F;&#x2F;stu :&#x3D; Student&#123;&#125;</span><br><span class="line">    &#x2F;&#x2F;peo &#x3D; stu</span><br><span class="line">	var peo People &#x3D; Student&#123;&#125;</span><br><span class="line"></span><br><span class="line">	think :&#x3D; &quot;bitch&quot;</span><br><span class="line">	fmt.Println(peo.Speak(think))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight go"><table><tr><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> People <span class="hljs-keyword">interface</span> &#123;<br>	Speak(<span class="hljs-keyword">string</span>) <span class="hljs-keyword">string</span><br>&#125;<br><br><span class="hljs-keyword">type</span> Student <span class="hljs-keyword">struct</span>&#123;&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(stu *Student)</span> <span class="hljs-title">Speak</span><span class="hljs-params">(think <span class="hljs-keyword">string</span>)</span> <span class="hljs-params">(talk <span class="hljs-keyword">string</span>)</span></span> &#123;<br>	<span class="hljs-keyword">if</span> think == <span class="hljs-string">&quot;sb&quot;</span> &#123;<br>		talk = <span class="hljs-string">&quot;你是个大帅比&quot;</span><br>	&#125; <span class="hljs-keyword">else</span> &#123;<br>		talk = <span class="hljs-string">&quot;您好&quot;</span><br>	&#125;<br>	<span class="hljs-keyword">return</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br><br>    <span class="hljs-comment">//var peo PeoPle</span><br>    <span class="hljs-comment">//stu := Student&#123;&#125;</span><br>    <span class="hljs-comment">//peo = stu</span><br>	<span class="hljs-keyword">var</span> peo People = Student&#123;&#125;<br><br>	think := <span class="hljs-string">&quot;bitch&quot;</span><br>	fmt.Println(peo.Speak(think))<br>&#125;<br></code></pre></td></tr></table></figure>
 
 <p>答案：不能<br>会报错：cannot use (Student literal) (value of type Student) as People value in variable declaration: <strong>missing method Speak (Speak has pointer receiver)</strong></p>
 <h3 id="8、类型与接口的关系"><a href="#8、类型与接口的关系" class="headerlink" title="8、类型与接口的关系"></a>8、类型与接口的关系</h3><h4 id="8、1一个类型实现多个接口"><a href="#8、1一个类型实现多个接口" class="headerlink" title="8、1一个类型实现多个接口"></a>8、1一个类型实现多个接口</h4><p>（java中一个类也是可以实现多个接口的，其实从这里也可以看出go语言的设计是在集齐众多语言的长处，当然没有说它比谁好的意思，我观点一直都是只有最合适的场景。）</p>
 <p>一个类型可以同时实现多个接口，而接口间彼此独立，不知道对方的实现。 例如，狗可以叫，也可以动。我们就分别定义Sayer接口和Mover接口，如下： Mover接口。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; Sayer 接口</span><br><span class="line">type Sayer interface &#123;</span><br><span class="line">	say()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; Mover 接口</span><br><span class="line">type Mover interface &#123;</span><br><span class="line">	move()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight ada"><table><tr><td class="code"><pre><code class="hljs ada">// Sayer 接口<br><span class="hljs-keyword">type</span> <span class="hljs-type">Sayer </span><span class="hljs-keyword">interface</span> &#123;<br>	say()<br>&#125;<br><br>// Mover 接口<br><span class="hljs-keyword">type</span> <span class="hljs-type">Mover </span><span class="hljs-keyword">interface</span> &#123;<br>	move()<br>&#125;<br></code></pre></td></tr></table></figure>
 <p>dog既可以实现Sayer接口，也可以实现Mover接口。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">type dog struct &#123;</span><br><span class="line">	name string</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 实现Sayer接口</span><br><span class="line">func (d dog) say() &#123;</span><br><span class="line">	fmt.Printf(&quot;%s会叫汪汪汪\n&quot;, d.name)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 实现Mover接口</span><br><span class="line">func (d dog) move() &#123;</span><br><span class="line">	fmt.Printf(&quot;%s会动\n&quot;, d.name)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line">	var x Sayer</span><br><span class="line">	var y Mover</span><br><span class="line"></span><br><span class="line">	var a &#x3D; dog&#123;name: &quot;旺财&quot;&#125;</span><br><span class="line">	x &#x3D; a</span><br><span class="line">	y &#x3D; a</span><br><span class="line">	x.say()</span><br><span class="line">	y.move()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight swift"><table><tr><td class="code"><pre><code class="hljs swift">type dog <span class="hljs-class"><span class="hljs-keyword">struct</span> </span>&#123;<br>	name string<br>&#125;<br><br><span class="hljs-comment">// 实现Sayer接口</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> (d dog)</span> say() &#123;<br>	fmt.<span class="hljs-type">Printf</span>(<span class="hljs-string">&quot;%s会叫汪汪汪<span class="hljs-subst">\n</span>&quot;</span>, d.name)<br>&#125;<br><br><span class="hljs-comment">// 实现Mover接口</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> (d dog)</span> move() &#123;<br>	fmt.<span class="hljs-type">Printf</span>(<span class="hljs-string">&quot;%s会动<span class="hljs-subst">\n</span>&quot;</span>, d.name)<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span>()</span> &#123;<br>	<span class="hljs-keyword">var</span> x <span class="hljs-type">Sayer</span><br>	<span class="hljs-keyword">var</span> y <span class="hljs-type">Mover</span><br><br>	<span class="hljs-keyword">var</span> a <span class="hljs-operator">=</span> dog&#123;name: <span class="hljs-string">&quot;旺财&quot;</span>&#125;<br>	x <span class="hljs-operator">=</span> a<br>	y <span class="hljs-operator">=</span> a<br>	x.say()<br>	y.move()<br>&#125;<br></code></pre></td></tr></table></figure>
 <h4 id="8、2多个类型实现同一接口"><a href="#8、2多个类型实现同一接口" class="headerlink" title="8、2多个类型实现同一接口"></a>8、2多个类型实现同一接口</h4><p>Go语言中不同的类型还可以实现同一接口 首先我们定义一个Mover接口，它要求必须由一个move方法。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; Mover 接口</span><br><span class="line">type Mover interface &#123;</span><br><span class="line">	move()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight ada"><table><tr><td class="code"><pre><code class="hljs ada">// Mover 接口<br><span class="hljs-keyword">type</span> <span class="hljs-type">Mover </span><span class="hljs-keyword">interface</span> &#123;<br>	move()<br>&#125;<br></code></pre></td></tr></table></figure>
 <p>例如狗可以动，汽车也可以动，可以使用如下代码实现这个关系：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">type dog struct &#123;</span><br><span class="line">	name string</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">type car struct &#123;</span><br><span class="line">	brand string</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; dog类型实现Mover接口</span><br><span class="line">func (d dog) move() &#123;</span><br><span class="line">	fmt.Printf(&quot;%s会跑\n&quot;, d.name)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; car类型实现Mover接口</span><br><span class="line">func (c car) move() &#123;</span><br><span class="line">	fmt.Printf(&quot;%s速度70迈\n&quot;, c.brand)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight go"><table><tr><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> dog <span class="hljs-keyword">struct</span> &#123;<br>	name <span class="hljs-keyword">string</span><br>&#125;<br><br><span class="hljs-keyword">type</span> car <span class="hljs-keyword">struct</span> &#123;<br>	brand <span class="hljs-keyword">string</span><br>&#125;<br><br><span class="hljs-comment">// dog类型实现Mover接口</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(d dog)</span> <span class="hljs-title">move</span><span class="hljs-params">()</span></span> &#123;<br>	fmt.Printf(<span class="hljs-string">&quot;%s会跑\n&quot;</span>, d.name)<br>&#125;<br><br><span class="hljs-comment">// car类型实现Mover接口</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(c car)</span> <span class="hljs-title">move</span><span class="hljs-params">()</span></span> &#123;<br>	fmt.Printf(<span class="hljs-string">&quot;%s速度70迈\n&quot;</span>, c.brand)<br>&#125;<br></code></pre></td></tr></table></figure>
 <p>这个时候我们在代码中就可以把狗和汽车当成一个会动的物体来处理了，不再需要关注它们具体是什么，只需要调用它们的move方法就可以了。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">func main() &#123;</span><br><span class="line">	var x Mover</span><br><span class="line">	var a &#x3D; dog&#123;name: &quot;旺财&quot;&#125;</span><br><span class="line">	var b &#x3D; car&#123;brand: &quot;保时捷&quot;&#125;</span><br><span class="line">	x &#x3D; a</span><br><span class="line">	x.move()</span><br><span class="line">	x &#x3D; b</span><br><span class="line">	x.move()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight stylus"><table><tr><td class="code"><pre><code class="hljs stylus">func <span class="hljs-selector-tag">main</span>() &#123;<br>	<span class="hljs-selector-tag">var</span> x Mover<br>	<span class="hljs-selector-tag">var</span> <span class="hljs-selector-tag">a</span> = dog&#123;name: <span class="hljs-string">&quot;旺财&quot;</span>&#125;<br>	<span class="hljs-selector-tag">var</span> <span class="hljs-selector-tag">b</span> = car&#123;brand: <span class="hljs-string">&quot;保时捷&quot;</span>&#125;<br>	x = a<br>	x<span class="hljs-selector-class">.move</span>()<br>	x = b<br>	x<span class="hljs-selector-class">.move</span>()<br>&#125;<br></code></pre></td></tr></table></figure>
 <p>上面的代码执行结果如下：</p>
 <p>旺财会跑<br>保时捷速度70迈<br><strong>并且一个接口的方法，不一定需要由一个类型完全实现，接口的方法可以通过在类型中嵌入其他类型或者结构体来实现。</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; WashingMachine 洗衣机</span><br><span class="line">type WashingMachine interface &#123;</span><br><span class="line">	wash()</span><br><span class="line">	dry()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 甩干器</span><br><span class="line">type dryer struct&#123;&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 实现WashingMachine接口的dry()方法</span><br><span class="line">func (d dryer) dry() &#123;</span><br><span class="line">	fmt.Println(&quot;甩一甩&quot;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 海尔洗衣机</span><br><span class="line">type haier struct &#123;</span><br><span class="line">	dryer &#x2F;&#x2F;嵌入甩干器</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 实现WashingMachine接口的wash()方法</span><br><span class="line">func (h haier) wash() &#123;</span><br><span class="line">	fmt.Println(&quot;洗刷刷&quot;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight go"><table><tr><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// WashingMachine 洗衣机</span><br><span class="hljs-keyword">type</span> WashingMachine <span class="hljs-keyword">interface</span> &#123;<br>	wash()<br>	dry()<br>&#125;<br><br><span class="hljs-comment">// 甩干器</span><br><span class="hljs-keyword">type</span> dryer <span class="hljs-keyword">struct</span>&#123;&#125;<br><br><span class="hljs-comment">// 实现WashingMachine接口的dry()方法</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(d dryer)</span> <span class="hljs-title">dry</span><span class="hljs-params">()</span></span> &#123;<br>	fmt.Println(<span class="hljs-string">&quot;甩一甩&quot;</span>)<br>&#125;<br><br><span class="hljs-comment">// 海尔洗衣机</span><br><span class="hljs-keyword">type</span> haier <span class="hljs-keyword">struct</span> &#123;<br>	dryer <span class="hljs-comment">//嵌入甩干器</span><br>&#125;<br><br><span class="hljs-comment">// 实现WashingMachine接口的wash()方法</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(h haier)</span> <span class="hljs-title">wash</span><span class="hljs-params">()</span></span> &#123;<br>	fmt.Println(<span class="hljs-string">&quot;洗刷刷&quot;</span>)<br>&#125;<br></code></pre></td></tr></table></figure>
 <p>我们可以看到haier中嵌入了dryer结构体，然后自己实现了一个，内部嵌入的结构体实现了一个。</p>
 <h3 id="9、接口嵌套"><a href="#9、接口嵌套" class="headerlink" title="9、接口嵌套"></a>9、接口嵌套</h3><p>接口与接口间可以通过嵌套创造出新的接口。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; Sayer 接口</span><br><span class="line">type Sayer interface &#123;</span><br><span class="line">	say()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; Mover 接口</span><br><span class="line">type Mover interface &#123;</span><br><span class="line">	move()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 接口嵌套</span><br><span class="line">type animal interface &#123;</span><br><span class="line">	Sayer</span><br><span class="line">	Mover</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight elm"><table><tr><td class="code"><pre><code class="hljs elm">// <span class="hljs-type">Sayer</span> 接口<br><span class="hljs-keyword">type</span> <span class="hljs-type">Sayer</span> interface &#123;<br>	say()<br>&#125;<br><br>// <span class="hljs-type">Mover</span> 接口<br><span class="hljs-keyword">type</span> <span class="hljs-type">Mover</span> interface &#123;<br>	move()<br>&#125;<br><br>// 接口嵌套<br><span class="hljs-keyword">type</span> animal interface &#123;<br>	<span class="hljs-type">Sayer</span><br>	<span class="hljs-type">Mover</span><br>&#125;<br></code></pre></td></tr></table></figure>
 <p><strong>嵌套得到的接口的使用与普通接口一样，</strong>这里我们让cat实现animal接口：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">type cat struct &#123;</span><br><span class="line">	name string</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func (c cat) say() &#123;</span><br><span class="line">	fmt.Println(&quot;喵喵喵&quot;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func (c cat) move() &#123;</span><br><span class="line">	fmt.Println(&quot;猫会动&quot;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line">	var x animal</span><br><span class="line">	x &#x3D; cat&#123;name: &quot;花花&quot;&#125;</span><br><span class="line">	x.move()</span><br><span class="line">	x.say()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight go"><table><tr><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> cat <span class="hljs-keyword">struct</span> &#123;<br>	name <span class="hljs-keyword">string</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(c cat)</span> <span class="hljs-title">say</span><span class="hljs-params">()</span></span> &#123;<br>	fmt.Println(<span class="hljs-string">&quot;喵喵喵&quot;</span>)<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(c cat)</span> <span class="hljs-title">move</span><span class="hljs-params">()</span></span> &#123;<br>	fmt.Println(<span class="hljs-string">&quot;猫会动&quot;</span>)<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	<span class="hljs-keyword">var</span> x animal<br>	x = cat&#123;name: <span class="hljs-string">&quot;花花&quot;</span>&#125;<br>	x.move()<br>	x.say()<br>&#125;<br></code></pre></td></tr></table></figure>
 <h3 id="10、空接口"><a href="#10、空接口" class="headerlink" title="10、空接口"></a>10、空接口</h3><h4 id="10、1-空接口的定义"><a href="#10、1-空接口的定义" class="headerlink" title="10、1 空接口的定义"></a>10、1 空接口的定义</h4><p>空接口是指没有定义任何方法的接口。因此任何类型都实现了空接口。</p>
 <p>空接口类型的变量可以存储任意类型的变量。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">func main() &#123;</span><br><span class="line">	&#x2F;&#x2F; 定义一个空接口x</span><br><span class="line">	var x interface&#123;&#125;</span><br><span class="line"></span><br><span class="line">	s :&#x3D; &quot;Hello 沙河&quot;</span><br><span class="line">	x &#x3D; s</span><br><span class="line">	fmt.Printf(&quot;type:%T value:%v\n&quot;, x, x)</span><br><span class="line"></span><br><span class="line">	i :&#x3D; 100</span><br><span class="line">	x &#x3D; i</span><br><span class="line">	fmt.Printf(&quot;type:%T value:%v\n&quot;, x, x)</span><br><span class="line"></span><br><span class="line">	b :&#x3D; true</span><br><span class="line">	x &#x3D; b</span><br><span class="line">	fmt.Printf(&quot;type:%T value:%v\n&quot;, x, x)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">type:string value:Hello 沙河</span><br><span class="line">type:int value:100</span><br><span class="line">type:bool value:true</span><br></pre></td></tr></table></figure>
+<figure class="highlight llvm"><table><tr><td class="code"><pre><code class="hljs llvm">func main() &#123;<br>	// 定义一个空接口<span class="hljs-keyword">x</span><br>	var <span class="hljs-keyword">x</span> interface&#123;&#125;<br><br>	s :<span class="hljs-operator">=</span> <span class="hljs-string">&quot;Hello 沙河&quot;</span><br>	<span class="hljs-keyword">x</span> <span class="hljs-operator">=</span> s<br>	fmt.Printf(<span class="hljs-string">&quot;type:%T value:%v\n&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-keyword">x</span><span class="hljs-punctuation">,</span> <span class="hljs-keyword">x</span>)<br><br>	i :<span class="hljs-operator">=</span> <span class="hljs-number">100</span><br>	<span class="hljs-keyword">x</span> <span class="hljs-operator">=</span> i<br>	fmt.Printf(<span class="hljs-string">&quot;type:%T value:%v\n&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-keyword">x</span><span class="hljs-punctuation">,</span> <span class="hljs-keyword">x</span>)<br><br>	b :<span class="hljs-operator">=</span> <span class="hljs-keyword">true</span><br>	<span class="hljs-keyword">x</span> <span class="hljs-operator">=</span> b<br>	fmt.Printf(<span class="hljs-string">&quot;type:%T value:%v\n&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-keyword">x</span><span class="hljs-punctuation">,</span> <span class="hljs-keyword">x</span>)<br>&#125;<br></code></pre></td></tr></table></figure>
+<figure class="highlight go"><table><tr><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span>:<span class="hljs-keyword">string</span> value:Hello 沙河<br><span class="hljs-keyword">type</span>:<span class="hljs-keyword">int</span> value:<span class="hljs-number">100</span><br><span class="hljs-keyword">type</span>:<span class="hljs-keyword">bool</span> value:<span class="hljs-literal">true</span><br></code></pre></td></tr></table></figure>
 
 <h4 id="10、2空接口的应用"><a href="#10、2空接口的应用" class="headerlink" title="10、2空接口的应用"></a>10、2空接口的应用</h4><p>空接口作为函数的参数<br><strong>使用空接口实现可以接收任意类型的函数参数。</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 空接口作为函数参数</span><br><span class="line">func show(a interface&#123;&#125;) &#123;</span><br><span class="line">	fmt.Printf(&quot;type:%T value:%v\n&quot;, a, a)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight swift"><table><tr><td class="code"><pre><code class="hljs swift"><span class="hljs-comment">// 空接口作为函数参数</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">show</span>(a interface&#123;&#125;)</span> &#123;<br>	fmt.<span class="hljs-type">Printf</span>(<span class="hljs-string">&quot;type:%T value:%v<span class="hljs-subst">\n</span>&quot;</span>, a, a)<br>&#125;<br></code></pre></td></tr></table></figure>
 
 <p>空接口作为map的值<br><strong>使用空接口实现可以保存任意值的字典。</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 空接口作为map值</span><br><span class="line">	var studentInfo &#x3D; make(map[string]interface&#123;&#125;)</span><br><span class="line">	studentInfo[&quot;name&quot;] &#x3D; &quot;沙河娜扎&quot;</span><br><span class="line">	studentInfo[&quot;age&quot;] &#x3D; 18</span><br><span class="line">	studentInfo[&quot;married&quot;] &#x3D; false</span><br><span class="line">	fmt.Println(studentInfo)</span><br></pre></td></tr></table></figure>
+<figure class="highlight go"><table><tr><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// 空接口作为map值</span><br>	<span class="hljs-keyword">var</span> studentInfo = <span class="hljs-built_in">make</span>(<span class="hljs-keyword">map</span>[<span class="hljs-keyword">string</span>]<span class="hljs-keyword">interface</span>&#123;&#125;)<br>	studentInfo[<span class="hljs-string">&quot;name&quot;</span>] = <span class="hljs-string">&quot;沙河娜扎&quot;</span><br>	studentInfo[<span class="hljs-string">&quot;age&quot;</span>] = <span class="hljs-number">18</span><br>	studentInfo[<span class="hljs-string">&quot;married&quot;</span>] = <span class="hljs-literal">false</span><br>	fmt.Println(studentInfo)<br></code></pre></td></tr></table></figure>
 
 <h3 id="11、类型断言"><a href="#11、类型断言" class="headerlink" title="11、类型断言"></a>11、类型断言</h3><p>空接口可以存储任意类型的值，那我们如何获取其存储的具体数据呢？</p>
 <h4 id="11、1接口值"><a href="#11、1接口值" class="headerlink" title="11、1接口值"></a>11、1接口值</h4><p>一个接口的值（简称接口值）是由一个具体类型和具体类型的值两部分组成的。这两部分分别称为接口的动态类型和动态值。</p>
 <p>我们来看一个具体的例子：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">var w io.Writer</span><br><span class="line">w &#x3D; os.Stdout</span><br><span class="line">w &#x3D; new(bytes.Buffer)</span><br><span class="line">w &#x3D; nil</span><br></pre></td></tr></table></figure>
+<figure class="highlight abnf"><table><tr><td class="code"><pre><code class="hljs abnf">var w io.Writer<br><span class="hljs-attribute">w</span> = os.Stdout<br><span class="hljs-attribute">w</span> = new(bytes.Buffer)<br><span class="hljs-attribute">w</span> = nil<br></code></pre></td></tr></table></figure>
 <p>请看下图分解：<br><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/interface.png"><br>通过图片我们可以看出，接口其实是有两部分组成的，动态类型和动态值。动态类型赋值时存进去，动态值存的是包含值指针的接口值。后面这句话我是理解成就是一个指针指向这个值，所以就可以通过这个指针调用值实现的那些方法。</p>
 <p>想要判断空接口中的值这个时候就可以使用类型断言，其语法格式：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">x.(T)</span><br></pre></td></tr></table></figure>
+<figure class="highlight excel"><table><tr><td class="code"><pre><code class="hljs excel">x.(<span class="hljs-built_in">T</span>)<br></code></pre></td></tr></table></figure>
 <p>其中：</p>
 <p>x：表示类型为interface{}的变量<br>T：表示断言x可能是的类型。</p>
 <p>该语法返回两个参数，第一个参数是x转化为T类型后的变量，第二个值是一个布尔值，若为true则表示断言成功，为false则表示断言失败。(这里让我想起了我在列表list那个blog说的使用接口进行断言，但是断言失败将会宕机。)<br>举个例子：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">func main() &#123;</span><br><span class="line">	var x interface&#123;&#125;</span><br><span class="line">	x &#x3D; &quot;Hello 沙河&quot;</span><br><span class="line">	v, ok :&#x3D; x.(string)</span><br><span class="line">	if ok &#123;</span><br><span class="line">		fmt.Println(v)</span><br><span class="line">	&#125; else &#123;</span><br><span class="line">		fmt.Println(&quot;类型断言失败&quot;)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">上面的示例中如果要断言多次就需要写多个if判断，这个时候我们可以使用switch语句来实现：</span><br><span class="line"></span><br><span class="line">func justifyType(x interface&#123;&#125;) &#123;</span><br><span class="line">	switch v :&#x3D; x.(type) &#123;</span><br><span class="line">	case string:</span><br><span class="line">		fmt.Printf(&quot;x is a string，value is %v\n&quot;, v)</span><br><span class="line">	case int:</span><br><span class="line">		fmt.Printf(&quot;x is a int is %v\n&quot;, v)</span><br><span class="line">	case bool:</span><br><span class="line">		fmt.Printf(&quot;x is a bool is %v\n&quot;, v)</span><br><span class="line">	default:</span><br><span class="line">		fmt.Println(&quot;unsupport type！&quot;)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight go"><table><tr><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	<span class="hljs-keyword">var</span> x <span class="hljs-keyword">interface</span>&#123;&#125;<br>	x = <span class="hljs-string">&quot;Hello 沙河&quot;</span><br>	v, ok := x.(<span class="hljs-keyword">string</span>)<br>	<span class="hljs-keyword">if</span> ok &#123;<br>		fmt.Println(v)<br>	&#125; <span class="hljs-keyword">else</span> &#123;<br>		fmt.Println(<span class="hljs-string">&quot;类型断言失败&quot;</span>)<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<figure class="highlight go"><table><tr><td class="code"><pre><code class="hljs go">上面的示例中如果要断言多次就需要写多个<span class="hljs-keyword">if</span>判断，这个时候我们可以使用<span class="hljs-keyword">switch</span>语句来实现：<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">justifyType</span><span class="hljs-params">(x <span class="hljs-keyword">interface</span>&#123;&#125;)</span></span> &#123;<br>	<span class="hljs-keyword">switch</span> v := x.(<span class="hljs-keyword">type</span>) &#123;<br>	<span class="hljs-keyword">case</span> <span class="hljs-keyword">string</span>:<br>		fmt.Printf(<span class="hljs-string">&quot;x is a string，value is %v\n&quot;</span>, v)<br>	<span class="hljs-keyword">case</span> <span class="hljs-keyword">int</span>:<br>		fmt.Printf(<span class="hljs-string">&quot;x is a int is %v\n&quot;</span>, v)<br>	<span class="hljs-keyword">case</span> <span class="hljs-keyword">bool</span>:<br>		fmt.Printf(<span class="hljs-string">&quot;x is a bool is %v\n&quot;</span>, v)<br>	<span class="hljs-keyword">default</span>:<br>		fmt.Println(<span class="hljs-string">&quot;unsupport type！&quot;</span>)<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 
 <p>因为空接口可以存储任意类型值的特点，所以空接口在Go语言中的使用十分广泛。</p>
 <p><strong>关于接口需要注意的是，只有当有两个或两个以上的具体类型必须以相同的方式进行处理时才需要定义接口。不要为了接口而写接口，那样只会增加不必要的抽象，导致不必要的运行时损耗。</strong></p>
 <p><em><strong>以上就是本次的全部内容了，希望能对你有所帮助！</strong></em><br>不得不说大佬的笔记真的很全面！！！</p>
 
-            </div>
-          
-
-    
-      <footer class="post-footer">
-		
-		<div class="post-tags">
-		  
-			<a href="/tags/interface/">interface</a>
-		  
-			<a href="/tags/%E6%8E%A5%E5%8F%A3/">接口</a>
-		  
-		</div>
-		
-
-        
-        
-  <nav class="post-nav">
-    
-      <a class="prev" href="/2021/05/26/list%E7%9A%84%E5%AE%9E%E7%8E%B0%E4%B8%8E%E6%93%8D%E4%BD%9C/">
-        <i class="iconfont icon-left"></i>
-        <span class="prev-text nav-default">“list的实现与操作”</span>
-        <span class="prev-text nav-mobile">Prev</span>
-      </a>
-    
-    
-      <a class="next" href="/2021/05/26/golang%E7%9A%84%E5%87%A0%E7%A7%8D%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%8B%BC%E6%8E%A5/">
-        <span class="next-text nav-default">golang的几种字符串拼接</span>
-        <span class="prev-text nav-mobile">Next</span>
-        <i class="iconfont icon-right"></i>
-      </a>
-    
-  </nav>
-
-        
-  <div class="comments" id="comments">
-    
-  </div>
-
-
-      </footer>
-    
-  </article>
-
     </div>
+</div>
+<style>
+    #noneimg img {
+        display: none;
+        z-index: 109;
+        width: 600px !important;
+        border-radius: 0px;
+        position: fixed;
+        box-shadow: 0 0 0px #c3c3c300 !important;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto !important;
+    }
 
-      </div>
+    @media screen and (max-width:600px) {
+        #noneimg img {
+            width: 88%
+        }
+    }
+</style>
+<script>
+    $(function () { $('#article').click(function (e) { if (e.target.tagName == "IMG") { if ($('#nonediv').length == 0) { let MImg = `<div id='noneimg'><img src='${e.target.currentSrc}'></div>`; let MDiv = "<div id='nonediv' style='cursor: pointer;display: none; position: fixed;left: 0;top: 0; right: 0;bottom: 0;background-color: #333;opacity:0.5;z-index: 108;'></div>"; $('#article').append(MDiv); $('#article').append(MImg); $("#nonediv").fadeIn("slow"); $("#noneimg img").fadeIn("slow") } } else { if ($('#nonediv').length !== 0) { $("#noneimg ").fadeOut("slow"); $("#nonediv").fadeOut("slow"); setTimeout(function () { $('#nonediv').remove(); $('#noneimg').remove() }, 500) } } }); $('.article-content').addClass('content-move') });
+</script>
+<div class="Last-Next">
+    
+    <a href="/2021/05/26/list%E7%9A%84%E5%AE%9E%E7%8E%B0%E4%B8%8E%E6%93%8D%E4%BD%9C/">
+        <div class="last">
+            <span>上一篇</span>
+            <p>“list的实现与操作”</p>
+        </div>
+    </a>
+    
 
-      <footer id="colophon"><span class="copyright-year">
     
-        &copy;
+    <a href="/2021/05/26/golang%E7%9A%84%E5%87%A0%E7%A7%8D%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%8B%BC%E6%8E%A5/">
+        <div class="next">
+            <span>下一篇</span>
+            <p>golang的几种字符串拼接</p>
+        </div>
+    </a>
     
-        2014 -
-    
-    2021
-    <span class="footer-author">Russshare.</span>
-    <span class="power-by">
-        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+</div>
+		
+<link rel="stylesheet" href="/css/food.css">
+
+<div class="footer">
+	<div class="Copyright">
+		©2021 By CHANGEQ. 主题：<a
+			style="text-decoration: none;display: contents; color: #898F9F;"
+			target="_blank" rel="noopener" href="https://github.com/qiaobug/hexo-theme-quiet">Quiet</a>
+	</div>
+	<div class="contact">
+		
+		<a target="_blank" rel="noopener" href="https://github.com/qiaobug">
+			<img src="https://cdn.jsdelivr.net/gh/duogongneng/MyBlogImg/imggithub.png" alt="Quiet主题">
+		</a>
+		
+	</div>
+</div>
+
+<script src="/js/jquery.min.js"></script>
+
+
+<script src="/js/gotop.js"></script>
+
+
+<style type="text/css">
+    @media screen and (min-width: 600px) {
+        .goTop>span {
+            display: block;
+            border-radius: 50%;
+            width: 66px;
+            height: 66px;
+            cursor: pointer;
+            opacity: 0.8;
+            background: rgba(18, 24, 58, 0.06);
+            text-align: center;
+            border: 1px solid rgba(18, 24, 58, 0.06);
+
+            transition: border .5s;
+            -moz-transition: border .5s;
+            /* Firefox 4 */
+            -webkit-transition: border .5s;
+            /* Safari 和 Chrome */
+            -o-transition: border .5s;
+            /* Opera */
+        }
+
+        .goTop>span:hover {
+            border: 1px solid #6680B3;
+        }
+
+
+        .goTop {
+            position: fixed;
+            right: 30px;
+            bottom: 80px;
+        }
+
+        .goTop>span>svg {
+            width: 30px;
+            height: 30px;
+            margin-top: 17.5px;
+            opacity: 0.7;
+        }
+
+    }
+
+    @media screen and (max-width: 600px) {
+        .goTop {
+            display: none;
+        }
+    }
+</style>
+<div class="goTop" id="js-go_top">
+    <span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <g>
+                <path d="M13 12v8h-2v-8H4l8-8 8 8z"></path>
+            </g>
+        </svg>
     </span>
-</span>
+</div>
+<script>
+    $('#js-go_top').gotoTop({ offset: 500, speed: 300, animationShow: { 'transform': 'translate(0,0)', 'transition': 'transform .5s ease-in-out' }, animationHide: { 'transform': 'translate(100px,0)', 'transition': 'transform .5s ease-in-out' } });
+</script>
+<script>
+	console.log('\n %c Hexo-Quiet 主题 %c https://github.com/QiaoBug/hexo-theme-quiet \n', 'color: #fadfa3; background: #030307; padding:5px 0;', 'background: #fadfa3; padding:5px 0;')
+</script>
+	</body>
 
-      </footer>
-
-      <div class="back-to-top" id="back-to-top">
-        <i class="iconfont icon-up"></i>
-      </div>
-    </div>
-    
-
-
-    
-
-
-
-
-  
-    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
-  
-
-  
-
-    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
-<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
-
-  </body>
 </html>

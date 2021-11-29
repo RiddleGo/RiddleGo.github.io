@@ -1,136 +1,276 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
-  <head>
-    
-<meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+<html>
+
+	<head>
+		
+<title>剑指offer12-Quiet</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="shortcut icon" type="image/x-icon" href="/image/favicon.ico">
 
 
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="keywords" content="剑指offer,">
+<meta name="description" content="">
 
 
-
-  <meta name="description" content="剑指offer12"/>
-
+<script src="/js/jquery.min.js"></script>
 
 
+	<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+</head>
 
-  <meta name="keywords" content="剑指offer," />
-
-
-
-
-
-  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+	<body>
+		
+<link rel="stylesheet" href="/css/page.css">
 
 
+<link rel="stylesheet" href="/css/page_cente.css">
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+<link rel="stylesheet" href="/css/atom-one-dark.css">
 
 
+<link rel="stylesheet" href="/css/header.css">
 
-<link rel="canonical" href="https://riddlego.github.io/2021/08/03/剑指offer12/"/>
-
-
-<meta name="description" content="剑指 Offer 12. 矩阵中的路径给定一个 m x n 二维字符网格 board 和一个字符串单词 word 。如果 word 存在于网格中，返回 true ；否则，返回 false 。 单词必须按照字母顺序，通过相邻的单元格内的字母构成，其中“相邻”单元格是那些水平相邻或垂直相邻的单元格。同一个单元格内的字母不允许被重复使用。   例如，在下面的 3×4 的矩阵中包含单词 “ABCCED”（">
-<meta property="og:type" content="article">
-<meta property="og:title" content="剑指offer12">
-<meta property="og:url" content="https://riddlego.github.io/2021/08/03/%E5%89%91%E6%8C%87offer12/index.html">
-<meta property="og:site_name" content="RiddleGo">
-<meta property="og:description" content="剑指 Offer 12. 矩阵中的路径给定一个 m x n 二维字符网格 board 和一个字符串单词 word 。如果 word 存在于网格中，返回 true ；否则，返回 false 。 单词必须按照字母顺序，通过相邻的单元格内的字母构成，其中“相邻”单元格是那些水平相邻或垂直相邻的单元格。同一个单元格内的字母不允许被重复使用。   例如，在下面的 3×4 的矩阵中包含单词 “ABCCED”（">
-<meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2021-08-02T16:24:05.000Z">
-<meta property="article:modified_time" content="2021-08-05T14:31:35.788Z">
-<meta property="article:author" content="Russshare">
-<meta property="article:tag" content="剑指offer">
-<meta name="twitter:card" content="summary">
-
-
-<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
-<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
-
-
-
-
-
-<script type="text/javascript">
-  var themeConfig = {
-    fancybox: {
-      enable: false
-    },
-  };
-</script>
-
-
-
-
-  
-
-
-
-    <title> 剑指offer12 - RiddleGo </title>
-  <meta name="generator" content="Hexo 5.4.0"></head>
-
-  <body>
-    <div id="page">
-      <header id="masthead"><div class="site-header-inner">
-    <h1 class="site-title">
-        <a href="/." class="logo">RiddleGo</a>
-    </h1>
-
-    <nav id="nav-top">
+	<div class="header">
+		<div class="header-top">
+			<div class="h-left">
+				<a href="/">
+					<img src="/image/logo.png" alt="Quiet">
+				</a>
+			</div>
+			<div class="h-right">
+				<ul>
+					
+						
+								<li>
+									<a href="/">
+										HOME
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/archives">
+										ARCHIVE
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/categories">
+										CATEGORIES
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/tags">
+										TAGS
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/links">
+										LINKS
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/about">
+										ABOUT
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+				</ul>
+			</div>
+			<div class="h-right-close">
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+					<path fill="none" d="M0 0h24v24H0z" />
+					<path d="M3 4h18v2H3V4zm0 7h18v2H3v-2zm0 7h18v2H3v-2z" fill="rgba(68,68,68,1)" />
+				</svg>
+			</div>
+		</div>
+	</div>
+	<div class="sidebar">
+    <div class="topo">
+        <h2>CHANGEQ</h2>
+    </div>
+    <ul>
         
-            <ul id="menu-top" class="nav-top-items">
-                
-                    <li class="menu-item">
-                        <a href="/archives">
-                            
-                            
-                                Archives
-                            
-                        </a>
-                    </li>
-                
-                    <li class="menu-item">
-                        <a href="/about">
-                            
-                            
-                                About
-                            
-                        </a>
-                    </li>
-                
-            </ul>
+        <li>
+            <a href="/">HOME</a>
+        </li>
         
-  </nav>
+        <li>
+            <a href="/archives">ARCHIVE</a>
+        </li>
+        
+        <li>
+            <a href="/categories">CATEGORIES</a>
+        </li>
+        
+        <li>
+            <a href="/tags">TAGS</a>
+        </li>
+        
+        <li>
+            <a href="/links">LINKS</a>
+        </li>
+        
+        <li>
+            <a href="/about">ABOUT</a>
+        </li>
+        
+    </ul>
+    <div class="my_foot">
+        
+        <a target="_blank" rel="noopener" href="https://github.com/qiaobug">
+            <img src="https://cdn.jsdelivr.net/gh/duogongneng/MyBlogImg/imggithub.png" alt="Quiet主题">
+        </a>
+        
+    </div>
 </div>
+<div class='shelter'
+    style='cursor: pointer;display: none; position: fixed;left: 0;top: 0; right: 0;bottom: 0;background-color: #333;opacity:0.5;z-index: 108;'>
+</div>
+<style>
+    .sidebar {
+        width: 0;
+        height: 100%;
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        background: #fff;
+        z-index: 999;
+        text-align: center;
+        box-shadow: -6px 0 20px rgba(98, 94, 94, .815)
+    }
 
-      </header>
-      <div id="content">
-        
-    <div id="primary">
-        
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          剑指offer12
-        
-      </h1>
+    .topo {
+        width: 100%;
+        height: 200px;
+        background: url(https://api.ixiaowai.cn/gqapi/gqapi.php) no-repeat;
+        background-size: 100% 100%;
+        position: relative;
+        display: flex;
+        align-items: flex-end
+    }
 
-      <time class="post-time">
-          8月 03 2021
-      </time>
-    </header>
+    .topo h2 {
+        color: #fff;
+        z-index: 1;
+        position: relative;
+        margin: 0 0 10px 10px;
+        font-size: 1.2em;
+        box-sizing: border-box
+    }
 
+    .topo:before {
+        content: '';
+        background-image: url(/image/pattern.png);
+        background-repeat: repeat;
+        height: 100%;
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 100%;
+        z-index: 1
+    }
 
+    .sidebar ul {
+        width: 100%;
+        margin-top: 50px
+    }
 
-    
-            <div class="post-content">
-            <h2 id="剑指-Offer-12-矩阵中的路径"><a href="#剑指-Offer-12-矩阵中的路径" class="headerlink" title="剑指 Offer 12. 矩阵中的路径"></a>剑指 Offer 12. 矩阵中的路径</h2><p>给定一个 m x n 二维字符网格 board 和一个字符串单词 word 。如果 word 存在于网格中，返回 true ；否则，返回 false 。</p>
+    .sidebar ul li {
+        height: 50px;
+        list-style: none;
+        font-size: 1.2em;
+        text-align: right;
+        margin-right: 10px
+    }
+
+    .sidebar ul li a {
+        display: grid;
+        color: #5d606a;
+        text-overflow: ellipsis;
+        width: 100%;
+        text-decoration: none
+    }
+
+    .my_foot {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        position: absolute;
+        bottom: 0
+    }
+
+    .my_foot a {
+        text-decoration: none;
+        margin-right: 10px;
+        display: inline-block
+    }
+
+    .my_foot a img {
+        width: 30px;
+        height: 30px
+    }
+</style>
+
+<script>
+    $(function () { $('.h-right-close>svg').click(function () { $('.sidebar').animate({ width: "66%" }, 500); $('.shelter').fadeIn("slow") }); $('.shelter').click(function (e) { $('.sidebar').animate({ width: "0" }, 500); $('.shelter').fadeOut("slow") }) })
+</script>
+		<script>
+			$(function () { $(window).scroll(function () { if ($(document).scrollTop() > 100) { $(".header-top").removeClass("header-move2"); $('.header-top').addClass('header-move1') } else { $(".header-top").removeClass("header-move1"); $('.header-top').addClass('header-move2') } }) });
+		</script>
+<div class="header-bg ">
+    <div class="bg-content">
+        <ul class="tag">
+            
+            
+            <li><a href="/tags/剑指offer">剑指offer</a></li>
+            
+            
+        </ul>
+        <h1>剑指offer12</h1>
+        <div class="article-info">
+            <div class="article-author">
+                
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+                    <g>
+                        <path fill="#12183A"
+                            d="M6.187 15.265A6.47 6.47 0 0 0 10 16.5a6.47 6.47 0 0 0 3.813-1.235A4.99 4.99 0 0 0 10 13.5a4.99 4.99 0 0 0-3.813 1.765zM5.082 14.25A6.485 6.485 0 0 1 10 12c1.965 0 3.726.872 4.918 2.25a6.5 6.5 0 1 0-9.836 0zM10 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0-1.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z">
+                        </path>
+                    </g>
+                </svg>
+                
+                <span> <a href="">CHANGEQ</a></span>
+                <p>2021-08-03 00:24:05</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="article-content">
+    <div id="article" class="content">
+        <h2 id="剑指-Offer-12-矩阵中的路径"><a href="#剑指-Offer-12-矩阵中的路径" class="headerlink" title="剑指 Offer 12. 矩阵中的路径"></a>剑指 Offer 12. 矩阵中的路径</h2><p>给定一个 m x n 二维字符网格 board 和一个字符串单词 word 。如果 word 存在于网格中，返回 true ；否则，返回 false 。</p>
 <p>单词必须按照字母顺序，通过相邻的单元格内的字母构成，其中“相邻”单元格是那些水平相邻或垂直相邻的单元格。同一个单元格内的字母不允许被重复使用。</p>
 <p> </p>
 <p>例如，在下面的 3×4 的矩阵中包含单词 “ABCCED”（单词中的字母已标出）。</p>
@@ -144,7 +284,7 @@
 <p>我拿到这个道题，有了回溯这个想法以后第一个时间，我应该怎么入手啊，我拿到了一个二维的数组。</p>
 <pre><code class="入手：我们要知道我们需要匹配这个word的字符串，当我们遍历到匹配完所有的时候，这个时候就可以返回true。">
 那么我们这个匹配函数，需要做的就是：
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">1、定位矩阵字符串的位置---通过i,j</span><br><span class="line">2、记录匹配字符的长度---刚刚起始的时候一个都没有，是0</span><br><span class="line">3、当我匹配到了，证明我来过。</span><br><span class="line">4、在进入下一个递归（dfs）之后</span><br><span class="line">5、记得去掉我曾经来过的那个标记</span><br><span class="line">6、为什么这里要去掉那个标志？这个就是回溯的一个关键点</span><br><span class="line">    你想想，我返回的是res，当有一个是成立的时候，它就为true，如果不是，那我肯定要进入另外一个中开始新的dfs，这个时候你肯定不能继续保留你修改的东西。所以啊，就是我觉得可以这样理解，就是能行，我就拿来试一下，能行我自己心里有个数，用完我就还原，不影响你其他人的dfs。</span><br></pre></td></tr></table></figure>
+<figure class="highlight ada"><table><tr><td class="code"><pre><code class="hljs ada"><span class="hljs-number">1</span>、定位矩阵字符串的位置<span class="hljs-comment">---通过i,j</span><br><span class="hljs-number">2</span>、记录匹配字符的长度<span class="hljs-comment">---刚刚起始的时候一个都没有，是0</span><br><span class="hljs-number">3</span>、当我匹配到了，证明我来过。<br><span class="hljs-number">4</span>、在进入下一个递归（dfs）之后<br><span class="hljs-number">5</span>、记得去掉我曾经来过的那个标记<br><span class="hljs-number">6</span>、为什么这里要去掉那个标志？这个就是回溯的一个关键点<br>    你想想，我返回的是res，当有一个是成立的时候，它就为<span class="hljs-literal">true</span>，如果不是，那我肯定要进入另外一个中开始新的dfs，这个时候你肯定不能继续保留你修改的东西。所以啊，就是我觉得可以这样理解，就是能行，我就拿来试一下，能行我自己心里有个数，用完我就还原，不影响你其他人的dfs。<br></code></pre></td></tr></table></figure>
 
 
 
@@ -155,11 +295,11 @@
 这个讲了关于回溯法的框架
 废话不多说，直接上回溯算法框架。解决一个回溯问题，实际上就是一个决策树的遍历过程。你只需要思考 3 个问题：
 
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1、路径：也就是已经做出的选择。</span><br><span class="line"></span><br><span class="line">2、选择列表：也就是你当前可以做的选择。</span><br><span class="line"></span><br><span class="line">3、结束条件：也就是到达决策树底层，无法再做选择的条件。</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><code class="hljs plain">1、路径：也就是已经做出的选择。<br><br>2、选择列表：也就是你当前可以做的选择。<br><br>3、结束条件：也就是到达决策树底层，无法再做选择的条件。<br></code></pre></td></tr></table></figure>
 
 代码框架
 
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">result &#x3D; []</span><br><span class="line">def backtrack(路径, 选择列表):</span><br><span class="line">    if 满足结束条件:</span><br><span class="line">        result.add(路径)</span><br><span class="line">        return</span><br><span class="line"></span><br><span class="line">    for 选择 in 选择列表:</span><br><span class="line">        做选择</span><br><span class="line">        backtrack(路径, 选择列表)</span><br><span class="line">        撤销选择</span><br></pre></td></tr></table></figure>
+<figure class="highlight livecodeserver"><table><tr><td class="code"><pre><code class="hljs livecodeserver"><span class="hljs-built_in">result</span> = []<br>def backtrack(路径, 选择列表):<br>    <span class="hljs-keyword">if</span> 满足结束条件:<br>        <span class="hljs-built_in">result</span>.<span class="hljs-built_in">add</span>(路径)<br>        <span class="hljs-literal">return</span><br><br>    <span class="hljs-keyword">for</span> 选择 <span class="hljs-keyword">in</span> 选择列表:<br>        做选择<br>        backtrack(路径, 选择列表)<br>        撤销选择<br></code></pre></td></tr></table></figure>
 
 
 
@@ -167,93 +307,144 @@
 
 其实你想做出一道题很简单（简单个屁），但是真的能做到一类题都能触类旁通，那是真的很厉害了。
 
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">class Solution:</span><br><span class="line">    def exist(self,board: List[List[str]], word: str)-&gt;bool:</span><br><span class="line">        for i in range(len(board)):</span><br><span class="line">            for j in range(len(board[0])):</span><br><span class="line">                if dfs(i,j,0):</span><br><span class="line">                    return True</span><br><span class="line">        return false</span><br><span class="line"></span><br><span class="line">        def dfs(i,j,k):</span><br><span class="line">            if not 0&lt;&#x3D;i&lt;len(board) or not 0&lt;&#x3D;j &lt; len(board[0]) or board[i][j] !&#x3D; word[k]: return False</span><br><span class="line">            #满足结束条件:</span><br><span class="line">            if k &#x3D;&#x3D; len(word) - 1: return True</span><br><span class="line">            #路径.add(选择)</span><br><span class="line">            board[i][j]&#x3D;&#x3D;&#39;&#39;</span><br><span class="line">            #backtrack(路径, 选择列表)</span><br><span class="line">            res&#x3D;dfs(i+1,j,k+1) or dfs(i-1,j,k+1) or dfs(i,j+1,k+1) or dfs(i,j-1,k+1)</span><br><span class="line">            #路径.remove(选择)</span><br><span class="line">            board[i][j]&#x3D;word[k]</span><br><span class="line">            #将该选择再加入选择列表 </span><br><span class="line">            return res</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="code"><pre><code class="hljs python"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Solution</span>:</span><br>    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">exist</span>(<span class="hljs-params">self,board: <span class="hljs-type">List</span>[<span class="hljs-type">List</span>[<span class="hljs-built_in">str</span>]], word: <span class="hljs-built_in">str</span></span>)-&gt;<span class="hljs-built_in">bool</span>:</span><br>        <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-built_in">len</span>(board)):<br>            <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-built_in">len</span>(board[<span class="hljs-number">0</span>])):<br>                <span class="hljs-keyword">if</span> dfs(i,j,<span class="hljs-number">0</span>):<br>                    <span class="hljs-keyword">return</span> <span class="hljs-literal">True</span><br>        <span class="hljs-keyword">return</span> false<br><br>        <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">dfs</span>(<span class="hljs-params">i,j,k</span>):</span><br>            <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> <span class="hljs-number">0</span>&lt;=i&lt;<span class="hljs-built_in">len</span>(board) <span class="hljs-keyword">or</span> <span class="hljs-keyword">not</span> <span class="hljs-number">0</span>&lt;=j &lt; <span class="hljs-built_in">len</span>(board[<span class="hljs-number">0</span>]) <span class="hljs-keyword">or</span> board[i][j] != word[k]: <span class="hljs-keyword">return</span> <span class="hljs-literal">False</span><br>            <span class="hljs-comment">#满足结束条件:</span><br>            <span class="hljs-keyword">if</span> k == <span class="hljs-built_in">len</span>(word) - <span class="hljs-number">1</span>: <span class="hljs-keyword">return</span> <span class="hljs-literal">True</span><br>            <span class="hljs-comment">#路径.add(选择)</span><br>            board[i][j]==<span class="hljs-string">&#x27;&#x27;</span><br>            <span class="hljs-comment">#backtrack(路径, 选择列表)</span><br>            res=dfs(i+<span class="hljs-number">1</span>,j,k+<span class="hljs-number">1</span>) <span class="hljs-keyword">or</span> dfs(i-<span class="hljs-number">1</span>,j,k+<span class="hljs-number">1</span>) <span class="hljs-keyword">or</span> dfs(i,j+<span class="hljs-number">1</span>,k+<span class="hljs-number">1</span>) <span class="hljs-keyword">or</span> dfs(i,j-<span class="hljs-number">1</span>,k+<span class="hljs-number">1</span>)<br>            <span class="hljs-comment">#路径.remove(选择)</span><br>            board[i][j]=word[k]<br>            <span class="hljs-comment">#将该选择再加入选择列表 </span><br>            <span class="hljs-keyword">return</span> res<br></code></pre></td></tr></table></figure>
 
 套用框架
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">class Solution:</span><br><span class="line">    def exits(self,board:List[List[str]],word:str)-&gt;bool:</span><br><span class="line">         for i in range len(board):</span><br><span class="line">            for j in range len(board[0]):</span><br><span class="line">            #从整个矩形的任何位置出发</span><br><span class="line">                if dfs(i,j,0):</span><br><span class="line">                    return True</span><br><span class="line">        return false</span><br><span class="line">        </span><br><span class="line">        dfs(i,j,k):</span><br><span class="line">            if not 0&lt;&#x3D;i&lt;len(board) or not 0&lt;&#x3D;j&lt;len(board[0]) or board[i][j] !&#x3D; work[k]:</span><br><span class="line">                return False</span><br><span class="line">            if k&#x3D;&#x3D;len(word)-1:return True</span><br><span class="line"></span><br><span class="line">            borad[i][j]&#x3D;&#x3D;&#39;&#39;</span><br><span class="line">            res&#x3D;dfs(i + 1, j, k + 1) or dfs(i - 1, j, k + 1) or dfs(i, j + 1, k + 1) or dfs(i, j - 1, k + 1)</span><br><span class="line">            borad[i][j]&#x3D;word[k]</span><br><span class="line">            return res</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="code"><pre><code class="hljs python"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Solution</span>:</span><br>    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">exits</span>(<span class="hljs-params">self,board:<span class="hljs-type">List</span>[<span class="hljs-type">List</span>[<span class="hljs-built_in">str</span>]],word:<span class="hljs-built_in">str</span></span>)-&gt;<span class="hljs-built_in">bool</span>:</span><br>         <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span> <span class="hljs-built_in">len</span>(board):<br>            <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span> <span class="hljs-built_in">len</span>(board[<span class="hljs-number">0</span>]):<br>            <span class="hljs-comment">#从整个矩形的任何位置出发</span><br>                <span class="hljs-keyword">if</span> dfs(i,j,<span class="hljs-number">0</span>):<br>                    <span class="hljs-keyword">return</span> <span class="hljs-literal">True</span><br>        <span class="hljs-keyword">return</span> false<br>        <br>        dfs(i,j,k):<br>            <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> <span class="hljs-number">0</span>&lt;=i&lt;<span class="hljs-built_in">len</span>(board) <span class="hljs-keyword">or</span> <span class="hljs-keyword">not</span> <span class="hljs-number">0</span>&lt;=j&lt;<span class="hljs-built_in">len</span>(board[<span class="hljs-number">0</span>]) <span class="hljs-keyword">or</span> board[i][j] != work[k]:<br>                <span class="hljs-keyword">return</span> <span class="hljs-literal">False</span><br>            <span class="hljs-keyword">if</span> k==<span class="hljs-built_in">len</span>(word)-<span class="hljs-number">1</span>:<span class="hljs-keyword">return</span> <span class="hljs-literal">True</span><br><br>            borad[i][j]==<span class="hljs-string">&#x27;&#x27;</span><br>            res=dfs(i + <span class="hljs-number">1</span>, j, k + <span class="hljs-number">1</span>) <span class="hljs-keyword">or</span> dfs(i - <span class="hljs-number">1</span>, j, k + <span class="hljs-number">1</span>) <span class="hljs-keyword">or</span> dfs(i, j + <span class="hljs-number">1</span>, k + <span class="hljs-number">1</span>) <span class="hljs-keyword">or</span> dfs(i, j - <span class="hljs-number">1</span>, k + <span class="hljs-number">1</span>)<br>            borad[i][j]=word[k]<br>            <span class="hljs-keyword">return</span> res<br></code></pre></td></tr></table></figure>
 </code></pre>
 
-            </div>
-          
-
-    
-      <footer class="post-footer">
-		
-		<div class="post-tags">
-		  
-			<a href="/tags/%E5%89%91%E6%8C%87offer/">剑指offer</a>
-		  
-		</div>
-		
-
-        
-        
-  <nav class="post-nav">
-    
-      <a class="prev" href="/2021/08/03/%E5%89%91%E6%8C%87offer13/">
-        <i class="iconfont icon-left"></i>
-        <span class="prev-text nav-default">剑指offer13</span>
-        <span class="prev-text nav-mobile">Prev</span>
-      </a>
-    
-    
-      <a class="next" href="/2021/08/03/%E5%89%91%E6%8C%87offer09/">
-        <span class="next-text nav-default">剑指offer09</span>
-        <span class="prev-text nav-mobile">Next</span>
-        <i class="iconfont icon-right"></i>
-      </a>
-    
-  </nav>
-
-        
-  <div class="comments" id="comments">
-    
-  </div>
-
-
-      </footer>
-    
-  </article>
-
     </div>
+</div>
+<style>
+    #noneimg img {
+        display: none;
+        z-index: 109;
+        width: 600px !important;
+        border-radius: 0px;
+        position: fixed;
+        box-shadow: 0 0 0px #c3c3c300 !important;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto !important;
+    }
 
-      </div>
+    @media screen and (max-width:600px) {
+        #noneimg img {
+            width: 88%
+        }
+    }
+</style>
+<script>
+    $(function () { $('#article').click(function (e) { if (e.target.tagName == "IMG") { if ($('#nonediv').length == 0) { let MImg = `<div id='noneimg'><img src='${e.target.currentSrc}'></div>`; let MDiv = "<div id='nonediv' style='cursor: pointer;display: none; position: fixed;left: 0;top: 0; right: 0;bottom: 0;background-color: #333;opacity:0.5;z-index: 108;'></div>"; $('#article').append(MDiv); $('#article').append(MImg); $("#nonediv").fadeIn("slow"); $("#noneimg img").fadeIn("slow") } } else { if ($('#nonediv').length !== 0) { $("#noneimg ").fadeOut("slow"); $("#nonediv").fadeOut("slow"); setTimeout(function () { $('#nonediv').remove(); $('#noneimg').remove() }, 500) } } }); $('.article-content').addClass('content-move') });
+</script>
+<div class="Last-Next">
+    
+    <a href="/2021/08/03/%E5%89%91%E6%8C%87offer13/">
+        <div class="last">
+            <span>上一篇</span>
+            <p>剑指offer13</p>
+        </div>
+    </a>
+    
 
-      <footer id="colophon"><span class="copyright-year">
     
-        &copy;
+    <a href="/2021/08/03/%E5%89%91%E6%8C%87offer09/">
+        <div class="next">
+            <span>下一篇</span>
+            <p>剑指offer09</p>
+        </div>
+    </a>
     
-        2014 -
-    
-    2021
-    <span class="footer-author">Russshare.</span>
-    <span class="power-by">
-        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+</div>
+		
+<link rel="stylesheet" href="/css/food.css">
+
+<div class="footer">
+	<div class="Copyright">
+		©2021 By CHANGEQ. 主题：<a
+			style="text-decoration: none;display: contents; color: #898F9F;"
+			target="_blank" rel="noopener" href="https://github.com/qiaobug/hexo-theme-quiet">Quiet</a>
+	</div>
+	<div class="contact">
+		
+		<a target="_blank" rel="noopener" href="https://github.com/qiaobug">
+			<img src="https://cdn.jsdelivr.net/gh/duogongneng/MyBlogImg/imggithub.png" alt="Quiet主题">
+		</a>
+		
+	</div>
+</div>
+
+<script src="/js/jquery.min.js"></script>
+
+
+<script src="/js/gotop.js"></script>
+
+
+<style type="text/css">
+    @media screen and (min-width: 600px) {
+        .goTop>span {
+            display: block;
+            border-radius: 50%;
+            width: 66px;
+            height: 66px;
+            cursor: pointer;
+            opacity: 0.8;
+            background: rgba(18, 24, 58, 0.06);
+            text-align: center;
+            border: 1px solid rgba(18, 24, 58, 0.06);
+
+            transition: border .5s;
+            -moz-transition: border .5s;
+            /* Firefox 4 */
+            -webkit-transition: border .5s;
+            /* Safari 和 Chrome */
+            -o-transition: border .5s;
+            /* Opera */
+        }
+
+        .goTop>span:hover {
+            border: 1px solid #6680B3;
+        }
+
+
+        .goTop {
+            position: fixed;
+            right: 30px;
+            bottom: 80px;
+        }
+
+        .goTop>span>svg {
+            width: 30px;
+            height: 30px;
+            margin-top: 17.5px;
+            opacity: 0.7;
+        }
+
+    }
+
+    @media screen and (max-width: 600px) {
+        .goTop {
+            display: none;
+        }
+    }
+</style>
+<div class="goTop" id="js-go_top">
+    <span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <g>
+                <path d="M13 12v8h-2v-8H4l8-8 8 8z"></path>
+            </g>
+        </svg>
     </span>
-</span>
+</div>
+<script>
+    $('#js-go_top').gotoTop({ offset: 500, speed: 300, animationShow: { 'transform': 'translate(0,0)', 'transition': 'transform .5s ease-in-out' }, animationHide: { 'transform': 'translate(100px,0)', 'transition': 'transform .5s ease-in-out' } });
+</script>
+<script>
+	console.log('\n %c Hexo-Quiet 主题 %c https://github.com/QiaoBug/hexo-theme-quiet \n', 'color: #fadfa3; background: #030307; padding:5px 0;', 'background: #fadfa3; padding:5px 0;')
+</script>
+	</body>
 
-      </footer>
-
-      <div class="back-to-top" id="back-to-top">
-        <i class="iconfont icon-up"></i>
-      </div>
-    </div>
-    
-
-
-    
-
-
-
-
-  
-    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
-  
-
-  
-
-    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
-<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
-
-  </body>
 </html>

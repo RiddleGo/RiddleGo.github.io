@@ -1,140 +1,280 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
-  <head>
-    
-<meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+<html>
+
+	<head>
+		
+<title>关于Linux—shell你必须知道的-Quiet</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="shortcut icon" type="image/x-icon" href="/image/favicon.ico">
 
 
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="keywords" content="linux,shell,脚本语言,">
+<meta name="description" content="">
 
 
-
-  <meta name="description" content="关于Linux—shell你必须知道的"/>
-
+<script src="/js/jquery.min.js"></script>
 
 
+	<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+</head>
 
-  <meta name="keywords" content="linux,shell,脚本语言," />
-
-
-
-
-
-  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+	<body>
+		
+<link rel="stylesheet" href="/css/page.css">
 
 
+<link rel="stylesheet" href="/css/page_cente.css">
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+<link rel="stylesheet" href="/css/atom-one-dark.css">
 
 
+<link rel="stylesheet" href="/css/header.css">
 
-<link rel="canonical" href="https://riddlego.github.io/2021/06/24/关于Linux—shell你必须知道的/"/>
-
-
-<meta name="description" content="内容来自labuladong公众号 我个人很喜欢使用 Linux 系统，虽然说 Windows 的图形化界面做的确实比 Linux 好，但是对脚本的支持太差了。一开始有点不习惯命令行操作，但是熟悉了之后反而发现移动鼠标点点点才是浪费时间的罪魁祸首。。。 那么对于 Linux 命令行，本文不是介绍某些命令的用法，而是说明一些简单却特别容易让人迷惑的细节问题。 1、标准输入和命令参数的区别。 2、在后">
-<meta property="og:type" content="article">
-<meta property="og:title" content="关于Linux—shell你必须知道的">
-<meta property="og:url" content="https://riddlego.github.io/2021/06/24/%E5%85%B3%E4%BA%8ELinux%E2%80%94shell%E4%BD%A0%E5%BF%85%E9%A1%BB%E7%9F%A5%E9%81%93%E7%9A%84/index.html">
-<meta property="og:site_name" content="RiddleGo">
-<meta property="og:description" content="内容来自labuladong公众号 我个人很喜欢使用 Linux 系统，虽然说 Windows 的图形化界面做的确实比 Linux 好，但是对脚本的支持太差了。一开始有点不习惯命令行操作，但是熟悉了之后反而发现移动鼠标点点点才是浪费时间的罪魁祸首。。。 那么对于 Linux 命令行，本文不是介绍某些命令的用法，而是说明一些简单却特别容易让人迷惑的细节问题。 1、标准输入和命令参数的区别。 2、在后">
-<meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/linuxprocess/011.png">
-<meta property="article:published_time" content="2021-06-24T01:53:24.000Z">
-<meta property="article:modified_time" content="2021-06-29T09:58:29.126Z">
-<meta property="article:author" content="Russshare">
-<meta property="article:tag" content="linux">
-<meta property="article:tag" content="shell">
-<meta property="article:tag" content="脚本语言">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/linuxprocess/011.png">
-
-
-<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
-<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
-
-
-
-
-
-<script type="text/javascript">
-  var themeConfig = {
-    fancybox: {
-      enable: false
-    },
-  };
-</script>
-
-
-
-
-  
-
-
-
-    <title> 关于Linux—shell你必须知道的 - RiddleGo </title>
-  <meta name="generator" content="Hexo 5.4.0"></head>
-
-  <body>
-    <div id="page">
-      <header id="masthead"><div class="site-header-inner">
-    <h1 class="site-title">
-        <a href="/." class="logo">RiddleGo</a>
-    </h1>
-
-    <nav id="nav-top">
+	<div class="header">
+		<div class="header-top">
+			<div class="h-left">
+				<a href="/">
+					<img src="/image/logo.png" alt="Quiet">
+				</a>
+			</div>
+			<div class="h-right">
+				<ul>
+					
+						
+								<li>
+									<a href="/">
+										HOME
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/archives">
+										ARCHIVE
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/categories">
+										CATEGORIES
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/tags">
+										TAGS
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/links">
+										LINKS
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/about">
+										ABOUT
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+				</ul>
+			</div>
+			<div class="h-right-close">
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+					<path fill="none" d="M0 0h24v24H0z" />
+					<path d="M3 4h18v2H3V4zm0 7h18v2H3v-2zm0 7h18v2H3v-2z" fill="rgba(68,68,68,1)" />
+				</svg>
+			</div>
+		</div>
+	</div>
+	<div class="sidebar">
+    <div class="topo">
+        <h2>CHANGEQ</h2>
+    </div>
+    <ul>
         
-            <ul id="menu-top" class="nav-top-items">
-                
-                    <li class="menu-item">
-                        <a href="/archives">
-                            
-                            
-                                Archives
-                            
-                        </a>
-                    </li>
-                
-                    <li class="menu-item">
-                        <a href="/about">
-                            
-                            
-                                About
-                            
-                        </a>
-                    </li>
-                
-            </ul>
+        <li>
+            <a href="/">HOME</a>
+        </li>
         
-  </nav>
+        <li>
+            <a href="/archives">ARCHIVE</a>
+        </li>
+        
+        <li>
+            <a href="/categories">CATEGORIES</a>
+        </li>
+        
+        <li>
+            <a href="/tags">TAGS</a>
+        </li>
+        
+        <li>
+            <a href="/links">LINKS</a>
+        </li>
+        
+        <li>
+            <a href="/about">ABOUT</a>
+        </li>
+        
+    </ul>
+    <div class="my_foot">
+        
+        <a target="_blank" rel="noopener" href="https://github.com/qiaobug">
+            <img src="https://cdn.jsdelivr.net/gh/duogongneng/MyBlogImg/imggithub.png" alt="Quiet主题">
+        </a>
+        
+    </div>
 </div>
+<div class='shelter'
+    style='cursor: pointer;display: none; position: fixed;left: 0;top: 0; right: 0;bottom: 0;background-color: #333;opacity:0.5;z-index: 108;'>
+</div>
+<style>
+    .sidebar {
+        width: 0;
+        height: 100%;
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        background: #fff;
+        z-index: 999;
+        text-align: center;
+        box-shadow: -6px 0 20px rgba(98, 94, 94, .815)
+    }
 
-      </header>
-      <div id="content">
-        
-    <div id="primary">
-        
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          关于Linux—shell你必须知道的
-        
-      </h1>
+    .topo {
+        width: 100%;
+        height: 200px;
+        background: url(https://api.ixiaowai.cn/gqapi/gqapi.php) no-repeat;
+        background-size: 100% 100%;
+        position: relative;
+        display: flex;
+        align-items: flex-end
+    }
 
-      <time class="post-time">
-          6月 24 2021
-      </time>
-    </header>
+    .topo h2 {
+        color: #fff;
+        z-index: 1;
+        position: relative;
+        margin: 0 0 10px 10px;
+        font-size: 1.2em;
+        box-sizing: border-box
+    }
 
+    .topo:before {
+        content: '';
+        background-image: url(/image/pattern.png);
+        background-repeat: repeat;
+        height: 100%;
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 100%;
+        z-index: 1
+    }
 
+    .sidebar ul {
+        width: 100%;
+        margin-top: 50px
+    }
 
-    
-            <div class="post-content">
-            <p><strong>内容来自labuladong公众号</strong></p>
+    .sidebar ul li {
+        height: 50px;
+        list-style: none;
+        font-size: 1.2em;
+        text-align: right;
+        margin-right: 10px
+    }
+
+    .sidebar ul li a {
+        display: grid;
+        color: #5d606a;
+        text-overflow: ellipsis;
+        width: 100%;
+        text-decoration: none
+    }
+
+    .my_foot {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        position: absolute;
+        bottom: 0
+    }
+
+    .my_foot a {
+        text-decoration: none;
+        margin-right: 10px;
+        display: inline-block
+    }
+
+    .my_foot a img {
+        width: 30px;
+        height: 30px
+    }
+</style>
+
+<script>
+    $(function () { $('.h-right-close>svg').click(function () { $('.sidebar').animate({ width: "66%" }, 500); $('.shelter').fadeIn("slow") }); $('.shelter').click(function (e) { $('.sidebar').animate({ width: "0" }, 500); $('.shelter').fadeOut("slow") }) })
+</script>
+		<script>
+			$(function () { $(window).scroll(function () { if ($(document).scrollTop() > 100) { $(".header-top").removeClass("header-move2"); $('.header-top').addClass('header-move1') } else { $(".header-top").removeClass("header-move1"); $('.header-top').addClass('header-move2') } }) });
+		</script>
+<div class="header-bg ">
+    <div class="bg-content">
+        <ul class="tag">
+            
+            
+            <li><a href="/tags/linux">linux</a></li>
+            
+            <li><a href="/tags/shell">shell</a></li>
+            
+            <li><a href="/tags/脚本语言">脚本语言</a></li>
+            
+            
+        </ul>
+        <h1>关于Linux—shell你必须知道的</h1>
+        <div class="article-info">
+            <div class="article-author">
+                
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+                    <g>
+                        <path fill="#12183A"
+                            d="M6.187 15.265A6.47 6.47 0 0 0 10 16.5a6.47 6.47 0 0 0 3.813-1.235A4.99 4.99 0 0 0 10 13.5a4.99 4.99 0 0 0-3.813 1.765zM5.082 14.25A6.485 6.485 0 0 1 10 12c1.965 0 3.726.872 4.918 2.25a6.5 6.5 0 1 0-9.836 0zM10 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0-1.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z">
+                        </path>
+                    </g>
+                </svg>
+                
+                <span> <a href="">CHANGEQ</a></span>
+                <p>2021-06-24 09:53:24</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="article-content">
+    <div id="article" class="content">
+        <p><strong>内容来自labuladong公众号</strong></p>
 <p>我个人很喜欢使用 Linux 系统，虽然说 Windows 的图形化界面做的确实比 Linux 好，但是对脚本的支持太差了。一开始有点不习惯命令行操作，但是熟悉了之后反而发现移动鼠标点点点才是浪费时间的罪魁祸首。。。</p>
 <p><strong>那么对于 Linux 命令行，本文不是介绍某些命令的用法，而是说明一些简单却特别容易让人迷惑的细节问题。</strong></p>
 <p>1、标准输入和命令参数的区别。</p>
@@ -143,13 +283,13 @@
 <p>4、有的命令和sudo一起用就 command not found。</p>
 <h3 id="一、标准输入和参数的区别"><a href="#一、标准输入和参数的区别" class="headerlink" title="一、标准输入和参数的区别"></a>一、标准输入和参数的区别</h3><p>这个问题一定是最容易让人迷惑的，具体来说，就是搞不清什么时候用管道符 | 和文件重定向&gt;，&lt;，什么时候用变量$。</p>
 <p>比如说，我现在有个自动连接宽带的 shell 脚本connect.sh，存在我的家目录：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ where connect.sh</span><br><span class="line">&#x2F;home&#x2F;fdl&#x2F;bin&#x2F;connect.sh</span><br></pre></td></tr></table></figure>
+<figure class="highlight awk"><table><tr><td class="code"><pre><code class="hljs awk">$ where connect.sh<br><span class="hljs-regexp">/home/</span>fdl<span class="hljs-regexp">/bin/</span>connect.sh<br></code></pre></td></tr></table></figure>
 
 <p>如果我想删除这个脚本，而且想少敲几次键盘，应该怎么操作呢？我曾经这样尝试过：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ where connect.sh | rm</span><br></pre></td></tr></table></figure>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><code class="hljs powershell"><span class="hljs-variable">$</span> <span class="hljs-built_in">where</span> connect.sh | <span class="hljs-built_in">rm</span><br></code></pre></td></tr></table></figure>
 
 <p>实际上，这样操作是错误的，正确的做法应该是这样的：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ rm $(where connect.sh)</span><br></pre></td></tr></table></figure>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><code class="hljs powershell"><span class="hljs-variable">$</span> <span class="hljs-built_in">rm</span> <span class="hljs-variable">$</span>(<span class="hljs-built_in">where</span> connect.sh)<br></code></pre></td></tr></table></figure>
 
 <p>前者试图将where的结果连接到rm的标准输入，后者试图将结果作为命令行参数传入。</p>
 <p><strong>标准输入就是编程语言中诸如scanf或者readline这种命令；而参数是指程序的main函数传入的args字符数组</strong>。</p>
@@ -158,15 +298,15 @@
 <p>同理，输出重定向就是把files[1]指向一个文件，那么程序的输出就不会写入到显示器，而是写入到这个文件中：</p>
 <p>管道符其实也是异曲同工，把一个进程的输出流和另一个进程的输入流接起一条「管道」，数据就在其中传递：</p>
 <p>用刚才的例子说，rm命令源代码中肯定不接受标准输入，而是接收命令行参数，删除相应的文件。作为对比，cat命令是既接受标准输入，又接受命令行参数：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ cat filename</span><br><span class="line">...file text...</span><br><span class="line"></span><br><span class="line">$ cat &lt; filename</span><br><span class="line">...file text...</span><br><span class="line"></span><br><span class="line">$ echo &#39;hello world&#39; | cat</span><br><span class="line">hello world</span><br></pre></td></tr></table></figure>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><code class="hljs powershell"><span class="hljs-variable">$</span> <span class="hljs-built_in">cat</span> filename<br>...file text...<br><br><span class="hljs-variable">$</span> <span class="hljs-built_in">cat</span> &lt; filename<br>...file text...<br><br><span class="hljs-variable">$</span> <span class="hljs-built_in">echo</span> <span class="hljs-string">&#x27;hello world&#x27;</span> | <span class="hljs-built_in">cat</span><br>hello world<br></code></pre></td></tr></table></figure>
 <p><strong>如果命令能够让终端阻塞，说明该命令接收标准输入，</strong>反之就是不接受，比如你只运行cat命令不加任何参数，终端就会阻塞，等待你输入字符串并回显相同的字符串。</p>
 <h3 id="二、后台运行程序"><a href="#二、后台运行程序" class="headerlink" title="二、后台运行程序"></a>二、后台运行程序</h3><p>比如说你远程登录到服务器上，运行一个 Django web 程序：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ python manager.py runserver 0.0.0.0</span><br><span class="line">Listening on 0.0.0.0:8080...</span><br></pre></td></tr></table></figure>
+<figure class="highlight vim"><table><tr><td class="code"><pre><code class="hljs vim">$ <span class="hljs-keyword">python</span> manager.<span class="hljs-keyword">py</span> runserver <span class="hljs-number">0.0</span>.<span class="hljs-number">0.0</span><br>Listening <span class="hljs-keyword">on</span> <span class="hljs-number">0.0</span>.<span class="hljs-number">0.0</span>:<span class="hljs-number">8080</span>...<br></code></pre></td></tr></table></figure>
 
 <p>现在你可以通过服务器的 IP 地址测试 Django 服务，但是终端此时就阻塞了，你输入什么都不响应，除非输入 Ctrl-C 或者 Ctrl-/ 终止 python 进程。</p>
 <p>可以在命令之后加一个&amp;符号，这样命令行不会阻塞，可以响应你后续输入的命令，但是如果你退出服务器的登录，就不能访问该网页了。</p>
 <p>如果你想在退出服务器之后仍然能够访问 web 服务，应该这样把命令包裹成这样(cmd &amp;)：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ (python manager.py runserver 0.0.0.0 &amp;)</span><br><span class="line">Listening on 0.0.0.0:8080...</span><br><span class="line"></span><br><span class="line">$ logout</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="code"><pre><code class="hljs shell"><span class="hljs-meta">$</span><span class="bash"> (python manager.py runserver 0.0.0.0 &amp;)</span><br>Listening on 0.0.0.0:8080...<br><br><span class="hljs-meta">$</span><span class="bash"> <span class="hljs-built_in">logout</span></span><br></code></pre></td></tr></table></figure>
 <p><strong>底层原理是这样的</strong>：</p>
 <p>每一个命令行终端都是一个 shell 进程，<br>你在这个终端里执行的程序实际上都是这个 shell 进程分出来的子进程。</p>
 <p>正常情况下，shell 进程会阻塞，等待子进程退出才重新接收你输入的新的命令。</p>
@@ -174,7 +314,7 @@
 <p>但是无论如何，你如果关掉了这个 shell 命令行端口，依附于它的所有子进程都会退出。</p>
 <p>而(cmd &amp;)这样运行命令，则是将cmd命令挂到一个systemd系统守护进程名下，认systemd做爸爸，这样当你退出当前终端时，对于刚才的cmd命令就完全没有影响了。</p>
 <p>类似的，还有一种后台运行常用的做法是这样：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ nohup some_cmd &amp;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<figure class="highlight 1c"><table><tr><td class="code"><pre><code class="hljs 1c">$ nohup some_cmd <span class="hljs-meta">&amp;</span><br><br></code></pre></td></tr></table></figure>
 <p>nohup命令也是类似的原理，不过通过我的测试，还是(cmd &amp;)这种形式更加稳定。</p>
 <h3 id="三、单引号和双引号的区别"><a href="#三、单引号和双引号的区别" class="headerlink" title="三、单引号和双引号的区别"></a>三、单引号和双引号的区别</h3><p>不同的 shell 行为会有细微区别，但有一点是确定的，<strong>对于$，(，)这几个符号，单引号包围的字符串不会做任何转义，双引号包围的字符串会转义。</strong></p>
 <p>shell 的行为可以测试，使用set -x命令，会开启 shell 的命令回显，你可以通过回显观察 shell 到底在执行什么命令：</p>
@@ -182,100 +322,147 @@
 <p>可见 echo $(cmd) 和 echo “$(cmd)”，结果差不多，但是仍然有区别。注意观察，双引号转义完成的结果会自动增加单引号，而前者不会。</p>
 <p><strong>也就是说，如果 $ 读取出的参数字符串包含空格，应该用双引号括起来，否则就会出错。</strong></p>
 <h3 id="四、sudo-找不到命令"><a href="#四、sudo-找不到命令" class="headerlink" title="四、sudo 找不到命令"></a>四、sudo 找不到命令</h3><p>有时候我们普通用户可以用的命令，用sudo加权限之后却报错 command not found：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ connect.sh</span><br><span class="line">network-manager: Permission denied</span><br><span class="line"></span><br><span class="line">$ sudo connect.sh</span><br><span class="line">sudo: command not found</span><br></pre></td></tr></table></figure>
+<figure class="highlight jboss-cli"><table><tr><td class="code"><pre><code class="hljs jboss-cli">$ <span class="hljs-keyword">connect</span>.sh<br>network-manager: Permission denied<br><br>$ sudo <span class="hljs-keyword">connect</span>.sh<br>sudo: <span class="hljs-keyword">command</span> not found<br></code></pre></td></tr></table></figure>
 <p>原因在于，connect.sh这个脚本仅存在于该用户的环境变量中：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ where connect.sh </span><br><span class="line">&#x2F;home&#x2F;fdl&#x2F;bin&#x2F;connect.sh</span><br></pre></td></tr></table></figure>
+<figure class="highlight awk"><table><tr><td class="code"><pre><code class="hljs awk">$ where connect.sh <br><span class="hljs-regexp">/home/</span>fdl<span class="hljs-regexp">/bin/</span>connect.sh<br></code></pre></td></tr></table></figure>
 <p><strong>当使用sudo时，系统认为是 root 用户在执行命令，所以会去搜索 root 用户的环境变量，而这个脚本在 root 的环境变量目录中当然是找不到的。</strong></p>
 <p>解决方法是使用脚本文件的路径，而不是仅仅通过脚本名称：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo &#x2F;home&#x2F;fdl&#x2F;bin&#x2F;connect.sh</span><br></pre></td></tr></table></figure>
+<figure class="highlight awk"><table><tr><td class="code"><pre><code class="hljs awk">$ sudo <span class="hljs-regexp">/home/</span>fdl<span class="hljs-regexp">/bin/</span>connect.sh<br></code></pre></td></tr></table></figure>
 
 <p>以上就是全部内容，对于出现的一些难以理解的现象，要多思考和尝试，熟练之后，shell 命令行真的可以带来很大的便利。</p>
 
-            </div>
-          
-
-    
-      <footer class="post-footer">
-		
-		<div class="post-tags">
-		  
-			<a href="/tags/linux/">linux</a>
-		  
-			<a href="/tags/shell/">shell</a>
-		  
-			<a href="/tags/%E8%84%9A%E6%9C%AC%E8%AF%AD%E8%A8%80/">脚本语言</a>
-		  
-		</div>
-		
-
-        
-        
-  <nav class="post-nav">
-    
-      <a class="prev" href="/2021/06/24/%E6%AF%8F%E5%A4%A9%E4%B8%80%E9%81%93%E7%AE%97%E6%B3%95%E9%A2%98%EF%BC%9A%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95%E7%9A%84%E5%89%8D%E4%B8%96%E4%BB%8A%E7%94%9F/">
-        <i class="iconfont icon-left"></i>
-        <span class="prev-text nav-default">加密算法的前世今生</span>
-        <span class="prev-text nav-mobile">Prev</span>
-      </a>
-    
-    
-      <a class="next" href="/2021/06/24/CC2530%E7%9A%84%E5%86%85%E5%AD%98%E4%BD%BF%E7%94%A8/">
-        <span class="next-text nav-default">CC2530的内存使用</span>
-        <span class="prev-text nav-mobile">Next</span>
-        <i class="iconfont icon-right"></i>
-      </a>
-    
-  </nav>
-
-        
-  <div class="comments" id="comments">
-    
-  </div>
-
-
-      </footer>
-    
-  </article>
-
     </div>
+</div>
+<style>
+    #noneimg img {
+        display: none;
+        z-index: 109;
+        width: 600px !important;
+        border-radius: 0px;
+        position: fixed;
+        box-shadow: 0 0 0px #c3c3c300 !important;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto !important;
+    }
 
-      </div>
+    @media screen and (max-width:600px) {
+        #noneimg img {
+            width: 88%
+        }
+    }
+</style>
+<script>
+    $(function () { $('#article').click(function (e) { if (e.target.tagName == "IMG") { if ($('#nonediv').length == 0) { let MImg = `<div id='noneimg'><img src='${e.target.currentSrc}'></div>`; let MDiv = "<div id='nonediv' style='cursor: pointer;display: none; position: fixed;left: 0;top: 0; right: 0;bottom: 0;background-color: #333;opacity:0.5;z-index: 108;'></div>"; $('#article').append(MDiv); $('#article').append(MImg); $("#nonediv").fadeIn("slow"); $("#noneimg img").fadeIn("slow") } } else { if ($('#nonediv').length !== 0) { $("#noneimg ").fadeOut("slow"); $("#nonediv").fadeOut("slow"); setTimeout(function () { $('#nonediv').remove(); $('#noneimg').remove() }, 500) } } }); $('.article-content').addClass('content-move') });
+</script>
+<div class="Last-Next">
+    
+    <a href="/2021/06/24/%E6%AF%8F%E5%A4%A9%E4%B8%80%E9%81%93%E7%AE%97%E6%B3%95%E9%A2%98%EF%BC%9A%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95%E7%9A%84%E5%89%8D%E4%B8%96%E4%BB%8A%E7%94%9F/">
+        <div class="last">
+            <span>上一篇</span>
+            <p>加密算法的前世今生</p>
+        </div>
+    </a>
+    
 
-      <footer id="colophon"><span class="copyright-year">
     
-        &copy;
+    <a href="/2021/06/24/CC2530%E7%9A%84%E5%86%85%E5%AD%98%E4%BD%BF%E7%94%A8/">
+        <div class="next">
+            <span>下一篇</span>
+            <p>CC2530的内存使用</p>
+        </div>
+    </a>
     
-        2014 -
-    
-    2021
-    <span class="footer-author">Russshare.</span>
-    <span class="power-by">
-        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+</div>
+		
+<link rel="stylesheet" href="/css/food.css">
+
+<div class="footer">
+	<div class="Copyright">
+		©2021 By CHANGEQ. 主题：<a
+			style="text-decoration: none;display: contents; color: #898F9F;"
+			target="_blank" rel="noopener" href="https://github.com/qiaobug/hexo-theme-quiet">Quiet</a>
+	</div>
+	<div class="contact">
+		
+		<a target="_blank" rel="noopener" href="https://github.com/qiaobug">
+			<img src="https://cdn.jsdelivr.net/gh/duogongneng/MyBlogImg/imggithub.png" alt="Quiet主题">
+		</a>
+		
+	</div>
+</div>
+
+<script src="/js/jquery.min.js"></script>
+
+
+<script src="/js/gotop.js"></script>
+
+
+<style type="text/css">
+    @media screen and (min-width: 600px) {
+        .goTop>span {
+            display: block;
+            border-radius: 50%;
+            width: 66px;
+            height: 66px;
+            cursor: pointer;
+            opacity: 0.8;
+            background: rgba(18, 24, 58, 0.06);
+            text-align: center;
+            border: 1px solid rgba(18, 24, 58, 0.06);
+
+            transition: border .5s;
+            -moz-transition: border .5s;
+            /* Firefox 4 */
+            -webkit-transition: border .5s;
+            /* Safari 和 Chrome */
+            -o-transition: border .5s;
+            /* Opera */
+        }
+
+        .goTop>span:hover {
+            border: 1px solid #6680B3;
+        }
+
+
+        .goTop {
+            position: fixed;
+            right: 30px;
+            bottom: 80px;
+        }
+
+        .goTop>span>svg {
+            width: 30px;
+            height: 30px;
+            margin-top: 17.5px;
+            opacity: 0.7;
+        }
+
+    }
+
+    @media screen and (max-width: 600px) {
+        .goTop {
+            display: none;
+        }
+    }
+</style>
+<div class="goTop" id="js-go_top">
+    <span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <g>
+                <path d="M13 12v8h-2v-8H4l8-8 8 8z"></path>
+            </g>
+        </svg>
     </span>
-</span>
+</div>
+<script>
+    $('#js-go_top').gotoTop({ offset: 500, speed: 300, animationShow: { 'transform': 'translate(0,0)', 'transition': 'transform .5s ease-in-out' }, animationHide: { 'transform': 'translate(100px,0)', 'transition': 'transform .5s ease-in-out' } });
+</script>
+<script>
+	console.log('\n %c Hexo-Quiet 主题 %c https://github.com/QiaoBug/hexo-theme-quiet \n', 'color: #fadfa3; background: #030307; padding:5px 0;', 'background: #fadfa3; padding:5px 0;')
+</script>
+	</body>
 
-      </footer>
-
-      <div class="back-to-top" id="back-to-top">
-        <i class="iconfont icon-up"></i>
-      </div>
-    </div>
-    
-
-
-    
-
-
-
-
-  
-    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
-  
-
-  
-
-    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
-<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
-
-  </body>
 </html>

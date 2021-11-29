@@ -1,463 +1,579 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
-  <head>
-    
-<meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+<html>
+
+	<head>
+		
+<title>Hexo主题-Quiet主题-Hexo扁平化主题安装-Quiet</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="shortcut icon" type="image/x-icon" href="/image/favicon.ico">
+
+<meta name="keywords" content="hexo主题,hexo扁平化主题,Quiet主题">
+<meta name="description" content="描述">
 
 
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
+<script src="/js/jquery.min.js"></script>
 
 
+	<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+</head>
 
-  <meta name="description" content="听风说你来自远方"/>
-
-
-
-
-
-
+	<body>
+		
+<link rel="stylesheet" href="/css/home.css">
 
 
-  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+<link rel="stylesheet" href="/css/header.css">
 
+	<div class="header">
+		<div class="header-top">
+			<div class="h-left">
+				<a href="/">
+					<img src="/image/logo.png" alt="Quiet">
+				</a>
+			</div>
+			<div class="h-right">
+				<ul>
+					
+						
+							<li class="select">
+								<a href="/">
+									HOME
+								</a>
+								<span class="dot"></span>
+							</li>
+							
+									
+						
+								<li>
+									<a href="/archives">
+										ARCHIVE
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/categories">
+										CATEGORIES
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/tags">
+										TAGS
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/links">
+										LINKS
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/about">
+										ABOUT
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+				</ul>
+			</div>
+			<div class="h-right-close">
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+					<path fill="none" d="M0 0h24v24H0z" />
+					<path d="M3 4h18v2H3V4zm0 7h18v2H3v-2zm0 7h18v2H3v-2z" fill="rgba(68,68,68,1)" />
+				</svg>
+			</div>
+		</div>
+	</div>
+	<div class="sidebar">
+    <div class="topo">
+        <h2>CHANGEQ</h2>
+    </div>
+    <ul>
+        
+        <li>
+            <a href="/">HOME</a>
+        </li>
+        
+        <li>
+            <a href="/archives">ARCHIVE</a>
+        </li>
+        
+        <li>
+            <a href="/categories">CATEGORIES</a>
+        </li>
+        
+        <li>
+            <a href="/tags">TAGS</a>
+        </li>
+        
+        <li>
+            <a href="/links">LINKS</a>
+        </li>
+        
+        <li>
+            <a href="/about">ABOUT</a>
+        </li>
+        
+    </ul>
+    <div class="my_foot">
+        
+        <a target="_blank" rel="noopener" href="https://github.com/qiaobug">
+            <img src="https://cdn.jsdelivr.net/gh/duogongneng/MyBlogImg/imggithub.png" alt="Quiet主题">
+        </a>
+        
+    </div>
+</div>
+<div class='shelter'
+    style='cursor: pointer;display: none; position: fixed;left: 0;top: 0; right: 0;bottom: 0;background-color: #333;opacity:0.5;z-index: 108;'>
+</div>
+<style>
+    .sidebar {
+        width: 0;
+        height: 100%;
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        background: #fff;
+        z-index: 999;
+        text-align: center;
+        box-shadow: -6px 0 20px rgba(98, 94, 94, .815)
+    }
 
+    .topo {
+        width: 100%;
+        height: 200px;
+        background: url(https://api.ixiaowai.cn/gqapi/gqapi.php) no-repeat;
+        background-size: 100% 100%;
+        position: relative;
+        display: flex;
+        align-items: flex-end
+    }
 
+    .topo h2 {
+        color: #fff;
+        z-index: 1;
+        position: relative;
+        margin: 0 0 10px 10px;
+        font-size: 1.2em;
+        box-sizing: border-box
+    }
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+    .topo:before {
+        content: '';
+        background-image: url(/image/pattern.png);
+        background-repeat: repeat;
+        height: 100%;
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 100%;
+        z-index: 1
+    }
 
+    .sidebar ul {
+        width: 100%;
+        margin-top: 50px
+    }
 
+    .sidebar ul li {
+        height: 50px;
+        list-style: none;
+        font-size: 1.2em;
+        text-align: right;
+        margin-right: 10px
+    }
 
-<link rel="canonical" href="https://riddlego.github.io/page/17/"/>
+    .sidebar ul li a {
+        display: grid;
+        color: #5d606a;
+        text-overflow: ellipsis;
+        width: 100%;
+        text-decoration: none
+    }
 
+    .my_foot {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        position: absolute;
+        bottom: 0
+    }
 
-<meta name="description" content="听风说你来自远方">
-<meta property="og:type" content="website">
-<meta property="og:title" content="RiddleGo">
-<meta property="og:url" content="https://riddlego.github.io/page/17/index.html">
-<meta property="og:site_name" content="RiddleGo">
-<meta property="og:description" content="听风说你来自远方">
-<meta property="og:locale" content="zh_CN">
-<meta property="article:author" content="Russshare">
-<meta property="article:tag" content="zh-Hans">
-<meta name="twitter:card" content="summary">
+    .my_foot a {
+        text-decoration: none;
+        margin-right: 10px;
+        display: inline-block
+    }
 
+    .my_foot a img {
+        width: 30px;
+        height: 30px
+    }
+</style>
 
-<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
-<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
-
-
-
-
-
-<script type="text/javascript">
-  var themeConfig = {
-    fancybox: {
-      enable: false
-    },
-  };
+<script>
+    $(function () { $('.h-right-close>svg').click(function () { $('.sidebar').animate({ width: "66%" }, 500); $('.shelter').fadeIn("slow") }); $('.shelter').click(function (e) { $('.sidebar').animate({ width: "0" }, 500); $('.shelter').fadeOut("slow") }) })
 </script>
-
-
-
-
-  
-
-
-
-    <title> RiddleGo - 听风说你来自远方</title>
-  <meta name="generator" content="Hexo 5.4.0"></head>
-
-  <body>
-    <div id="page">
-      <header id="masthead"><div class="site-header-inner">
-    <h1 class="site-title">
-        <a href="/." class="logo">RiddleGo</a>
-    </h1>
-
-    <nav id="nav-top">
-        
-            <ul id="menu-top" class="nav-top-items">
-                
-                    <li class="menu-item">
-                        <a href="/archives">
-                            
-                            
-                                Archives
-                            
-                        </a>
-                    </li>
-                
-                    <li class="menu-item">
-                        <a href="/about">
-                            
-                            
-                                About
-                            
-                        </a>
-                    </li>
-                
-            </ul>
-        
-  </nav>
+		<script>
+			$(function () { $(window).scroll(function () { if ($(document).scrollTop() > 100) { $(".header-top").removeClass("header-move2"); $('.header-top').addClass('header-move1') } else { $(".header-top").removeClass("header-move1"); $('.header-top').addClass('header-move2') } }) });
+		</script>
+<div class="header-bg">
+	<div class="bg-content">
+		<span>
+			<img class="site-logo" src="/image/logo.png" alt="Q">
+		</span>
+		<h2>
+			A COLLEGE STUDENT WITH IDEALS AND BELIEFS.
+		</h2>
+	</div>
+</div>
+<div class="main">
+	<div class="feed">
+		
+			<div class="feed-display">
+				<a href="/2021/07/29/%E4%BD%A0%E7%9C%9F%E7%9A%84%E4%BA%86%E8%A7%A3%E6%B3%9B%E5%9E%8BGeneric%E5%98%9B%EF%BC%9F/">
+					<h2 class="feed-title">
+						你真的了解泛型Generic嘛？
+					</h2>
+					
+							<img src="https://api.ixiaowai.cn/gqapi/gqapi.php" alt="Quiet">
+							
+				</a>
+				<div class="feed-meat">
+					<div class="meat-info">
+						<div class="info-auth">
+							<a href="">
+								CHANGEQ
+							</a>
+						</div>
+						<div class="info-data">
+							2021-07-29
+						</div>
+					</div>
+					<div class="meat-type"></div>
+				</div>
+			</div>
+			
+			<div class="feed-display">
+				<a href="/2021/07/29/%E4%BB%80%E4%B9%88%E6%98%AFMatter/">
+					<h2 class="feed-title">
+						什么是Matter
+					</h2>
+					
+							<img src="https://api.ixiaowai.cn/gqapi/gqapi.php" alt="Quiet">
+							
+				</a>
+				<div class="feed-meat">
+					<div class="meat-info">
+						<div class="info-auth">
+							<a href="">
+								CHANGEQ
+							</a>
+						</div>
+						<div class="info-data">
+							2021-07-29
+						</div>
+					</div>
+					<div class="meat-type"></div>
+				</div>
+			</div>
+			
+			<div class="feed-display">
+				<a href="/2021/07/29/Golang%E7%A8%8B%E5%BA%8F%E5%91%98%E5%BA%94%E8%AF%A5%E6%80%8E%E4%B9%88%E7%90%86%E8%A7%A3%E4%BA%91%E5%8E%9F%E7%94%9F%EF%BC%9F/">
+					<h2 class="feed-title">
+						Golang程序员应该怎么理解云原生？
+					</h2>
+					
+							<img src="https://api.ixiaowai.cn/gqapi/gqapi.php" alt="Quiet">
+							
+				</a>
+				<div class="feed-meat">
+					<div class="meat-info">
+						<div class="info-auth">
+							<a href="">
+								CHANGEQ
+							</a>
+						</div>
+						<div class="info-data">
+							2021-07-29
+						</div>
+					</div>
+					<div class="meat-type"></div>
+				</div>
+			</div>
+			
+			<div class="feed-display">
+				<a href="/2021/07/29/%E6%B5%85%E6%9E%90Go-IO%E7%9A%84%E7%9F%A5%E8%AF%86%E6%A1%86%E6%9E%B6/">
+					<h2 class="feed-title">
+						浅析Go-IO的知识框架
+					</h2>
+					
+							<img src="https://api.ixiaowai.cn/gqapi/gqapi.php" alt="Quiet">
+							
+				</a>
+				<div class="feed-meat">
+					<div class="meat-info">
+						<div class="info-auth">
+							<a href="">
+								CHANGEQ
+							</a>
+						</div>
+						<div class="info-data">
+							2021-07-29
+						</div>
+					</div>
+					<div class="meat-type"></div>
+				</div>
+			</div>
+			
+			<div class="feed-display">
+				<a href="/2021/07/29/%E8%B5%B7%E9%A3%9E%E7%9A%84WiFi6%EF%BC%8C%E8%BF%9B%E5%87%BB%E7%9A%84%E9%AB%98%E9%80%9A%E5%92%8C%E5%B0%8F%E7%B1%B3/">
+					<h2 class="feed-title">
+						起飞的WiFi6，进击的高通和小米
+					</h2>
+					
+							<img src="https://api.ixiaowai.cn/gqapi/gqapi.php" alt="Quiet">
+							
+				</a>
+				<div class="feed-meat">
+					<div class="meat-info">
+						<div class="info-auth">
+							<a href="">
+								CHANGEQ
+							</a>
+						</div>
+						<div class="info-data">
+							2021-07-29
+						</div>
+					</div>
+					<div class="meat-type"></div>
+				</div>
+			</div>
+			
+			<div class="feed-display">
+				<a href="/2021/07/29/%E9%99%A4%E4%BA%86%E6%AF%94%E7%89%B9%E5%B8%81%EF%BC%8C%E5%8C%BA%E5%9D%97%E9%93%BE%E5%88%B0%E5%BA%95%E8%BF%98%E8%83%BD%E5%81%9A%E4%BB%80%E4%B9%88%EF%BC%9F/">
+					<h2 class="feed-title">
+						除了比特币，区块链到底还能做什么？
+					</h2>
+					
+							<img src="https://api.ixiaowai.cn/gqapi/gqapi.php" alt="Quiet">
+							
+				</a>
+				<div class="feed-meat">
+					<div class="meat-info">
+						<div class="info-auth">
+							<a href="">
+								CHANGEQ
+							</a>
+						</div>
+						<div class="info-data">
+							2021-07-29
+						</div>
+					</div>
+					<div class="meat-type"></div>
+				</div>
+			</div>
+			
+			<div class="feed-display">
+				<a href="/2021/07/29/PYQT%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E5%AE%9E%E6%88%98%E7%B3%BB%E5%88%97/">
+					<h2 class="feed-title">
+						PYQT从入门到实战系列
+					</h2>
+					
+							<img src="https://api.ixiaowai.cn/gqapi/gqapi.php" alt="Quiet">
+							
+				</a>
+				<div class="feed-meat">
+					<div class="meat-info">
+						<div class="info-auth">
+							<a href="">
+								CHANGEQ
+							</a>
+						</div>
+						<div class="info-data">
+							2021-07-29
+						</div>
+					</div>
+					<div class="meat-type"></div>
+				</div>
+			</div>
+			
+			<div class="feed-display">
+				<a href="/2021/07/29/pyqt5%E4%B8%AD%E5%B8%B8%E7%94%A8%E7%9A%84%E6%8C%89%E9%92%AE%E7%B1%BB%E6%8E%A7%E4%BB%B6/">
+					<h2 class="feed-title">
+						pyqt5中常用的按钮类控件
+					</h2>
+					
+							<img src="https://api.ixiaowai.cn/gqapi/gqapi.php" alt="Quiet">
+							
+				</a>
+				<div class="feed-meat">
+					<div class="meat-info">
+						<div class="info-auth">
+							<a href="">
+								CHANGEQ
+							</a>
+						</div>
+						<div class="info-data">
+							2021-07-29
+						</div>
+					</div>
+					<div class="meat-type"></div>
+				</div>
+			</div>
+			
+			<div class="feed-display">
+				<a href="/2021/07/29/%E6%AF%8F%E5%A4%A9%E4%B8%80%E9%81%93%E7%AE%97%E6%B3%95%E9%A2%98%EF%BC%9A%E5%9C%A8%E6%97%8B%E8%BD%AC%E8%BF%87%E7%9A%84%E6%9C%89%E5%BA%8F%E6%95%B0%E7%BB%84%E4%B8%AD%E5%AF%BB%E6%89%BE%E7%9B%AE%E6%A0%87%E5%80%BC/">
+					<h2 class="feed-title">
+						每天一道算法题：在旋转过的有序数组中寻找目标值
+					</h2>
+					
+							<img src="https://api.ixiaowai.cn/gqapi/gqapi.php" alt="Quiet">
+							
+				</a>
+				<div class="feed-meat">
+					<div class="meat-info">
+						<div class="info-auth">
+							<a href="">
+								CHANGEQ
+							</a>
+						</div>
+						<div class="info-data">
+							2021-07-29
+						</div>
+					</div>
+					<div class="meat-type"></div>
+				</div>
+			</div>
+			
+	</div>
+</div>
+<div class="change-page">
+	
+		<div class="p-page">
+			<a href="/page/16/">
+				<div class="previous">
+					上一页
+				</div>
+			</a>
+		</div>
+		
+			
+				<div class="n-page">
+					<a href="/page/18/">
+						<div class="next">
+							下一页
+						</div>
+					</a>
+				</div>
+				
 </div>
 
-      </header>
-      <div id="content">
-        
-    <div id="primary" class="home">
-        
-            
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2021/07/28/%E6%AF%8F%E5%A4%A9%E4%B8%80%E9%81%93%E7%AE%97%E6%B3%95%E9%A2%98%EF%BC%9A%E8%9E%BA%E6%97%8B%E7%9F%A9%E9%98%B5/">每天一道算法题：螺旋矩阵</a>
-        
-      </h1>
-
-      <time class="post-time">
-          7月 28 2021
-      </time>
-    </header>
-
-
-
-    
-        <div class="post-excerpt post-content">
-            
-            
-
-            
-          
-
-    
-  </article>
-
-        
-            
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2021/07/28/%E6%AF%8F%E5%A4%A9%E4%B8%80%E9%81%93%E7%AE%97%E6%B3%95%E9%A2%98%EF%BC%9A%E5%8F%8D%E8%BD%AC%E5%AD%97%E7%AC%A6%E4%B8%B2/">每天一道算法题：反转字符串</a>
-        
-      </h1>
-
-      <time class="post-time">
-          7月 28 2021
-      </time>
-    </header>
-
-
-
-    
-        <div class="post-excerpt post-content">
-            
-            
-
-            
-          
-
-    
-  </article>
-
-        
-            
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2021/07/28/pyqt%E4%B8%AD%E7%9A%84layout%E5%B8%83%E5%B1%80/">pyqt中的layout布局</a>
-        
-      </h1>
-
-      <time class="post-time">
-          7月 28 2021
-      </time>
-    </header>
-
-
-
-    
-        <div class="post-excerpt post-content">
-            
-            
-
-            
-          
-
-    
-  </article>
-
-        
-            
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2021/07/28/pyqt-QGroupbox/">pyqt-QGroupbox</a>
-        
-      </h1>
-
-      <time class="post-time">
-          7月 28 2021
-      </time>
-    </header>
-
-
-
-    
-        <div class="post-excerpt post-content">
-            
-            
-
-            
-          
-
-    
-  </article>
-
-        
-            
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2021/07/28/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%EF%BC%9A%E5%BC%80%E5%8F%91%E6%A8%A1%E5%BC%8F/">软件工程：开发模式</a>
-        
-      </h1>
-
-      <time class="post-time">
-          7月 28 2021
-      </time>
-    </header>
-
-
-
-    
-        <div class="post-excerpt post-content">
-            
-            
-
-            
-          
-
-    
-  </article>
-
-        
-            
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2021/07/27/Python%E8%B0%83%E7%94%A8C-%E7%A8%8B%E5%BA%8F/">Python调用C++程序</a>
-        
-      </h1>
-
-      <time class="post-time">
-          7月 27 2021
-      </time>
-    </header>
-
-
-
-    
-        <div class="post-excerpt post-content">
-            
-            
-
-            
-          
-
-    
-  </article>
-
-        
-            
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2021/07/26/%E6%AF%8F%E5%A4%A9%E4%B8%80%E9%81%93%E7%AE%97%E6%B3%95%E9%A2%98%EF%BC%9A%E6%97%A0%E9%87%8D%E5%A4%8D%E7%9A%84%E5%AD%97%E7%AC%A6%E7%9A%84%E6%9C%80%E9%95%BF%E5%AD%90%E4%B8%B2/">每天一道算法题：无重复的字符的最长子串</a>
-        
-      </h1>
-
-      <time class="post-time">
-          7月 26 2021
-      </time>
-    </header>
-
-
-
-    
-        <div class="post-excerpt post-content">
-            
-            
-
-            
-          
-
-    
-  </article>
-
-        
-            
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2021/07/26/%E6%AF%8F%E5%A4%A9%E4%B8%80%E9%81%93%E7%AE%97%E6%B3%95%E9%A2%98%EF%BC%9A%E5%9C%A8%E4%BA%8C%E5%8F%89%E6%A0%91%E4%B8%AD%E6%89%BE%E5%88%B0%E4%B8%A4%E4%B8%AA%E8%8A%82%E7%82%B9%E7%9A%84%E6%9C%80%E8%BF%91%E5%85%AC%E5%85%B1%E7%A5%96%E5%85%88/">每天一道算法题：在二叉树中找到两个节点的最近公共祖先</a>
-        
-      </h1>
-
-      <time class="post-time">
-          7月 26 2021
-      </time>
-    </header>
-
-
-
-    
-        <div class="post-excerpt post-content">
-            
-            
-
-            
-          
-
-    
-  </article>
-
-        
-            
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2021/07/26/%E6%AF%8F%E5%A4%A9%E4%B8%80%E9%81%93%E7%AE%97%E6%B3%95%E9%A2%98%EF%BC%9A%E4%B8%A4%E4%B8%AA%E9%93%BE%E8%A1%A8%E7%94%9F%E6%88%90%E7%9B%B8%E5%8A%A0%E9%93%BE%E8%A1%A8/">每天一道算法题：两个链表生成相加链表</a>
-        
-      </h1>
-
-      <time class="post-time">
-          7月 26 2021
-      </time>
-    </header>
-
-
-
-    
-        <div class="post-excerpt post-content">
-            
-            
-
-            
-          
-
-    
-  </article>
-
-        
-            
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2021/07/26/%E6%AF%8F%E5%A4%A9%E4%B8%80%E9%81%93%E7%AE%97%E6%B3%95%E9%A2%98%EF%BC%9A%E4%B8%A4%E4%B8%AA%E9%93%BE%E8%A1%A8%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%85%AC%E5%85%B1%E7%BB%93%E7%82%B9/">每天一道算法题：两个链表的第一个公共结点</a>
-        
-      </h1>
-
-      <time class="post-time">
-          7月 26 2021
-      </time>
-    </header>
-
-
-
-    
-        <div class="post-excerpt post-content">
-            
-            
-
-            
-          
-
-    
-  </article>
-
-        
-        
-  <nav class="pagination">
-    
-      <a class="prev" href="/page/16/">
-        <i class="iconfont icon-left"></i>
-        <span class="prev-text">Prev</span>
-      </a>
-    
-    
-      <a class="next" href="/page/18/">
-        <span class="next-text">Next</span>
-        <i class="iconfont icon-right"></i>
-      </a>
-    
-  </nav>
-
-    </div>
-    <div id="secondary">
-    
-
-    
-
-    
-    <section id="tags" class="widget-area widget_tags">
-        <h3 class="widget-title">Tags</h3>
-        <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/5G/" rel="tag">5G</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%88%92%E7%83%9F/" rel="tag">戒烟</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/AD7747/" rel="tag">AD7747</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CC2530/" rel="tag">CC2530</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B5%8B%E7%94%B5%E5%AE%B9/" rel="tag">测电容</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android-Studio/" rel="tag">Android Studio</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bug/" rel="tag">Bug</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/APP/" rel="tag">APP</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/BLE/" rel="tag">BLE</a><span class="tag-list-count">1</span></li></ul>
-    </section>
-
-
+<script>$(function () { $('.feed').addClass('move'); })</script>
+		
+<link rel="stylesheet" href="/css/food.css">
+
+<div class="footer">
+	<div class="Copyright">
+		©2021 By CHANGEQ. 主题：<a
+			style="text-decoration: none;display: contents; color: #898F9F;"
+			target="_blank" rel="noopener" href="https://github.com/qiaobug/hexo-theme-quiet">Quiet</a>
+	</div>
+	<div class="contact">
+		
+		<a target="_blank" rel="noopener" href="https://github.com/qiaobug">
+			<img src="https://cdn.jsdelivr.net/gh/duogongneng/MyBlogImg/imggithub.png" alt="Quiet主题">
+		</a>
+		
+	</div>
 </div>
 
+<script src="/js/jquery.min.js"></script>
 
-      </div>
 
-      <footer id="colophon"><span class="copyright-year">
-    
-        &copy;
-    
-        2014 -
-    
-    2021
-    <span class="footer-author">Russshare.</span>
-    <span class="power-by">
-        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+<script src="/js/gotop.js"></script>
+
+
+<style type="text/css">
+    @media screen and (min-width: 600px) {
+        .goTop>span {
+            display: block;
+            border-radius: 50%;
+            width: 66px;
+            height: 66px;
+            cursor: pointer;
+            opacity: 0.8;
+            background: rgba(18, 24, 58, 0.06);
+            text-align: center;
+            border: 1px solid rgba(18, 24, 58, 0.06);
+
+            transition: border .5s;
+            -moz-transition: border .5s;
+            /* Firefox 4 */
+            -webkit-transition: border .5s;
+            /* Safari 和 Chrome */
+            -o-transition: border .5s;
+            /* Opera */
+        }
+
+        .goTop>span:hover {
+            border: 1px solid #6680B3;
+        }
+
+
+        .goTop {
+            position: fixed;
+            right: 30px;
+            bottom: 80px;
+        }
+
+        .goTop>span>svg {
+            width: 30px;
+            height: 30px;
+            margin-top: 17.5px;
+            opacity: 0.7;
+        }
+
+    }
+
+    @media screen and (max-width: 600px) {
+        .goTop {
+            display: none;
+        }
+    }
+</style>
+<div class="goTop" id="js-go_top">
+    <span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <g>
+                <path d="M13 12v8h-2v-8H4l8-8 8 8z"></path>
+            </g>
+        </svg>
     </span>
-</span>
+</div>
+<script>
+    $('#js-go_top').gotoTop({ offset: 500, speed: 300, animationShow: { 'transform': 'translate(0,0)', 'transition': 'transform .5s ease-in-out' }, animationHide: { 'transform': 'translate(100px,0)', 'transition': 'transform .5s ease-in-out' } });
+</script>
+<script>
+	console.log('\n %c Hexo-Quiet 主题 %c https://github.com/QiaoBug/hexo-theme-quiet \n', 'color: #fadfa3; background: #030307; padding:5px 0;', 'background: #fadfa3; padding:5px 0;')
+</script>
+	</body>
 
-      </footer>
-
-      <div class="back-to-top" id="back-to-top">
-        <i class="iconfont icon-up"></i>
-      </div>
-    </div>
-    
-
-
-    
-
-
-
-
-  
-    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
-  
-
-  
-
-    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
-<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
-
-  </body>
 </html>

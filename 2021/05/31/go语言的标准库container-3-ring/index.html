@@ -1,247 +1,437 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
-  <head>
-    
-<meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+<html>
+
+	<head>
+		
+<title>go语言的标准库container-3-ring-Quiet</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="shortcut icon" type="image/x-icon" href="/image/favicon.ico">
 
 
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="keywords" content="golang数据结构,环,">
+<meta name="description" content="">
 
 
-
-  <meta name="description" content="go语言的标准库container-3-ring"/>
-
+<script src="/js/jquery.min.js"></script>
 
 
+	<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+</head>
 
-  <meta name="keywords" content="golang数据结构,环," />
-
-
-
-
-
-  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+	<body>
+		
+<link rel="stylesheet" href="/css/page.css">
 
 
+<link rel="stylesheet" href="/css/page_cente.css">
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+<link rel="stylesheet" href="/css/atom-one-dark.css">
 
 
+<link rel="stylesheet" href="/css/header.css">
 
-<link rel="canonical" href="https://riddlego.github.io/2021/05/31/go语言的标准库container-3-ring/"/>
-
-
-<meta name="description" content="前言 ：这玩意暂时还没用到，但是这玩意既然有肯定就是有价值的，有时候找了点文章整理一下学一下，以防以后用的上。 简介Go的标准包Container中包含了常用的容器类型，包括conatiner&#x2F;list，container&#x2F;heap，container&#x2F;ring，本篇讲解container&#x2F;ring的使用。 ring包ring包提供了环形链表的操作。它仅导出了一个类型，Ring： Ring类型代表">
-<meta property="og:type" content="article">
-<meta property="og:title" content="go语言的标准库container-3-ring">
-<meta property="og:url" content="https://riddlego.github.io/2021/05/31/go%E8%AF%AD%E8%A8%80%E7%9A%84%E6%A0%87%E5%87%86%E5%BA%93container-3-ring/index.html">
-<meta property="og:site_name" content="RiddleGo">
-<meta property="og:description" content="前言 ：这玩意暂时还没用到，但是这玩意既然有肯定就是有价值的，有时候找了点文章整理一下学一下，以防以后用的上。 简介Go的标准包Container中包含了常用的容器类型，包括conatiner&#x2F;list，container&#x2F;heap，container&#x2F;ring，本篇讲解container&#x2F;ring的使用。 ring包ring包提供了环形链表的操作。它仅导出了一个类型，Ring： Ring类型代表">
-<meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2021-05-31T13:25:41.000Z">
-<meta property="article:modified_time" content="2021-05-31T13:27:18.000Z">
-<meta property="article:author" content="Russshare">
-<meta property="article:tag" content="golang数据结构">
-<meta property="article:tag" content="环">
-<meta name="twitter:card" content="summary">
-
-
-<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
-<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
-
-
-
-
-
-<script type="text/javascript">
-  var themeConfig = {
-    fancybox: {
-      enable: false
-    },
-  };
-</script>
-
-
-
-
-  
-
-
-
-    <title> go语言的标准库container-3-ring - RiddleGo </title>
-  <meta name="generator" content="Hexo 5.4.0"></head>
-
-  <body>
-    <div id="page">
-      <header id="masthead"><div class="site-header-inner">
-    <h1 class="site-title">
-        <a href="/." class="logo">RiddleGo</a>
-    </h1>
-
-    <nav id="nav-top">
+	<div class="header">
+		<div class="header-top">
+			<div class="h-left">
+				<a href="/">
+					<img src="/image/logo.png" alt="Quiet">
+				</a>
+			</div>
+			<div class="h-right">
+				<ul>
+					
+						
+								<li>
+									<a href="/">
+										HOME
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/archives">
+										ARCHIVE
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/categories">
+										CATEGORIES
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/tags">
+										TAGS
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/links">
+										LINKS
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/about">
+										ABOUT
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+				</ul>
+			</div>
+			<div class="h-right-close">
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+					<path fill="none" d="M0 0h24v24H0z" />
+					<path d="M3 4h18v2H3V4zm0 7h18v2H3v-2zm0 7h18v2H3v-2z" fill="rgba(68,68,68,1)" />
+				</svg>
+			</div>
+		</div>
+	</div>
+	<div class="sidebar">
+    <div class="topo">
+        <h2>CHANGEQ</h2>
+    </div>
+    <ul>
         
-            <ul id="menu-top" class="nav-top-items">
-                
-                    <li class="menu-item">
-                        <a href="/archives">
-                            
-                            
-                                Archives
-                            
-                        </a>
-                    </li>
-                
-                    <li class="menu-item">
-                        <a href="/about">
-                            
-                            
-                                About
-                            
-                        </a>
-                    </li>
-                
-            </ul>
+        <li>
+            <a href="/">HOME</a>
+        </li>
         
-  </nav>
+        <li>
+            <a href="/archives">ARCHIVE</a>
+        </li>
+        
+        <li>
+            <a href="/categories">CATEGORIES</a>
+        </li>
+        
+        <li>
+            <a href="/tags">TAGS</a>
+        </li>
+        
+        <li>
+            <a href="/links">LINKS</a>
+        </li>
+        
+        <li>
+            <a href="/about">ABOUT</a>
+        </li>
+        
+    </ul>
+    <div class="my_foot">
+        
+        <a target="_blank" rel="noopener" href="https://github.com/qiaobug">
+            <img src="https://cdn.jsdelivr.net/gh/duogongneng/MyBlogImg/imggithub.png" alt="Quiet主题">
+        </a>
+        
+    </div>
 </div>
+<div class='shelter'
+    style='cursor: pointer;display: none; position: fixed;left: 0;top: 0; right: 0;bottom: 0;background-color: #333;opacity:0.5;z-index: 108;'>
+</div>
+<style>
+    .sidebar {
+        width: 0;
+        height: 100%;
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        background: #fff;
+        z-index: 999;
+        text-align: center;
+        box-shadow: -6px 0 20px rgba(98, 94, 94, .815)
+    }
 
-      </header>
-      <div id="content">
-        
-    <div id="primary">
-        
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          go语言的标准库container-3-ring
-        
-      </h1>
+    .topo {
+        width: 100%;
+        height: 200px;
+        background: url(https://api.ixiaowai.cn/gqapi/gqapi.php) no-repeat;
+        background-size: 100% 100%;
+        position: relative;
+        display: flex;
+        align-items: flex-end
+    }
 
-      <time class="post-time">
-          5月 31 2021
-      </time>
-    </header>
+    .topo h2 {
+        color: #fff;
+        z-index: 1;
+        position: relative;
+        margin: 0 0 10px 10px;
+        font-size: 1.2em;
+        box-sizing: border-box
+    }
 
+    .topo:before {
+        content: '';
+        background-image: url(/image/pattern.png);
+        background-repeat: repeat;
+        height: 100%;
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 100%;
+        z-index: 1
+    }
 
+    .sidebar ul {
+        width: 100%;
+        margin-top: 50px
+    }
 
-    
-            <div class="post-content">
-            <h3 id="前言-："><a href="#前言-：" class="headerlink" title="前言 ："></a>前言 ：</h3><p>这玩意暂时还没用到，但是这玩意既然有肯定就是有价值的，有时候找了点文章整理一下学一下，以防以后用的上。</p>
+    .sidebar ul li {
+        height: 50px;
+        list-style: none;
+        font-size: 1.2em;
+        text-align: right;
+        margin-right: 10px
+    }
+
+    .sidebar ul li a {
+        display: grid;
+        color: #5d606a;
+        text-overflow: ellipsis;
+        width: 100%;
+        text-decoration: none
+    }
+
+    .my_foot {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        position: absolute;
+        bottom: 0
+    }
+
+    .my_foot a {
+        text-decoration: none;
+        margin-right: 10px;
+        display: inline-block
+    }
+
+    .my_foot a img {
+        width: 30px;
+        height: 30px
+    }
+</style>
+
+<script>
+    $(function () { $('.h-right-close>svg').click(function () { $('.sidebar').animate({ width: "66%" }, 500); $('.shelter').fadeIn("slow") }); $('.shelter').click(function (e) { $('.sidebar').animate({ width: "0" }, 500); $('.shelter').fadeOut("slow") }) })
+</script>
+		<script>
+			$(function () { $(window).scroll(function () { if ($(document).scrollTop() > 100) { $(".header-top").removeClass("header-move2"); $('.header-top').addClass('header-move1') } else { $(".header-top").removeClass("header-move1"); $('.header-top').addClass('header-move2') } }) });
+		</script>
+<div class="header-bg ">
+    <div class="bg-content">
+        <ul class="tag">
+            
+            
+            <li><a href="/tags/golang数据结构">golang数据结构</a></li>
+            
+            <li><a href="/tags/环">环</a></li>
+            
+            
+        </ul>
+        <h1>go语言的标准库container-3-ring</h1>
+        <div class="article-info">
+            <div class="article-author">
+                
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+                    <g>
+                        <path fill="#12183A"
+                            d="M6.187 15.265A6.47 6.47 0 0 0 10 16.5a6.47 6.47 0 0 0 3.813-1.235A4.99 4.99 0 0 0 10 13.5a4.99 4.99 0 0 0-3.813 1.765zM5.082 14.25A6.485 6.485 0 0 1 10 12c1.965 0 3.726.872 4.918 2.25a6.5 6.5 0 1 0-9.836 0zM10 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0-1.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z">
+                        </path>
+                    </g>
+                </svg>
+                
+                <span> <a href="">CHANGEQ</a></span>
+                <p>2021-05-31 21:25:41</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="article-content">
+    <div id="article" class="content">
+        <h3 id="前言-："><a href="#前言-：" class="headerlink" title="前言 ："></a>前言 ：</h3><p>这玩意暂时还没用到，但是这玩意既然有肯定就是有价值的，有时候找了点文章整理一下学一下，以防以后用的上。</p>
 <p>简介<br>Go的标准包Container中包含了常用的容器类型，包括conatiner/list，container/heap，container/ring，本篇讲解container/ring的使用。</p>
 <h3 id="ring包"><a href="#ring包" class="headerlink" title="ring包"></a>ring包</h3><p>ring包提供了环形链表的操作。它仅导出了一个类型，Ring：</p>
 <p><strong>Ring类型代表环形链表的一个元素，同时也代表链表本身。环形链表没有头尾；指向环形链表任一元素的指针都可以作为整个环形链表看待。Ring零值是具有一个（Value字段为nil的）元素的链表。</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; Ring表示环形链表中的元素。</span><br><span class="line">type Ring struct &#123;</span><br><span class="line">    Value interface&#123;&#125; &#x2F;&#x2F; Value类型为interface&#123;&#125;，因此可以接受任意类型</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight elm"><table><tr><td class="code"><pre><code class="hljs elm">// <span class="hljs-type">Ring</span>表示环形链表中的元素。<br><span class="hljs-keyword">type</span> <span class="hljs-type">Ring</span> struct &#123;<br>    <span class="hljs-type">Value</span> interface&#123;&#125; // <span class="hljs-type">Value</span>类型为interface&#123;&#125;，因此可以接受任意类型<br>&#125;<br></code></pre></td></tr></table></figure>
 <p>内部的函数</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 创建一个长度为n的环形链表</span><br><span class="line">func New(n int) *Ring</span><br><span class="line">&#x2F;&#x2F; 针对环形链表中的每一个元素x进行f(x)操作</span><br><span class="line">func (r *Ring) Do(f func(interface&#123;&#125;))</span><br><span class="line">&#x2F;&#x2F; 获取环形链表长度</span><br><span class="line">func (r *Ring) Len() int</span><br><span class="line">&#x2F;&#x2F; 如果r和s在同一环形链表中，则删除r和s之间的元素，</span><br><span class="line">&#x2F;&#x2F; 被删除的元素组成一个新的环形链表，返回值为该环形链表的指针（即删除前，r-&gt;Next()表示的元素）</span><br><span class="line">&#x2F;&#x2F; 如果r和s不在同一个环形链表中，则将s插入到r后面，返回值为</span><br><span class="line">&#x2F;&#x2F; 插入s后，s最后一个元素的下一个元素（即插入前，r-&gt;Next()表示的元素）</span><br><span class="line">func (r *Ring) Link(s *Ring) *Ring</span><br><span class="line">&#x2F;&#x2F; 移动 n % r.Len() 个位置，n正负均可</span><br><span class="line">func (r *Ring) Move(n int) *Ring</span><br><span class="line">&#x2F;&#x2F; 返回下一个元素</span><br><span class="line">func (r *Ring) Next() *Ring</span><br><span class="line">&#x2F;&#x2F; 返回前一个元素</span><br><span class="line">func (r *Ring) Prev() *Ring</span><br><span class="line">&#x2F;&#x2F; 删除r后面的 n % r.Len() 个元素</span><br><span class="line">func (r *Ring) Unlink(n int) *Ring</span><br></pre></td></tr></table></figure>
+<figure class="highlight go"><table><tr><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// 创建一个长度为n的环形链表</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">New</span><span class="hljs-params">(n <span class="hljs-keyword">int</span>)</span> *<span class="hljs-title">Ring</span></span><br><span class="hljs-comment">// 针对环形链表中的每一个元素x进行f(x)操作</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(r *Ring)</span> <span class="hljs-title">Do</span><span class="hljs-params">(f <span class="hljs-keyword">func</span>(<span class="hljs-keyword">interface</span>&#123;&#125;)</span>)</span><br><span class="hljs-comment">// 获取环形链表长度</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(r *Ring)</span> <span class="hljs-title">Len</span><span class="hljs-params">()</span> <span class="hljs-title">int</span></span><br><span class="hljs-comment">// 如果r和s在同一环形链表中，则删除r和s之间的元素，</span><br><span class="hljs-comment">// 被删除的元素组成一个新的环形链表，返回值为该环形链表的指针（即删除前，r-&gt;Next()表示的元素）</span><br><span class="hljs-comment">// 如果r和s不在同一个环形链表中，则将s插入到r后面，返回值为</span><br><span class="hljs-comment">// 插入s后，s最后一个元素的下一个元素（即插入前，r-&gt;Next()表示的元素）</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(r *Ring)</span> <span class="hljs-title">Link</span><span class="hljs-params">(s *Ring)</span> *<span class="hljs-title">Ring</span></span><br><span class="hljs-comment">// 移动 n % r.Len() 个位置，n正负均可</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(r *Ring)</span> <span class="hljs-title">Move</span><span class="hljs-params">(n <span class="hljs-keyword">int</span>)</span> *<span class="hljs-title">Ring</span></span><br><span class="hljs-comment">// 返回下一个元素</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(r *Ring)</span> <span class="hljs-title">Next</span><span class="hljs-params">()</span> *<span class="hljs-title">Ring</span></span><br><span class="hljs-comment">// 返回前一个元素</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(r *Ring)</span> <span class="hljs-title">Prev</span><span class="hljs-params">()</span> *<span class="hljs-title">Ring</span></span><br><span class="hljs-comment">// 删除r后面的 n % r.Len() 个元素</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(r *Ring)</span> <span class="hljs-title">Unlink</span><span class="hljs-params">(n <span class="hljs-keyword">int</span>)</span> *<span class="hljs-title">Ring</span></span><br></code></pre></td></tr></table></figure>
 
 <h3 id="整两个栗子-照着抄一下哈哈"><a href="#整两个栗子-照着抄一下哈哈" class="headerlink" title="整两个栗子  照着抄一下哈哈"></a>整两个栗子  照着抄一下哈哈</h3><p>Ring的用法<br><strong>栗子一：</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">	&quot;container&#x2F;ring&quot;</span><br><span class="line">	&quot;fmt&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line">	RingFunc()</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">func RingFunc() &#123;</span><br><span class="line">	r :&#x3D; ring.New(10) &#x2F;&#x2F;初始长度10</span><br><span class="line">	for i :&#x3D; 0; i &lt; r.Len(); i++ &#123;</span><br><span class="line">		r.Value &#x3D; i</span><br><span class="line">		r &#x3D; r.Next()</span><br><span class="line">	&#125;</span><br><span class="line">	for i :&#x3D; 0; i &lt; r.Len(); i++ &#123;</span><br><span class="line">		fmt.Println(r.Value)</span><br><span class="line">		r &#x3D; r.Next()</span><br><span class="line">	&#125;</span><br><span class="line">	r &#x3D; r.Move(6)</span><br><span class="line">	fmt.Println(r.Value) &#x2F;&#x2F;6</span><br><span class="line">	r1 :&#x3D; r.Unlink(19)   &#x2F;&#x2F;移除19%10&#x3D;9个元素</span><br><span class="line">	for i :&#x3D; 0; i &lt; r1.Len(); i++ &#123;</span><br><span class="line">		fmt.Println(r1.Value)</span><br><span class="line">		r1 &#x3D; r1.Next()</span><br><span class="line">	&#125;</span><br><span class="line">	fmt.Println(r.Len())  &#x2F;&#x2F;10-9&#x3D;1</span><br><span class="line">	fmt.Println(r1.Len()) &#x2F;&#x2F;9</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight go"><table><tr><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><br><span class="hljs-keyword">import</span> (<br>	<span class="hljs-string">&quot;container/ring&quot;</span><br>	<span class="hljs-string">&quot;fmt&quot;</span><br>)<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	RingFunc()<br><br>&#125;<br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">RingFunc</span><span class="hljs-params">()</span></span> &#123;<br>	r := ring.New(<span class="hljs-number">10</span>) <span class="hljs-comment">//初始长度10</span><br>	<span class="hljs-keyword">for</span> i := <span class="hljs-number">0</span>; i &lt; r.Len(); i++ &#123;<br>		r.Value = i<br>		r = r.Next()<br>	&#125;<br>	<span class="hljs-keyword">for</span> i := <span class="hljs-number">0</span>; i &lt; r.Len(); i++ &#123;<br>		fmt.Println(r.Value)<br>		r = r.Next()<br>	&#125;<br>	r = r.Move(<span class="hljs-number">6</span>)<br>	fmt.Println(r.Value) <span class="hljs-comment">//6</span><br>	r1 := r.Unlink(<span class="hljs-number">19</span>)   <span class="hljs-comment">//移除19%10=9个元素</span><br>	<span class="hljs-keyword">for</span> i := <span class="hljs-number">0</span>; i &lt; r1.Len(); i++ &#123;<br>		fmt.Println(r1.Value)<br>		r1 = r1.Next()<br>	&#125;<br>	fmt.Println(r.Len())  <span class="hljs-comment">//10-9=1</span><br>	fmt.Println(r1.Len()) <span class="hljs-comment">//9</span><br>&#125;<br></code></pre></td></tr></table></figure>
 
 <p><strong>栗子二：</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">    &quot;container&#x2F;ring&quot;</span><br><span class="line">    &quot;fmt&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line"></span><br><span class="line">    const rLen &#x3D; 3</span><br><span class="line"></span><br><span class="line">    &#x2F;&#x2F; 创建新的Ring</span><br><span class="line">    r :&#x3D; ring.New(rLen)</span><br><span class="line"></span><br><span class="line">    for i :&#x3D; 0; i &lt; rLen; i++ &#123;</span><br><span class="line">        r.Value &#x3D; i</span><br><span class="line">        r &#x3D; r.Next()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    fmt.Printf(&quot;Length of ring: %d\n&quot;, r.Len()) &#x2F;&#x2F; Length of ring: 3</span><br><span class="line"></span><br><span class="line">    &#x2F;&#x2F; 该匿名函数用来打印Ring中的数据</span><br><span class="line">    printRing :&#x3D; func(v interface&#123;&#125;) &#123;</span><br><span class="line">        fmt.Print(v, &quot; &quot;)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    r.Do(printRing) &#x2F;&#x2F; 0 1 2</span><br><span class="line">    fmt.Println()</span><br><span class="line"></span><br><span class="line">    &#x2F;&#x2F; 将r之后的第二个元素的值乘以2</span><br><span class="line">    r.Move(2).Value &#x3D; r.Move(2).Value.(int) * 2</span><br><span class="line"></span><br><span class="line">    r.Do(printRing) &#x2F;&#x2F; 0 1 4</span><br><span class="line">    fmt.Println()</span><br><span class="line"></span><br><span class="line">    &#x2F;&#x2F; 删除 r 与 r+2 之间的元素，即删除 r+1</span><br><span class="line">    &#x2F;&#x2F; 返回删除的元素组成的Ring的指针</span><br><span class="line">    result :&#x3D; r.Link(r.Move(2))</span><br><span class="line"></span><br><span class="line">    r.Do(printRing) &#x2F;&#x2F; 0 4</span><br><span class="line">    fmt.Println()</span><br><span class="line"></span><br><span class="line">    result.Do(printRing) &#x2F;&#x2F; 1</span><br><span class="line">    fmt.Println()</span><br><span class="line"></span><br><span class="line">    another :&#x3D; ring.New(rLen)</span><br><span class="line">    another.Value &#x3D; 7</span><br><span class="line">    another.Next().Value &#x3D; 8 &#x2F;&#x2F; 给 another + 1 表示的元素赋值，即第二个元素</span><br><span class="line">    another.Prev().Value &#x3D; 9 &#x2F;&#x2F; 给 another - 1 表示的元素赋值，即第三个元素</span><br><span class="line"></span><br><span class="line">    another.Do(printRing) &#x2F;&#x2F; 7 8 9</span><br><span class="line">    fmt.Println()</span><br><span class="line"></span><br><span class="line">    &#x2F;&#x2F; 插入another到r后面，返回插入前r的下一个元素</span><br><span class="line">    result &#x3D; r.Link(another)</span><br><span class="line"></span><br><span class="line">    r.Do(printRing) &#x2F;&#x2F; 0 7 8 9 4</span><br><span class="line">    fmt.Println()</span><br><span class="line"></span><br><span class="line">    result.Do(printRing) &#x2F;&#x2F; 4 0 7 8 9</span><br><span class="line">    fmt.Println()</span><br><span class="line"></span><br><span class="line">    &#x2F;&#x2F; 删除r之后的三个元素，返回被删除元素组成的Ring的指针</span><br><span class="line">    result &#x3D; r.Unlink(3)</span><br><span class="line"></span><br><span class="line">    r.Do(printRing) &#x2F;&#x2F; 0 4</span><br><span class="line">    fmt.Println()</span><br><span class="line"></span><br><span class="line">    result.Do(printRing) &#x2F;&#x2F; 7 8 9</span><br><span class="line">    fmt.Println()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight gradle"><table><tr><td class="code"><pre><code class="hljs gradle"><span class="hljs-keyword">package</span> main<br><br><span class="hljs-keyword">import</span> (<br>    <span class="hljs-string">&quot;container/ring&quot;</span><br>    <span class="hljs-string">&quot;fmt&quot;</span><br>)<br><br>func main() &#123;<br><br>    const rLen = <span class="hljs-number">3</span><br><br>    <span class="hljs-comment">// 创建新的Ring</span><br>    r := ring.<span class="hljs-keyword">New</span>(rLen)<br><br>    <span class="hljs-keyword">for</span> i := <span class="hljs-number">0</span>; i &lt; rLen; i++ &#123;<br>        r.Value = i<br>        r = r.<span class="hljs-keyword">Next</span>()<br>    &#125;<br><br>    fmt.Printf(<span class="hljs-string">&quot;Length of ring: %d\n&quot;</span>, r.Len()) <span class="hljs-comment">// Length of ring: 3</span><br><br>    <span class="hljs-comment">// 该匿名函数用来打印Ring中的数据</span><br>    printRing := func(v <span class="hljs-keyword">interface</span>&#123;&#125;) &#123;<br>        fmt.<span class="hljs-keyword">Print</span>(v, <span class="hljs-string">&quot; &quot;</span>)<br>    &#125;<br><br>    r.<span class="hljs-keyword">Do</span>(printRing) <span class="hljs-comment">// 0 1 2</span><br>    fmt.<span class="hljs-keyword">Println</span>()<br><br>    <span class="hljs-comment">// 将r之后的第二个元素的值乘以2</span><br>    r.Move(<span class="hljs-number">2</span>).Value = r.Move(<span class="hljs-number">2</span>).Value.(<span class="hljs-keyword">int</span>) * <span class="hljs-number">2</span><br><br>    r.<span class="hljs-keyword">Do</span>(printRing) <span class="hljs-comment">// 0 1 4</span><br>    fmt.<span class="hljs-keyword">Println</span>()<br><br>    <span class="hljs-comment">// 删除 r 与 r+2 之间的元素，即删除 r+1</span><br>    <span class="hljs-comment">// 返回删除的元素组成的Ring的指针</span><br>    result := r.Link(r.Move(<span class="hljs-number">2</span>))<br><br>    r.<span class="hljs-keyword">Do</span>(printRing) <span class="hljs-comment">// 0 4</span><br>    fmt.<span class="hljs-keyword">Println</span>()<br><br>    result.<span class="hljs-keyword">Do</span>(printRing) <span class="hljs-comment">// 1</span><br>    fmt.<span class="hljs-keyword">Println</span>()<br><br>    another := ring.<span class="hljs-keyword">New</span>(rLen)<br>    another.Value = <span class="hljs-number">7</span><br>    another.<span class="hljs-keyword">Next</span>().Value = <span class="hljs-number">8</span> <span class="hljs-comment">// 给 another + 1 表示的元素赋值，即第二个元素</span><br>    another.Prev().Value = <span class="hljs-number">9</span> <span class="hljs-comment">// 给 another - 1 表示的元素赋值，即第三个元素</span><br><br>    another.<span class="hljs-keyword">Do</span>(printRing) <span class="hljs-comment">// 7 8 9</span><br>    fmt.<span class="hljs-keyword">Println</span>()<br><br>    <span class="hljs-comment">// 插入another到r后面，返回插入前r的下一个元素</span><br>    result = r.Link(another)<br><br>    r.<span class="hljs-keyword">Do</span>(printRing) <span class="hljs-comment">// 0 7 8 9 4</span><br>    fmt.<span class="hljs-keyword">Println</span>()<br><br>    result.<span class="hljs-keyword">Do</span>(printRing) <span class="hljs-comment">// 4 0 7 8 9</span><br>    fmt.<span class="hljs-keyword">Println</span>()<br><br>    <span class="hljs-comment">// 删除r之后的三个元素，返回被删除元素组成的Ring的指针</span><br>    result = r.Unlink(<span class="hljs-number">3</span>)<br><br>    r.<span class="hljs-keyword">Do</span>(printRing) <span class="hljs-comment">// 0 4</span><br>    fmt.<span class="hljs-keyword">Println</span>()<br><br>    result.<span class="hljs-keyword">Do</span>(printRing) <span class="hljs-comment">// 7 8 9</span><br>    fmt.<span class="hljs-keyword">Println</span>()<br>&#125;<br></code></pre></td></tr></table></figure>
 <h3 id="实际使用场景"><a href="#实际使用场景" class="headerlink" title="实际使用场景"></a>实际使用场景</h3><p>这个栗子太阔怕了，嘤嘤嘤</p>
 <p><strong>模拟约瑟夫问题</strong><br>环形列表可以模拟约瑟夫问题。约瑟夫问题描述如下：</p>
 <p>来自百度：<br>据说著名犹太历史学家 Josephus有过以下的故事：在罗马人占领乔塔帕特后，39 个犹太人与Josephus及他的朋友躲到一个洞中，39个犹太人决定宁愿死也不要被敌人抓到，于是决定了一个自杀方式，41个人排成一个圆圈，由第1个人开始报数，每报数到第3人该人就必须自杀，然后再由下一个重新报数，直到所有人都自杀身亡为止。然而Josephus 和他的朋友并不想遵从。首先从一个人开始，越过k-2个人（因为第一个人已经被越过），并杀掉第k个人。接着，再越过k-1个人，并杀掉第k个人。这个过程沿着圆圈一直进行，直到最终只剩下一个人留下，这个人就可以继续活着。问题是，给定了和，一开始要站在什么地方才能避免被处决？Josephus要他的朋友先假装遵从，他将朋友与自己安排在第16个与第31个位置，于是逃过了这场死亡游戏。</p>
 <p>用代码模拟如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">    &quot;container&#x2F;ring&quot;</span><br><span class="line">    &quot;fmt&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">type Player struct &#123;</span><br><span class="line">    position int  &#x2F;&#x2F; 位置</span><br><span class="line">    alive    bool &#x2F;&#x2F; 是否存活</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line"></span><br><span class="line">    const (</span><br><span class="line">        playerCount &#x3D; 41  &#x2F;&#x2F; 玩家人数</span><br><span class="line">        startPos    &#x3D; 1  &#x2F;&#x2F; 开始报数位置</span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line">    deadline :&#x3D; 3</span><br><span class="line"></span><br><span class="line">    r :&#x3D; ring.New(playerCount)</span><br><span class="line"></span><br><span class="line">    &#x2F;&#x2F; 设置所有玩家初始值</span><br><span class="line">    for i :&#x3D; 1; i &lt;&#x3D; playerCount; i++ &#123;</span><br><span class="line">        r.Value &#x3D; &amp;Player&#123;i, true&#125;</span><br><span class="line">        r &#x3D; r.Next()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    &#x2F;&#x2F; 如果开始报数的位置不为1，则设置开始位置</span><br><span class="line">    if startPos &gt; 1 &#123;</span><br><span class="line">        r &#x3D; r.Move(startPos - 1)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    counter :&#x3D; 1  &#x2F;&#x2F; 报数从1开始，因为下面的循环从第二个开始计算</span><br><span class="line">    deadCount :&#x3D; 0  &#x2F;&#x2F; 死亡人数，初始值为0</span><br><span class="line"></span><br><span class="line">    for deadCount &lt; playerCount &#123;  &#x2F;&#x2F; 直到所有人都死亡，否则循环一直执行</span><br><span class="line">        r &#x3D; r.Next() &#x2F;&#x2F; 跳到下一个人</span><br><span class="line"></span><br><span class="line">        &#x2F;&#x2F; 如果是活着的人，则报数</span><br><span class="line">        if r.Value.(*Player).alive &#123;</span><br><span class="line">            counter++</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        &#x2F;&#x2F; 如果报数为deadline，则此人淘汰出局</span><br><span class="line">        if counter &#x3D;&#x3D; deadline &#123;</span><br><span class="line">            r.Value.(*Player).alive &#x3D; false</span><br><span class="line">            fmt.Printf(&quot;Player %d died!\n&quot;, r.Value.(*Player).position)</span><br><span class="line">            deadCount++</span><br><span class="line"></span><br><span class="line">            counter &#x3D; 0  &#x2F;&#x2F; 报数置成0</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight go"><table><tr><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><br><span class="hljs-keyword">import</span> (<br>    <span class="hljs-string">&quot;container/ring&quot;</span><br>    <span class="hljs-string">&quot;fmt&quot;</span><br>)<br><br><span class="hljs-keyword">type</span> Player <span class="hljs-keyword">struct</span> &#123;<br>    position <span class="hljs-keyword">int</span>  <span class="hljs-comment">// 位置</span><br>    alive    <span class="hljs-keyword">bool</span> <span class="hljs-comment">// 是否存活</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br><br>    <span class="hljs-keyword">const</span> (<br>        playerCount = <span class="hljs-number">41</span>  <span class="hljs-comment">// 玩家人数</span><br>        startPos    = <span class="hljs-number">1</span>  <span class="hljs-comment">// 开始报数位置</span><br>    )<br><br>    deadline := <span class="hljs-number">3</span><br><br>    r := ring.New(playerCount)<br><br>    <span class="hljs-comment">// 设置所有玩家初始值</span><br>    <span class="hljs-keyword">for</span> i := <span class="hljs-number">1</span>; i &lt;= playerCount; i++ &#123;<br>        r.Value = &amp;Player&#123;i, <span class="hljs-literal">true</span>&#125;<br>        r = r.Next()<br>    &#125;<br><br>    <span class="hljs-comment">// 如果开始报数的位置不为1，则设置开始位置</span><br>    <span class="hljs-keyword">if</span> startPos &gt; <span class="hljs-number">1</span> &#123;<br>        r = r.Move(startPos - <span class="hljs-number">1</span>)<br>    &#125;<br><br>    counter := <span class="hljs-number">1</span>  <span class="hljs-comment">// 报数从1开始，因为下面的循环从第二个开始计算</span><br>    deadCount := <span class="hljs-number">0</span>  <span class="hljs-comment">// 死亡人数，初始值为0</span><br><br>    <span class="hljs-keyword">for</span> deadCount &lt; playerCount &#123;  <span class="hljs-comment">// 直到所有人都死亡，否则循环一直执行</span><br>        r = r.Next() <span class="hljs-comment">// 跳到下一个人</span><br><br>        <span class="hljs-comment">// 如果是活着的人，则报数</span><br>        <span class="hljs-keyword">if</span> r.Value.(*Player).alive &#123;<br>            counter++<br>        &#125;<br><br>        <span class="hljs-comment">// 如果报数为deadline，则此人淘汰出局</span><br>        <span class="hljs-keyword">if</span> counter == deadline &#123;<br>            r.Value.(*Player).alive = <span class="hljs-literal">false</span><br>            fmt.Printf(<span class="hljs-string">&quot;Player %d died!\n&quot;</span>, r.Value.(*Player).position)<br>            deadCount++<br><br>            counter = <span class="hljs-number">0</span>  <span class="hljs-comment">// 报数置成0</span><br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 
 <p>输出如下，可以看到16和31是最后两个出队列的，因此Josephus将他的朋友与自己安排在第16个与第31个位置是安全的。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">Player 3 died!</span><br><span class="line">Player 6 died!</span><br><span class="line">Player 9 died!</span><br><span class="line">Player 12 died!</span><br><span class="line">Player 15 died!</span><br><span class="line">Player 18 died!</span><br><span class="line">Player 21 died!</span><br><span class="line">Player 24 died!</span><br><span class="line">Player 27 died!</span><br><span class="line">Player 30 died!</span><br><span class="line">Player 33 died!</span><br><span class="line">Player 36 died!</span><br><span class="line">Player 39 died!</span><br><span class="line">Player 1 died!</span><br><span class="line">Player 5 died!</span><br><span class="line">Player 10 died!</span><br><span class="line">Player 14 died!</span><br><span class="line">Player 19 died!</span><br><span class="line">Player 23 died!</span><br><span class="line">Player 28 died!</span><br><span class="line">Player 32 died!</span><br><span class="line">Player 37 died!</span><br><span class="line">Player 41 died!</span><br><span class="line">Player 7 died!</span><br><span class="line">Player 13 died!</span><br><span class="line">Player 20 died!</span><br><span class="line">Player 26 died!</span><br><span class="line">Player 34 died!</span><br><span class="line">Player 40 died!</span><br><span class="line">Player 8 died!</span><br><span class="line">Player 17 died!</span><br><span class="line">Player 29 died!</span><br><span class="line">Player 38 died!</span><br><span class="line">Player 11 died!</span><br><span class="line">Player 25 died!</span><br><span class="line">Player 2 died!</span><br><span class="line">Player 22 died!</span><br><span class="line">Player 4 died!</span><br><span class="line">Player 35 died!</span><br><span class="line">Player 16 died!</span><br><span class="line">Player 31 died!</span><br></pre></td></tr></table></figure>
+<figure class="highlight apache"><table><tr><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">Player</span> <span class="hljs-number">3</span> died!<br><span class="hljs-attribute">Player</span> <span class="hljs-number">6</span> died!<br><span class="hljs-attribute">Player</span> <span class="hljs-number">9</span> died!<br><span class="hljs-attribute">Player</span> <span class="hljs-number">12</span> died!<br><span class="hljs-attribute">Player</span> <span class="hljs-number">15</span> died!<br><span class="hljs-attribute">Player</span> <span class="hljs-number">18</span> died!<br><span class="hljs-attribute">Player</span> <span class="hljs-number">21</span> died!<br><span class="hljs-attribute">Player</span> <span class="hljs-number">24</span> died!<br><span class="hljs-attribute">Player</span> <span class="hljs-number">27</span> died!<br><span class="hljs-attribute">Player</span> <span class="hljs-number">30</span> died!<br><span class="hljs-attribute">Player</span> <span class="hljs-number">33</span> died!<br><span class="hljs-attribute">Player</span> <span class="hljs-number">36</span> died!<br><span class="hljs-attribute">Player</span> <span class="hljs-number">39</span> died!<br><span class="hljs-attribute">Player</span> <span class="hljs-number">1</span> died!<br><span class="hljs-attribute">Player</span> <span class="hljs-number">5</span> died!<br><span class="hljs-attribute">Player</span> <span class="hljs-number">10</span> died!<br><span class="hljs-attribute">Player</span> <span class="hljs-number">14</span> died!<br><span class="hljs-attribute">Player</span> <span class="hljs-number">19</span> died!<br><span class="hljs-attribute">Player</span> <span class="hljs-number">23</span> died!<br><span class="hljs-attribute">Player</span> <span class="hljs-number">28</span> died!<br><span class="hljs-attribute">Player</span> <span class="hljs-number">32</span> died!<br><span class="hljs-attribute">Player</span> <span class="hljs-number">37</span> died!<br><span class="hljs-attribute">Player</span> <span class="hljs-number">41</span> died!<br><span class="hljs-attribute">Player</span> <span class="hljs-number">7</span> died!<br><span class="hljs-attribute">Player</span> <span class="hljs-number">13</span> died!<br><span class="hljs-attribute">Player</span> <span class="hljs-number">20</span> died!<br><span class="hljs-attribute">Player</span> <span class="hljs-number">26</span> died!<br><span class="hljs-attribute">Player</span> <span class="hljs-number">34</span> died!<br><span class="hljs-attribute">Player</span> <span class="hljs-number">40</span> died!<br><span class="hljs-attribute">Player</span> <span class="hljs-number">8</span> died!<br><span class="hljs-attribute">Player</span> <span class="hljs-number">17</span> died!<br><span class="hljs-attribute">Player</span> <span class="hljs-number">29</span> died!<br><span class="hljs-attribute">Player</span> <span class="hljs-number">38</span> died!<br><span class="hljs-attribute">Player</span> <span class="hljs-number">11</span> died!<br><span class="hljs-attribute">Player</span> <span class="hljs-number">25</span> died!<br><span class="hljs-attribute">Player</span> <span class="hljs-number">2</span> died!<br><span class="hljs-attribute">Player</span> <span class="hljs-number">22</span> died!<br><span class="hljs-attribute">Player</span> <span class="hljs-number">4</span> died!<br><span class="hljs-attribute">Player</span> <span class="hljs-number">35</span> died!<br><span class="hljs-attribute">Player</span> <span class="hljs-number">16</span> died!<br><span class="hljs-attribute">Player</span> <span class="hljs-number">31</span> died!<br></code></pre></td></tr></table></figure>
 
 <h3 id="打个总结"><a href="#打个总结" class="headerlink" title="打个总结"></a>打个总结</h3><p>我有点进去看一下ring的内部结构<br>ring.go</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; Copyright 2009 The Go Authors. All rights reserved.</span><br><span class="line">&#x2F;&#x2F; Use of this source code is governed by a BSD-style</span><br><span class="line">&#x2F;&#x2F; license that can be found in the LICENSE file.</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; Package ring implements operations on circular lists.</span><br><span class="line">package ring</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; A Ring is an element of a circular list, or ring.</span><br><span class="line">&#x2F;&#x2F; Rings do not have a beginning or end; a pointer to any ring element</span><br><span class="line">&#x2F;&#x2F; serves as reference to the entire ring. Empty rings are represented</span><br><span class="line">&#x2F;&#x2F; as nil Ring pointers. The zero value for a Ring is a one-element</span><br><span class="line">&#x2F;&#x2F; ring with a nil Value.</span><br><span class="line">&#x2F;&#x2F;</span><br><span class="line">type Ring struct &#123;</span><br><span class="line">	next, prev *Ring</span><br><span class="line">	Value      interface&#123;&#125; &#x2F;&#x2F; for use by client; untouched by this library</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func (r *Ring) init() *Ring &#123;</span><br><span class="line">	r.next &#x3D; r</span><br><span class="line">	r.prev &#x3D; r</span><br><span class="line">	return r</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; Next returns the next ring element. r must not be empty.</span><br><span class="line">func (r *Ring) Next() *Ring &#123;</span><br><span class="line">	if r.next &#x3D;&#x3D; nil &#123;</span><br><span class="line">		return r.init()</span><br><span class="line">	&#125;</span><br><span class="line">	return r.next</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; Prev returns the previous ring element. r must not be empty.</span><br><span class="line">func (r *Ring) Prev() *Ring &#123;</span><br><span class="line">	if r.next &#x3D;&#x3D; nil &#123;</span><br><span class="line">		return r.init()</span><br><span class="line">	&#125;</span><br><span class="line">	return r.prev</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; Move moves n % r.Len() elements backward (n &lt; 0) or forward (n &gt;&#x3D; 0)</span><br><span class="line">&#x2F;&#x2F; in the ring and returns that ring element. r must not be empty.</span><br><span class="line">&#x2F;&#x2F;</span><br><span class="line">func (r *Ring) Move(n int) *Ring &#123;</span><br><span class="line">	if r.next &#x3D;&#x3D; nil &#123;</span><br><span class="line">		return r.init()</span><br><span class="line">	&#125;</span><br><span class="line">	switch &#123;</span><br><span class="line">	case n &lt; 0:</span><br><span class="line">		for ; n &lt; 0; n++ &#123;</span><br><span class="line">			r &#x3D; r.prev</span><br><span class="line">		&#125;</span><br><span class="line">	case n &gt; 0:</span><br><span class="line">		for ; n &gt; 0; n-- &#123;</span><br><span class="line">			r &#x3D; r.next</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	return r</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; New creates a ring of n elements.</span><br><span class="line">func New(n int) *Ring &#123;</span><br><span class="line">	if n &lt;&#x3D; 0 &#123;</span><br><span class="line">		return nil</span><br><span class="line">	&#125;</span><br><span class="line">	r :&#x3D; new(Ring)</span><br><span class="line">	p :&#x3D; r</span><br><span class="line">	for i :&#x3D; 1; i &lt; n; i++ &#123;</span><br><span class="line">		p.next &#x3D; &amp;Ring&#123;prev: p&#125;</span><br><span class="line">		p &#x3D; p.next</span><br><span class="line">	&#125;</span><br><span class="line">	p.next &#x3D; r</span><br><span class="line">	r.prev &#x3D; p</span><br><span class="line">	return r</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; Link connects ring r with ring s such that r.Next()</span><br><span class="line">&#x2F;&#x2F; becomes s and returns the original value for r.Next().</span><br><span class="line">&#x2F;&#x2F; r must not be empty.</span><br><span class="line">&#x2F;&#x2F;</span><br><span class="line">&#x2F;&#x2F; If r and s point to the same ring, linking</span><br><span class="line">&#x2F;&#x2F; them removes the elements between r and s from the ring.</span><br><span class="line">&#x2F;&#x2F; The removed elements form a subring and the result is a</span><br><span class="line">&#x2F;&#x2F; reference to that subring (if no elements were removed,</span><br><span class="line">&#x2F;&#x2F; the result is still the original value for r.Next(),</span><br><span class="line">&#x2F;&#x2F; and not nil).</span><br><span class="line">&#x2F;&#x2F;</span><br><span class="line">&#x2F;&#x2F; If r and s point to different rings, linking</span><br><span class="line">&#x2F;&#x2F; them creates a single ring with the elements of s inserted</span><br><span class="line">&#x2F;&#x2F; after r. The result points to the element following the</span><br><span class="line">&#x2F;&#x2F; last element of s after insertion.</span><br><span class="line">&#x2F;&#x2F;</span><br><span class="line">func (r *Ring) Link(s *Ring) *Ring &#123;</span><br><span class="line">	n :&#x3D; r.Next()</span><br><span class="line">	if s !&#x3D; nil &#123;</span><br><span class="line">		p :&#x3D; s.Prev()</span><br><span class="line">		&#x2F;&#x2F; Note: Cannot use multiple assignment because</span><br><span class="line">		&#x2F;&#x2F; evaluation order of LHS is not specified.</span><br><span class="line">		r.next &#x3D; s</span><br><span class="line">		s.prev &#x3D; r</span><br><span class="line">		n.prev &#x3D; p</span><br><span class="line">		p.next &#x3D; n</span><br><span class="line">	&#125;</span><br><span class="line">	return n</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; Unlink removes n % r.Len() elements from the ring r, starting</span><br><span class="line">&#x2F;&#x2F; at r.Next(). If n % r.Len() &#x3D;&#x3D; 0, r remains unchanged.</span><br><span class="line">&#x2F;&#x2F; The result is the removed subring. r must not be empty.</span><br><span class="line">&#x2F;&#x2F;</span><br><span class="line">func (r *Ring) Unlink(n int) *Ring &#123;</span><br><span class="line">	if n &lt;&#x3D; 0 &#123;</span><br><span class="line">		return nil</span><br><span class="line">	&#125;</span><br><span class="line">	return r.Link(r.Move(n + 1))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; Len computes the number of elements in ring r.</span><br><span class="line">&#x2F;&#x2F; It executes in time proportional to the number of elements.</span><br><span class="line">&#x2F;&#x2F;</span><br><span class="line">func (r *Ring) Len() int &#123;</span><br><span class="line">	n :&#x3D; 0</span><br><span class="line">	if r !&#x3D; nil &#123;</span><br><span class="line">		n &#x3D; 1</span><br><span class="line">		for p :&#x3D; r.Next(); p !&#x3D; r; p &#x3D; p.next &#123;</span><br><span class="line">			n++</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	return n</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; Do calls function f on each element of the ring, in forward order.</span><br><span class="line">&#x2F;&#x2F; The behavior of Do is undefined if f changes *r.</span><br><span class="line">func (r *Ring) Do(f func(interface&#123;&#125;)) &#123;</span><br><span class="line">	if r !&#x3D; nil &#123;</span><br><span class="line">		f(r.Value)</span><br><span class="line">		for p :&#x3D; r.Next(); p !&#x3D; r; p &#x3D; p.next &#123;</span><br><span class="line">			f(p.Value)</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<figure class="highlight go"><table><tr><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// Copyright 2009 The Go Authors. All rights reserved.</span><br><span class="hljs-comment">// Use of this source code is governed by a BSD-style</span><br><span class="hljs-comment">// license that can be found in the LICENSE file.</span><br><br><span class="hljs-comment">// Package ring implements operations on circular lists.</span><br><span class="hljs-keyword">package</span> ring<br><br><span class="hljs-comment">// A Ring is an element of a circular list, or ring.</span><br><span class="hljs-comment">// Rings do not have a beginning or end; a pointer to any ring element</span><br><span class="hljs-comment">// serves as reference to the entire ring. Empty rings are represented</span><br><span class="hljs-comment">// as nil Ring pointers. The zero value for a Ring is a one-element</span><br><span class="hljs-comment">// ring with a nil Value.</span><br><span class="hljs-comment">//</span><br><span class="hljs-keyword">type</span> Ring <span class="hljs-keyword">struct</span> &#123;<br>	next, prev *Ring<br>	Value      <span class="hljs-keyword">interface</span>&#123;&#125; <span class="hljs-comment">// for use by client; untouched by this library</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(r *Ring)</span> <span class="hljs-title">init</span><span class="hljs-params">()</span> *<span class="hljs-title">Ring</span></span> &#123;<br>	r.next = r<br>	r.prev = r<br>	<span class="hljs-keyword">return</span> r<br>&#125;<br><br><span class="hljs-comment">// Next returns the next ring element. r must not be empty.</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(r *Ring)</span> <span class="hljs-title">Next</span><span class="hljs-params">()</span> *<span class="hljs-title">Ring</span></span> &#123;<br>	<span class="hljs-keyword">if</span> r.next == <span class="hljs-literal">nil</span> &#123;<br>		<span class="hljs-keyword">return</span> r.init()<br>	&#125;<br>	<span class="hljs-keyword">return</span> r.next<br>&#125;<br><br><span class="hljs-comment">// Prev returns the previous ring element. r must not be empty.</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(r *Ring)</span> <span class="hljs-title">Prev</span><span class="hljs-params">()</span> *<span class="hljs-title">Ring</span></span> &#123;<br>	<span class="hljs-keyword">if</span> r.next == <span class="hljs-literal">nil</span> &#123;<br>		<span class="hljs-keyword">return</span> r.init()<br>	&#125;<br>	<span class="hljs-keyword">return</span> r.prev<br>&#125;<br><br><span class="hljs-comment">// Move moves n % r.Len() elements backward (n &lt; 0) or forward (n &gt;= 0)</span><br><span class="hljs-comment">// in the ring and returns that ring element. r must not be empty.</span><br><span class="hljs-comment">//</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(r *Ring)</span> <span class="hljs-title">Move</span><span class="hljs-params">(n <span class="hljs-keyword">int</span>)</span> *<span class="hljs-title">Ring</span></span> &#123;<br>	<span class="hljs-keyword">if</span> r.next == <span class="hljs-literal">nil</span> &#123;<br>		<span class="hljs-keyword">return</span> r.init()<br>	&#125;<br>	<span class="hljs-keyword">switch</span> &#123;<br>	<span class="hljs-keyword">case</span> n &lt; <span class="hljs-number">0</span>:<br>		<span class="hljs-keyword">for</span> ; n &lt; <span class="hljs-number">0</span>; n++ &#123;<br>			r = r.prev<br>		&#125;<br>	<span class="hljs-keyword">case</span> n &gt; <span class="hljs-number">0</span>:<br>		<span class="hljs-keyword">for</span> ; n &gt; <span class="hljs-number">0</span>; n-- &#123;<br>			r = r.next<br>		&#125;<br>	&#125;<br>	<span class="hljs-keyword">return</span> r<br>&#125;<br><br><span class="hljs-comment">// New creates a ring of n elements.</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">New</span><span class="hljs-params">(n <span class="hljs-keyword">int</span>)</span> *<span class="hljs-title">Ring</span></span> &#123;<br>	<span class="hljs-keyword">if</span> n &lt;= <span class="hljs-number">0</span> &#123;<br>		<span class="hljs-keyword">return</span> <span class="hljs-literal">nil</span><br>	&#125;<br>	r := <span class="hljs-built_in">new</span>(Ring)<br>	p := r<br>	<span class="hljs-keyword">for</span> i := <span class="hljs-number">1</span>; i &lt; n; i++ &#123;<br>		p.next = &amp;Ring&#123;prev: p&#125;<br>		p = p.next<br>	&#125;<br>	p.next = r<br>	r.prev = p<br>	<span class="hljs-keyword">return</span> r<br>&#125;<br><br><span class="hljs-comment">// Link connects ring r with ring s such that r.Next()</span><br><span class="hljs-comment">// becomes s and returns the original value for r.Next().</span><br><span class="hljs-comment">// r must not be empty.</span><br><span class="hljs-comment">//</span><br><span class="hljs-comment">// If r and s point to the same ring, linking</span><br><span class="hljs-comment">// them removes the elements between r and s from the ring.</span><br><span class="hljs-comment">// The removed elements form a subring and the result is a</span><br><span class="hljs-comment">// reference to that subring (if no elements were removed,</span><br><span class="hljs-comment">// the result is still the original value for r.Next(),</span><br><span class="hljs-comment">// and not nil).</span><br><span class="hljs-comment">//</span><br><span class="hljs-comment">// If r and s point to different rings, linking</span><br><span class="hljs-comment">// them creates a single ring with the elements of s inserted</span><br><span class="hljs-comment">// after r. The result points to the element following the</span><br><span class="hljs-comment">// last element of s after insertion.</span><br><span class="hljs-comment">//</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(r *Ring)</span> <span class="hljs-title">Link</span><span class="hljs-params">(s *Ring)</span> *<span class="hljs-title">Ring</span></span> &#123;<br>	n := r.Next()<br>	<span class="hljs-keyword">if</span> s != <span class="hljs-literal">nil</span> &#123;<br>		p := s.Prev()<br>		<span class="hljs-comment">// Note: Cannot use multiple assignment because</span><br>		<span class="hljs-comment">// evaluation order of LHS is not specified.</span><br>		r.next = s<br>		s.prev = r<br>		n.prev = p<br>		p.next = n<br>	&#125;<br>	<span class="hljs-keyword">return</span> n<br>&#125;<br><br><span class="hljs-comment">// Unlink removes n % r.Len() elements from the ring r, starting</span><br><span class="hljs-comment">// at r.Next(). If n % r.Len() == 0, r remains unchanged.</span><br><span class="hljs-comment">// The result is the removed subring. r must not be empty.</span><br><span class="hljs-comment">//</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(r *Ring)</span> <span class="hljs-title">Unlink</span><span class="hljs-params">(n <span class="hljs-keyword">int</span>)</span> *<span class="hljs-title">Ring</span></span> &#123;<br>	<span class="hljs-keyword">if</span> n &lt;= <span class="hljs-number">0</span> &#123;<br>		<span class="hljs-keyword">return</span> <span class="hljs-literal">nil</span><br>	&#125;<br>	<span class="hljs-keyword">return</span> r.Link(r.Move(n + <span class="hljs-number">1</span>))<br>&#125;<br><br><span class="hljs-comment">// Len computes the number of elements in ring r.</span><br><span class="hljs-comment">// It executes in time proportional to the number of elements.</span><br><span class="hljs-comment">//</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(r *Ring)</span> <span class="hljs-title">Len</span><span class="hljs-params">()</span> <span class="hljs-title">int</span></span> &#123;<br>	n := <span class="hljs-number">0</span><br>	<span class="hljs-keyword">if</span> r != <span class="hljs-literal">nil</span> &#123;<br>		n = <span class="hljs-number">1</span><br>		<span class="hljs-keyword">for</span> p := r.Next(); p != r; p = p.next &#123;<br>			n++<br>		&#125;<br>	&#125;<br>	<span class="hljs-keyword">return</span> n<br>&#125;<br><br><span class="hljs-comment">// Do calls function f on each element of the ring, in forward order.</span><br><span class="hljs-comment">// The behavior of Do is undefined if f changes *r.</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(r *Ring)</span> <span class="hljs-title">Do</span><span class="hljs-params">(f <span class="hljs-keyword">func</span>(<span class="hljs-keyword">interface</span>&#123;&#125;)</span>)</span> &#123;<br>	<span class="hljs-keyword">if</span> r != <span class="hljs-literal">nil</span> &#123;<br>		f(r.Value)<br>		<span class="hljs-keyword">for</span> p := r.Next(); p != r; p = p.next &#123;<br>			f(p.Value)<br>		&#125;<br>	&#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
 <p>这个我简单的看了一下，每个函数你应该都能看出来它的功能，有了前面两个的基础，到这里其实一些思想触类旁通你应该能理解。如果有天需要了我在详细研究一下吧，现在要迫不及待的去开打开打（LOL）~~~</p>
 <p><a target="_blank" rel="noopener" href="https://blog.csdn.net/u011304970/article/details/72830017">原文链接</a></p>
 <p><em><strong>以上就是这次的全部内容，希望能够对你有所帮助！！！</strong></em></p>
 
-            </div>
-          
-
-    
-      <footer class="post-footer">
-		
-		<div class="post-tags">
-		  
-			<a href="/tags/golang%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">golang数据结构</a>
-		  
-			<a href="/tags/%E7%8E%AF/">环</a>
-		  
-		</div>
-		
-
-        
-        
-  <nav class="post-nav">
-    
-      <a class="prev" href="/2021/05/31/go%E8%AF%AD%E8%A8%80%E7%9A%84%E6%A0%87%E5%87%86%E5%BA%93container-2-heap/">
-        <i class="iconfont icon-left"></i>
-        <span class="prev-text nav-default">go语言的标准库container-2-heap</span>
-        <span class="prev-text nav-mobile">Prev</span>
-      </a>
-    
-    
-      <a class="next" href="/2021/05/31/golang%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/">
-        <span class="next-text nav-default">golang的基本数据类型</span>
-        <span class="prev-text nav-mobile">Next</span>
-        <i class="iconfont icon-right"></i>
-      </a>
-    
-  </nav>
-
-        
-  <div class="comments" id="comments">
-    
-  </div>
-
-
-      </footer>
-    
-  </article>
-
     </div>
+</div>
+<style>
+    #noneimg img {
+        display: none;
+        z-index: 109;
+        width: 600px !important;
+        border-radius: 0px;
+        position: fixed;
+        box-shadow: 0 0 0px #c3c3c300 !important;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto !important;
+    }
 
-      </div>
+    @media screen and (max-width:600px) {
+        #noneimg img {
+            width: 88%
+        }
+    }
+</style>
+<script>
+    $(function () { $('#article').click(function (e) { if (e.target.tagName == "IMG") { if ($('#nonediv').length == 0) { let MImg = `<div id='noneimg'><img src='${e.target.currentSrc}'></div>`; let MDiv = "<div id='nonediv' style='cursor: pointer;display: none; position: fixed;left: 0;top: 0; right: 0;bottom: 0;background-color: #333;opacity:0.5;z-index: 108;'></div>"; $('#article').append(MDiv); $('#article').append(MImg); $("#nonediv").fadeIn("slow"); $("#noneimg img").fadeIn("slow") } } else { if ($('#nonediv').length !== 0) { $("#noneimg ").fadeOut("slow"); $("#nonediv").fadeOut("slow"); setTimeout(function () { $('#nonediv').remove(); $('#noneimg').remove() }, 500) } } }); $('.article-content').addClass('content-move') });
+</script>
+<div class="Last-Next">
+    
+    <a href="/2021/05/31/go%E8%AF%AD%E8%A8%80%E7%9A%84%E6%A0%87%E5%87%86%E5%BA%93container-2-heap/">
+        <div class="last">
+            <span>上一篇</span>
+            <p>go语言的标准库container-2-heap</p>
+        </div>
+    </a>
+    
 
-      <footer id="colophon"><span class="copyright-year">
     
-        &copy;
+    <a href="/2021/05/31/golang%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/">
+        <div class="next">
+            <span>下一篇</span>
+            <p>golang的基本数据类型</p>
+        </div>
+    </a>
     
-        2014 -
-    
-    2021
-    <span class="footer-author">Russshare.</span>
-    <span class="power-by">
-        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+</div>
+		
+<link rel="stylesheet" href="/css/food.css">
+
+<div class="footer">
+	<div class="Copyright">
+		©2021 By CHANGEQ. 主题：<a
+			style="text-decoration: none;display: contents; color: #898F9F;"
+			target="_blank" rel="noopener" href="https://github.com/qiaobug/hexo-theme-quiet">Quiet</a>
+	</div>
+	<div class="contact">
+		
+		<a target="_blank" rel="noopener" href="https://github.com/qiaobug">
+			<img src="https://cdn.jsdelivr.net/gh/duogongneng/MyBlogImg/imggithub.png" alt="Quiet主题">
+		</a>
+		
+	</div>
+</div>
+
+<script src="/js/jquery.min.js"></script>
+
+
+<script src="/js/gotop.js"></script>
+
+
+<style type="text/css">
+    @media screen and (min-width: 600px) {
+        .goTop>span {
+            display: block;
+            border-radius: 50%;
+            width: 66px;
+            height: 66px;
+            cursor: pointer;
+            opacity: 0.8;
+            background: rgba(18, 24, 58, 0.06);
+            text-align: center;
+            border: 1px solid rgba(18, 24, 58, 0.06);
+
+            transition: border .5s;
+            -moz-transition: border .5s;
+            /* Firefox 4 */
+            -webkit-transition: border .5s;
+            /* Safari 和 Chrome */
+            -o-transition: border .5s;
+            /* Opera */
+        }
+
+        .goTop>span:hover {
+            border: 1px solid #6680B3;
+        }
+
+
+        .goTop {
+            position: fixed;
+            right: 30px;
+            bottom: 80px;
+        }
+
+        .goTop>span>svg {
+            width: 30px;
+            height: 30px;
+            margin-top: 17.5px;
+            opacity: 0.7;
+        }
+
+    }
+
+    @media screen and (max-width: 600px) {
+        .goTop {
+            display: none;
+        }
+    }
+</style>
+<div class="goTop" id="js-go_top">
+    <span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <g>
+                <path d="M13 12v8h-2v-8H4l8-8 8 8z"></path>
+            </g>
+        </svg>
     </span>
-</span>
+</div>
+<script>
+    $('#js-go_top').gotoTop({ offset: 500, speed: 300, animationShow: { 'transform': 'translate(0,0)', 'transition': 'transform .5s ease-in-out' }, animationHide: { 'transform': 'translate(100px,0)', 'transition': 'transform .5s ease-in-out' } });
+</script>
+<script>
+	console.log('\n %c Hexo-Quiet 主题 %c https://github.com/QiaoBug/hexo-theme-quiet \n', 'color: #fadfa3; background: #030307; padding:5px 0;', 'background: #fadfa3; padding:5px 0;')
+</script>
+	</body>
 
-      </footer>
-
-      <div class="back-to-top" id="back-to-top">
-        <i class="iconfont icon-up"></i>
-      </div>
-    </div>
-    
-
-
-    
-
-
-
-
-  
-    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
-  
-
-  
-
-    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
-<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
-
-  </body>
 </html>

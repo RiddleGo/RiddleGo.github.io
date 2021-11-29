@@ -1,234 +1,424 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
-  <head>
-    
-<meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+<html>
+
+	<head>
+		
+<title>每天一道算法题：无重复的字符的最长子串-Quiet</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="shortcut icon" type="image/x-icon" href="/image/favicon.ico">
 
 
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="keywords" content="面试,算法,">
+<meta name="description" content="">
 
 
-
-  <meta name="description" content="每天一道算法题：无重复的字符的最长子串"/>
-
+<script src="/js/jquery.min.js"></script>
 
 
+	<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+</head>
 
-  <meta name="keywords" content="面试,算法," />
-
-
-
-
-
-  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+	<body>
+		
+<link rel="stylesheet" href="/css/page.css">
 
 
+<link rel="stylesheet" href="/css/page_cente.css">
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+<link rel="stylesheet" href="/css/atom-one-dark.css">
 
 
+<link rel="stylesheet" href="/css/header.css">
 
-<link rel="canonical" href="https://riddlego.github.io/2021/07/26/每天一道算法题：无重复的字符的最长子串/"/>
-
-
-<meta name="description" content="给定一个字符串，找出不含有重复字符的最长子串的长度。 示例 1: 输入: “abcabcbb”输出: 3解释: 无重复字符的最长子串是 “abc”，其长度为 3。示例 2: 输入: “bbbbb”输出: 1解释: 无重复字符的最长子串是 “b”，其长度为 1。示例 3: 输入: “pwwkew”输出: 3解释: 无重复字符的最长子串是 “wke”，其长度为 3。     请注意，答案必须是一个子串">
-<meta property="og:type" content="article">
-<meta property="og:title" content="每天一道算法题：无重复的字符的最长子串">
-<meta property="og:url" content="https://riddlego.github.io/2021/07/26/%E6%AF%8F%E5%A4%A9%E4%B8%80%E9%81%93%E7%AE%97%E6%B3%95%E9%A2%98%EF%BC%9A%E6%97%A0%E9%87%8D%E5%A4%8D%E7%9A%84%E5%AD%97%E7%AC%A6%E7%9A%84%E6%9C%80%E9%95%BF%E5%AD%90%E4%B8%B2/index.html">
-<meta property="og:site_name" content="RiddleGo">
-<meta property="og:description" content="给定一个字符串，找出不含有重复字符的最长子串的长度。 示例 1: 输入: “abcabcbb”输出: 3解释: 无重复字符的最长子串是 “abc”，其长度为 3。示例 2: 输入: “bbbbb”输出: 1解释: 无重复字符的最长子串是 “b”，其长度为 1。示例 3: 输入: “pwwkew”输出: 3解释: 无重复字符的最长子串是 “wke”，其长度为 3。     请注意，答案必须是一个子串">
-<meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2021-07-26T14:49:16.000Z">
-<meta property="article:modified_time" content="2021-07-26T14:51:10.000Z">
-<meta property="article:author" content="Russshare">
-<meta property="article:tag" content="面试">
-<meta property="article:tag" content="算法">
-<meta name="twitter:card" content="summary">
-
-
-<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
-<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
-
-
-
-
-
-<script type="text/javascript">
-  var themeConfig = {
-    fancybox: {
-      enable: false
-    },
-  };
-</script>
-
-
-
-
-  
-
-
-
-    <title> 每天一道算法题：无重复的字符的最长子串 - RiddleGo </title>
-  <meta name="generator" content="Hexo 5.4.0"></head>
-
-  <body>
-    <div id="page">
-      <header id="masthead"><div class="site-header-inner">
-    <h1 class="site-title">
-        <a href="/." class="logo">RiddleGo</a>
-    </h1>
-
-    <nav id="nav-top">
+	<div class="header">
+		<div class="header-top">
+			<div class="h-left">
+				<a href="/">
+					<img src="/image/logo.png" alt="Quiet">
+				</a>
+			</div>
+			<div class="h-right">
+				<ul>
+					
+						
+								<li>
+									<a href="/">
+										HOME
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/archives">
+										ARCHIVE
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/categories">
+										CATEGORIES
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/tags">
+										TAGS
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/links">
+										LINKS
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/about">
+										ABOUT
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+				</ul>
+			</div>
+			<div class="h-right-close">
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+					<path fill="none" d="M0 0h24v24H0z" />
+					<path d="M3 4h18v2H3V4zm0 7h18v2H3v-2zm0 7h18v2H3v-2z" fill="rgba(68,68,68,1)" />
+				</svg>
+			</div>
+		</div>
+	</div>
+	<div class="sidebar">
+    <div class="topo">
+        <h2>CHANGEQ</h2>
+    </div>
+    <ul>
         
-            <ul id="menu-top" class="nav-top-items">
-                
-                    <li class="menu-item">
-                        <a href="/archives">
-                            
-                            
-                                Archives
-                            
-                        </a>
-                    </li>
-                
-                    <li class="menu-item">
-                        <a href="/about">
-                            
-                            
-                                About
-                            
-                        </a>
-                    </li>
-                
-            </ul>
+        <li>
+            <a href="/">HOME</a>
+        </li>
         
-  </nav>
+        <li>
+            <a href="/archives">ARCHIVE</a>
+        </li>
+        
+        <li>
+            <a href="/categories">CATEGORIES</a>
+        </li>
+        
+        <li>
+            <a href="/tags">TAGS</a>
+        </li>
+        
+        <li>
+            <a href="/links">LINKS</a>
+        </li>
+        
+        <li>
+            <a href="/about">ABOUT</a>
+        </li>
+        
+    </ul>
+    <div class="my_foot">
+        
+        <a target="_blank" rel="noopener" href="https://github.com/qiaobug">
+            <img src="https://cdn.jsdelivr.net/gh/duogongneng/MyBlogImg/imggithub.png" alt="Quiet主题">
+        </a>
+        
+    </div>
 </div>
+<div class='shelter'
+    style='cursor: pointer;display: none; position: fixed;left: 0;top: 0; right: 0;bottom: 0;background-color: #333;opacity:0.5;z-index: 108;'>
+</div>
+<style>
+    .sidebar {
+        width: 0;
+        height: 100%;
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        background: #fff;
+        z-index: 999;
+        text-align: center;
+        box-shadow: -6px 0 20px rgba(98, 94, 94, .815)
+    }
 
-      </header>
-      <div id="content">
-        
-    <div id="primary">
-        
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          每天一道算法题：无重复的字符的最长子串
-        
-      </h1>
+    .topo {
+        width: 100%;
+        height: 200px;
+        background: url(https://api.ixiaowai.cn/gqapi/gqapi.php) no-repeat;
+        background-size: 100% 100%;
+        position: relative;
+        display: flex;
+        align-items: flex-end
+    }
 
-      <time class="post-time">
-          7月 26 2021
-      </time>
-    </header>
+    .topo h2 {
+        color: #fff;
+        z-index: 1;
+        position: relative;
+        margin: 0 0 10px 10px;
+        font-size: 1.2em;
+        box-sizing: border-box
+    }
 
+    .topo:before {
+        content: '';
+        background-image: url(/image/pattern.png);
+        background-repeat: repeat;
+        height: 100%;
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 100%;
+        z-index: 1
+    }
 
+    .sidebar ul {
+        width: 100%;
+        margin-top: 50px
+    }
 
-    
-            <div class="post-content">
-            <p>给定一个字符串，找出不含有重复字符的最长子串的长度。</p>
+    .sidebar ul li {
+        height: 50px;
+        list-style: none;
+        font-size: 1.2em;
+        text-align: right;
+        margin-right: 10px
+    }
+
+    .sidebar ul li a {
+        display: grid;
+        color: #5d606a;
+        text-overflow: ellipsis;
+        width: 100%;
+        text-decoration: none
+    }
+
+    .my_foot {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        position: absolute;
+        bottom: 0
+    }
+
+    .my_foot a {
+        text-decoration: none;
+        margin-right: 10px;
+        display: inline-block
+    }
+
+    .my_foot a img {
+        width: 30px;
+        height: 30px
+    }
+</style>
+
+<script>
+    $(function () { $('.h-right-close>svg').click(function () { $('.sidebar').animate({ width: "66%" }, 500); $('.shelter').fadeIn("slow") }); $('.shelter').click(function (e) { $('.sidebar').animate({ width: "0" }, 500); $('.shelter').fadeOut("slow") }) })
+</script>
+		<script>
+			$(function () { $(window).scroll(function () { if ($(document).scrollTop() > 100) { $(".header-top").removeClass("header-move2"); $('.header-top').addClass('header-move1') } else { $(".header-top").removeClass("header-move1"); $('.header-top').addClass('header-move2') } }) });
+		</script>
+<div class="header-bg ">
+    <div class="bg-content">
+        <ul class="tag">
+            
+            
+            <li><a href="/tags/面试">面试</a></li>
+            
+            <li><a href="/tags/算法">算法</a></li>
+            
+            
+        </ul>
+        <h1>每天一道算法题：无重复的字符的最长子串</h1>
+        <div class="article-info">
+            <div class="article-author">
+                
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+                    <g>
+                        <path fill="#12183A"
+                            d="M6.187 15.265A6.47 6.47 0 0 0 10 16.5a6.47 6.47 0 0 0 3.813-1.235A4.99 4.99 0 0 0 10 13.5a4.99 4.99 0 0 0-3.813 1.765zM5.082 14.25A6.485 6.485 0 0 1 10 12c1.965 0 3.726.872 4.918 2.25a6.5 6.5 0 1 0-9.836 0zM10 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0-1.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z">
+                        </path>
+                    </g>
+                </svg>
+                
+                <span> <a href="">CHANGEQ</a></span>
+                <p>2021-07-26 22:49:16</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="article-content">
+    <div id="article" class="content">
+        <p>给定一个字符串，找出不含有重复字符的最长子串的长度。</p>
 <p>示例 1:</p>
 <p>输入: “abcabcbb”<br>输出: 3<br>解释: 无重复字符的最长子串是 “abc”，其长度为 3。<br>示例 2:</p>
 <p>输入: “bbbbb”<br>输出: 1<br>解释: 无重复字符的最长子串是 “b”，其长度为 1。<br>示例 3:</p>
 <p>输入: “pwwkew”<br>输出: 3<br>解释: 无重复字符的最长子串是 “wke”，其长度为 3。<br>     请注意，答案必须是一个子串，”pwke” 是一个子序列 而不是子串。</p>
 <p>方法一</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;abcabcbb</span><br><span class="line">&#x2F;&#x2F;判断子串是否合法</span><br><span class="line">&#x2F;&#x2F;内嵌一个循环判断是否有重复子串</span><br><span class="line">&#x2F;&#x2F;如果有个重复子串，则start和end的位置增加</span><br><span class="line">&#x2F;&#x2F;如果不重复则，继续增加子串的数量</span><br><span class="line">func lengthOfLongestSubstring(s string) int &#123;</span><br><span class="line">	if s &#x3D;&#x3D; &quot;&quot;&#123;</span><br><span class="line">		return 0</span><br><span class="line">	&#125;</span><br><span class="line">	var strLen &#x3D; len(s)</span><br><span class="line">	var start,end&#x3D;0,1</span><br><span class="line">	var s2 string</span><br><span class="line">	for end &lt;&#x3D; strLen&#123;</span><br><span class="line">		var s1 string &#x3D; string(s[start:end])</span><br><span class="line">		&#x2F;&#x2F;计算重复</span><br><span class="line">		var repeatCount int &#x3D; 1</span><br><span class="line">		var s1Len int &#x3D; len(s1)</span><br><span class="line">		for i:&#x3D;0;i &lt; s1Len;i++&#123;</span><br><span class="line">			var temp string &#x3D; string(s1[i])</span><br><span class="line">			repeatCount &#x3D; strings.Count(s1,temp)</span><br><span class="line">			&#x2F;&#x2F;说明有重复的了</span><br><span class="line">			if repeatCount &gt;1&#123;</span><br><span class="line">				start++</span><br><span class="line">				end &#x3D;start+len(s1)</span><br><span class="line">				break</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		if repeatCount &#x3D;&#x3D;1&#123;</span><br><span class="line">			&#x2F;&#x2F;增加</span><br><span class="line">			s2 &#x3D; s1 &#x2F;&#x2F;保存之前的值</span><br><span class="line">			end++</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	return len(s2)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight go"><table><tr><td class="code"><pre><code class="hljs go"><span class="hljs-comment">//abcabcbb</span><br><span class="hljs-comment">//判断子串是否合法</span><br><span class="hljs-comment">//内嵌一个循环判断是否有重复子串</span><br><span class="hljs-comment">//如果有个重复子串，则start和end的位置增加</span><br><span class="hljs-comment">//如果不重复则，继续增加子串的数量</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">lengthOfLongestSubstring</span><span class="hljs-params">(s <span class="hljs-keyword">string</span>)</span> <span class="hljs-title">int</span></span> &#123;<br>	<span class="hljs-keyword">if</span> s == <span class="hljs-string">&quot;&quot;</span>&#123;<br>		<span class="hljs-keyword">return</span> <span class="hljs-number">0</span><br>	&#125;<br>	<span class="hljs-keyword">var</span> strLen = <span class="hljs-built_in">len</span>(s)<br>	<span class="hljs-keyword">var</span> start,end=<span class="hljs-number">0</span>,<span class="hljs-number">1</span><br>	<span class="hljs-keyword">var</span> s2 <span class="hljs-keyword">string</span><br>	<span class="hljs-keyword">for</span> end &lt;= strLen&#123;<br>		<span class="hljs-keyword">var</span> s1 <span class="hljs-keyword">string</span> = <span class="hljs-keyword">string</span>(s[start:end])<br>		<span class="hljs-comment">//计算重复</span><br>		<span class="hljs-keyword">var</span> repeatCount <span class="hljs-keyword">int</span> = <span class="hljs-number">1</span><br>		<span class="hljs-keyword">var</span> s1Len <span class="hljs-keyword">int</span> = <span class="hljs-built_in">len</span>(s1)<br>		<span class="hljs-keyword">for</span> i:=<span class="hljs-number">0</span>;i &lt; s1Len;i++&#123;<br>			<span class="hljs-keyword">var</span> temp <span class="hljs-keyword">string</span> = <span class="hljs-keyword">string</span>(s1[i])<br>			repeatCount = strings.Count(s1,temp)<br>			<span class="hljs-comment">//说明有重复的了</span><br>			<span class="hljs-keyword">if</span> repeatCount &gt;<span class="hljs-number">1</span>&#123;<br>				start++<br>				end =start+<span class="hljs-built_in">len</span>(s1)<br>				<span class="hljs-keyword">break</span><br>			&#125;<br>		&#125;<br>		<span class="hljs-keyword">if</span> repeatCount ==<span class="hljs-number">1</span>&#123;<br>			<span class="hljs-comment">//增加</span><br>			s2 = s1 <span class="hljs-comment">//保存之前的值</span><br>			end++<br>		&#125;<br>	&#125;<br>	<span class="hljs-keyword">return</span> <span class="hljs-built_in">len</span>(s2)<br>&#125;<br></code></pre></td></tr></table></figure>
 <p>方法二</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;n*n*n  找出该串的所有子串，不重复，且最大即可</span><br><span class="line">func lengthOfLongestSubstring(s string)int&#123;</span><br><span class="line">	var counts int &#x3D; 0</span><br><span class="line">	for i:&#x3D;0;i&lt;len(s);i++&#123;</span><br><span class="line">		&#x2F;&#x2F;找出他所有的子串</span><br><span class="line">		for j:&#x3D;i+1;j&lt;&#x3D;len(s);j++&#123;</span><br><span class="line">			if allUnique(s,i,j)&#123;</span><br><span class="line">				temp :&#x3D; math.Max(float64(counts),float64(j-i))</span><br><span class="line">				counts &#x3D; int(temp)</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	return counts</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">&#x2F;&#x2F;找出子串不重复的</span><br><span class="line">func allUnique(s string,start,end int)(bool)&#123;</span><br><span class="line">	&#x2F;&#x2F;会截取start -&gt; end-1位置的下标</span><br><span class="line">	s &#x3D; s[start:end]</span><br><span class="line">	for i:&#x3D;0;i&lt;len(s);i++&#123;</span><br><span class="line">		&#x2F;&#x2F;返回该子串在主串中的重复数量</span><br><span class="line">		repeatCount :&#x3D; strings.Count(s,string(s[i]))</span><br><span class="line">		if repeatCount !&#x3D;1 &#123;</span><br><span class="line">			return false</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	return true</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight go"><table><tr><td class="code"><pre><code class="hljs go"><span class="hljs-comment">//n*n*n  找出该串的所有子串，不重复，且最大即可</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">lengthOfLongestSubstring</span><span class="hljs-params">(s <span class="hljs-keyword">string</span>)</span><span class="hljs-title">int</span></span>&#123;<br>	<span class="hljs-keyword">var</span> counts <span class="hljs-keyword">int</span> = <span class="hljs-number">0</span><br>	<span class="hljs-keyword">for</span> i:=<span class="hljs-number">0</span>;i&lt;<span class="hljs-built_in">len</span>(s);i++&#123;<br>		<span class="hljs-comment">//找出他所有的子串</span><br>		<span class="hljs-keyword">for</span> j:=i+<span class="hljs-number">1</span>;j&lt;=<span class="hljs-built_in">len</span>(s);j++&#123;<br>			<span class="hljs-keyword">if</span> allUnique(s,i,j)&#123;<br>				temp := math.Max(<span class="hljs-keyword">float64</span>(counts),<span class="hljs-keyword">float64</span>(j-i))<br>				counts = <span class="hljs-keyword">int</span>(temp)<br>			&#125;<br>		&#125;<br>	&#125;<br>	<span class="hljs-keyword">return</span> counts<br>&#125;<br> <br><span class="hljs-comment">//找出子串不重复的</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">allUnique</span><span class="hljs-params">(s <span class="hljs-keyword">string</span>,start,end <span class="hljs-keyword">int</span>)</span><span class="hljs-params">(<span class="hljs-keyword">bool</span>)</span></span>&#123;<br>	<span class="hljs-comment">//会截取start -&gt; end-1位置的下标</span><br>	s = s[start:end]<br>	<span class="hljs-keyword">for</span> i:=<span class="hljs-number">0</span>;i&lt;<span class="hljs-built_in">len</span>(s);i++&#123;<br>		<span class="hljs-comment">//返回该子串在主串中的重复数量</span><br>		repeatCount := strings.Count(s,<span class="hljs-keyword">string</span>(s[i]))<br>		<span class="hljs-keyword">if</span> repeatCount !=<span class="hljs-number">1</span> &#123;<br>			<span class="hljs-keyword">return</span> <span class="hljs-literal">false</span><br>		&#125;<br>	&#125;<br>	<span class="hljs-keyword">return</span> <span class="hljs-literal">true</span><br>&#125;<br></code></pre></td></tr></table></figure>
 <p>方法三</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;利用滑动窗口和容器</span><br><span class="line">func lengthOfLongestSubstring(s string)int&#123;</span><br><span class="line">	&#x2F;&#x2F;借助一个容器，来判断，子串中是否有重复 妙</span><br><span class="line">	m :&#x3D; make(map[byte]byte)</span><br><span class="line">	sLen :&#x3D; len(s)</span><br><span class="line">	start,end :&#x3D; 0,0</span><br><span class="line">	var repeatCount int &#x3D; 0</span><br><span class="line">	&#x2F;&#x2F;start 和 end 双条件判断，只有end一个也可以，可能这样更严谨一些吧</span><br><span class="line">	for  start &lt;sLen &amp;&amp; end &lt;sLen&#123;</span><br><span class="line">		temp :&#x3D; s[end]</span><br><span class="line">		if _,ok :&#x3D; m[temp];!ok&#123;</span><br><span class="line">			&#x2F;&#x2F;不存在说明该key是唯一的</span><br><span class="line">			m[s[end]] &#x3D; s[end]</span><br><span class="line">			end++ &#x2F;&#x2F;移动滑动窗口</span><br><span class="line">			repeatCount &#x3D; int(math.Max(float64(repeatCount),float64(end-start)))</span><br><span class="line">		&#125;else&#123;</span><br><span class="line">			&#x2F;&#x2F;说明了有重复的，滑动窗口移动，则start+1,</span><br><span class="line">			delete(m,s[start])</span><br><span class="line">			start++</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	return repeatCount</span><br><span class="line"> </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight go"><table><tr><td class="code"><pre><code class="hljs go"><span class="hljs-comment">//利用滑动窗口和容器</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">lengthOfLongestSubstring</span><span class="hljs-params">(s <span class="hljs-keyword">string</span>)</span><span class="hljs-title">int</span></span>&#123;<br>	<span class="hljs-comment">//借助一个容器，来判断，子串中是否有重复 妙</span><br>	m := <span class="hljs-built_in">make</span>(<span class="hljs-keyword">map</span>[<span class="hljs-keyword">byte</span>]<span class="hljs-keyword">byte</span>)<br>	sLen := <span class="hljs-built_in">len</span>(s)<br>	start,end := <span class="hljs-number">0</span>,<span class="hljs-number">0</span><br>	<span class="hljs-keyword">var</span> repeatCount <span class="hljs-keyword">int</span> = <span class="hljs-number">0</span><br>	<span class="hljs-comment">//start 和 end 双条件判断，只有end一个也可以，可能这样更严谨一些吧</span><br>	<span class="hljs-keyword">for</span>  start &lt;sLen &amp;&amp; end &lt;sLen&#123;<br>		temp := s[end]<br>		<span class="hljs-keyword">if</span> _,ok := m[temp];!ok&#123;<br>			<span class="hljs-comment">//不存在说明该key是唯一的</span><br>			m[s[end]] = s[end]<br>			end++ <span class="hljs-comment">//移动滑动窗口</span><br>			repeatCount = <span class="hljs-keyword">int</span>(math.Max(<span class="hljs-keyword">float64</span>(repeatCount),<span class="hljs-keyword">float64</span>(end-start)))<br>		&#125;<span class="hljs-keyword">else</span>&#123;<br>			<span class="hljs-comment">//说明了有重复的，滑动窗口移动，则start+1,</span><br>			<span class="hljs-built_in">delete</span>(m,s[start])<br>			start++<br>		&#125;<br>	&#125;<br>	<span class="hljs-keyword">return</span> repeatCount<br> <br>&#125;<br></code></pre></td></tr></table></figure>
 <p>方法四</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;优化滑动窗口</span><br><span class="line">&#x2F;&#x2F; abcabcbb</span><br><span class="line">&#x2F;&#x2F; abc</span><br><span class="line">&#x2F;&#x2F; bca</span><br><span class="line">&#x2F;&#x2F; cab</span><br><span class="line">&#x2F;&#x2F; abc</span><br><span class="line">&#x2F;&#x2F; cb</span><br><span class="line">&#x2F;&#x2F; b</span><br><span class="line">func lengthOfLongestSubstring4(s string)int&#123;</span><br><span class="line">	var n,ans &#x3D; len(s),0</span><br><span class="line">	m :&#x3D; make(map[string]int) &#x2F;&#x2F;存放字符出现的位置</span><br><span class="line">	for j,i :&#x3D;0,0; j&lt;n;j++&#123;</span><br><span class="line">		if _,ok :&#x3D; m[string(s[j])];ok&#123;</span><br><span class="line">			&#x2F;&#x2F;发现重复的，则重新选择一个i，这个i停留在出现重复的前一位置</span><br><span class="line">			i &#x3D; int(math.Max(float64(m[string(s[j])]),float64(i))) &#x2F;&#x2F;这里的i则为下标</span><br><span class="line">		&#125;</span><br><span class="line">		&#x2F;&#x2F;每次计算j-i+1的记录，j为字符串的下标，i为下标，重复，i则从重复位置前一位开始</span><br><span class="line">		ans &#x3D; int(math.Max(float64(ans),float64(j-i+1)))</span><br><span class="line">		m[string(s[j])] &#x3D; j+1</span><br><span class="line">	&#125;</span><br><span class="line">	return ans</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight go"><table><tr><td class="code"><pre><code class="hljs go"><span class="hljs-comment">//优化滑动窗口</span><br><span class="hljs-comment">// abcabcbb</span><br><span class="hljs-comment">// abc</span><br><span class="hljs-comment">// bca</span><br><span class="hljs-comment">// cab</span><br><span class="hljs-comment">// abc</span><br><span class="hljs-comment">// cb</span><br><span class="hljs-comment">// b</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">lengthOfLongestSubstring4</span><span class="hljs-params">(s <span class="hljs-keyword">string</span>)</span><span class="hljs-title">int</span></span>&#123;<br>	<span class="hljs-keyword">var</span> n,ans = <span class="hljs-built_in">len</span>(s),<span class="hljs-number">0</span><br>	m := <span class="hljs-built_in">make</span>(<span class="hljs-keyword">map</span>[<span class="hljs-keyword">string</span>]<span class="hljs-keyword">int</span>) <span class="hljs-comment">//存放字符出现的位置</span><br>	<span class="hljs-keyword">for</span> j,i :=<span class="hljs-number">0</span>,<span class="hljs-number">0</span>; j&lt;n;j++&#123;<br>		<span class="hljs-keyword">if</span> _,ok := m[<span class="hljs-keyword">string</span>(s[j])];ok&#123;<br>			<span class="hljs-comment">//发现重复的，则重新选择一个i，这个i停留在出现重复的前一位置</span><br>			i = <span class="hljs-keyword">int</span>(math.Max(<span class="hljs-keyword">float64</span>(m[<span class="hljs-keyword">string</span>(s[j])]),<span class="hljs-keyword">float64</span>(i))) <span class="hljs-comment">//这里的i则为下标</span><br>		&#125;<br>		<span class="hljs-comment">//每次计算j-i+1的记录，j为字符串的下标，i为下标，重复，i则从重复位置前一位开始</span><br>		ans = <span class="hljs-keyword">int</span>(math.Max(<span class="hljs-keyword">float64</span>(ans),<span class="hljs-keyword">float64</span>(j-i+<span class="hljs-number">1</span>)))<br>		m[<span class="hljs-keyword">string</span>(s[j])] = j+<span class="hljs-number">1</span><br>	&#125;<br>	<span class="hljs-keyword">return</span> ans<br>&#125;<br></code></pre></td></tr></table></figure>
 <p><a target="_blank" rel="noopener" href="https://blog.csdn.net/heart66_A/article/details/83714168">原文链接：</a></p>
 
-            </div>
-          
-
-    
-      <footer class="post-footer">
-		
-		<div class="post-tags">
-		  
-			<a href="/tags/%E9%9D%A2%E8%AF%95/">面试</a>
-		  
-			<a href="/tags/%E7%AE%97%E6%B3%95/">算法</a>
-		  
-		</div>
-		
-
-        
-        
-  <nav class="post-nav">
-    
-      <a class="prev" href="/2021/07/27/Python%E8%B0%83%E7%94%A8C-%E7%A8%8B%E5%BA%8F/">
-        <i class="iconfont icon-left"></i>
-        <span class="prev-text nav-default">Python调用C++程序</span>
-        <span class="prev-text nav-mobile">Prev</span>
-      </a>
-    
-    
-      <a class="next" href="/2021/07/26/%E6%AF%8F%E5%A4%A9%E4%B8%80%E9%81%93%E7%AE%97%E6%B3%95%E9%A2%98%EF%BC%9A%E5%9C%A8%E4%BA%8C%E5%8F%89%E6%A0%91%E4%B8%AD%E6%89%BE%E5%88%B0%E4%B8%A4%E4%B8%AA%E8%8A%82%E7%82%B9%E7%9A%84%E6%9C%80%E8%BF%91%E5%85%AC%E5%85%B1%E7%A5%96%E5%85%88/">
-        <span class="next-text nav-default">每天一道算法题：在二叉树中找到两个节点的最近公共祖先</span>
-        <span class="prev-text nav-mobile">Next</span>
-        <i class="iconfont icon-right"></i>
-      </a>
-    
-  </nav>
-
-        
-  <div class="comments" id="comments">
-    
-  </div>
-
-
-      </footer>
-    
-  </article>
-
     </div>
+</div>
+<style>
+    #noneimg img {
+        display: none;
+        z-index: 109;
+        width: 600px !important;
+        border-radius: 0px;
+        position: fixed;
+        box-shadow: 0 0 0px #c3c3c300 !important;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto !important;
+    }
 
-      </div>
+    @media screen and (max-width:600px) {
+        #noneimg img {
+            width: 88%
+        }
+    }
+</style>
+<script>
+    $(function () { $('#article').click(function (e) { if (e.target.tagName == "IMG") { if ($('#nonediv').length == 0) { let MImg = `<div id='noneimg'><img src='${e.target.currentSrc}'></div>`; let MDiv = "<div id='nonediv' style='cursor: pointer;display: none; position: fixed;left: 0;top: 0; right: 0;bottom: 0;background-color: #333;opacity:0.5;z-index: 108;'></div>"; $('#article').append(MDiv); $('#article').append(MImg); $("#nonediv").fadeIn("slow"); $("#noneimg img").fadeIn("slow") } } else { if ($('#nonediv').length !== 0) { $("#noneimg ").fadeOut("slow"); $("#nonediv").fadeOut("slow"); setTimeout(function () { $('#nonediv').remove(); $('#noneimg').remove() }, 500) } } }); $('.article-content').addClass('content-move') });
+</script>
+<div class="Last-Next">
+    
+    <a href="/2021/07/27/Python%E8%B0%83%E7%94%A8C-%E7%A8%8B%E5%BA%8F/">
+        <div class="last">
+            <span>上一篇</span>
+            <p>Python调用C++程序</p>
+        </div>
+    </a>
+    
 
-      <footer id="colophon"><span class="copyright-year">
     
-        &copy;
+    <a href="/2021/07/26/%E6%AF%8F%E5%A4%A9%E4%B8%80%E9%81%93%E7%AE%97%E6%B3%95%E9%A2%98%EF%BC%9A%E5%9C%A8%E4%BA%8C%E5%8F%89%E6%A0%91%E4%B8%AD%E6%89%BE%E5%88%B0%E4%B8%A4%E4%B8%AA%E8%8A%82%E7%82%B9%E7%9A%84%E6%9C%80%E8%BF%91%E5%85%AC%E5%85%B1%E7%A5%96%E5%85%88/">
+        <div class="next">
+            <span>下一篇</span>
+            <p>每天一道算法题：在二叉树中找到两个节点的最近公共祖先</p>
+        </div>
+    </a>
     
-        2014 -
-    
-    2021
-    <span class="footer-author">Russshare.</span>
-    <span class="power-by">
-        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+</div>
+		
+<link rel="stylesheet" href="/css/food.css">
+
+<div class="footer">
+	<div class="Copyright">
+		©2021 By CHANGEQ. 主题：<a
+			style="text-decoration: none;display: contents; color: #898F9F;"
+			target="_blank" rel="noopener" href="https://github.com/qiaobug/hexo-theme-quiet">Quiet</a>
+	</div>
+	<div class="contact">
+		
+		<a target="_blank" rel="noopener" href="https://github.com/qiaobug">
+			<img src="https://cdn.jsdelivr.net/gh/duogongneng/MyBlogImg/imggithub.png" alt="Quiet主题">
+		</a>
+		
+	</div>
+</div>
+
+<script src="/js/jquery.min.js"></script>
+
+
+<script src="/js/gotop.js"></script>
+
+
+<style type="text/css">
+    @media screen and (min-width: 600px) {
+        .goTop>span {
+            display: block;
+            border-radius: 50%;
+            width: 66px;
+            height: 66px;
+            cursor: pointer;
+            opacity: 0.8;
+            background: rgba(18, 24, 58, 0.06);
+            text-align: center;
+            border: 1px solid rgba(18, 24, 58, 0.06);
+
+            transition: border .5s;
+            -moz-transition: border .5s;
+            /* Firefox 4 */
+            -webkit-transition: border .5s;
+            /* Safari 和 Chrome */
+            -o-transition: border .5s;
+            /* Opera */
+        }
+
+        .goTop>span:hover {
+            border: 1px solid #6680B3;
+        }
+
+
+        .goTop {
+            position: fixed;
+            right: 30px;
+            bottom: 80px;
+        }
+
+        .goTop>span>svg {
+            width: 30px;
+            height: 30px;
+            margin-top: 17.5px;
+            opacity: 0.7;
+        }
+
+    }
+
+    @media screen and (max-width: 600px) {
+        .goTop {
+            display: none;
+        }
+    }
+</style>
+<div class="goTop" id="js-go_top">
+    <span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <g>
+                <path d="M13 12v8h-2v-8H4l8-8 8 8z"></path>
+            </g>
+        </svg>
     </span>
-</span>
+</div>
+<script>
+    $('#js-go_top').gotoTop({ offset: 500, speed: 300, animationShow: { 'transform': 'translate(0,0)', 'transition': 'transform .5s ease-in-out' }, animationHide: { 'transform': 'translate(100px,0)', 'transition': 'transform .5s ease-in-out' } });
+</script>
+<script>
+	console.log('\n %c Hexo-Quiet 主题 %c https://github.com/QiaoBug/hexo-theme-quiet \n', 'color: #fadfa3; background: #030307; padding:5px 0;', 'background: #fadfa3; padding:5px 0;')
+</script>
+	</body>
 
-      </footer>
-
-      <div class="back-to-top" id="back-to-top">
-        <i class="iconfont icon-up"></i>
-      </div>
-    </div>
-    
-
-
-    
-
-
-
-
-  
-    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
-  
-
-  
-
-    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
-<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
-
-  </body>
 </html>

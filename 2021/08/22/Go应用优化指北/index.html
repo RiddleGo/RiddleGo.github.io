@@ -1,140 +1,276 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
-  <head>
-    
-<meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+<html>
+
+	<head>
+		
+<title>Go应用优化指北-Quiet</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="shortcut icon" type="image/x-icon" href="/image/favicon.ico">
 
 
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="keywords" content="golang优化,">
+<meta name="description" content="">
 
 
-
-  <meta name="description" content="Go应用优化指北"/>
-
+<script src="/js/jquery.min.js"></script>
 
 
+	<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+</head>
 
-  <meta name="keywords" content="golang优化," />
-
-
-
-
-
-  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+	<body>
+		
+<link rel="stylesheet" href="/css/page.css">
 
 
+<link rel="stylesheet" href="/css/page_cente.css">
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+<link rel="stylesheet" href="/css/atom-one-dark.css">
 
 
+<link rel="stylesheet" href="/css/header.css">
 
-<link rel="canonical" href="https://riddlego.github.io/2021/08/22/Go应用优化指北/"/>
-
-
-<meta name="description" content="全文来自曹大微信公众号–点击进入原文 真的太建议大家好好阅读一下曹大的文章，我们学生因为没有在工作中接触真正的业务，曹大总能把很厉害的实际的技术讲的很通透。瑞思拜。 为什么要做优化这是一个速度决定一切的时代，我们的生活在不断地数字化，线下的流程依然在持续向线上转移，转移过程中，作为工程师，我们会碰到各种各样的性能问题。 互联网公司本质是将用户共通的行为流程进行了集中化管理，通过中心化的信息交换达到">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Go应用优化指北">
-<meta property="og:url" content="https://riddlego.github.io/2021/08/22/Go%E5%BA%94%E7%94%A8%E4%BC%98%E5%8C%96%E6%8C%87%E5%8C%97/index.html">
-<meta property="og:site_name" content="RiddleGo">
-<meta property="og:description" content="全文来自曹大微信公众号–点击进入原文 真的太建议大家好好阅读一下曹大的文章，我们学生因为没有在工作中接触真正的业务，曹大总能把很厉害的实际的技术讲的很通透。瑞思拜。 为什么要做优化这是一个速度决定一切的时代，我们的生活在不断地数字化，线下的流程依然在持续向线上转移，转移过程中，作为工程师，我们会碰到各种各样的性能问题。 互联网公司本质是将用户共通的行为流程进行了集中化管理，通过中心化的信息交换达到">
-<meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/process/%E4%BC%98%E5%8C%9601.png">
-<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/process/%E4%BC%98%E5%8C%9602.png">
-<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/process/%E4%BC%98%E5%8C%9603.png">
-<meta property="article:published_time" content="2021-08-22T08:27:52.000Z">
-<meta property="article:modified_time" content="2021-08-31T13:49:18.789Z">
-<meta property="article:author" content="Russshare">
-<meta property="article:tag" content="golang优化">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/process/%E4%BC%98%E5%8C%9601.png">
-
-
-<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
-<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
-
-
-
-
-
-<script type="text/javascript">
-  var themeConfig = {
-    fancybox: {
-      enable: false
-    },
-  };
-</script>
-
-
-
-
-  
-
-
-
-    <title> Go应用优化指北 - RiddleGo </title>
-  <meta name="generator" content="Hexo 5.4.0"></head>
-
-  <body>
-    <div id="page">
-      <header id="masthead"><div class="site-header-inner">
-    <h1 class="site-title">
-        <a href="/." class="logo">RiddleGo</a>
-    </h1>
-
-    <nav id="nav-top">
+	<div class="header">
+		<div class="header-top">
+			<div class="h-left">
+				<a href="/">
+					<img src="/image/logo.png" alt="Quiet">
+				</a>
+			</div>
+			<div class="h-right">
+				<ul>
+					
+						
+								<li>
+									<a href="/">
+										HOME
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/archives">
+										ARCHIVE
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/categories">
+										CATEGORIES
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/tags">
+										TAGS
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/links">
+										LINKS
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/about">
+										ABOUT
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+				</ul>
+			</div>
+			<div class="h-right-close">
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+					<path fill="none" d="M0 0h24v24H0z" />
+					<path d="M3 4h18v2H3V4zm0 7h18v2H3v-2zm0 7h18v2H3v-2z" fill="rgba(68,68,68,1)" />
+				</svg>
+			</div>
+		</div>
+	</div>
+	<div class="sidebar">
+    <div class="topo">
+        <h2>CHANGEQ</h2>
+    </div>
+    <ul>
         
-            <ul id="menu-top" class="nav-top-items">
-                
-                    <li class="menu-item">
-                        <a href="/archives">
-                            
-                            
-                                Archives
-                            
-                        </a>
-                    </li>
-                
-                    <li class="menu-item">
-                        <a href="/about">
-                            
-                            
-                                About
-                            
-                        </a>
-                    </li>
-                
-            </ul>
+        <li>
+            <a href="/">HOME</a>
+        </li>
         
-  </nav>
+        <li>
+            <a href="/archives">ARCHIVE</a>
+        </li>
+        
+        <li>
+            <a href="/categories">CATEGORIES</a>
+        </li>
+        
+        <li>
+            <a href="/tags">TAGS</a>
+        </li>
+        
+        <li>
+            <a href="/links">LINKS</a>
+        </li>
+        
+        <li>
+            <a href="/about">ABOUT</a>
+        </li>
+        
+    </ul>
+    <div class="my_foot">
+        
+        <a target="_blank" rel="noopener" href="https://github.com/qiaobug">
+            <img src="https://cdn.jsdelivr.net/gh/duogongneng/MyBlogImg/imggithub.png" alt="Quiet主题">
+        </a>
+        
+    </div>
 </div>
+<div class='shelter'
+    style='cursor: pointer;display: none; position: fixed;left: 0;top: 0; right: 0;bottom: 0;background-color: #333;opacity:0.5;z-index: 108;'>
+</div>
+<style>
+    .sidebar {
+        width: 0;
+        height: 100%;
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        background: #fff;
+        z-index: 999;
+        text-align: center;
+        box-shadow: -6px 0 20px rgba(98, 94, 94, .815)
+    }
 
-      </header>
-      <div id="content">
-        
-    <div id="primary">
-        
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          Go应用优化指北
-        
-      </h1>
+    .topo {
+        width: 100%;
+        height: 200px;
+        background: url(https://api.ixiaowai.cn/gqapi/gqapi.php) no-repeat;
+        background-size: 100% 100%;
+        position: relative;
+        display: flex;
+        align-items: flex-end
+    }
 
-      <time class="post-time">
-          8月 22 2021
-      </time>
-    </header>
+    .topo h2 {
+        color: #fff;
+        z-index: 1;
+        position: relative;
+        margin: 0 0 10px 10px;
+        font-size: 1.2em;
+        box-sizing: border-box
+    }
 
+    .topo:before {
+        content: '';
+        background-image: url(/image/pattern.png);
+        background-repeat: repeat;
+        height: 100%;
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 100%;
+        z-index: 1
+    }
 
+    .sidebar ul {
+        width: 100%;
+        margin-top: 50px
+    }
 
-    
-            <div class="post-content">
-            <p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/X7OU9JjSThB5IZF_KVT1Jg">全文来自曹大微信公众号–点击进入原文</a></p>
+    .sidebar ul li {
+        height: 50px;
+        list-style: none;
+        font-size: 1.2em;
+        text-align: right;
+        margin-right: 10px
+    }
+
+    .sidebar ul li a {
+        display: grid;
+        color: #5d606a;
+        text-overflow: ellipsis;
+        width: 100%;
+        text-decoration: none
+    }
+
+    .my_foot {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        position: absolute;
+        bottom: 0
+    }
+
+    .my_foot a {
+        text-decoration: none;
+        margin-right: 10px;
+        display: inline-block
+    }
+
+    .my_foot a img {
+        width: 30px;
+        height: 30px
+    }
+</style>
+
+<script>
+    $(function () { $('.h-right-close>svg').click(function () { $('.sidebar').animate({ width: "66%" }, 500); $('.shelter').fadeIn("slow") }); $('.shelter').click(function (e) { $('.sidebar').animate({ width: "0" }, 500); $('.shelter').fadeOut("slow") }) })
+</script>
+		<script>
+			$(function () { $(window).scroll(function () { if ($(document).scrollTop() > 100) { $(".header-top").removeClass("header-move2"); $('.header-top').addClass('header-move1') } else { $(".header-top").removeClass("header-move1"); $('.header-top').addClass('header-move2') } }) });
+		</script>
+<div class="header-bg ">
+    <div class="bg-content">
+        <ul class="tag">
+            
+            
+            <li><a href="/tags/golang优化">golang优化</a></li>
+            
+            
+        </ul>
+        <h1>Go应用优化指北</h1>
+        <div class="article-info">
+            <div class="article-author">
+                
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+                    <g>
+                        <path fill="#12183A"
+                            d="M6.187 15.265A6.47 6.47 0 0 0 10 16.5a6.47 6.47 0 0 0 3.813-1.235A4.99 4.99 0 0 0 10 13.5a4.99 4.99 0 0 0-3.813 1.765zM5.082 14.25A6.485 6.485 0 0 1 10 12c1.965 0 3.726.872 4.918 2.25a6.5 6.5 0 1 0-9.836 0zM10 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0-1.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z">
+                        </path>
+                    </g>
+                </svg>
+                
+                <span> <a href="">CHANGEQ</a></span>
+                <p>2021-08-22 16:27:52</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="article-content">
+    <div id="article" class="content">
+        <p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/X7OU9JjSThB5IZF_KVT1Jg">全文来自曹大微信公众号–点击进入原文</a></p>
 <p>真的太建议大家好好阅读一下曹大的文章，我们学生因为没有在工作中接触真正的业务，曹大总能把很厉害的实际的技术讲的很通透。瑞思拜。</p>
 <h2 id="为什么要做优化"><a href="#为什么要做优化" class="headerlink" title="为什么要做优化"></a>为什么要做优化</h2><p>这是一个速度决定一切的时代，我们的生活在不断地数字化，线下的流程依然在持续向线上转移，转移过程中，作为工程师，我们会碰到各种各样的性能问题。</p>
 <p>互联网公司本质是将用户共通的行为流程进行了集中化管理，通过中心化的信息交换达到效率提升的目的，同时用规模效应降低了数据交换的成本。</p>
@@ -168,7 +304,7 @@
 <p>4、本地 benchmark 证明优化效果</p>
 <p>5、集成 patch 到业务模块，回到 2</p>
 <h2 id="可以使用的工具"><a href="#可以使用的工具" class="headerlink" title="可以使用的工具"></a>可以使用的工具</h2><h3 id="pprof"><a href="#pprof" class="headerlink" title="pprof"></a>pprof</h3><h4 id="memory-profiler"><a href="#memory-profiler" class="headerlink" title="memory profiler"></a>memory profiler</h4><p>Go 内置的内存 profiler 可以让我们对线上系统进行内存使用采样，有四个相应的指标：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">inuse_objects：当我们认为内存中的驻留对象过多时，就会关注该指标</span><br><span class="line"></span><br><span class="line">inuse_space：当我们认为应用程序占据的 RSS 过大时，会关注该指标</span><br><span class="line"></span><br><span class="line">alloc_objects：当应用曾经发生过历史上的大量内存分配行为导致 CPU 或内存使用大幅上升时，可能关注该指标</span><br><span class="line"></span><br><span class="line">alloc_space：当应用历史上发生过内存使用大量上升时，会关注该指标</span><br></pre></td></tr></table></figure>
+<figure class="highlight x86asm"><table><tr><td class="code"><pre><code class="hljs x86asm">inuse_objects：当我们认为内存中的驻留对象过多时，就会关注该指标<br><br>inuse_space：当我们认为应用程序占据的 RSS 过大时，会关注该指标<br><br>alloc_objects：当应用曾经发生过历史上的大量内存分配行为导致 <span class="hljs-meta">CPU</span> 或内存使用大幅上升时，可能关注该指标<br><br>alloc_space：当应用历史上发生过内存使用大量上升时，会关注该指标<br></code></pre></td></tr></table></figure>
 
 <p><strong>网关类应用因为海量连接的关系，会导致进程消耗大量内存，</strong>所以我们经常看到相关的优化文章，主要就是降低应用的 inuse_space。</p>
 <p><strong>而两个对象数指标主要是为 GC 优化提供依据，</strong>当我们进行 GC 调优时，会同时关注<strong>应用分配的对象数、****正在使用的对象数</strong>，<strong>以及 GC 的 CPU 占用的指标。</strong></p>
@@ -183,7 +319,7 @@
 <p>gprof is implemented as a background goroutine that wakes up 99 times per second and calls runtime.GoroutineProfile. This returns a list of all goroutines regardless of their current On/Off CPU scheduling status and their call stacks.</p>
 <p>fgprof 是启动了一个后台的 goroutine，每秒启动 99 次，调用 runtime.GoroutineProfile 来采集所有 gorooutine 的栈。</p>
 <p>虽然看起来很美好：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">func GoroutineProfile(p []StackRecord) (n int, ok bool) &#123;</span><br><span class="line">    .....</span><br><span class="line"> stopTheWorld(&quot;profile&quot;)</span><br><span class="line"></span><br><span class="line"> for _, gp1 :&#x3D; range allgs &#123;</span><br><span class="line">  ......</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"> if n &lt;&#x3D; len(p) &#123;</span><br><span class="line">  &#x2F;&#x2F; Save current goroutine.</span><br><span class="line">  ........</span><br><span class="line">  systemstack(func() &#123;</span><br><span class="line">   saveg(pc, sp, gp, &amp;r[0])</span><br><span class="line">  &#125;)</span><br><span class="line"></span><br><span class="line">  &#x2F;&#x2F; Save other goroutines.</span><br><span class="line">  for _, gp1 :&#x3D; range allgs &#123;</span><br><span class="line">   if isOK(gp1) &#123;</span><br><span class="line">    .......</span><br><span class="line">    saveg(^uintptr(0), ^uintptr(0), gp1, &amp;r[0])</span><br><span class="line">                .......</span><br><span class="line">   &#125;</span><br><span class="line">  &#125;</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"> startTheWorld()</span><br><span class="line"></span><br><span class="line"> return n, ok</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<figure class="highlight go"><table><tr><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">GoroutineProfile</span><span class="hljs-params">(p []StackRecord)</span> <span class="hljs-params">(n <span class="hljs-keyword">int</span>, ok <span class="hljs-keyword">bool</span>)</span></span> &#123;<br>    .....<br> stopTheWorld(<span class="hljs-string">&quot;profile&quot;</span>)<br><br> <span class="hljs-keyword">for</span> _, gp1 := <span class="hljs-keyword">range</span> allgs &#123;<br>  ......<br> &#125;<br><br> <span class="hljs-keyword">if</span> n &lt;= <span class="hljs-built_in">len</span>(p) &#123;<br>  <span class="hljs-comment">// Save current goroutine.</span><br>  ........<br>  systemstack(<span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>   saveg(pc, sp, gp, &amp;r[<span class="hljs-number">0</span>])<br>  &#125;)<br><br>  <span class="hljs-comment">// Save other goroutines.</span><br>  <span class="hljs-keyword">for</span> _, gp1 := <span class="hljs-keyword">range</span> allgs &#123;<br>   <span class="hljs-keyword">if</span> isOK(gp1) &#123;<br>    .......<br>    saveg(^<span class="hljs-keyword">uintptr</span>(<span class="hljs-number">0</span>), ^<span class="hljs-keyword">uintptr</span>(<span class="hljs-number">0</span>), gp1, &amp;r[<span class="hljs-number">0</span>])<br>                .......<br>   &#125;<br>  &#125;<br> &#125;<br><br> startTheWorld()<br><br> <span class="hljs-keyword">return</span> n, ok<br>&#125;<br><br></code></pre></td></tr></table></figure>
 
 <p>但调用 GoroutineProfile 函数的开销并不低，如果线上系统的 goroutine 上万，每次采集 profile 都遍历上万个 goroutine 的成本实在是太高了。所以 fgprof 只适合在测试环境中使用。</p>
 <h4 id="trace"><a href="#trace" class="headerlink" title="trace"></a>trace</h4><p>一般情况下我们是不需要使用 trace 来定位性能问题的，通过压测 + profile 就可以解决大部分问题，除非我们的问题与 runtime 本身的问题相关。</p>
@@ -192,19 +328,19 @@
 <h4 id="perf"><a href="#perf" class="headerlink" title="perf"></a>perf</h4><p>如果应用没有开启 pprof，在线上应急时，我们也可以临时使用 perf：</p>
 <p><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/process/%E4%BC%98%E5%8C%9601.png"></p>
 <h2 id="微观性能优化"><a href="#微观性能优化" class="headerlink" title="微观性能优化"></a>微观性能优化</h2><p>编写 library 时会关注关键函数的性能，这时可以脱离系统去探讨性能优化，Go 语言的 test 子命令集成了相关的功能，<strong>只要我们按照约定来写 Benchmark 前缀的测试函数</strong>，就可以实现函数级的基准测试。我们以常见的二维数组遍历为例：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import &quot;testing&quot;</span><br><span class="line"></span><br><span class="line">var x &#x3D; make([][]int, 100)</span><br><span class="line"></span><br><span class="line">func init() &#123;</span><br><span class="line"> for i :&#x3D; 0; i &lt; 100; i++ &#123;</span><br><span class="line">  x[i] &#x3D; make([]int, 100)</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func traverseVertical() &#123;</span><br><span class="line"> for i :&#x3D; 0; i &lt; 100; i++ &#123;</span><br><span class="line">  for j :&#x3D; 0; j &lt; 100; j++ &#123;</span><br><span class="line">   x[j][i] &#x3D; 1</span><br><span class="line">  &#125;</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func traverseHorizontal() &#123;</span><br><span class="line"> for i :&#x3D; 0; i &lt; 100; i++ &#123;</span><br><span class="line">  for j :&#x3D; 0; j &lt; 100; j++ &#123;</span><br><span class="line">   x[i][j] &#x3D; 1</span><br><span class="line">  &#125;</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func BenchmarkHorizontal(b *testing.B) &#123;</span><br><span class="line"> for i :&#x3D; 0; i &lt; b.N; i++ &#123;</span><br><span class="line">  traverseHorizontal()</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func BenchmarkVertical(b *testing.B) &#123;</span><br><span class="line"> for i :&#x3D; 0; i &lt; b.N; i++ &#123;</span><br><span class="line">  traverseVertical()</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<figure class="highlight go"><table><tr><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><br><span class="hljs-keyword">import</span> <span class="hljs-string">&quot;testing&quot;</span><br><br><span class="hljs-keyword">var</span> x = <span class="hljs-built_in">make</span>([][]<span class="hljs-keyword">int</span>, <span class="hljs-number">100</span>)<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">init</span><span class="hljs-params">()</span></span> &#123;<br> <span class="hljs-keyword">for</span> i := <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">100</span>; i++ &#123;<br>  x[i] = <span class="hljs-built_in">make</span>([]<span class="hljs-keyword">int</span>, <span class="hljs-number">100</span>)<br> &#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">traverseVertical</span><span class="hljs-params">()</span></span> &#123;<br> <span class="hljs-keyword">for</span> i := <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">100</span>; i++ &#123;<br>  <span class="hljs-keyword">for</span> j := <span class="hljs-number">0</span>; j &lt; <span class="hljs-number">100</span>; j++ &#123;<br>   x[j][i] = <span class="hljs-number">1</span><br>  &#125;<br> &#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">traverseHorizontal</span><span class="hljs-params">()</span></span> &#123;<br> <span class="hljs-keyword">for</span> i := <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">100</span>; i++ &#123;<br>  <span class="hljs-keyword">for</span> j := <span class="hljs-number">0</span>; j &lt; <span class="hljs-number">100</span>; j++ &#123;<br>   x[i][j] = <span class="hljs-number">1</span><br>  &#125;<br> &#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">BenchmarkHorizontal</span><span class="hljs-params">(b *testing.B)</span></span> &#123;<br> <span class="hljs-keyword">for</span> i := <span class="hljs-number">0</span>; i &lt; b.N; i++ &#123;<br>  traverseHorizontal()<br> &#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">BenchmarkVertical</span><span class="hljs-params">(b *testing.B)</span></span> &#123;<br> <span class="hljs-keyword">for</span> i := <span class="hljs-number">0</span>; i &lt; b.N; i++ &#123;<br>  traverseVertical()<br> &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
 <p>执行 go test -bench=.</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">BenchmarkHorizontal-12       102368      10916 ns&#x2F;op</span><br><span class="line">BenchmarkVertical-12          66612      18197 ns&#x2F;op</span><br></pre></td></tr></table></figure>
+<figure class="highlight apache"><table><tr><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">BenchmarkHorizontal</span>-<span class="hljs-number">12</span>       <span class="hljs-number">102368</span>      <span class="hljs-number">10916</span> ns/op<br><span class="hljs-attribute">BenchmarkVertical</span>-<span class="hljs-number">12</span>          <span class="hljs-number">66612</span>      <span class="hljs-number">18197</span> ns/op<br></code></pre></td></tr></table></figure>
 <p><strong>可见横向遍历数组要快得多，这提醒我们在写代码时要考虑 CPU 的 cache 设计及局部性原理，以使程序能够在相同的逻辑下获得更好的性能。</strong></p>
 <p>除了 CPU 优化，我们还经常会碰到要优化内存分配的场景。只要带上 -benchmem 的 flag 就可以实现了。</p>
 <p>举个例子，形如下面这样的代码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">logStr :&#x3D; &quot;userid :&quot; + userID + &quot;; orderid:&quot; + orderID</span><br></pre></td></tr></table></figure>
+<figure class="highlight pf"><table><tr><td class="code"><pre><code class="hljs pf"><span class="hljs-keyword">log</span>Str := <span class="hljs-string">&quot;userid :&quot;</span> + <span class="hljs-keyword">user</span>ID + <span class="hljs-string">&quot;; orderid:&quot;</span> + orderID<br></code></pre></td></tr></table></figure>
 <p>你觉得代码写的很难看，想要优化一下可读性，就改成了下列代码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">logStr :&#x3D; fmt.Sprintf(&quot;userid: %v; orderid: %v&quot;, userID, orderID)</span><br></pre></td></tr></table></figure>
+<figure class="highlight perl"><table><tr><td class="code"><pre><code class="hljs perl">logStr := fmt.Sprintf(<span class="hljs-string">&quot;userid: %v; orderid: %v&quot;</span>, userID, orderID)<br></code></pre></td></tr></table></figure>
 
 <p>这样的修改方式在某公司的系统中曾经导致了 p2 事故，上线后接口的超时俱增至 SLA 承诺以上。</p>
 <p>我们简单验证就可以发现：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">BenchmarkPrin-12       7168467        157 ns&#x2F;op       64 B&#x2F;op        3 allocs&#x2F;op</span><br><span class="line">BenchmarkPlus -12     43278558         26.7 ns&#x2F;op        0 B&#x2F;op        0 allocs&#x2F;op</span><br></pre></td></tr></table></figure>
+<figure class="highlight apache"><table><tr><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">BenchmarkPrin</span>-<span class="hljs-number">12</span>       <span class="hljs-number">7168467</span>        <span class="hljs-number">157</span> ns/op       <span class="hljs-number">64</span> B/op        <span class="hljs-number">3</span> allocs/op<br><span class="hljs-attribute">BenchmarkPlus</span> -<span class="hljs-number">12</span>     <span class="hljs-number">43278558</span>         <span class="hljs-number">26</span>.<span class="hljs-number">7</span> ns/op        <span class="hljs-number">0</span> B/op        <span class="hljs-number">0</span> allocs/op<br></code></pre></td></tr></table></figure>
 <p><strong>使用 + 进行字符串拼接，不会在堆上产生额外对象。****而使用 fmt 系列函数，则会造成局部对象逃逸到堆上，这里是高频路径上有大量逃逸，所以导致线上服务的 GC 压力加重，大量接口超时。</strong></p>
 <p>出于谨慎考虑，修改高并发接口时，拿不准的尽量都应进行简单的线下 benchmark 测试。</p>
 <p>当然，我们不能指望靠写一大堆 benchmark 帮我们发现系统的瓶颈。</p>
@@ -240,7 +376,7 @@
 <h3 id="减少变量逃逸"><a href="#减少变量逃逸" class="headerlink" title="减少变量逃逸"></a>减少变量逃逸</h3><p><strong>尽量在栈上分配对象，关于逃逸的规则，可以查看</strong> Go 编译器代码中的逃逸测试部分：</p>
 <p><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/process/%E4%BC%98%E5%8C%9602.png"></p>
 <p>查看某个 package 内的逃逸情况，可以使用 build + 全路径的方式，如：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go build -gcflags&#x3D;&quot;-m -m&quot; github.com&#x2F;cch123&#x2F;elasticsql</span><br></pre></td></tr></table></figure>
+<figure class="highlight awk"><table><tr><td class="code"><pre><code class="hljs awk">go build -gcflags=<span class="hljs-string">&quot;-m -m&quot;</span> github.com<span class="hljs-regexp">/cch123/</span>elasticsql<br></code></pre></td></tr></table></figure>
 <p>需要注意的是，逃逸分析的结果是会随着版本变化的，所以去背诵网上逃逸相关的文章结论是没有什么意义的。</p>
 <h3 id="使用-sync-Pool-复用堆上对象"><a href="#使用-sync-Pool-复用堆上对象" class="headerlink" title="使用 sync.Pool 复用堆上对象"></a>使用 sync.Pool 复用堆上对象</h3><p>sync.Pool 用出花儿的就是 fasthttp 了，可以看看我之前写的这一篇：fasthttp 为什么快[7]。</p>
 <p>最简单的复用就是复用各种 struct，slice，<strong>在复用时 put 时，需要判断 size 是否已经扩容过头，小心因为 sync.Pool 中存了大量的巨型对象导致进程占用了大量内存</strong></p>
@@ -307,87 +443,138 @@
 <p>[13]<br>go-perfbook: <a target="_blank" rel="noopener" href="https://github.com/dgryski/go-perfbook">https://github.com/dgryski/go-perfbook</a></p>
 <p>[14]<br>Systems Performance: <a target="_blank" rel="noopener" href="https://www.amazon.com/Systems-Performance-Brendan-Gregg/dp/0136820158/ref=sr_1_1?dchild=1&amp;keywords=systems+performance&amp;qid=1617092159&amp;sr=8-1">https://www.amazon.com/Systems-Performance-Brendan-Gregg/dp/0136820158/ref=sr_1_1?dchild=1&amp;keywords=systems+performance&amp;qid=1617092159&amp;sr=8-1</a></p>
 
-            </div>
-          
-
-    
-      <footer class="post-footer">
-		
-		<div class="post-tags">
-		  
-			<a href="/tags/golang%E4%BC%98%E5%8C%96/">golang优化</a>
-		  
-		</div>
-		
-
-        
-        
-  <nav class="post-nav">
-    
-      <a class="prev" href="/2021/08/22/runtime%E5%8C%85/">
-        <i class="iconfont icon-left"></i>
-        <span class="prev-text nav-default">runtime包</span>
-        <span class="prev-text nav-mobile">Prev</span>
-      </a>
-    
-    
-      <a class="next" href="/2021/08/22/sync%E5%8C%85%EF%BC%88%E4%B8%8B%E9%9B%A8%E5%A4%A9%E7%AA%81%E7%84%B6%E6%83%B3%E8%B5%B7%E7%9A%84%E4%B8%80%E4%B8%AA%E7%9F%A5%E8%AF%86%E7%82%B9%EF%BC%89/">
-        <span class="next-text nav-default">sync包（下雨天突然想起的一个知识点）</span>
-        <span class="prev-text nav-mobile">Next</span>
-        <i class="iconfont icon-right"></i>
-      </a>
-    
-  </nav>
-
-        
-  <div class="comments" id="comments">
-    
-  </div>
-
-
-      </footer>
-    
-  </article>
-
     </div>
+</div>
+<style>
+    #noneimg img {
+        display: none;
+        z-index: 109;
+        width: 600px !important;
+        border-radius: 0px;
+        position: fixed;
+        box-shadow: 0 0 0px #c3c3c300 !important;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto !important;
+    }
 
-      </div>
+    @media screen and (max-width:600px) {
+        #noneimg img {
+            width: 88%
+        }
+    }
+</style>
+<script>
+    $(function () { $('#article').click(function (e) { if (e.target.tagName == "IMG") { if ($('#nonediv').length == 0) { let MImg = `<div id='noneimg'><img src='${e.target.currentSrc}'></div>`; let MDiv = "<div id='nonediv' style='cursor: pointer;display: none; position: fixed;left: 0;top: 0; right: 0;bottom: 0;background-color: #333;opacity:0.5;z-index: 108;'></div>"; $('#article').append(MDiv); $('#article').append(MImg); $("#nonediv").fadeIn("slow"); $("#noneimg img").fadeIn("slow") } } else { if ($('#nonediv').length !== 0) { $("#noneimg ").fadeOut("slow"); $("#nonediv").fadeOut("slow"); setTimeout(function () { $('#nonediv').remove(); $('#noneimg').remove() }, 500) } } }); $('.article-content').addClass('content-move') });
+</script>
+<div class="Last-Next">
+    
+    <a href="/2021/08/22/runtime%E5%8C%85/">
+        <div class="last">
+            <span>上一篇</span>
+            <p>runtime包</p>
+        </div>
+    </a>
+    
 
-      <footer id="colophon"><span class="copyright-year">
     
-        &copy;
+    <a href="/2021/08/22/sync%E5%8C%85%EF%BC%88%E4%B8%8B%E9%9B%A8%E5%A4%A9%E7%AA%81%E7%84%B6%E6%83%B3%E8%B5%B7%E7%9A%84%E4%B8%80%E4%B8%AA%E7%9F%A5%E8%AF%86%E7%82%B9%EF%BC%89/">
+        <div class="next">
+            <span>下一篇</span>
+            <p>sync包（下雨天突然想起的一个知识点）</p>
+        </div>
+    </a>
     
-        2014 -
-    
-    2021
-    <span class="footer-author">Russshare.</span>
-    <span class="power-by">
-        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+</div>
+		
+<link rel="stylesheet" href="/css/food.css">
+
+<div class="footer">
+	<div class="Copyright">
+		©2021 By CHANGEQ. 主题：<a
+			style="text-decoration: none;display: contents; color: #898F9F;"
+			target="_blank" rel="noopener" href="https://github.com/qiaobug/hexo-theme-quiet">Quiet</a>
+	</div>
+	<div class="contact">
+		
+		<a target="_blank" rel="noopener" href="https://github.com/qiaobug">
+			<img src="https://cdn.jsdelivr.net/gh/duogongneng/MyBlogImg/imggithub.png" alt="Quiet主题">
+		</a>
+		
+	</div>
+</div>
+
+<script src="/js/jquery.min.js"></script>
+
+
+<script src="/js/gotop.js"></script>
+
+
+<style type="text/css">
+    @media screen and (min-width: 600px) {
+        .goTop>span {
+            display: block;
+            border-radius: 50%;
+            width: 66px;
+            height: 66px;
+            cursor: pointer;
+            opacity: 0.8;
+            background: rgba(18, 24, 58, 0.06);
+            text-align: center;
+            border: 1px solid rgba(18, 24, 58, 0.06);
+
+            transition: border .5s;
+            -moz-transition: border .5s;
+            /* Firefox 4 */
+            -webkit-transition: border .5s;
+            /* Safari 和 Chrome */
+            -o-transition: border .5s;
+            /* Opera */
+        }
+
+        .goTop>span:hover {
+            border: 1px solid #6680B3;
+        }
+
+
+        .goTop {
+            position: fixed;
+            right: 30px;
+            bottom: 80px;
+        }
+
+        .goTop>span>svg {
+            width: 30px;
+            height: 30px;
+            margin-top: 17.5px;
+            opacity: 0.7;
+        }
+
+    }
+
+    @media screen and (max-width: 600px) {
+        .goTop {
+            display: none;
+        }
+    }
+</style>
+<div class="goTop" id="js-go_top">
+    <span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <g>
+                <path d="M13 12v8h-2v-8H4l8-8 8 8z"></path>
+            </g>
+        </svg>
     </span>
-</span>
+</div>
+<script>
+    $('#js-go_top').gotoTop({ offset: 500, speed: 300, animationShow: { 'transform': 'translate(0,0)', 'transition': 'transform .5s ease-in-out' }, animationHide: { 'transform': 'translate(100px,0)', 'transition': 'transform .5s ease-in-out' } });
+</script>
+<script>
+	console.log('\n %c Hexo-Quiet 主题 %c https://github.com/QiaoBug/hexo-theme-quiet \n', 'color: #fadfa3; background: #030307; padding:5px 0;', 'background: #fadfa3; padding:5px 0;')
+</script>
+	</body>
 
-      </footer>
-
-      <div class="back-to-top" id="back-to-top">
-        <i class="iconfont icon-up"></i>
-      </div>
-    </div>
-    
-
-
-    
-
-
-
-
-  
-    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
-  
-
-  
-
-    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
-<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
-
-  </body>
 </html>

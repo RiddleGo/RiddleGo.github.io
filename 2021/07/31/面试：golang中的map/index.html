@@ -1,270 +1,453 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
-  <head>
-    
-<meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+<html>
+
+	<head>
+		
+<title>面试：golang中的map-Quiet</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="shortcut icon" type="image/x-icon" href="/image/favicon.ico">
 
 
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="keywords" content="map,线程安全,">
+<meta name="description" content="">
 
 
-
-  <meta name="description" content="面试：golang中的map"/>
-
+<script src="/js/jquery.min.js"></script>
 
 
+	<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+</head>
 
-  <meta name="keywords" content="map,线程安全," />
-
-
-
-
-
-  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+	<body>
+		
+<link rel="stylesheet" href="/css/page.css">
 
 
+<link rel="stylesheet" href="/css/page_cente.css">
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+<link rel="stylesheet" href="/css/atom-one-dark.css">
 
 
+<link rel="stylesheet" href="/css/header.css">
 
-<link rel="canonical" href="https://riddlego.github.io/2021/07/31/面试：golang中的map/"/>
-
-
-<meta name="description" content="文章链接 涉及概念并发安全Map 分段锁 sync.Map CAS ( Compare And Swap ) 双检查 分段锁1234type SimpleCache struct &amp;#123;    mu    sync.RWMutex    items map[interface&amp;#123;&amp;#125;]*simpleItem&amp;#125;  在日常开发中， 上述这种数据结构肯定不少见，因为gol">
-<meta property="og:type" content="article">
-<meta property="og:title" content="面试：golang中的map">
-<meta property="og:url" content="https://riddlego.github.io/2021/07/31/%E9%9D%A2%E8%AF%95%EF%BC%9Agolang%E4%B8%AD%E7%9A%84map/index.html">
-<meta property="og:site_name" content="RiddleGo">
-<meta property="og:description" content="文章链接 涉及概念并发安全Map 分段锁 sync.Map CAS ( Compare And Swap ) 双检查 分段锁1234type SimpleCache struct &amp;#123;    mu    sync.RWMutex    items map[interface&amp;#123;&amp;#125;]*simpleItem&amp;#125;  在日常开发中， 上述这种数据结构肯定不少见，因为gol">
-<meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/%E5%88%86%E6%AE%B5%E9%94%81.png">
-<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/gomap01.png">
-<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/gomap02.png">
-<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/gomap03.png">
-<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/gomap04.png">
-<meta property="og:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/gomap05.png">
-<meta property="article:published_time" content="2021-07-31T08:10:09.000Z">
-<meta property="article:modified_time" content="2021-08-02T16:18:02.236Z">
-<meta property="article:author" content="Russshare">
-<meta property="article:tag" content="map">
-<meta property="article:tag" content="线程安全">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://gitee.com/psycho1900/miss-reddle/raw/master/%E5%88%86%E6%AE%B5%E9%94%81.png">
-
-
-<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
-<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
-
-
-
-
-
-<script type="text/javascript">
-  var themeConfig = {
-    fancybox: {
-      enable: false
-    },
-  };
-</script>
-
-
-
-
-  
-
-
-
-    <title> 面试：golang中的map - RiddleGo </title>
-  <meta name="generator" content="Hexo 5.4.0"></head>
-
-  <body>
-    <div id="page">
-      <header id="masthead"><div class="site-header-inner">
-    <h1 class="site-title">
-        <a href="/." class="logo">RiddleGo</a>
-    </h1>
-
-    <nav id="nav-top">
+	<div class="header">
+		<div class="header-top">
+			<div class="h-left">
+				<a href="/">
+					<img src="/image/logo.png" alt="Quiet">
+				</a>
+			</div>
+			<div class="h-right">
+				<ul>
+					
+						
+								<li>
+									<a href="/">
+										HOME
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/archives">
+										ARCHIVE
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/categories">
+										CATEGORIES
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/tags">
+										TAGS
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/links">
+										LINKS
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/about">
+										ABOUT
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+				</ul>
+			</div>
+			<div class="h-right-close">
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+					<path fill="none" d="M0 0h24v24H0z" />
+					<path d="M3 4h18v2H3V4zm0 7h18v2H3v-2zm0 7h18v2H3v-2z" fill="rgba(68,68,68,1)" />
+				</svg>
+			</div>
+		</div>
+	</div>
+	<div class="sidebar">
+    <div class="topo">
+        <h2>CHANGEQ</h2>
+    </div>
+    <ul>
         
-            <ul id="menu-top" class="nav-top-items">
-                
-                    <li class="menu-item">
-                        <a href="/archives">
-                            
-                            
-                                Archives
-                            
-                        </a>
-                    </li>
-                
-                    <li class="menu-item">
-                        <a href="/about">
-                            
-                            
-                                About
-                            
-                        </a>
-                    </li>
-                
-            </ul>
+        <li>
+            <a href="/">HOME</a>
+        </li>
         
-  </nav>
+        <li>
+            <a href="/archives">ARCHIVE</a>
+        </li>
+        
+        <li>
+            <a href="/categories">CATEGORIES</a>
+        </li>
+        
+        <li>
+            <a href="/tags">TAGS</a>
+        </li>
+        
+        <li>
+            <a href="/links">LINKS</a>
+        </li>
+        
+        <li>
+            <a href="/about">ABOUT</a>
+        </li>
+        
+    </ul>
+    <div class="my_foot">
+        
+        <a target="_blank" rel="noopener" href="https://github.com/qiaobug">
+            <img src="https://cdn.jsdelivr.net/gh/duogongneng/MyBlogImg/imggithub.png" alt="Quiet主题">
+        </a>
+        
+    </div>
 </div>
+<div class='shelter'
+    style='cursor: pointer;display: none; position: fixed;left: 0;top: 0; right: 0;bottom: 0;background-color: #333;opacity:0.5;z-index: 108;'>
+</div>
+<style>
+    .sidebar {
+        width: 0;
+        height: 100%;
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        background: #fff;
+        z-index: 999;
+        text-align: center;
+        box-shadow: -6px 0 20px rgba(98, 94, 94, .815)
+    }
 
-      </header>
-      <div id="content">
-        
-    <div id="primary">
-        
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          面试：golang中的map
-        
-      </h1>
+    .topo {
+        width: 100%;
+        height: 200px;
+        background: url(https://api.ixiaowai.cn/gqapi/gqapi.php) no-repeat;
+        background-size: 100% 100%;
+        position: relative;
+        display: flex;
+        align-items: flex-end
+    }
 
-      <time class="post-time">
-          7月 31 2021
-      </time>
-    </header>
+    .topo h2 {
+        color: #fff;
+        z-index: 1;
+        position: relative;
+        margin: 0 0 10px 10px;
+        font-size: 1.2em;
+        box-sizing: border-box
+    }
 
+    .topo:before {
+        content: '';
+        background-image: url(/image/pattern.png);
+        background-repeat: repeat;
+        height: 100%;
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 100%;
+        z-index: 1
+    }
 
+    .sidebar ul {
+        width: 100%;
+        margin-top: 50px
+    }
 
-    
-            <div class="post-content">
-            <p><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000018448064">文章链接</a></p>
+    .sidebar ul li {
+        height: 50px;
+        list-style: none;
+        font-size: 1.2em;
+        text-align: right;
+        margin-right: 10px
+    }
+
+    .sidebar ul li a {
+        display: grid;
+        color: #5d606a;
+        text-overflow: ellipsis;
+        width: 100%;
+        text-decoration: none
+    }
+
+    .my_foot {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        position: absolute;
+        bottom: 0
+    }
+
+    .my_foot a {
+        text-decoration: none;
+        margin-right: 10px;
+        display: inline-block
+    }
+
+    .my_foot a img {
+        width: 30px;
+        height: 30px
+    }
+</style>
+
+<script>
+    $(function () { $('.h-right-close>svg').click(function () { $('.sidebar').animate({ width: "66%" }, 500); $('.shelter').fadeIn("slow") }); $('.shelter').click(function (e) { $('.sidebar').animate({ width: "0" }, 500); $('.shelter').fadeOut("slow") }) })
+</script>
+		<script>
+			$(function () { $(window).scroll(function () { if ($(document).scrollTop() > 100) { $(".header-top").removeClass("header-move2"); $('.header-top').addClass('header-move1') } else { $(".header-top").removeClass("header-move1"); $('.header-top').addClass('header-move2') } }) });
+		</script>
+<div class="header-bg ">
+    <div class="bg-content">
+        <ul class="tag">
+            
+            
+            <li><a href="/tags/map">map</a></li>
+            
+            <li><a href="/tags/线程安全">线程安全</a></li>
+            
+            
+        </ul>
+        <h1>面试：golang中的map</h1>
+        <div class="article-info">
+            <div class="article-author">
+                
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+                    <g>
+                        <path fill="#12183A"
+                            d="M6.187 15.265A6.47 6.47 0 0 0 10 16.5a6.47 6.47 0 0 0 3.813-1.235A4.99 4.99 0 0 0 10 13.5a4.99 4.99 0 0 0-3.813 1.765zM5.082 14.25A6.485 6.485 0 0 1 10 12c1.965 0 3.726.872 4.918 2.25a6.5 6.5 0 1 0-9.836 0zM10 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0-1.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z">
+                        </path>
+                    </g>
+                </svg>
+                
+                <span> <a href="">CHANGEQ</a></span>
+                <p>2021-07-31 16:10:09</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="article-content">
+    <div id="article" class="content">
+        <p><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000018448064">文章链接</a></p>
 <h2 id="涉及概念"><a href="#涉及概念" class="headerlink" title="涉及概念"></a>涉及概念</h2><p>并发安全Map</p>
 <p>分段锁</p>
 <p>sync.Map</p>
 <p>CAS ( Compare And Swap )</p>
 <p>双检查</p>
-<h3 id="分段锁"><a href="#分段锁" class="headerlink" title="分段锁"></a>分段锁</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">type SimpleCache struct &#123;</span><br><span class="line">    mu    sync.RWMutex</span><br><span class="line">    items map[interface&#123;&#125;]*simpleItem</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="分段锁"><a href="#分段锁" class="headerlink" title="分段锁"></a>分段锁</h3><figure class="highlight elm"><table><tr><td class="code"><pre><code class="hljs elm"><span class="hljs-keyword">type</span> <span class="hljs-type">SimpleCache</span> struct &#123;<br>    mu    sync.<span class="hljs-type">RWMutex</span><br>    items map[interface&#123;&#125;]*simpleItem<br>&#125;<br></code></pre></td></tr></table></figure>
 
 <p>在日常开发中， 上述这种数据结构肯定不少见，<strong>因为golang的原生map是非并发安全的，所以为了保证map的并发安全，最简单的方式就是给map加锁。</strong></p>
 <p>之前使用过两个本地内存缓存的开源库， gcache, cache2go，其中存储缓存对象的结构都是这样，对于轻量级的缓存库，为了设计简洁（包含清理过期对象等 ) 再加上当需要缓存大量数据时有redis,memcache等明星项目解决。 </p>
 <p><strong>但是如果抛开这些因素遇到真正数量巨大的数据量时，直接对一个map加锁，当map中的值越来越多，访问map的请求越来越多，大家都竞争这一把锁显得并发访问控制变重。</strong></p>
 <p>在go1.9引入sync.Map 之前，比较流行的做法就是使用分段锁，顾名思义就是将锁分段，将锁的粒度变小，<strong>将存储的对象分散到各个分片中，每个分片由一把锁控制，这样使得当需要对在A分片上的数据进行读写时不会影响B分片的读写。</strong></p>
 <p><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/%E5%88%86%E6%AE%B5%E9%94%81.png"></p>
-<h4 id="分段锁的实现"><a href="#分段锁的实现" class="headerlink" title="分段锁的实现"></a>分段锁的实现</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; Map 分片</span><br><span class="line">type ConcurrentMap []*ConcurrentMapShared</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 每一个Map 是一个加锁的并发安全Map</span><br><span class="line">type ConcurrentMapShared struct &#123;</span><br><span class="line">    items map[string]interface&#123;&#125;</span><br><span class="line">    sync.RWMutex    &#x2F;&#x2F; 各个分片Map各自的锁</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="分段锁的实现"><a href="#分段锁的实现" class="headerlink" title="分段锁的实现"></a>分段锁的实现</h4><figure class="highlight go"><table><tr><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// Map 分片</span><br><span class="hljs-keyword">type</span> ConcurrentMap []*ConcurrentMapShared<br><br><span class="hljs-comment">// 每一个Map 是一个加锁的并发安全Map</span><br><span class="hljs-keyword">type</span> ConcurrentMapShared <span class="hljs-keyword">struct</span> &#123;<br>    items <span class="hljs-keyword">map</span>[<span class="hljs-keyword">string</span>]<span class="hljs-keyword">interface</span>&#123;&#125;<br>    sync.RWMutex    <span class="hljs-comment">// 各个分片Map各自的锁</span><br>&#125;<br></code></pre></td></tr></table></figure>
 
 <p><strong>主流的分段锁，即通过hash取模的方式找到当前访问的key处于哪一个分片之上，再对该分片进行加锁之后再读写。分片定位时，常用有BKDR, FNV32等hash算法得到key的hash值。</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">func New() ConcurrentMap &#123;</span><br><span class="line">    &#x2F;&#x2F; SHARD_COUNT  默认32个分片</span><br><span class="line">    m :&#x3D; make(ConcurrentMap, SHARD_COUNT)</span><br><span class="line">    for i :&#x3D; 0; i &lt; SHARD_COUNT; i++ &#123;</span><br><span class="line">        m[i] &#x3D; &amp;ConcurrentMapShared&#123;</span><br><span class="line">            items: make(map[string]interface&#123;&#125;),</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return m</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight go"><table><tr><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">New</span><span class="hljs-params">()</span> <span class="hljs-title">ConcurrentMap</span></span> &#123;<br>    <span class="hljs-comment">// SHARD_COUNT  默认32个分片</span><br>    m := <span class="hljs-built_in">make</span>(ConcurrentMap, SHARD_COUNT)<br>    <span class="hljs-keyword">for</span> i := <span class="hljs-number">0</span>; i &lt; SHARD_COUNT; i++ &#123;<br>        m[i] = &amp;ConcurrentMapShared&#123;<br>            items: <span class="hljs-built_in">make</span>(<span class="hljs-keyword">map</span>[<span class="hljs-keyword">string</span>]<span class="hljs-keyword">interface</span>&#123;&#125;),<br>        &#125;<br>    &#125;<br>    <span class="hljs-keyword">return</span> m<br>&#125;<br></code></pre></td></tr></table></figure>
 <p>在初始化好分片后， 对分片上的数据进行读写时就需要用hash取模进行分段定位来确认即将要读写的分片。</p>
-<h4 id="获取段定位"><a href="#获取段定位" class="headerlink" title="获取段定位"></a>获取段定位</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">func (m ConcurrentMap) GetShard(key string) *ConcurrentMapShared &#123;</span><br><span class="line">    return m[uint(fnv32(key))%uint(SHARD_COUNT)]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; FNV hash</span><br><span class="line">func fnv32(key string) uint32 &#123;</span><br><span class="line">    hash :&#x3D; uint32(2166136261)</span><br><span class="line">    const prime32 &#x3D; uint32(16777619)</span><br><span class="line">    for i :&#x3D; 0; i &lt; len(key); i++ &#123;</span><br><span class="line">        hash *&#x3D; prime32</span><br><span class="line">        hash ^&#x3D; uint32(key[i])</span><br><span class="line">    &#125;</span><br><span class="line">    return hash</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="获取段定位"><a href="#获取段定位" class="headerlink" title="获取段定位"></a>获取段定位</h4><figure class="highlight go"><table><tr><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(m ConcurrentMap)</span> <span class="hljs-title">GetShard</span><span class="hljs-params">(key <span class="hljs-keyword">string</span>)</span> *<span class="hljs-title">ConcurrentMapShared</span></span> &#123;<br>    <span class="hljs-keyword">return</span> m[<span class="hljs-keyword">uint</span>(fnv32(key))%<span class="hljs-keyword">uint</span>(SHARD_COUNT)]<br>&#125;<br><br><span class="hljs-comment">// FNV hash</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">fnv32</span><span class="hljs-params">(key <span class="hljs-keyword">string</span>)</span> <span class="hljs-title">uint32</span></span> &#123;<br>    hash := <span class="hljs-keyword">uint32</span>(<span class="hljs-number">2166136261</span>)<br>    <span class="hljs-keyword">const</span> prime32 = <span class="hljs-keyword">uint32</span>(<span class="hljs-number">16777619</span>)<br>    <span class="hljs-keyword">for</span> i := <span class="hljs-number">0</span>; i &lt; <span class="hljs-built_in">len</span>(key); i++ &#123;<br>        hash *= prime32<br>        hash ^= <span class="hljs-keyword">uint32</span>(key[i])<br>    &#125;<br>    <span class="hljs-keyword">return</span> hash<br>&#125;<br></code></pre></td></tr></table></figure>
 <p>之后对于map的GET SET 就简单顺利成章的完成</p>
-<h4 id="Set-And-Get"><a href="#Set-And-Get" class="headerlink" title="Set And Get"></a>Set And Get</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">func (m ConcurrentMap) Set(key string, value interface&#123;&#125;) &#123;</span><br><span class="line">    shard :&#x3D; m.GetShard(key) &#x2F;&#x2F; 段定位找到分片</span><br><span class="line">    shard.Lock()              &#x2F;&#x2F; 分片上锁</span><br><span class="line">    shard.items[key] &#x3D; value &#x2F;&#x2F; 分片操作 </span><br><span class="line">    shard.Unlock()              &#x2F;&#x2F; 分片解锁</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func (m ConcurrentMap) Get(key string) (interface&#123;&#125;, bool) &#123;</span><br><span class="line">    shard :&#x3D; m.GetShard(key)</span><br><span class="line">    shard.RLock()</span><br><span class="line">    val, ok :&#x3D; shard.items[key]</span><br><span class="line">    shard.RUnlock()</span><br><span class="line">    return val, ok</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="Set-And-Get"><a href="#Set-And-Get" class="headerlink" title="Set And Get"></a>Set And Get</h4><figure class="highlight go"><table><tr><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(m ConcurrentMap)</span> <span class="hljs-title">Set</span><span class="hljs-params">(key <span class="hljs-keyword">string</span>, value <span class="hljs-keyword">interface</span>&#123;&#125;)</span></span> &#123;<br>    shard := m.GetShard(key) <span class="hljs-comment">// 段定位找到分片</span><br>    shard.Lock()              <span class="hljs-comment">// 分片上锁</span><br>    shard.items[key] = value <span class="hljs-comment">// 分片操作 </span><br>    shard.Unlock()              <span class="hljs-comment">// 分片解锁</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(m ConcurrentMap)</span> <span class="hljs-title">Get</span><span class="hljs-params">(key <span class="hljs-keyword">string</span>)</span> <span class="hljs-params">(<span class="hljs-keyword">interface</span>&#123;&#125;, <span class="hljs-keyword">bool</span>)</span></span> &#123;<br>    shard := m.GetShard(key)<br>    shard.RLock()<br>    val, ok := shard.items[key]<br>    shard.RUnlock()<br>    <span class="hljs-keyword">return</span> val, ok<br>&#125;<br></code></pre></td></tr></table></figure>
 <p> 由此一个分段锁Map就实现了， 但是比起普通的Map, 常用到的方法比如获取所有key, 获取所有Val 操作是要比原生Map复杂的，因为要遍历每一个分片的每一个数据， 好在golang的并发特性使得解决这类问题变得非常简单</p>
-<h4 id="Keys"><a href="#Keys" class="headerlink" title="Keys"></a>Keys</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 统计当前分段map中item的个数</span><br><span class="line">func (m ConcurrentMap) Count() int &#123;</span><br><span class="line">    count :&#x3D; 0</span><br><span class="line">    for i :&#x3D; 0; i &lt; SHARD_COUNT; i++ &#123;</span><br><span class="line">        shard :&#x3D; m[i]</span><br><span class="line">        shard.RLock()</span><br><span class="line">        count +&#x3D; len(shard.items)</span><br><span class="line">        shard.RUnlock()</span><br><span class="line">    &#125;</span><br><span class="line">    return count</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 获取所有的key</span><br><span class="line">func (m ConcurrentMap) Keys() []string &#123;</span><br><span class="line">    count :&#x3D; m.Count()</span><br><span class="line">    ch :&#x3D; make(chan string, count)</span><br><span class="line"></span><br><span class="line">    &#x2F;&#x2F; 每一个分片启动一个协程 遍历key</span><br><span class="line">    go func() &#123;</span><br><span class="line">        wg :&#x3D; sync.WaitGroup&#123;&#125;</span><br><span class="line">        wg.Add(SHARD_COUNT)</span><br><span class="line">        for _, shard :&#x3D; range m &#123;</span><br><span class="line"></span><br><span class="line">            go func(shard *ConcurrentMapShared) &#123;</span><br><span class="line">                defer wg.Done()</span><br><span class="line">                </span><br><span class="line">                shard.RLock()</span><br><span class="line"></span><br><span class="line">                &#x2F;&#x2F; 每个分片中的key遍历后都写入统计用的channel</span><br><span class="line">                for key :&#x3D; range shard.items &#123;</span><br><span class="line">                    ch &lt;- key</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                shard.RUnlock()</span><br><span class="line">            &#125;(shard)</span><br><span class="line">        &#125;</span><br><span class="line">        wg.Wait()</span><br><span class="line">        close(ch)</span><br><span class="line">    &#125;()</span><br><span class="line"></span><br><span class="line">    keys :&#x3D; make([]string, count)</span><br><span class="line">    &#x2F;&#x2F; 统计各个协程并发读取Map分片的key</span><br><span class="line">    for k :&#x3D; range ch &#123;</span><br><span class="line">        keys &#x3D; append(keys, k)</span><br><span class="line">    &#125;</span><br><span class="line">    return keys</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="Keys"><a href="#Keys" class="headerlink" title="Keys"></a>Keys</h4><figure class="highlight go"><table><tr><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// 统计当前分段map中item的个数</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(m ConcurrentMap)</span> <span class="hljs-title">Count</span><span class="hljs-params">()</span> <span class="hljs-title">int</span></span> &#123;<br>    count := <span class="hljs-number">0</span><br>    <span class="hljs-keyword">for</span> i := <span class="hljs-number">0</span>; i &lt; SHARD_COUNT; i++ &#123;<br>        shard := m[i]<br>        shard.RLock()<br>        count += <span class="hljs-built_in">len</span>(shard.items)<br>        shard.RUnlock()<br>    &#125;<br>    <span class="hljs-keyword">return</span> count<br>&#125;<br><br><span class="hljs-comment">// 获取所有的key</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(m ConcurrentMap)</span> <span class="hljs-title">Keys</span><span class="hljs-params">()</span> []<span class="hljs-title">string</span></span> &#123;<br>    count := m.Count()<br>    ch := <span class="hljs-built_in">make</span>(<span class="hljs-keyword">chan</span> <span class="hljs-keyword">string</span>, count)<br><br>    <span class="hljs-comment">// 每一个分片启动一个协程 遍历key</span><br>    <span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> &#123;<br>        wg := sync.WaitGroup&#123;&#125;<br>        wg.Add(SHARD_COUNT)<br>        <span class="hljs-keyword">for</span> _, shard := <span class="hljs-keyword">range</span> m &#123;<br><br>            <span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(shard *ConcurrentMapShared)</span></span> &#123;<br>                <span class="hljs-keyword">defer</span> wg.Done()<br>                <br>                shard.RLock()<br><br>                <span class="hljs-comment">// 每个分片中的key遍历后都写入统计用的channel</span><br>                <span class="hljs-keyword">for</span> key := <span class="hljs-keyword">range</span> shard.items &#123;<br>                    ch &lt;- key<br>                &#125;<br><br>                shard.RUnlock()<br>            &#125;(shard)<br>        &#125;<br>        wg.Wait()<br>        <span class="hljs-built_in">close</span>(ch)<br>    &#125;()<br><br>    keys := <span class="hljs-built_in">make</span>([]<span class="hljs-keyword">string</span>, count)<br>    <span class="hljs-comment">// 统计各个协程并发读取Map分片的key</span><br>    <span class="hljs-keyword">for</span> k := <span class="hljs-keyword">range</span> ch &#123;<br>        keys = <span class="hljs-built_in">append</span>(keys, k)<br>    &#125;<br>    <span class="hljs-keyword">return</span> keys<br>&#125;<br></code></pre></td></tr></table></figure>
 
 <p>这里写了一个benchMark来对该分段锁Map和原生的Map加锁方式进行压测， 场景为将一万个不重复的键值对同时以100万次写和100万次读，分别进行5次压测， 如下压测代码</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">func BenchmarkMapShared(b *testing.B) &#123;</span><br><span class="line">    num :&#x3D; 10000</span><br><span class="line">    testCase :&#x3D; genNoRepetTestCase(num) &#x2F;&#x2F; 10000个不重复的键值对</span><br><span class="line">    m :&#x3D; New()</span><br><span class="line">    for _, v :&#x3D; range testCase &#123;</span><br><span class="line">        m.Set(v.Key, v.Val)</span><br><span class="line">    &#125;</span><br><span class="line">    b.ResetTimer()</span><br><span class="line"></span><br><span class="line">    for i :&#x3D; 0; i &lt; 5; i++ &#123;</span><br><span class="line">        b.Run(strconv.Itoa(i), func(b *testing.B) &#123;</span><br><span class="line"></span><br><span class="line">            b.N &#x3D; 1000000</span><br><span class="line"></span><br><span class="line">            wg :&#x3D; sync.WaitGroup&#123;&#125;</span><br><span class="line">            wg.Add(b.N * 2)</span><br><span class="line">            for i :&#x3D; 0; i &lt; b.N; i++ &#123;</span><br><span class="line">                e :&#x3D; testCase[rand.Intn(num)]</span><br><span class="line"></span><br><span class="line">                go func(key string, val interface&#123;&#125;) &#123;</span><br><span class="line">                    m.Set(key, val)</span><br><span class="line">                    wg.Done()</span><br><span class="line">                &#125;(e.Key, e.Val)</span><br><span class="line"></span><br><span class="line">                go func(key string) &#123;</span><br><span class="line">                    _, _ &#x3D; m.Get(key)</span><br><span class="line">                    wg.Done()</span><br><span class="line">                &#125;(e.Key)</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line">            wg.Wait()</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight go"><table><tr><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">BenchmarkMapShared</span><span class="hljs-params">(b *testing.B)</span></span> &#123;<br>    num := <span class="hljs-number">10000</span><br>    testCase := genNoRepetTestCase(num) <span class="hljs-comment">// 10000个不重复的键值对</span><br>    m := New()<br>    <span class="hljs-keyword">for</span> _, v := <span class="hljs-keyword">range</span> testCase &#123;<br>        m.Set(v.Key, v.Val)<br>    &#125;<br>    b.ResetTimer()<br><br>    <span class="hljs-keyword">for</span> i := <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">5</span>; i++ &#123;<br>        b.Run(strconv.Itoa(i), <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(b *testing.B)</span></span> &#123;<br><br>            b.N = <span class="hljs-number">1000000</span><br><br>            wg := sync.WaitGroup&#123;&#125;<br>            wg.Add(b.N * <span class="hljs-number">2</span>)<br>            <span class="hljs-keyword">for</span> i := <span class="hljs-number">0</span>; i &lt; b.N; i++ &#123;<br>                e := testCase[rand.Intn(num)]<br><br>                <span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(key <span class="hljs-keyword">string</span>, val <span class="hljs-keyword">interface</span>&#123;&#125;)</span></span> &#123;<br>                    m.Set(key, val)<br>                    wg.Done()<br>                &#125;(e.Key, e.Val)<br><br>                <span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(key <span class="hljs-keyword">string</span>)</span></span> &#123;<br>                    _, _ = m.Get(key)<br>                    wg.Done()<br>                &#125;(e.Key)<br><br>            &#125;<br>            wg.Wait()<br>        &#125;)<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 <p>原生Map加锁压测结果<br><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/gomap01.png"></p>
 <p>分段锁压测结果<br><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/gomap02.png"></p>
 <p>可以看出在将锁的粒度细化后再面对大量需要控制并发安全的访问时，分段锁Map的耗时比原生Map加锁要快3倍有余</p>
 <h3 id="Sync-Map"><a href="#Sync-Map" class="headerlink" title="Sync.Map"></a>Sync.Map</h3><p>go1.9之后加入了支持并发安全的Map <strong>sync.Map</strong>, <strong>sync.Map 通过一份只使用原子操作的数据和一份冗余了只读数据的加锁数据实现一定程度上的读写分离，使得大多数读操作和更新操作是原子操作，写入新数据才加锁的方式来提升性能。</strong>以下是 sync.Map源码剖析, 结构体中的注释都会在具体实现代码中提示相呼应</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">type Map struct &#123;</span><br><span class="line">    &#x2F;&#x2F; 保护dirty的锁</span><br><span class="line">    mu Mutex                        </span><br><span class="line">    &#x2F;&#x2F; 只读数据（修改采用原子操作)</span><br><span class="line">    read atomic.Value                </span><br><span class="line">    &#x2F;&#x2F; 包含只读中所有数据（冗余），写入新数据时也在dirty中操作</span><br><span class="line">    dirty map[interface&#123;&#125;]*entry  </span><br><span class="line">    &#x2F;&#x2F; 当原子操作访问只读read时找不到数据时会去dirty中寻找，此时misses+1，dirty及作为存储新写入的数据，又冗余了只读结构中的数据，所以当misses &gt; dirty 的长度时， 会将dirty升级为read，同时将老的dirty置nil</span><br><span class="line">    misses int </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; Map struct 中的 read 就是readOnly 的指针</span><br><span class="line">type readOnly struct &#123;</span><br><span class="line">    &#x2F;&#x2F; 基础Map</span><br><span class="line">    m   map[interface&#123;&#125;]*entry </span><br><span class="line">    &#x2F;&#x2F; 用于表示当前dirty中是否有read中不存在的数据， 在写入数据时， 如果发现dirty中没有新数据且dirty为nil时，会将read中未被删除的数据拷贝一份冗余到dirty中， 过程与Map struct中的 misses相呼应</span><br><span class="line">    amended bool </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 数据项</span><br><span class="line">type entry struct &#123;</span><br><span class="line">    p unsafe.Pointer </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 用于标记数据项已被删除（主要保证数据冗余时的并发安全）</span><br><span class="line">&#x2F;&#x2F; 上述Map结构中说到有一个将read数据拷贝冗余至dirty的过程， 因为删除数据项是将*entry置nil, 为了避免冗余过程中因并发问题导致*entry改变而影响到拷贝后的dirty正确性，所以sync.Map使用expunged来标记entry是否被删除</span><br><span class="line">var expunged &#x3D; unsafe.Pointer(new(interface&#123;&#125;))</span><br></pre></td></tr></table></figure>
+<figure class="highlight go"><table><tr><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">type</span> Map <span class="hljs-keyword">struct</span> &#123;<br>    <span class="hljs-comment">// 保护dirty的锁</span><br>    mu Mutex                        <br>    <span class="hljs-comment">// 只读数据（修改采用原子操作)</span><br>    read atomic.Value                <br>    <span class="hljs-comment">// 包含只读中所有数据（冗余），写入新数据时也在dirty中操作</span><br>    dirty <span class="hljs-keyword">map</span>[<span class="hljs-keyword">interface</span>&#123;&#125;]*entry  <br>    <span class="hljs-comment">// 当原子操作访问只读read时找不到数据时会去dirty中寻找，此时misses+1，dirty及作为存储新写入的数据，又冗余了只读结构中的数据，所以当misses &gt; dirty 的长度时， 会将dirty升级为read，同时将老的dirty置nil</span><br>    misses <span class="hljs-keyword">int</span> <br>&#125;<br><br><span class="hljs-comment">// Map struct 中的 read 就是readOnly 的指针</span><br><span class="hljs-keyword">type</span> readOnly <span class="hljs-keyword">struct</span> &#123;<br>    <span class="hljs-comment">// 基础Map</span><br>    m   <span class="hljs-keyword">map</span>[<span class="hljs-keyword">interface</span>&#123;&#125;]*entry <br>    <span class="hljs-comment">// 用于表示当前dirty中是否有read中不存在的数据， 在写入数据时， 如果发现dirty中没有新数据且dirty为nil时，会将read中未被删除的数据拷贝一份冗余到dirty中， 过程与Map struct中的 misses相呼应</span><br>    amended <span class="hljs-keyword">bool</span> <br>&#125;<br><br><span class="hljs-comment">// 数据项</span><br><span class="hljs-keyword">type</span> entry <span class="hljs-keyword">struct</span> &#123;<br>    p unsafe.Pointer <br>&#125;<br><br><span class="hljs-comment">// 用于标记数据项已被删除（主要保证数据冗余时的并发安全）</span><br><span class="hljs-comment">// 上述Map结构中说到有一个将read数据拷贝冗余至dirty的过程， 因为删除数据项是将*entry置nil, 为了避免冗余过程中因并发问题导致*entry改变而影响到拷贝后的dirty正确性，所以sync.Map使用expunged来标记entry是否被删除</span><br><span class="hljs-keyword">var</span> expunged = unsafe.Pointer(<span class="hljs-built_in">new</span>(<span class="hljs-keyword">interface</span>&#123;&#125;))<br></code></pre></td></tr></table></figure>
 
 <p>在下面sync.Map具体实现中将会看到很多“双检查”代码，<strong>因为通过原子操作获取的值可能在进行其他非原子操作过程中已改变，所以再非原子操作后需要使用之前原子操作获取的值需要再次进行原子操作获取。</strong></p>
 <p>    <strong>compareAndSwap交换并比较， 用于在多线程编程中实现不被打断的数据交换操作，从而避免多线程同时改写某一数据时导致数据不一致问题。</strong></p>
-<h4 id="sync-Map-Write"><a href="#sync-Map-Write" class="headerlink" title="sync.Map Write"></a>sync.Map Write</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br></pre></td><td class="code"><pre><span class="line">func (m *Map) Store(key, value interface&#123;&#125;) &#123;</span><br><span class="line">    &#x2F;&#x2F; 先不上锁，而是从只读数据中按key读取， 如果已存在以compareAndSwap操作进行覆盖(update)</span><br><span class="line">    read, _ :&#x3D; m.read.Load().(readOnly)</span><br><span class="line">    if e, ok :&#x3D; read.m[key]; ok &amp;&amp; e.tryStore(&amp;value) &#123;</span><br><span class="line">        return</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    m.mu.Lock()</span><br><span class="line">    &#x2F;&#x2F; 双检查获取read</span><br><span class="line">    read, _ &#x3D; m.read.Load().(readOnly)</span><br><span class="line">    &#x2F;&#x2F; 如果data在read中，更新entry</span><br><span class="line">    if e, ok :&#x3D; read.m[key]; ok &#123;</span><br><span class="line">        &#x2F;&#x2F; 如果原子操作读到的数据是被标记删除的， 则视为新数据写入dirty</span><br><span class="line">        if e.unexpungeLocked() &#123;</span><br><span class="line">            m.dirty[key] &#x3D; e</span><br><span class="line">        &#125;</span><br><span class="line">        &#x2F;&#x2F; 原子操作写新数据</span><br><span class="line">        e.storeLocked(&amp;value)</span><br><span class="line">    &#125; else if e, ok :&#x3D; m.dirty[key]; ok &#123;</span><br><span class="line">        &#x2F;&#x2F; 原子操作写新数据</span><br><span class="line">        e.storeLocked(&amp;value)</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        &#x2F;&#x2F; 新数据 </span><br><span class="line">        &#x2F;&#x2F; 当dirty中没有新数据时，将read中数据冗余到dirty</span><br><span class="line">        if !read.amended &#123;</span><br><span class="line">            m.dirtyLocked()</span><br><span class="line">            m.read.Store(readOnly&#123;m: read.m, amended: true&#125;)</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        m.dirty[key] &#x3D; newEntry(value)</span><br><span class="line">    &#125;</span><br><span class="line">    m.mu.Unlock()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func (e *entry) tryStore(i *interface&#123;&#125;) bool &#123;</span><br><span class="line">    p :&#x3D; atomic.LoadPointer(&amp;e.p)</span><br><span class="line">    if p &#x3D;&#x3D; expunged &#123;</span><br><span class="line">        return false</span><br><span class="line">    &#125;</span><br><span class="line">    for &#123;</span><br><span class="line">        if atomic.CompareAndSwapPointer(&amp;e.p, p, unsafe.Pointer(i)) &#123;</span><br><span class="line">            return true</span><br><span class="line">        &#125;</span><br><span class="line">        p &#x3D; atomic.LoadPointer(&amp;e.p)</span><br><span class="line">        if p &#x3D;&#x3D; expunged &#123;</span><br><span class="line">            return false</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 在dirty中没有比read多出的新数据时触发冗余</span><br><span class="line">func (m *Map) dirtyLocked() &#123;</span><br><span class="line">    if m.dirty !&#x3D; nil &#123;</span><br><span class="line">        return</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    read, _ :&#x3D; m.read.Load().(readOnly)</span><br><span class="line">    m.dirty &#x3D; make(map[interface&#123;&#125;]*entry, len(read.m))</span><br><span class="line">    for k, e :&#x3D; range read.m &#123;</span><br><span class="line">        &#x2F;&#x2F; 检查entry是否被删除， 被删除的数据不冗余</span><br><span class="line">        if !e.tryExpungeLocked() &#123;</span><br><span class="line">            m.dirty[k] &#x3D; e</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func (e *entry) tryExpungeLocked() (isExpunged bool) &#123;</span><br><span class="line">    p :&#x3D; atomic.LoadPointer(&amp;e.p)</span><br><span class="line">    for p &#x3D;&#x3D; nil &#123;</span><br><span class="line">        &#x2F;&#x2F; 将被删除（置nil）的数据以cas原子操作标记为expunged（防止因并发情况下其他操作导致冗余进dirty的数据不正确）</span><br><span class="line">        if atomic.CompareAndSwapPointer(&amp;e.p, nil, expunged) &#123;</span><br><span class="line">            return true</span><br><span class="line">        &#125;</span><br><span class="line">        p &#x3D; atomic.LoadPointer(&amp;e.p)</span><br><span class="line">    &#125;</span><br><span class="line">    return p &#x3D;&#x3D; expunged</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="sync-Map-Read"><a href="#sync-Map-Read" class="headerlink" title="sync.Map Read"></a>sync.Map Read</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">func (m *Map) Load(key interface&#123;&#125;) (value interface&#123;&#125;, ok bool) &#123;</span><br><span class="line">    read, _ :&#x3D; m.read.Load().(readOnly)</span><br><span class="line">    e, ok :&#x3D; read.m[key]</span><br><span class="line"></span><br><span class="line">    &#x2F;&#x2F; 只读数据中没有，并且dirty有比read多的数据，加锁在dirty中找</span><br><span class="line">    if !ok &amp;&amp; read.amended &#123;</span><br><span class="line">        m.mu.Lock()</span><br><span class="line">        &#x2F;&#x2F; 双检查， 因为上锁之前的语句是非原子性的</span><br><span class="line">        read, _ &#x3D; m.read.Load().(readOnly)</span><br><span class="line">        e, ok &#x3D; read.m[key]</span><br><span class="line">        if !ok &amp;&amp; read.amended &#123;</span><br><span class="line">            &#x2F;&#x2F; 只读中没有读取到的次数+1</span><br><span class="line">            e, ok &#x3D; m.dirty[key]</span><br><span class="line">            &#x2F;&#x2F; 检查是否达到触发dirty升级read的条件</span><br><span class="line">            m.missLocked()</span><br><span class="line">        &#125;</span><br><span class="line">        m.mu.Unlock()</span><br><span class="line">    &#125;</span><br><span class="line">    if !ok &#123;</span><br><span class="line">        return nil, false</span><br><span class="line">    &#125;</span><br><span class="line">    &#x2F;&#x2F; atomic.Load 但被标记为删除的会返回nil</span><br><span class="line">    return e.load()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func (m *Map) missLocked() &#123;</span><br><span class="line">    m.misses++</span><br><span class="line">    if m.misses &lt; len(m.dirty) &#123;</span><br><span class="line">        return</span><br><span class="line">    &#125;</span><br><span class="line">    m.read.Store(readOnly&#123;m: m.dirty&#125;)</span><br><span class="line">    m.dirty &#x3D; nil</span><br><span class="line">    m.misses &#x3D; 0</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="sync-Map-Write"><a href="#sync-Map-Write" class="headerlink" title="sync.Map Write"></a>sync.Map Write</h4><figure class="highlight go"><table><tr><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(m *Map)</span> <span class="hljs-title">Store</span><span class="hljs-params">(key, value <span class="hljs-keyword">interface</span>&#123;&#125;)</span></span> &#123;<br>    <span class="hljs-comment">// 先不上锁，而是从只读数据中按key读取， 如果已存在以compareAndSwap操作进行覆盖(update)</span><br>    read, _ := m.read.Load().(readOnly)<br>    <span class="hljs-keyword">if</span> e, ok := read.m[key]; ok &amp;&amp; e.tryStore(&amp;value) &#123;<br>        <span class="hljs-keyword">return</span><br>    &#125;<br>    <br>    m.mu.Lock()<br>    <span class="hljs-comment">// 双检查获取read</span><br>    read, _ = m.read.Load().(readOnly)<br>    <span class="hljs-comment">// 如果data在read中，更新entry</span><br>    <span class="hljs-keyword">if</span> e, ok := read.m[key]; ok &#123;<br>        <span class="hljs-comment">// 如果原子操作读到的数据是被标记删除的， 则视为新数据写入dirty</span><br>        <span class="hljs-keyword">if</span> e.unexpungeLocked() &#123;<br>            m.dirty[key] = e<br>        &#125;<br>        <span class="hljs-comment">// 原子操作写新数据</span><br>        e.storeLocked(&amp;value)<br>    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> e, ok := m.dirty[key]; ok &#123;<br>        <span class="hljs-comment">// 原子操作写新数据</span><br>        e.storeLocked(&amp;value)<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-comment">// 新数据 </span><br>        <span class="hljs-comment">// 当dirty中没有新数据时，将read中数据冗余到dirty</span><br>        <span class="hljs-keyword">if</span> !read.amended &#123;<br>            m.dirtyLocked()<br>            m.read.Store(readOnly&#123;m: read.m, amended: <span class="hljs-literal">true</span>&#125;)<br>        &#125;<br>        <br>        m.dirty[key] = newEntry(value)<br>    &#125;<br>    m.mu.Unlock()<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(e *entry)</span> <span class="hljs-title">tryStore</span><span class="hljs-params">(i *<span class="hljs-keyword">interface</span>&#123;&#125;)</span> <span class="hljs-title">bool</span></span> &#123;<br>    p := atomic.LoadPointer(&amp;e.p)<br>    <span class="hljs-keyword">if</span> p == expunged &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span><br>    &#125;<br>    <span class="hljs-keyword">for</span> &#123;<br>        <span class="hljs-keyword">if</span> atomic.CompareAndSwapPointer(&amp;e.p, p, unsafe.Pointer(i)) &#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span><br>        &#125;<br>        p = atomic.LoadPointer(&amp;e.p)<br>        <span class="hljs-keyword">if</span> p == expunged &#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span><br>        &#125;<br>    &#125;<br>&#125;<br><br><br><span class="hljs-comment">// 在dirty中没有比read多出的新数据时触发冗余</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(m *Map)</span> <span class="hljs-title">dirtyLocked</span><span class="hljs-params">()</span></span> &#123;<br>    <span class="hljs-keyword">if</span> m.dirty != <span class="hljs-literal">nil</span> &#123;<br>        <span class="hljs-keyword">return</span><br>    &#125;<br><br>    read, _ := m.read.Load().(readOnly)<br>    m.dirty = <span class="hljs-built_in">make</span>(<span class="hljs-keyword">map</span>[<span class="hljs-keyword">interface</span>&#123;&#125;]*entry, <span class="hljs-built_in">len</span>(read.m))<br>    <span class="hljs-keyword">for</span> k, e := <span class="hljs-keyword">range</span> read.m &#123;<br>        <span class="hljs-comment">// 检查entry是否被删除， 被删除的数据不冗余</span><br>        <span class="hljs-keyword">if</span> !e.tryExpungeLocked() &#123;<br>            m.dirty[k] = e<br>        &#125;<br>    &#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(e *entry)</span> <span class="hljs-title">tryExpungeLocked</span><span class="hljs-params">()</span> <span class="hljs-params">(isExpunged <span class="hljs-keyword">bool</span>)</span></span> &#123;<br>    p := atomic.LoadPointer(&amp;e.p)<br>    <span class="hljs-keyword">for</span> p == <span class="hljs-literal">nil</span> &#123;<br>        <span class="hljs-comment">// 将被删除（置nil）的数据以cas原子操作标记为expunged（防止因并发情况下其他操作导致冗余进dirty的数据不正确）</span><br>        <span class="hljs-keyword">if</span> atomic.CompareAndSwapPointer(&amp;e.p, <span class="hljs-literal">nil</span>, expunged) &#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span><br>        &#125;<br>        p = atomic.LoadPointer(&amp;e.p)<br>    &#125;<br>    <span class="hljs-keyword">return</span> p == expunged<br>&#125;<br></code></pre></td></tr></table></figure>
+<h4 id="sync-Map-Read"><a href="#sync-Map-Read" class="headerlink" title="sync.Map Read"></a>sync.Map Read</h4><figure class="highlight stylus"><table><tr><td class="code"><pre><code class="hljs stylus">func (m *Map) Load(key interface&#123;&#125;) (value interface&#123;&#125;, ok bool) &#123;<br>    read, _ := m<span class="hljs-selector-class">.read</span><span class="hljs-selector-class">.Load</span>().(readOnly)<br>    e, ok := read<span class="hljs-selector-class">.m</span><span class="hljs-selector-attr">[key]</span><br><br>    <span class="hljs-comment">// 只读数据中没有，并且dirty有比read多的数据，加锁在dirty中找</span><br>    <span class="hljs-keyword">if</span> !ok &amp;&amp; read<span class="hljs-selector-class">.amended</span> &#123;<br>        m<span class="hljs-selector-class">.mu</span><span class="hljs-selector-class">.Lock</span>()<br>        <span class="hljs-comment">// 双检查， 因为上锁之前的语句是非原子性的</span><br>        read, _ = m<span class="hljs-selector-class">.read</span><span class="hljs-selector-class">.Load</span>().(readOnly)<br>        e, ok = read<span class="hljs-selector-class">.m</span><span class="hljs-selector-attr">[key]</span><br>        <span class="hljs-keyword">if</span> !ok &amp;&amp; read<span class="hljs-selector-class">.amended</span> &#123;<br>            <span class="hljs-comment">// 只读中没有读取到的次数+1</span><br>            e, ok = m<span class="hljs-selector-class">.dirty</span><span class="hljs-selector-attr">[key]</span><br>            <span class="hljs-comment">// 检查是否达到触发dirty升级read的条件</span><br>            m<span class="hljs-selector-class">.missLocked</span>()<br>        &#125;<br>        m<span class="hljs-selector-class">.mu</span><span class="hljs-selector-class">.Unlock</span>()<br>    &#125;<br>    <span class="hljs-keyword">if</span> !ok &#123;<br>        return nil, false<br>    &#125;<br>    <span class="hljs-comment">// atomic.Load 但被标记为删除的会返回nil</span><br>    return e<span class="hljs-selector-class">.load</span>()<br>&#125;<br><br>func (m *Map) missLocked() &#123;<br>    m.misses++<br>    <span class="hljs-keyword">if</span> m<span class="hljs-selector-class">.misses</span> &lt; len(m.dirty) &#123;<br>        return<br>    &#125;<br>    m<span class="hljs-selector-class">.read</span><span class="hljs-selector-class">.Store</span>(readOnly&#123;m: m.dirty&#125;)<br>    m<span class="hljs-selector-class">.dirty</span> = nil<br>    m<span class="hljs-selector-class">.misses</span> = <span class="hljs-number">0</span><br>&#125;<br></code></pre></td></tr></table></figure>
 
-<h4 id="sync-Map-DELETE"><a href="#sync-Map-DELETE" class="headerlink" title="sync.Map DELETE"></a>sync.Map DELETE</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">func (m *Map) Delete(key interface&#123;&#125;) &#123;</span><br><span class="line">    read, _ :&#x3D; m.read.Load().(readOnly)</span><br><span class="line">    e, ok :&#x3D; read.m[key]</span><br><span class="line">    &#x2F;&#x2F; 只读中不存在需要到dirty中去删除</span><br><span class="line">    if !ok &amp;&amp; read.amended &#123;</span><br><span class="line">        m.mu.Lock() </span><br><span class="line">        &#x2F;&#x2F; 双检查， 因为上锁之前的语句是非原子性的</span><br><span class="line">        read, _ &#x3D; m.read.Load().(readOnly)</span><br><span class="line">        e, ok &#x3D; read.m[key]</span><br><span class="line">        if !ok &amp;&amp; read.amended &#123;</span><br><span class="line">            delete(m.dirty, key)</span><br><span class="line">        &#125;</span><br><span class="line">        m.mu.Unlock()</span><br><span class="line">    &#125;</span><br><span class="line">    if ok &#123;</span><br><span class="line">        e.delete()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func (e *entry) delete() (hadValue bool) &#123;</span><br><span class="line">    for &#123;</span><br><span class="line">        p :&#x3D; atomic.LoadPointer(&amp;e.p)</span><br><span class="line">        if p &#x3D;&#x3D; nil || p &#x3D;&#x3D; expunged &#123;</span><br><span class="line">            return false</span><br><span class="line">        &#125;</span><br><span class="line">        if atomic.CompareAndSwapPointer(&amp;e.p, p, nil) &#123;</span><br><span class="line">            return true</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="sync-Map-DELETE"><a href="#sync-Map-DELETE" class="headerlink" title="sync.Map DELETE"></a>sync.Map DELETE</h4><figure class="highlight go"><table><tr><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(m *Map)</span> <span class="hljs-title">Delete</span><span class="hljs-params">(key <span class="hljs-keyword">interface</span>&#123;&#125;)</span></span> &#123;<br>    read, _ := m.read.Load().(readOnly)<br>    e, ok := read.m[key]<br>    <span class="hljs-comment">// 只读中不存在需要到dirty中去删除</span><br>    <span class="hljs-keyword">if</span> !ok &amp;&amp; read.amended &#123;<br>        m.mu.Lock() <br>        <span class="hljs-comment">// 双检查， 因为上锁之前的语句是非原子性的</span><br>        read, _ = m.read.Load().(readOnly)<br>        e, ok = read.m[key]<br>        <span class="hljs-keyword">if</span> !ok &amp;&amp; read.amended &#123;<br>            <span class="hljs-built_in">delete</span>(m.dirty, key)<br>        &#125;<br>        m.mu.Unlock()<br>    &#125;<br>    <span class="hljs-keyword">if</span> ok &#123;<br>        e.<span class="hljs-built_in">delete</span>()<br>    &#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(e *entry)</span> <span class="hljs-title">delete</span><span class="hljs-params">()</span> <span class="hljs-params">(hadValue <span class="hljs-keyword">bool</span>)</span></span> &#123;<br>    <span class="hljs-keyword">for</span> &#123;<br>        p := atomic.LoadPointer(&amp;e.p)<br>        <span class="hljs-keyword">if</span> p == <span class="hljs-literal">nil</span> || p == expunged &#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span><br>        &#125;<br>        <span class="hljs-keyword">if</span> atomic.CompareAndSwapPointer(&amp;e.p, p, <span class="hljs-literal">nil</span>) &#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span><br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 
 <p>同样以刚刚压测原生加锁Map和分段锁的方式来压测sync.Map<br><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/gomap03.png"></p>
 <p>压测平均下来sync.Map和分段锁差别不大，但是比起分段锁， sync.Map则将锁的粒度更加的细小到对数据的状态上，使得大多数据可以无锁化操作， 同时比分段锁拥有更好的拓展性，因为分段锁使用前总是要定一个分片数量， 在做扩容或者缩小时很麻烦, 但要达到sync.Map这种性能既好又能动态扩容的程度，代码就相对复杂很多。</p>
 <p><strong>还有注意在使用sync.Map时切忌不要将其拷贝，</strong> go源码中有对sync.Map注释到” A Map must not be copied after first use.”因为当sync.Map被拷贝之后， Map类型的dirty还是那个map 但是read 和 锁却不是之前的read和锁(都不在一个世界你拿什么保护我), 所以必然导致并发不安全（为了写博我把sync.Map代码复制出来一份把私有成员改成可外部访问的打印指针）</p>
 <p><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/gomap04.png"><br><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/gomap05.png"></p>
 <h3 id="这篇文章很硬核，建议认真阅读"><a href="#这篇文章很硬核，建议认真阅读" class="headerlink" title="这篇文章很硬核，建议认真阅读"></a>这篇文章很硬核，建议认真阅读</h3>
-            </div>
-          
-
-    
-      <footer class="post-footer">
-		
-		<div class="post-tags">
-		  
-			<a href="/tags/map/">map</a>
-		  
-			<a href="/tags/%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8/">线程安全</a>
-		  
-		</div>
-		
-
-        
-        
-  <nav class="post-nav">
-    
-      <a class="prev" href="/2021/07/31/%E9%9D%A2%E8%AF%95%EF%BC%9A%E5%A6%82%E4%BD%95%E4%BF%9D%E8%AF%81%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E6%95%B0%E6%8D%AE%E4%B8%80%E8%87%B4%E6%80%A7/">
-        <i class="iconfont icon-left"></i>
-        <span class="prev-text nav-default">面试：如何保证分布式系统数据一致性</span>
-        <span class="prev-text nav-mobile">Prev</span>
-      </a>
-    
-    
-      <a class="next" href="/2021/07/31/%E9%9D%A2%E8%AF%95%EF%BC%9A%E6%80%8E%E4%B9%88%E8%A7%A3%E5%86%B3hash%E5%86%B2%E7%AA%81%EF%BC%9F/">
-        <span class="next-text nav-default">面试：怎么解决hash冲突？</span>
-        <span class="prev-text nav-mobile">Next</span>
-        <i class="iconfont icon-right"></i>
-      </a>
-    
-  </nav>
-
-        
-  <div class="comments" id="comments">
-    
-  </div>
-
-
-      </footer>
-    
-  </article>
-
     </div>
+</div>
+<style>
+    #noneimg img {
+        display: none;
+        z-index: 109;
+        width: 600px !important;
+        border-radius: 0px;
+        position: fixed;
+        box-shadow: 0 0 0px #c3c3c300 !important;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto !important;
+    }
 
-      </div>
+    @media screen and (max-width:600px) {
+        #noneimg img {
+            width: 88%
+        }
+    }
+</style>
+<script>
+    $(function () { $('#article').click(function (e) { if (e.target.tagName == "IMG") { if ($('#nonediv').length == 0) { let MImg = `<div id='noneimg'><img src='${e.target.currentSrc}'></div>`; let MDiv = "<div id='nonediv' style='cursor: pointer;display: none; position: fixed;left: 0;top: 0; right: 0;bottom: 0;background-color: #333;opacity:0.5;z-index: 108;'></div>"; $('#article').append(MDiv); $('#article').append(MImg); $("#nonediv").fadeIn("slow"); $("#noneimg img").fadeIn("slow") } } else { if ($('#nonediv').length !== 0) { $("#noneimg ").fadeOut("slow"); $("#nonediv").fadeOut("slow"); setTimeout(function () { $('#nonediv').remove(); $('#noneimg').remove() }, 500) } } }); $('.article-content').addClass('content-move') });
+</script>
+<div class="Last-Next">
+    
+    <a href="/2021/07/31/%E9%9D%A2%E8%AF%95%EF%BC%9A%E5%A6%82%E4%BD%95%E4%BF%9D%E8%AF%81%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E6%95%B0%E6%8D%AE%E4%B8%80%E8%87%B4%E6%80%A7/">
+        <div class="last">
+            <span>上一篇</span>
+            <p>面试：如何保证分布式系统数据一致性</p>
+        </div>
+    </a>
+    
 
-      <footer id="colophon"><span class="copyright-year">
     
-        &copy;
+    <a href="/2021/07/31/%E9%9D%A2%E8%AF%95%EF%BC%9A%E6%80%8E%E4%B9%88%E8%A7%A3%E5%86%B3hash%E5%86%B2%E7%AA%81%EF%BC%9F/">
+        <div class="next">
+            <span>下一篇</span>
+            <p>面试：怎么解决hash冲突？</p>
+        </div>
+    </a>
     
-        2014 -
-    
-    2021
-    <span class="footer-author">Russshare.</span>
-    <span class="power-by">
-        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+</div>
+		
+<link rel="stylesheet" href="/css/food.css">
+
+<div class="footer">
+	<div class="Copyright">
+		©2021 By CHANGEQ. 主题：<a
+			style="text-decoration: none;display: contents; color: #898F9F;"
+			target="_blank" rel="noopener" href="https://github.com/qiaobug/hexo-theme-quiet">Quiet</a>
+	</div>
+	<div class="contact">
+		
+		<a target="_blank" rel="noopener" href="https://github.com/qiaobug">
+			<img src="https://cdn.jsdelivr.net/gh/duogongneng/MyBlogImg/imggithub.png" alt="Quiet主题">
+		</a>
+		
+	</div>
+</div>
+
+<script src="/js/jquery.min.js"></script>
+
+
+<script src="/js/gotop.js"></script>
+
+
+<style type="text/css">
+    @media screen and (min-width: 600px) {
+        .goTop>span {
+            display: block;
+            border-radius: 50%;
+            width: 66px;
+            height: 66px;
+            cursor: pointer;
+            opacity: 0.8;
+            background: rgba(18, 24, 58, 0.06);
+            text-align: center;
+            border: 1px solid rgba(18, 24, 58, 0.06);
+
+            transition: border .5s;
+            -moz-transition: border .5s;
+            /* Firefox 4 */
+            -webkit-transition: border .5s;
+            /* Safari 和 Chrome */
+            -o-transition: border .5s;
+            /* Opera */
+        }
+
+        .goTop>span:hover {
+            border: 1px solid #6680B3;
+        }
+
+
+        .goTop {
+            position: fixed;
+            right: 30px;
+            bottom: 80px;
+        }
+
+        .goTop>span>svg {
+            width: 30px;
+            height: 30px;
+            margin-top: 17.5px;
+            opacity: 0.7;
+        }
+
+    }
+
+    @media screen and (max-width: 600px) {
+        .goTop {
+            display: none;
+        }
+    }
+</style>
+<div class="goTop" id="js-go_top">
+    <span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <g>
+                <path d="M13 12v8h-2v-8H4l8-8 8 8z"></path>
+            </g>
+        </svg>
     </span>
-</span>
+</div>
+<script>
+    $('#js-go_top').gotoTop({ offset: 500, speed: 300, animationShow: { 'transform': 'translate(0,0)', 'transition': 'transform .5s ease-in-out' }, animationHide: { 'transform': 'translate(100px,0)', 'transition': 'transform .5s ease-in-out' } });
+</script>
+<script>
+	console.log('\n %c Hexo-Quiet 主题 %c https://github.com/QiaoBug/hexo-theme-quiet \n', 'color: #fadfa3; background: #030307; padding:5px 0;', 'background: #fadfa3; padding:5px 0;')
+</script>
+	</body>
 
-      </footer>
-
-      <div class="back-to-top" id="back-to-top">
-        <i class="iconfont icon-up"></i>
-      </div>
-    </div>
-    
-
-
-    
-
-
-
-
-  
-    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
-  
-
-  
-
-    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
-<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
-
-  </body>
 </html>

@@ -1,151 +1,291 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
-  <head>
-    
-<meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+<html>
+
+	<head>
+		
+<title>Go中的进阶测试模式-Quiet</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="shortcut icon" type="image/x-icon" href="/image/favicon.ico">
 
 
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="keywords" content="测试,">
+<meta name="description" content="">
 
 
-
-  <meta name="description" content="Go中的进阶测试模式"/>
-
+<script src="/js/jquery.min.js"></script>
 
 
+	<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+</head>
 
-  <meta name="keywords" content="测试," />
-
-
-
-
-
-  <link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+	<body>
+		
+<link rel="stylesheet" href="/css/page.css">
 
 
+<link rel="stylesheet" href="/css/page_cente.css">
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+<link rel="stylesheet" href="/css/atom-one-dark.css">
 
 
+<link rel="stylesheet" href="/css/header.css">
 
-<link rel="canonical" href="https://riddlego.github.io/2021/08/27/Go中的进阶测试模式/"/>
-
-
-<meta name="description" content="来自原文点击这里哦 Go 中的进阶测试模式Go 使编写测试非常简单。实际上，测试工具是内置在标准工具链里的，你可以简单地运行 go test 来运行你的测试，无需安装任何额外的依赖或任何别的东西。测试包是标准库的一部分，我很高兴地看到它的使用范围非常广泛。 当你在使用 Go 编写服务实现时，希望你的测试覆盖率随着时间的推移而增长。随着测试范围的扩大，测试运行时间也会变长。你希望用服务集成及集成测试">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Go中的进阶测试模式">
-<meta property="og:url" content="https://riddlego.github.io/2021/08/27/Go%E4%B8%AD%E7%9A%84%E8%BF%9B%E9%98%B6%E6%B5%8B%E8%AF%95%E6%A8%A1%E5%BC%8F/index.html">
-<meta property="og:site_name" content="RiddleGo">
-<meta property="og:description" content="来自原文点击这里哦 Go 中的进阶测试模式Go 使编写测试非常简单。实际上，测试工具是内置在标准工具链里的，你可以简单地运行 go test 来运行你的测试，无需安装任何额外的依赖或任何别的东西。测试包是标准库的一部分，我很高兴地看到它的使用范围非常广泛。 当你在使用 Go 编写服务实现时，希望你的测试覆盖率随着时间的推移而增长。随着测试范围的扩大，测试运行时间也会变长。你希望用服务集成及集成测试">
-<meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2021-08-27T11:47:28.000Z">
-<meta property="article:modified_time" content="2021-08-27T13:23:09.766Z">
-<meta property="article:author" content="Russshare">
-<meta property="article:tag" content="测试">
-<meta name="twitter:card" content="summary">
-
-
-<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
-<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
-
-
-
-
-
-<script type="text/javascript">
-  var themeConfig = {
-    fancybox: {
-      enable: false
-    },
-  };
-</script>
-
-
-
-
-  
-
-
-
-    <title> Go中的进阶测试模式 - RiddleGo </title>
-  <meta name="generator" content="Hexo 5.4.0"></head>
-
-  <body>
-    <div id="page">
-      <header id="masthead"><div class="site-header-inner">
-    <h1 class="site-title">
-        <a href="/." class="logo">RiddleGo</a>
-    </h1>
-
-    <nav id="nav-top">
+	<div class="header">
+		<div class="header-top">
+			<div class="h-left">
+				<a href="/">
+					<img src="/image/logo.png" alt="Quiet">
+				</a>
+			</div>
+			<div class="h-right">
+				<ul>
+					
+						
+								<li>
+									<a href="/">
+										HOME
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/archives">
+										ARCHIVE
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/categories">
+										CATEGORIES
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/tags">
+										TAGS
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/links">
+										LINKS
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/about">
+										ABOUT
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+				</ul>
+			</div>
+			<div class="h-right-close">
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+					<path fill="none" d="M0 0h24v24H0z" />
+					<path d="M3 4h18v2H3V4zm0 7h18v2H3v-2zm0 7h18v2H3v-2z" fill="rgba(68,68,68,1)" />
+				</svg>
+			</div>
+		</div>
+	</div>
+	<div class="sidebar">
+    <div class="topo">
+        <h2>CHANGEQ</h2>
+    </div>
+    <ul>
         
-            <ul id="menu-top" class="nav-top-items">
-                
-                    <li class="menu-item">
-                        <a href="/archives">
-                            
-                            
-                                Archives
-                            
-                        </a>
-                    </li>
-                
-                    <li class="menu-item">
-                        <a href="/about">
-                            
-                            
-                                About
-                            
-                        </a>
-                    </li>
-                
-            </ul>
+        <li>
+            <a href="/">HOME</a>
+        </li>
         
-  </nav>
+        <li>
+            <a href="/archives">ARCHIVE</a>
+        </li>
+        
+        <li>
+            <a href="/categories">CATEGORIES</a>
+        </li>
+        
+        <li>
+            <a href="/tags">TAGS</a>
+        </li>
+        
+        <li>
+            <a href="/links">LINKS</a>
+        </li>
+        
+        <li>
+            <a href="/about">ABOUT</a>
+        </li>
+        
+    </ul>
+    <div class="my_foot">
+        
+        <a target="_blank" rel="noopener" href="https://github.com/qiaobug">
+            <img src="https://cdn.jsdelivr.net/gh/duogongneng/MyBlogImg/imggithub.png" alt="Quiet主题">
+        </a>
+        
+    </div>
 </div>
+<div class='shelter'
+    style='cursor: pointer;display: none; position: fixed;left: 0;top: 0; right: 0;bottom: 0;background-color: #333;opacity:0.5;z-index: 108;'>
+</div>
+<style>
+    .sidebar {
+        width: 0;
+        height: 100%;
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        background: #fff;
+        z-index: 999;
+        text-align: center;
+        box-shadow: -6px 0 20px rgba(98, 94, 94, .815)
+    }
 
-      </header>
-      <div id="content">
-        
-    <div id="primary">
-        
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          Go中的进阶测试模式
-        
-      </h1>
+    .topo {
+        width: 100%;
+        height: 200px;
+        background: url(https://api.ixiaowai.cn/gqapi/gqapi.php) no-repeat;
+        background-size: 100% 100%;
+        position: relative;
+        display: flex;
+        align-items: flex-end
+    }
 
-      <time class="post-time">
-          8月 27 2021
-      </time>
-    </header>
+    .topo h2 {
+        color: #fff;
+        z-index: 1;
+        position: relative;
+        margin: 0 0 10px 10px;
+        font-size: 1.2em;
+        box-sizing: border-box
+    }
 
+    .topo:before {
+        content: '';
+        background-image: url(/image/pattern.png);
+        background-repeat: repeat;
+        height: 100%;
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 100%;
+        z-index: 1
+    }
 
+    .sidebar ul {
+        width: 100%;
+        margin-top: 50px
+    }
 
-    
-            <div class="post-content">
-            <p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/bVBX5sYbd32Il7IuL0waTw">来自原文点击这里哦</a></p>
+    .sidebar ul li {
+        height: 50px;
+        list-style: none;
+        font-size: 1.2em;
+        text-align: right;
+        margin-right: 10px
+    }
+
+    .sidebar ul li a {
+        display: grid;
+        color: #5d606a;
+        text-overflow: ellipsis;
+        width: 100%;
+        text-decoration: none
+    }
+
+    .my_foot {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        position: absolute;
+        bottom: 0
+    }
+
+    .my_foot a {
+        text-decoration: none;
+        margin-right: 10px;
+        display: inline-block
+    }
+
+    .my_foot a img {
+        width: 30px;
+        height: 30px
+    }
+</style>
+
+<script>
+    $(function () { $('.h-right-close>svg').click(function () { $('.sidebar').animate({ width: "66%" }, 500); $('.shelter').fadeIn("slow") }); $('.shelter').click(function (e) { $('.sidebar').animate({ width: "0" }, 500); $('.shelter').fadeOut("slow") }) })
+</script>
+		<script>
+			$(function () { $(window).scroll(function () { if ($(document).scrollTop() > 100) { $(".header-top").removeClass("header-move2"); $('.header-top').addClass('header-move1') } else { $(".header-top").removeClass("header-move1"); $('.header-top').addClass('header-move2') } }) });
+		</script>
+<div class="header-bg ">
+    <div class="bg-content">
+        <ul class="tag">
+            
+            
+            <li><a href="/tags/测试">测试</a></li>
+            
+            
+        </ul>
+        <h1>Go中的进阶测试模式</h1>
+        <div class="article-info">
+            <div class="article-author">
+                
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+                    <g>
+                        <path fill="#12183A"
+                            d="M6.187 15.265A6.47 6.47 0 0 0 10 16.5a6.47 6.47 0 0 0 3.813-1.235A4.99 4.99 0 0 0 10 13.5a4.99 4.99 0 0 0-3.813 1.765zM5.082 14.25A6.485 6.485 0 0 1 10 12c1.965 0 3.726.872 4.918 2.25a6.5 6.5 0 1 0-9.836 0zM10 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0-1.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z">
+                        </path>
+                    </g>
+                </svg>
+                
+                <span> <a href="">CHANGEQ</a></span>
+                <p>2021-08-27 19:47:28</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="article-content">
+    <div id="article" class="content">
+        <p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/bVBX5sYbd32Il7IuL0waTw">来自原文点击这里哦</a></p>
 <h2 id="Go-中的进阶测试模式"><a href="#Go-中的进阶测试模式" class="headerlink" title="Go 中的进阶测试模式"></a>Go 中的进阶测试模式</h2><p>Go 使编写测试非常简单。实际上，测试工具是内置在标准工具链里的，你可以简单地运行 go test 来运行你的测试，无需安装任何额外的依赖或任何别的东西。测试包是标准库的一部分，我很高兴地看到它的使用范围非常广泛。</p>
 <p>当你在使用 Go 编写服务实现时，希望你的测试覆盖率随着时间的推移而增长。随着测试范围的扩大，测试运行时间也会变长。你希望用服务集成及集成测试来测试服务的重要部分。你发现在某些情况下，集成测试和各种公共服务的耦合对 CI 和开发产生限制。</p>
 <h2 id="集成测试"><a href="#集成测试" class="headerlink" title="集成测试"></a>集成测试</h2><p>我是集成测试的忠实信徒。有人可能无法直接看到它的好处，但对于 LTS（长期支持）的版本，进行集成测试是一个很好的主意，因为你显然想要随着时间的推移升级你的服务。如果你要从 MySQL 5.7 切换到 8.0 （甚至是换成 PostgreSQL），你需要合理地确保你的服务依然正常工作，然后你可以检测问题并根据需要对实现进行更新。</p>
 <p>集成测试最近对我有用的一个例子是检测到 MySQL 保留字增加的情况：我有一个数据库部署里用到了 rank 字段。这个词在 MySQL 5.7 及之前是可以使用的，但在 MySQL 8.0 里它变成了一个保留字。集成测试捕获了这个问题，而模拟（mock）则无法做到这一点。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RANK ®; 在 8.0.2 版增加 (为保留字) 见 MySQL 8.0 的关键词和保留字[1]</span><br></pre></td></tr></table></figure>
+<figure class="highlight apache"><table><tr><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">RANK</span> ®; 在 <span class="hljs-number">8</span>.<span class="hljs-number">0</span>.<span class="hljs-number">2</span> 版增加 (为保留字) 见 MySQL <span class="hljs-number">8</span>.<span class="hljs-number">0</span> 的关键词和保留字[<span class="hljs-number">1</span>]<br></code></pre></td></tr></table></figure>
 
 <p>模拟是单元测试的一种扩展，而由于集成测试可能意味着高昂的成本，今天做集成测试比过去容易得多。随着 Docker 的不断发展，并有了像 Drone CI[2] 这样 Docker-first 的 CI，我们可以在 CI 测试套件里声明我们的服务。让我们看一下我定义的 MySQL 服务：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">services:</span><br><span class="line">- name: crust-db</span><br><span class="line">  image: percona:8.0</span><br><span class="line">  ports:</span><br><span class="line"> - 3306</span><br><span class="line">  environment:</span><br><span class="line"> MYSQL_ROOT_PASSWORD: bRxJ37sJ6Qu4</span><br><span class="line"> MYSQL_DATABASE: crust</span><br><span class="line"> MYSQL_USER: crust</span><br><span class="line"> MYSQL_PASSWORD: crust</span><br></pre></td></tr></table></figure>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">services:</span><br><span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">crust-db</span><br>  <span class="hljs-attr">image:</span> <span class="hljs-string">percona:8.0</span><br>  <span class="hljs-attr">ports:</span><br> <span class="hljs-bullet">-</span> <span class="hljs-number">3306</span><br>  <span class="hljs-attr">environment:</span><br> <span class="hljs-attr">MYSQL_ROOT_PASSWORD:</span> <span class="hljs-string">bRxJ37sJ6Qu4</span><br> <span class="hljs-attr">MYSQL_DATABASE:</span> <span class="hljs-string">crust</span><br> <span class="hljs-attr">MYSQL_USER:</span> <span class="hljs-string">crust</span><br> <span class="hljs-attr">MYSQL_PASSWORD:</span> <span class="hljs-string">crust</span><br></code></pre></td></tr></table></figure>
 <p>这基本上就是随我们的测试和构建一起开启数据库所需的全部。虽然在过去，这可能意味着你需要一个一直在线的数据库实例，你需要在某处进行管理，而今天大门已经打开，基本上你可以在你所用的 CI 框架里声明服务的一切所需。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&quot;Go 以及集成测试: 使用 Drone CI #golang&quot; via @TitPetric](http:&#x2F;&#x2F;twitter.com&#x2F;intent&#x2F;tweet?url&#x3D;https%3a%2f%2fscene-si.org%2f2019%2f04%2f15%2fnext-level-go-testing%2f&amp;text&#x3D;%22Go%20and%20integration%20tests%3a%20simple%20with%20Drone%20CI%20%23golang%22&amp;via&#x3D;TitPetric &quot;&quot;Go 以及集成测试: 使用 Drone CI #golang&quot; via @TitPetric&quot;)</span><br></pre></td></tr></table></figure>
+<figure class="highlight llvm"><table><tr><td class="code"><pre><code class="hljs llvm">[<span class="hljs-string">&quot;Go 以及集成测试: 使用 Drone CI #golang&quot;</span> via <span class="hljs-title">@TitPetric</span>](http://twitter.com/intent/tweet?url<span class="hljs-operator">=</span>https<span class="hljs-variable">%3</span>a<span class="hljs-variable">%2</span>f<span class="hljs-variable">%2</span>fscene-si.org<span class="hljs-variable">%2</span>f<span class="hljs-number">2019</span><span class="hljs-variable">%2</span>f<span class="hljs-number">04</span><span class="hljs-variable">%2</span>f<span class="hljs-number">15</span><span class="hljs-variable">%2</span>fnext-level-go-testing<span class="hljs-variable">%2</span>f&amp;text<span class="hljs-operator">=</span><span class="hljs-variable">%22</span>Go<span class="hljs-variable">%20</span><span class="hljs-keyword">and</span><span class="hljs-variable">%20</span>integration<span class="hljs-variable">%20</span>tests<span class="hljs-variable">%3</span>a<span class="hljs-variable">%20</span>simple<span class="hljs-variable">%20</span>with<span class="hljs-variable">%20</span>Drone<span class="hljs-variable">%20</span>CI<span class="hljs-variable">%20</span><span class="hljs-variable">%23</span>golang<span class="hljs-variable">%22</span>&amp;via<span class="hljs-operator">=</span>TitPetric <span class="hljs-string">&quot;&quot;</span>Go 以及集成测试: 使用 Drone CI #golang<span class="hljs-string">&quot; via @TitPetric&quot;</span>)<br></code></pre></td></tr></table></figure>
 <p>我有点跑题了，但这里的学问是 - <strong>如果你可以避免模拟一些东西，尤其是在你掌控下的服务，一定要考虑编写集成测试。你无需借助使用</strong> go-get 获取的像 gomock[3] 或 moq[4] 这样的项目。模拟一切是不明智的（例如，net.Conn 不需要模拟，它足够简单，可以在你的测试中创建你自己的 client/server，它将存在于内存中）。</p>
 <p>实际上，在集成测试和模拟之间也有中间立场，你可以编写像 Redis 这样的简单外部服务的 fake 实现，但你仍然不能捕捉到真实服务的所有细微之处。基本上，只满足你用到的简单接口大大降低了实现面（implementation surface），这就只需实现你用到的 API 子集的行为。</p>
 <h2 id="测试范围（testing-surface-area）"><a href="#测试范围（testing-surface-area）" class="headerlink" title="测试范围（testing surface area）"></a>测试范围（testing surface area）</h2><p>我正在开发一个项目，目前有 53 个测试文件，其中 28 个是需要外部服务（例如上述的数据库）的集成测试。你可能并不总是处理完整的环境，或者可能只对在项目中分散的一小部分测试感兴趣，并且你希望能够运行这些（且只运行这些）。</p>
 <p>查看 testing 包的 API 面（API surface），我们注意到有一个 Short()[5] 函数可用，它在运行 Go test 时对 -test.short 起作用。这使得我们在想运行测试的某个子集时可以跳过一些测试：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">func TestTimeConsuming(t *testing.T) &#123;</span><br><span class="line"> if testing.Short() &#123;</span><br><span class="line">  t.Skip(&quot;skipping test in short mode.&quot;)</span><br><span class="line"> &#125;</span><br><span class="line"> ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight reasonml"><table><tr><td class="code"><pre><code class="hljs reasonml">func <span class="hljs-constructor">TestTimeConsuming(<span class="hljs-params">t</span> <span class="hljs-operator">*</span><span class="hljs-params">testing</span>.T)</span> &#123;<br> <span class="hljs-keyword">if</span> testing.<span class="hljs-constructor">Short()</span> &#123;<br>  t.<span class="hljs-constructor">Skip(<span class="hljs-string">&quot;skipping test in short mode.&quot;</span>)</span><br> &#125;<br> ...<br>&#125;<br></code></pre></td></tr></table></figure>
 <p>从纸面上看，这意味着你在以 short 模式运行时可以跳过集成测试。但即使从上面的例子也可以看出，当测试持续时间是个重要因素时可以用来跳过某些测试，这才是动机 —— <strong>实际上，这个应该仅适用于基准测试。</strong></p>
 <p>那么，当考虑到你需要显式地以 -bench 参数启用基准测试时，你可能会琢磨一个基准与另一个基准测试能否比较快慢。Go 已经很聪明，它默认限制了每个基准运行的时间，而是否要修改这个配置，以及是否想同时使用 short 模式和基准，都由你来决定 - 对我来说，两个选项同时使用毫无意义。</p>
 <p>事实上，<strong>short 测试标记不应该用来跳过集成测试</strong>。它的目的是加速构建过程，但是代码判断或人为地判断哪个测试应该是 short 或是 long 让人望而却步。<strong>强调：要么运行所有的基准测试要么不运行。随着测试集的增长，short 测试标记无法给我们所需的灵活性，所以我们需要一种更具声明性的方式来界定我们需要运行哪些类型的测试。</strong></p>
@@ -166,13 +306,13 @@
 <p>你不能总是依赖你正在使用的 API；它会在未来几年都保持原样吗？没有人希望你创建一堆 GitHub 用户和组织来测试你的 webhook 端点和集成，但这并不意味着你不会偶尔需要这样做。</p>
 <p>一个最近的例子是 larger deprecation of Bitbucket APIs due to GDPR[8]. 这篇弃用通知是在大约一年前宣布的， 从 10 月开始，并计划在 2019 年 4 月底废弃各种 API 及返回的数据，可能会对现有的各种 CI 集成造成严重破坏。</p>
 <p>考虑到这一点，我这样扩展了 Peter 的建议：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; +build unit - 不需要任何服务的测试,</span><br><span class="line">&#x2F;&#x2F; +build integration - 一个强制标记来测试我们自己的服务，</span><br><span class="line">&#x2F;&#x2F; +build external - 针对第三方和公共服务进行测试，</span><br><span class="line">&#x2F;&#x2F; +build integration,external - 针对我们自己的服务以及公共服务进行测试,</span><br><span class="line">&#x2F;&#x2F; +build !integration,external - 专门针对公共服务进行测试,</span><br><span class="line">&#x2F;&#x2F; +build unit integration - 不依赖服务，提供集成功能</span><br></pre></td></tr></table></figure>
+<figure class="highlight awk"><table><tr><td class="code"><pre><code class="hljs awk"><span class="hljs-regexp">//</span> +build unit - 不需要任何服务的测试,<br><span class="hljs-regexp">//</span> +build integration - 一个强制标记来测试我们自己的服务，<br><span class="hljs-regexp">//</span> +build external - 针对第三方和公共服务进行测试，<br><span class="hljs-regexp">//</span> +build integration,external - 针对我们自己的服务以及公共服务进行测试,<br><span class="hljs-regexp">//</span> +build !integration,external - 专门针对公共服务进行测试,<br><span class="hljs-regexp">//</span> +build unit integration - 不依赖服务，提供集成功能<br></code></pre></td></tr></table></figure>
 
 <p>我们的测试通常属于单元测试、集成测试或外部测试的某一类，或者是它们的某种组合。我们肯定希望在 CI 任务中跳过 external 测试，原因显而易见，但如果我们正在考虑调试开发中的一些相关问题，它们是非常有价值的。我们经常需要定位到具体包中具体的测试，因此运行类似下面的内容是有意义的：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go test --tags&#x3D;&quot;integration external&quot; .&#x2F;messaging&#x2F;webhooks&#x2F;...</span><br></pre></td></tr></table></figure>
+<figure class="highlight awk"><table><tr><td class="code"><pre><code class="hljs awk">go test --tags=<span class="hljs-string">&quot;integration external&quot;</span> .<span class="hljs-regexp">/messaging/</span>webhooks/...<br></code></pre></td></tr></table></figure>
 <p>根据你的构建标记，这可能会运行你的代码库某个子集里面的所有集成和外部测试，跳过单元测试，或者它可能只运行那个既是集成测试也是外部测试的测试。无论哪种方式，你都专注于包实现，尤其是该包中与提供的标记匹配的所有测试的子集。</p>
 <p>对于 CI 任务，范围确定为：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go test --tags&#x3D;&quot;unit integration&quot; .&#x2F;...</span><br></pre></td></tr></table></figure>
+<figure class="highlight jboss-cli"><table><tr><td class="code"><pre><code class="hljs jboss-cli">go test <span class="hljs-params">--tags=</span><span class="hljs-string">&quot;unit integration&quot;</span> <span class="hljs-string">./...</span><br></code></pre></td></tr></table></figure>
 
 <p>这样，你可以完整地测试所有集成测试，以及完整的包范围。我们将跳过可能导致我们的 CI 构建失败的 <strong>external</strong> 和 <strong>integration</strong> <strong>AND</strong> <strong>external</strong> 测试，不让它们成为构建的问题。可能每月有那么一天，GitHub 或 Bitbucket 是坏的，我们只能一直看着它们的状态页面。</p>
 <p>因此，基本上，除了将某些测试标记为 <strong>integration</strong> 之外，我们还希望将其他标记为 <strong>unit</strong> 和 <strong>external</strong> ，以便我们可以根据需要在开发环境中跳过它们。<strong>没有人喜欢运行完整的测试集，并且发现它仅仅因为 GitHub 出问题而失败。而具有开发和调试目的的选项是非常宝贵的。</strong></p>
@@ -226,91 +366,142 @@
 </li>
 </ul>
 <p>实际上，在大多数情况下人们可以编写内部测试来实现相同的目标。我并不是在提倡，尤<strong>其是这样的 _internal_test.go 文件应该将内部暴露给黑盒测试，</strong>但是我看到了使用它们来提供有一天可能成为公共包 API 的效用实体，是有意义的。这仍然是太大的一步，但这一切都取决于你的需求。如果你不希望在给定日期或给定版本之前发布某部分 API，可以采取这种方式，对于每个 API，可以将其实现为公共包 API，而无需真正对外发布供测试之外使用。</p>
-<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><span class="line">[1]</span><br><span class="line">MySQL 8.0 的关键词和保留字: https:&#x2F;&#x2F;dev.mysql.com&#x2F;doc&#x2F;refman&#x2F;8.0&#x2F;en&#x2F;keywords.html</span><br><span class="line"></span><br><span class="line">[2]</span><br><span class="line">Drone CI: https:&#x2F;&#x2F;drone.io&#x2F;</span><br><span class="line"></span><br><span class="line">[3]</span><br><span class="line">gomock: https:&#x2F;&#x2F;github.com&#x2F;golang&#x2F;mock</span><br><span class="line"></span><br><span class="line">[4]</span><br><span class="line">moq: https:&#x2F;&#x2F;github.com&#x2F;matryer&#x2F;moq</span><br><span class="line"></span><br><span class="line">[5]</span><br><span class="line">Short(): https:&#x2F;&#x2F;golang.org&#x2F;pkg&#x2F;testing&#x2F;#Short</span><br><span class="line"></span><br><span class="line">[6]</span><br><span class="line">Go best practices for production environments (2014): https:&#x2F;&#x2F;peter.bourgon.org&#x2F;go-in-production&#x2F;</span><br><span class="line"></span><br><span class="line">[7]</span><br><span class="line">Go best practices, six years in (2016): https:&#x2F;&#x2F;peter.bourgon.org&#x2F;go-best-practices-2016&#x2F;</span><br><span class="line"></span><br><span class="line">[8]</span><br><span class="line">larger deprecation of Bitbucket APIs due to GDPR: https:&#x2F;&#x2F;developer.atlassian.com&#x2F;cloud&#x2F;bitbucket&#x2F;bbc-gdpr-api-migration-guide&#x2F;</span><br><span class="line"></span><br><span class="line">[9]</span><br><span class="line">golang&#x2F;go#15535: https:&#x2F;&#x2F;github.com&#x2F;golang&#x2F;go&#x2F;issues&#x2F;15513</span><br><span class="line"></span><br><span class="line">[10]</span><br><span class="line">Go 测试：编译时检查你的测试而无需运行它们 #protip #golang via @TitPetric: http:&#x2F;&#x2F;twitter.com&#x2F;intent&#x2F;tweet?url&#x3D;https%3a%2f%2fscene-si.org%2f2019%2f04%2f15%2fnext-level-go-testing%2f&amp;text&#x3D;%22Go%20testing%3a%20compile-time%20check%20your%20tests%20without%20running%20them%20%23protip%20%23golang%22&amp;via&#x3D;TitPetric</span><br><span class="line"></span><br><span class="line">[11]</span><br><span class="line">解决了这个问题: https:&#x2F;&#x2F;talks.golang.org&#x2F;2014&#x2F;testing.slide#21</span><br><span class="line"></span><br><span class="line">[12]</span><br><span class="line">测试作为公共 API: https:&#x2F;&#x2F;about.sourcegraph.com&#x2F;go&#x2F;advanced-testing-in-go#testing-as-a-public-api</span><br><span class="line"></span><br><span class="line">[13]</span><br><span class="line">“Go 测试：你是否应该用公共 API 提供测试所需设施？#golang” via @TitPetric: http:&#x2F;&#x2F;twitter.com&#x2F;intent&#x2F;tweet?url&#x3D;https%3a%2f%2fscene-si.org%2f2019%2f04%2f15%2fnext-level-go-testing%2f&amp;text&#x3D;%22Go%20testing%3a%20Should%20you%20have%20a%20public%20API%20to%20provide%20testing%20utilities%3f%20%23golang%22&amp;via&#x3D;TitPetric</span><br><span class="line"></span><br><span class="line">[14]</span><br><span class="line">API Testing - Swagger: https:&#x2F;&#x2F;goswagger.io&#x2F;faq&#x2F;faq_testing.html</span><br><span class="line"></span><br><span class="line">[15]</span><br><span class="line">Separate _test package: https:&#x2F;&#x2F;segment.com&#x2F;blog&#x2F;5-advanced-testing-techniques-in-go&#x2F;</span><br><span class="line"></span><br><span class="line">[16]</span><br><span class="line">Export unexported method for test: https:&#x2F;&#x2F;medium.com&#x2F;@robiplus&#x2F;golang-trick-export-for-test-aa16cbd7b8cd</span><br><span class="line"></span><br><span class="line">[17]</span><br><span class="line">API Foundations in Go: https:&#x2F;&#x2F;leanpub.com&#x2F;api-foundations</span><br><span class="line"></span><br><span class="line">[18]</span><br><span class="line">12 Factor Apps with Docker and Go: https:&#x2F;&#x2F;leanpub.com&#x2F;12fa-docker-golang</span><br><span class="line"></span><br><span class="line">[19]</span><br><span class="line">给我发邮件: black@scene-si.org</span><br><span class="line"></span><br><span class="line">[20]</span><br><span class="line">等等: https:&#x2F;&#x2F;scene-si.org&#x2F;about</span><br><span class="line"></span><br><span class="line">[21]</span><br><span class="line">Tit Petric: https:&#x2F;&#x2F;scene-si.org&#x2F;about</span><br><span class="line"></span><br><span class="line">[22]</span><br><span class="line">krystollia: https:&#x2F;&#x2F;github.com&#x2F;krystollia</span><br><span class="line"></span><br><span class="line">[23]</span><br><span class="line">polaris1119: https:&#x2F;&#x2F;github.com&#x2F;polaris1119</span><br><span class="line"></span><br><span class="line">[24]</span><br><span class="line">GCTT: https:&#x2F;&#x2F;github.com&#x2F;studygolang&#x2F;GCTT</span><br><span class="line"></span><br><span class="line">[25]</span><br><span class="line">Go 中文网: https:&#x2F;&#x2F;studygolang.com&#x2F;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><figure class="highlight awk"><table><tr><td class="code"><pre><code class="hljs awk">[<span class="hljs-number">1</span>]<br>MySQL <span class="hljs-number">8.0</span> 的关键词和保留字: https:<span class="hljs-regexp">//</span>dev.mysql.com<span class="hljs-regexp">/doc/</span>refman<span class="hljs-regexp">/8.0/</span>en/keywords.html<br><br>[<span class="hljs-number">2</span>]<br>Drone CI: https:<span class="hljs-regexp">//</span>drone.io/<br><br>[<span class="hljs-number">3</span>]<br>gomock: https:<span class="hljs-regexp">//gi</span>thub.com<span class="hljs-regexp">/golang/m</span>ock<br><br>[<span class="hljs-number">4</span>]<br>moq: https:<span class="hljs-regexp">//gi</span>thub.com<span class="hljs-regexp">/matryer/m</span>oq<br><br>[<span class="hljs-number">5</span>]<br>Short(): https:<span class="hljs-regexp">//g</span>olang.org<span class="hljs-regexp">/pkg/</span>testing/<span class="hljs-comment">#Short</span><br><br>[<span class="hljs-number">6</span>]<br>Go best practices <span class="hljs-keyword">for</span> production environments (<span class="hljs-number">2014</span>): https:<span class="hljs-regexp">//</span>peter.bourgon.org<span class="hljs-regexp">/go-in-production/</span><br><br>[<span class="hljs-number">7</span>]<br>Go best practices, six years <span class="hljs-keyword">in</span> (<span class="hljs-number">2016</span>): https:<span class="hljs-regexp">//</span>peter.bourgon.org<span class="hljs-regexp">/go-best-practices-2016/</span><br><br>[<span class="hljs-number">8</span>]<br>larger deprecation of Bitbucket APIs due to GDPR: https:<span class="hljs-regexp">//</span>developer.atlassian.com<span class="hljs-regexp">/cloud/</span>bitbucket<span class="hljs-regexp">/bbc-gdpr-api-migration-guide/</span><br><br>[<span class="hljs-number">9</span>]<br>golang<span class="hljs-regexp">/go#15535: https:/</span><span class="hljs-regexp">/github.com/g</span>olang<span class="hljs-regexp">/go/i</span>ssues/<span class="hljs-number">15513</span><br><br>[<span class="hljs-number">10</span>]<br>Go 测试：编译时检查你的测试而无需运行它们 <span class="hljs-comment">#protip #golang via @TitPetric: http://twitter.com/intent/tweet?url=https%3a%2f%2fscene-si.org%2f2019%2f04%2f15%2fnext-level-go-testing%2f&amp;text=%22Go%20testing%3a%20compile-time%20check%20your%20tests%20without%20running%20them%20%23protip%20%23golang%22&amp;via=TitPetric</span><br><br>[<span class="hljs-number">11</span>]<br>解决了这个问题: https:<span class="hljs-regexp">//</span>talks.golang.org<span class="hljs-regexp">/2014/</span>testing.slide<span class="hljs-comment">#21</span><br><br>[<span class="hljs-number">12</span>]<br>测试作为公共 API: https:<span class="hljs-regexp">//</span>about.sourcegraph.com<span class="hljs-regexp">/go/</span>advanced-testing-<span class="hljs-keyword">in</span>-go<span class="hljs-comment">#testing-as-a-public-api</span><br><br>[<span class="hljs-number">13</span>]<br>“Go 测试：你是否应该用公共 API 提供测试所需设施？<span class="hljs-comment">#golang” via @TitPetric: http://twitter.com/intent/tweet?url=https%3a%2f%2fscene-si.org%2f2019%2f04%2f15%2fnext-level-go-testing%2f&amp;text=%22Go%20testing%3a%20Should%20you%20have%20a%20public%20API%20to%20provide%20testing%20utilities%3f%20%23golang%22&amp;via=TitPetric</span><br><br>[<span class="hljs-number">14</span>]<br>API Testing - Swagger: https:<span class="hljs-regexp">//g</span>oswagger.io<span class="hljs-regexp">/faq/</span>faq_testing.html<br><br>[<span class="hljs-number">15</span>]<br>Separate _test package: https:<span class="hljs-regexp">//</span>segment.com<span class="hljs-regexp">/blog/</span><span class="hljs-number">5</span>-advanced-testing-techniques-<span class="hljs-keyword">in</span>-go/<br><br>[<span class="hljs-number">16</span>]<br>Export unexported method <span class="hljs-keyword">for</span> test: https:<span class="hljs-regexp">//m</span>edium.com<span class="hljs-regexp">/@robiplus/g</span>olang-trick-export-<span class="hljs-keyword">for</span>-test-aa16cbd7b8cd<br><br>[<span class="hljs-number">17</span>]<br>API Foundations <span class="hljs-keyword">in</span> Go: https:<span class="hljs-regexp">//</span>leanpub.com/api-foundations<br><br>[<span class="hljs-number">18</span>]<br><span class="hljs-number">12</span> Factor Apps with Docker and Go: https:<span class="hljs-regexp">//</span>leanpub.com/<span class="hljs-number">12</span>fa-docker-golang<br><br>[<span class="hljs-number">19</span>]<br>给我发邮件: black@scene-si.org<br><br>[<span class="hljs-number">20</span>]<br>等等: https:<span class="hljs-regexp">//</span>scene-si.org/about<br><br>[<span class="hljs-number">21</span>]<br>Tit Petric: https:<span class="hljs-regexp">//</span>scene-si.org/about<br><br>[<span class="hljs-number">22</span>]<br>krystollia: https:<span class="hljs-regexp">//gi</span>thub.com/krystollia<br><br>[<span class="hljs-number">23</span>]<br>polaris1119: https:<span class="hljs-regexp">//gi</span>thub.com/polaris1119<br><br>[<span class="hljs-number">24</span>]<br>GCTT: https:<span class="hljs-regexp">//gi</span>thub.com<span class="hljs-regexp">/studygolang/</span>GCTT<br><br>[<span class="hljs-number">25</span>]<br>Go 中文网: https:<span class="hljs-regexp">//</span>studygolang.com/<br><br><br></code></pre></td></tr></table></figure>
 
 <p><strong>推荐阅读</strong><br><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzAxMTA4Njc0OQ==&mid=2651448675&idx=2&sn=d94da8070cbc412e90f60c8e337b08fa&chksm=80bb3b91b7ccb28744f892bd14d5602e3553e53fc9d455c4177634ae4d238f7f21ec21f1c7a9&scene=21#wechat_redirect">类似 Go 中的表格驱动测试的步骤驱动评估</a></p>
 
-            </div>
-          
-
-    
-      <footer class="post-footer">
-		
-		<div class="post-tags">
-		  
-			<a href="/tags/%E6%B5%8B%E8%AF%95/">测试</a>
-		  
-		</div>
-		
-
-        
-        
-  <nav class="post-nav">
-    
-      <a class="prev" href="/2021/08/29/%E6%8F%90%E5%8D%87%E4%BB%A3%E7%A0%81%E8%B4%A8%E9%87%8F%E7%9A%84%E6%96%B9%E6%B3%95%EF%BC%9A%E9%A2%86%E5%9F%9F%E6%A8%A1%E5%9E%8B%E3%80%81%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99%E3%80%81%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">
-        <i class="iconfont icon-left"></i>
-        <span class="prev-text nav-default">提升代码质量的方法：领域模型、设计原则、设计模式</span>
-        <span class="prev-text nav-mobile">Prev</span>
-      </a>
-    
-    
-      <a class="next" href="/2021/08/27/Go%E6%A0%87%E5%87%86%E5%BA%93http%E4%B8%8Efasthttp%E6%9C%8D%E5%8A%A1%E7%AB%AF%E6%80%A7%E8%83%BD%E6%AF%94%E8%BE%83/">
-        <span class="next-text nav-default">Go标准库http与fasthttp服务端性能比较</span>
-        <span class="prev-text nav-mobile">Next</span>
-        <i class="iconfont icon-right"></i>
-      </a>
-    
-  </nav>
-
-        
-  <div class="comments" id="comments">
-    
-  </div>
-
-
-      </footer>
-    
-  </article>
-
     </div>
+</div>
+<style>
+    #noneimg img {
+        display: none;
+        z-index: 109;
+        width: 600px !important;
+        border-radius: 0px;
+        position: fixed;
+        box-shadow: 0 0 0px #c3c3c300 !important;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto !important;
+    }
 
-      </div>
+    @media screen and (max-width:600px) {
+        #noneimg img {
+            width: 88%
+        }
+    }
+</style>
+<script>
+    $(function () { $('#article').click(function (e) { if (e.target.tagName == "IMG") { if ($('#nonediv').length == 0) { let MImg = `<div id='noneimg'><img src='${e.target.currentSrc}'></div>`; let MDiv = "<div id='nonediv' style='cursor: pointer;display: none; position: fixed;left: 0;top: 0; right: 0;bottom: 0;background-color: #333;opacity:0.5;z-index: 108;'></div>"; $('#article').append(MDiv); $('#article').append(MImg); $("#nonediv").fadeIn("slow"); $("#noneimg img").fadeIn("slow") } } else { if ($('#nonediv').length !== 0) { $("#noneimg ").fadeOut("slow"); $("#nonediv").fadeOut("slow"); setTimeout(function () { $('#nonediv').remove(); $('#noneimg').remove() }, 500) } } }); $('.article-content').addClass('content-move') });
+</script>
+<div class="Last-Next">
+    
+    <a href="/2021/08/29/%E6%8F%90%E5%8D%87%E4%BB%A3%E7%A0%81%E8%B4%A8%E9%87%8F%E7%9A%84%E6%96%B9%E6%B3%95%EF%BC%9A%E9%A2%86%E5%9F%9F%E6%A8%A1%E5%9E%8B%E3%80%81%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99%E3%80%81%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">
+        <div class="last">
+            <span>上一篇</span>
+            <p>提升代码质量的方法：领域模型、设计原则、设计模式</p>
+        </div>
+    </a>
+    
 
-      <footer id="colophon"><span class="copyright-year">
     
-        &copy;
+    <a href="/2021/08/27/Go%E6%A0%87%E5%87%86%E5%BA%93http%E4%B8%8Efasthttp%E6%9C%8D%E5%8A%A1%E7%AB%AF%E6%80%A7%E8%83%BD%E6%AF%94%E8%BE%83/">
+        <div class="next">
+            <span>下一篇</span>
+            <p>Go标准库http与fasthttp服务端性能比较</p>
+        </div>
+    </a>
     
-        2014 -
-    
-    2021
-    <span class="footer-author">Russshare.</span>
-    <span class="power-by">
-        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+</div>
+		
+<link rel="stylesheet" href="/css/food.css">
+
+<div class="footer">
+	<div class="Copyright">
+		©2021 By CHANGEQ. 主题：<a
+			style="text-decoration: none;display: contents; color: #898F9F;"
+			target="_blank" rel="noopener" href="https://github.com/qiaobug/hexo-theme-quiet">Quiet</a>
+	</div>
+	<div class="contact">
+		
+		<a target="_blank" rel="noopener" href="https://github.com/qiaobug">
+			<img src="https://cdn.jsdelivr.net/gh/duogongneng/MyBlogImg/imggithub.png" alt="Quiet主题">
+		</a>
+		
+	</div>
+</div>
+
+<script src="/js/jquery.min.js"></script>
+
+
+<script src="/js/gotop.js"></script>
+
+
+<style type="text/css">
+    @media screen and (min-width: 600px) {
+        .goTop>span {
+            display: block;
+            border-radius: 50%;
+            width: 66px;
+            height: 66px;
+            cursor: pointer;
+            opacity: 0.8;
+            background: rgba(18, 24, 58, 0.06);
+            text-align: center;
+            border: 1px solid rgba(18, 24, 58, 0.06);
+
+            transition: border .5s;
+            -moz-transition: border .5s;
+            /* Firefox 4 */
+            -webkit-transition: border .5s;
+            /* Safari 和 Chrome */
+            -o-transition: border .5s;
+            /* Opera */
+        }
+
+        .goTop>span:hover {
+            border: 1px solid #6680B3;
+        }
+
+
+        .goTop {
+            position: fixed;
+            right: 30px;
+            bottom: 80px;
+        }
+
+        .goTop>span>svg {
+            width: 30px;
+            height: 30px;
+            margin-top: 17.5px;
+            opacity: 0.7;
+        }
+
+    }
+
+    @media screen and (max-width: 600px) {
+        .goTop {
+            display: none;
+        }
+    }
+</style>
+<div class="goTop" id="js-go_top">
+    <span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <g>
+                <path d="M13 12v8h-2v-8H4l8-8 8 8z"></path>
+            </g>
+        </svg>
     </span>
-</span>
+</div>
+<script>
+    $('#js-go_top').gotoTop({ offset: 500, speed: 300, animationShow: { 'transform': 'translate(0,0)', 'transition': 'transform .5s ease-in-out' }, animationHide: { 'transform': 'translate(100px,0)', 'transition': 'transform .5s ease-in-out' } });
+</script>
+<script>
+	console.log('\n %c Hexo-Quiet 主题 %c https://github.com/QiaoBug/hexo-theme-quiet \n', 'color: #fadfa3; background: #030307; padding:5px 0;', 'background: #fadfa3; padding:5px 0;')
+</script>
+	</body>
 
-      </footer>
-
-      <div class="back-to-top" id="back-to-top">
-        <i class="iconfont icon-up"></i>
-      </div>
-    </div>
-    
-
-
-    
-
-
-
-
-  
-    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
-  
-
-  
-
-    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
-<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
-
-  </body>
 </html>
