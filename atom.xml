@@ -6,7 +6,7 @@
   <link href="https://riddlego.github.io/atom.xml" rel="self"/>
   
   <link href="https://riddlego.github.io/"/>
-  <updated>2021-11-29T14:41:57.758Z</updated>
+  <updated>2021-11-30T05:29:33.637Z</updated>
   <id>https://riddlego.github.io/</id>
   
   <author>
@@ -15,6 +15,27 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>HEXO搭建BLOG常见问题</title>
+    <link href="https://riddlego.github.io/2021/11/30/HEXO%E6%90%AD%E5%BB%BABLOG%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/"/>
+    <id>https://riddlego.github.io/2021/11/30/HEXO%E6%90%AD%E5%BB%BABLOG%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/</id>
+    <published>2021-11-30T04:27:43.000Z</published>
+    <updated>2021-11-30T05:29:33.637Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>一开始是不想继续写Blog，因为这个主题和复杂环境整的我有点头大，换个电脑就会暴露出无限的问题，但是不知道为什么微信公众号总是引不起我的兴趣，说来惭愧。</p><p><strong>每次遇到问题总是习惯的去百度，甚至来不及去看一下Log与Info，也没有想过自己应该怎么去解决，说来惭愧，然后就百度了然后挨个挨个方法试，运气好就找到了办法，运气不好那只能删了又从零开始。remake大法无敌，不过这样对自己的提升可是太差劲。</strong></p><p>写这个篇文章一是总结错误，二也是对自己的学习习惯进行一种反思。</p><p>还有最近希望实验早点做完，这个寒假就在家可以写论文、做实验、吃火锅、打球、好舒服嗷呜。充满期待了，我一直以为我剩下的东西不多了，没想到啊，老师还创新了一大堆。如果我有的选。。。</p><h2 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h2><h3 id="问题一：SSH秘钥"><a href="#问题一：SSH秘钥" class="headerlink" title="问题一：SSH秘钥"></a>问题一：SSH秘钥</h3><p>首先配置你的git环境一定要使用你的github的用户名和邮箱</p><p>创建的时候也一定使用你的邮箱</p><p>如果你忘了原来是什么，你就重新来一次就行了，它就把以前的进行了覆盖</p><h3 id="问题二：-extends-‘-layout-swig‘-。。。"><a href="#问题二：-extends-‘-layout-swig‘-。。。" class="headerlink" title="问题二：% extends ‘_layout.swig‘ %。。。"></a>问题二：% extends ‘_layout.swig‘ %。。。</h3><p>这是因为hexo升级5.0之后吧swig给删除了</p><figure class="highlight coffeescript"><table><tr><td class="code"><pre><code class="hljs coffeescript"><span class="hljs-built_in">npm</span> i hexo-renderer-swig<br></code></pre></td></tr></table></figure><p>(所以啊，这个插件的匹配，版本问题真的麻烦，而哪些版本控制工具真的不错。)</p><h3 id="问题三：errno-10054"><a href="#问题三：errno-10054" class="headerlink" title="问题三：errno 10054"></a>问题三：errno 10054</h3><p>据说这是因为开启了SSL验证的原因，为什么验证不通过，这个就是github的网络问题，链接超时啊各种，我寄的有一次我弄了一晚上，后来一气之下关机了，然后第二天成功部署，我真的是裂开。</p><p>码云倒是稳定，但是99一年，学生党当然是要节约点咯。</p><p><a href="https://riddlego.github.io/2021/05/19/hexo%E8%BF%9C%E7%A8%8B%E9%83%A8%E7%BD%B2%E6%96%87%E7%AB%A0%E6%8A%A5%E9%94%99/">点击解决链接</a></p><h3 id="问题四：github部署上去，但是page不对啊"><a href="#问题四：github部署上去，但是page不对啊" class="headerlink" title="问题四：github部署上去，但是page不对啊"></a>问题四：github部署上去，但是page不对啊</h3><p>这是因为你的deploy是部署到mater，而你的github的仓库默认的是main分支，所以你的page网址访问的是main。</p><p>在仓库的设置的分支里面将默认设置为master即可</p><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>今天睡过头了，最近的学习效率很差劲，深度的学习一直是我自身的一个问题。所欠缺的东西，要想办法真的沉浸进去，当然还是需要去看书的，书是成体系的，这点很重要。</p><p>边学习边总结，不用拖延，不要犹豫。</p><p>点滴创造这个是不一样的结果，你已经在很多的时候看见了答案。</p><p>不抱怨不责怪是我内心坚守的政策。</p>]]></content>
+    
+    
+    <summary type="html">搭建Blog经常有遇到的问题</summary>
+    
+    
+    
+    <category term="Hexo博客" scheme="https://riddlego.github.io/categories/Hexo%E5%8D%9A%E5%AE%A2/"/>
+    
+    
+    <category term="-BUG -Hexo -主题" scheme="https://riddlego.github.io/tags/BUG-Hexo-%E4%B8%BB%E9%A2%98/"/>
+    
+  </entry>
   
   <entry>
     <title>RiddleGo</title>
@@ -470,30 +491,6 @@
     
     
     <category term="Go-Modules" scheme="https://riddlego.github.io/tags/Go-Modules/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>我开始怀疑</title>
-    <link href="https://riddlego.github.io/2021/09/05/%E6%88%91%E5%BC%80%E5%A7%8B%E6%80%80%E7%96%91/"/>
-    <id>https://riddlego.github.io/2021/09/05/%E6%88%91%E5%BC%80%E5%A7%8B%E6%80%80%E7%96%91/</id>
-    <published>2021-09-05T11:21:09.000Z</published>
-    <updated>2021-09-05T12:54:32.812Z</updated>
-    
-    <content type="html"><![CDATA[<p>自己发现自己有个不好的毛病就是一遇到很多的事情就会不知道做什么，或者是什么都想做，最近的事情又开始了，超级麻烦。</p><p>等着做一个数据分析软件，自己的头绪不是很多。</p><p>今天在知乎看见了一个前辈说的很有道理的话<br><a href="https://www.zhihu.com/question/356351510/answer/913928066?utm_source=wechat_session&utm_medium=social&utm_oi=948690773714153472&utm_content=group3_Answer&utm_campaign=shareopn">原文链接</a></p><p>可惜不能转载</p><p>其实也算是把路越走越窄，不断地做出了选择，其实也有想过去尝试更多地东西，不知道这条路到底是否适合自己，但是既然走上了这条路就必须得不停的走下去，其实糟老头子也说的不错，自己在学习方面很多的时候还是少了那个刨根究底，一个一个搞清楚的精神，但是他给我布置了那么多事情，什么都想我去做，就离谱。所以啊，不能太靠谱，要装作积极想做但是不靠谱的样子。</p><p>哈哈 瞎吐槽了几句</p><p>最近这段时间要好好在九月份内把数据分析的软件做出来，这个是当务之急，虽然别的地方也在催我，但是还是踏实的完成这个事情，如果不负责任，没有担当一次，那么在以后的工作中就会更加越来越不负责，何况这还是第一份实习，一定要搞出点样子。</p><p>整个还是需要好好计划每一步，分清楚模块，每个模块单独的功能实现，逻辑关系什么的都是需要慢慢的弄。</p><p>我想永远不要着急，其实当然几个方向都在需要你，想让你去做一些事情，确实很烦，这个周末弄什么效率好差，我超级不喜欢自己沉浸不进去的样子，哈哈哈，我时常怀疑这是不是因为没有女朋友的原因。</p><p>这些年学东西走的太着急，都是项目驱动，但是因为什么都不会，所以一个一个都是不靠谱，照着别人的咀嚼过的东西涂涂修修改改，这样自己一点思路没有，虽然最后到最后是学习了点东西，完成了点项目，也发了论文，可是真正的技术含量还是很浅薄，这样想起来我倒是蛮假大空，自己敲代码的能力还是太弱了，持续性也不强，以后还要吃这碗饭，离谱。</p><p>数据库是基本上不怎么会的，实习完弄zigbee和wifi的时候，也要好好学习一下混熟数据库，其实SQL这个语句还是很有学问。</p><p>下一步要加强自己的代码量，要独立去思考做一些东西，同时要好好捡回来自己的英语了，发现自己的英语好久没有开始阅读了，到时候就多看看英语的文档，现在养成习惯真的是一看见英语就习惯性的翻译，这样对自己的成长是不好的。</p><p>原创的文字的输出是永远不能没有的，输出来自己学到的加上自己思想的新东西。</p><p>源码就是追根究底，汇编好像其实也需要看，内部的逻辑，底层的代码走向真的好重要的，好了感觉自己给自己挖了好多坑，还不知道自己能去哪个公司，阿西，忧愁啊，感觉什么方向都是自己想做的事。</p><p>我超级反感自己这样的浅薄技术，拉的这么广，羡慕那些一个确定方向的人，羡慕啊。那些老早就知道自己的热爱，羡慕那些有自己爱好的。</p><p>这样想起来，这么多年，仿佛从来没有自己主动去选择什么都是被选择，没有多余的路走，按部就班，没有主动的奔赴哪个方向。当然现在找工作也是，被动，真尼玛被动，我讨厌，又不知道，又害怕去选择去想，我像是许三多，比16集之前的他好一点，比后面的要差得多，我特么也应该钻个牛角尖的，可是啊，我特么离南墙还有老远就戴着望远镜看见墙以后就屁颠屁颠换了个方向，所以没有撞到过，所以就这么的普通，普通。</p><p>算了，特么的，我这么多年也是浪费了很多的时间，错过了很多的人，做错了很多事，喝多很多的酒，抽了很多的烟，也算是个一事无成，时常自卑，偶尔觉得还行，不行就得劲安慰自己。</p><p>命运在后面催促像我这样的人走快点，走慢了就在屁股后面给你一脚。不小心你还摔个跟头，你当然可以选择就顺势躺下，最好是趴着的姿势，这样后面来的人踩着你，疼归疼，但是看不到你的脸，不会伤面子，除了熟人其他人根本不认识你。但是啊，有时候虽然知道自己普通，但是也是一个想被关注的衰小孩，所以啊就爬起来，拍了拍灰，觉得再走两步看看。</p><p>这往后的事情很难说的清楚，第一个阶段是迷茫的时候也不要停下脚步，下一个阶段就是做出了选择等碰到了南墙再说，前进的路上也得好好反思自己的路途方向。</p><p>抽支烟看三道题，明天继续上班。</p><p>学习需要看书，不要急于求成，现在的blog和视频成体系的很少，指不定还有错误。看书是最好的方式，而成体系的知识就是我所匮乏的。</p><p>遇到问题有条件的话尽量自己翻译，help用起来。</p><p>主动寻找论文，进行翻译，很多先近的技术就是源自大牛论文，接触前沿，也丰富自己英语。</p><p>求真</p><p>求实</p><p><strong>因为，但凡通过点滴付出，累积出来的结果，都是平淡无声的。</strong></p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;自己发现自己有个不好的毛病就是一遇到很多的事情就会不知道做什么，或者是什么都想做，最近的事情又开始了，超级麻烦。&lt;/p&gt;
-&lt;p&gt;等着做一个数据分析软件，自己的头绪不是很多。&lt;/p&gt;
-&lt;p&gt;今天在知乎看见了一个前辈说的很有道理的话&lt;br&gt;&lt;a href=&quot;https://ww</summary>
-      
-    
-    
-    
-    <category term="猛男日记" scheme="https://riddlego.github.io/categories/%E7%8C%9B%E7%94%B7%E6%97%A5%E8%AE%B0/"/>
-    
     
   </entry>
   
