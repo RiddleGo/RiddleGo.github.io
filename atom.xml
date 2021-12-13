@@ -6,7 +6,7 @@
   <link href="https://riddlego.github.io/atom.xml" rel="self"/>
   
   <link href="https://riddlego.github.io/"/>
-  <updated>2021-12-13T03:46:43.315Z</updated>
+  <updated>2021-12-13T04:11:57.483Z</updated>
   <id>https://riddlego.github.io/</id>
   
   <author>
@@ -17,23 +17,55 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>关于项目的梳理</title>
+    <link href="https://riddlego.github.io/2021/12/13/%E5%85%B3%E4%BA%8E%E9%A1%B9%E7%9B%AE%E7%9A%84%E6%A2%B3%E7%90%86/"/>
+    <id>https://riddlego.github.io/2021/12/13/%E5%85%B3%E4%BA%8E%E9%A1%B9%E7%9B%AE%E7%9A%84%E6%A2%B3%E7%90%86/</id>
+    <published>2021-12-13T04:11:57.000Z</published>
+    <updated>2021-12-13T04:11:57.483Z</updated>
+    
+    
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>HEXO文章部署常见问题记录（二）</title>
+    <link href="https://riddlego.github.io/2021/12/13/HEXO%E6%96%87%E7%AB%A0%E9%83%A8%E7%BD%B2%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95%EF%BC%88%E4%BA%8C%EF%BC%89/"/>
+    <id>https://riddlego.github.io/2021/12/13/HEXO%E6%96%87%E7%AB%A0%E9%83%A8%E7%BD%B2%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95%EF%BC%88%E4%BA%8C%EF%BC%89/</id>
+    <published>2021-12-13T04:11:04.000Z</published>
+    <updated>2021-12-13T04:24:34.787Z</updated>
+    
+    <content type="html"><![CDATA[<p>【<strong>问题一</strong>】OpenSSL SSL_connect: Connection was reset in connection to github.com:443</p><p>Github报错OpenSSL SSL_connect: Connection was reset in connection to github.com:443终极解决方案</p><p>今天在使用git命令进行push和pull时，出现如下报错：</p><figure class="highlight pgsql"><table><tr><td class="code"><pre><code class="hljs pgsql">fatal: unable <span class="hljs-keyword">to</span> <span class="hljs-keyword">access</span> <span class="hljs-string">&#x27;https://github.com/wxler/test.git/&#x27;</span>: OpenSSL SSL_connect: <span class="hljs-keyword">Connection</span> was <span class="hljs-keyword">reset</span> <span class="hljs-keyword">in</span> <span class="hljs-keyword">connection</span> <span class="hljs-keyword">to</span> github.com:<span class="hljs-number">443</span><br></code></pre></td></tr></table></figure><p>我查了很多种方案，下面必有一个方法能够解决。</p><p><strong>方案一</strong><br>在git bash命令行中依次输入以下命令：</p><figure class="highlight tcl"><table><tr><td class="code"><pre><code class="hljs tcl">git config --<span class="hljs-keyword">global</span> <span class="hljs-keyword">http</span>.sslBackend <span class="hljs-string">&quot;openssl&quot;</span><br>git config --<span class="hljs-keyword">global</span> <span class="hljs-keyword">http</span>.sslCAInfo <span class="hljs-string">&quot;C:\Program Files\Git\mingw64\ssl\cert.pem&quot;</span><br></code></pre></td></tr></table></figure><p>注意上面第二个命令，路径要换成git安装的路径。</p><p><strong>方案二</strong><br>如果你开启了VPN，很可能是因为代理的问题，这时候设置一下http.proxy就可以了。</p><p>一定要查看自己的VPN端口号，假如你的端口号是7890，在git bash命令行中输入以下命令即可：</p><figure class="highlight lua"><table><tr><td class="code"><pre><code class="hljs lua">git <span class="hljs-built_in">config</span> <span class="hljs-comment">--global http.proxy 127.0.0.1:7890</span><br>git <span class="hljs-built_in">config</span> <span class="hljs-comment">--global https.proxy 127.0.0.1:7890</span><br></code></pre></td></tr></table></figure><p>如果你之前git中已经设置过上述配置，则使用如下命令取消再进行配置即可：</p><figure class="highlight tcl"><table><tr><td class="code"><pre><code class="hljs tcl">git config --<span class="hljs-keyword">global</span> --<span class="hljs-keyword">unset</span> <span class="hljs-keyword">http</span>.proxy<br>git config --<span class="hljs-keyword">global</span> --<span class="hljs-keyword">unset</span> https.proxy<br></code></pre></td></tr></table></figure><p>下面是几个常用的git配置查看命令：</p><figure class="highlight autoit"><table><tr><td class="code"><pre><code class="hljs autoit">git config --<span class="hljs-keyword">global</span> http.proxy <span class="hljs-meta">#查看git的http代理配置</span><br>git config --<span class="hljs-keyword">global</span> https.proxy <span class="hljs-meta">#查看git的https代理配置</span><br>git config --<span class="hljs-keyword">global</span> -l <span class="hljs-meta">#查看git的所有配置</span><br></code></pre></td></tr></table></figure><p><strong>方案三</strong><br>还有一个情况，是你的VNP代理服务器节点有问题，有时候更换一个结点就好了。当然，也可以使用自己搭建的代理服务器。</p><p>博主提示，一定要科学上网，合理上网。</p><p><strong>方案四</strong><br>打开一个新的git bash终端，就没问题了。这个可能是当前git的会话有关。<br>————————————————<br>版权声明：本文为CSDN博主「雷恩Layne」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。<br>原文链接：<a href="https://blog.csdn.net/qq_37555071/article/details/114260533">https://blog.csdn.net/qq_37555071/article/details/114260533</a></p><p>【<strong>问题二</strong>】git ssh之Could not resolve hostname github.com问题</p><p><a href="https://www.dazhuanlan.com/ooke/topics/1187159">解决答案</a></p><p>【<strong>问题三</strong>】Failed to connect to 127.0.0.1 port 1080: Connection refused拒绝连接错误</p><p><a href="https://blog.csdn.net/weixin_41010198/article/details/87929622">解决答案</a></p><p>【<strong>问题四</strong>】(git clone出现 fatal: unable to access ‘<a href="https://github.com/...&#39;%E7%9A%84%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95(%E4%BA%B2%E6%B5%8B%E6%9C%89%E6%95%88)">https://github.com/...&#39;的解决办法(亲测有效)</a>)</p><p><a href="https://blog.csdn.net/qq_33349365/article/details/101514412">解决方法</a></p>]]></content>
+    
+    
+    <summary type="html">搭建Blog经常有遇到的问题</summary>
+    
+    
+    
+    <category term="Hexo博客" scheme="https://riddlego.github.io/categories/Hexo%E5%8D%9A%E5%AE%A2/"/>
+    
+    
+  </entry>
+  
+  <entry>
     <title>最近学习状态很差劲</title>
     <link href="https://riddlego.github.io/2021/12/11/%E6%9C%80%E8%BF%91%E5%AD%A6%E4%B9%A0%E7%8A%B6%E6%80%81%E5%BE%88%E5%B7%AE%E5%8A%B2/"/>
     <id>https://riddlego.github.io/2021/12/11/%E6%9C%80%E8%BF%91%E5%AD%A6%E4%B9%A0%E7%8A%B6%E6%80%81%E5%BE%88%E5%B7%AE%E5%8A%B2/</id>
     <published>2021-12-11T15:00:22.000Z</published>
-    <updated>2021-12-13T03:46:43.315Z</updated>
+    <updated>2021-12-13T04:23:41.476Z</updated>
     
     <content type="html"><![CDATA[<h2 id="算是反思吧"><a href="#算是反思吧" class="headerlink" title="算是反思吧"></a>算是反思吧</h2><hr><p>人生总是蛮奇怪的，会在某个节点想起一个人，进而回想起一些事情。然后这些事情对我们自身的成长有着很大的帮助，而我们总是在日常的生活中忘掉这些事情。所以不时的反思总结就很有帮助了，及时的更正，锊清楚事情都是很有必要的事情。</p><hr><p>但是这玩意又怎么可能是容易想起。</p><hr><p>很多的事情让我感觉到很烦恼，无意义的社交占了我太多的时间，我爽不爽呢？各自参半。时间真的不可以这样浪费。我算是玩的明白了，舍不得啊，寂寞和空虚又总是伴随在每个午后。这不是我想要的生活，但是一味的去排斥去逃避，又会在某个午后陷入进去，往来反复才是更大的弊病。怎么样子才会将我们的生活搞得一团糟糕。而我是真的没有太多的选择了，不是吗？</p><p>见过那些泥沼的样子，还想真的躺进去吗？眼睛被蒙蔽着，耳朵早已经被泥沙填满，泥浆开始从嘴角开始侵入，最后自己慢慢的沉下去了。</p><hr><p>每个时间都会给人们最好的解答，以不经意又或者是刻意的方式，让你疼痛或是爽的出声。你现在浪费的每分每秒都会在未来的某个时间以十倍的重量打在你的身体或者是脸上，你真的很想吗？所以啊应该怎么做呢？</p><hr><p>每个阶段做不同的事情，做个事情总是很难去安静下来，总是三番五次的看手机这样真的好吗？为什么没有在问题的完美解决验证以后再去选择休息，在做事情的每个阶段都有给自己找理由去不断地松懈，我真的很不爽，我不想这样下去，md我好想给自己几个pounch on my fucking face。</p><hr><p>手机再也不会放在身边，社交软件不用去安装了，好好的看书，做有意义的事情。</p><hr><p>重度学习</p><p>别尼玛浪费时间了，真的好不爽</p><p>我就想自己一个人待着，fuck</p><p>男人想要做的事情都不愿意去忍受孤独去做大吗？go big or go home这是早就开始需要做的决定不是吗？我的答案一直都是那个不是吗？fuck life！！！</p><h2 id="行之有效的办法"><a href="#行之有效的办法" class="headerlink" title="行之有效的办法"></a>行之有效的办法</h2><p>1、不要搭理无用的社交，离手机远点没有坏处。</p><p>2、多看书，技术书籍做好读书笔记，文化书籍做好读后感笔记。</p><p>3、对项目要自己进入一个深度的思考状态，不要一味地百度或者是问，先思考了然后做记录，记录的内容是自己对这个项目进行思考的过程，在什么地方遇到了瓶颈或者是问题，将可行的解决方案进行记录与分析。</p><p>4、对于每个材料一定要耐心归档整理好，不要偷懒，这是自己的很大的问题，一定要慢一点，耐心一点留给自己足够的时间。</p><p>5、有什么问题一定要不停地自我反思，及时记录与纠正，并在每个<strong>周末</strong>进行一篇的自我的反思，务必。</p>]]></content>
     
     
-      
-      
-    <summary type="html">&lt;h2 id=&quot;算是反思吧&quot;&gt;&lt;a href=&quot;#算是反思吧&quot; class=&quot;headerlink&quot; title=&quot;算是反思吧&quot;&gt;&lt;/a&gt;算是反思吧&lt;/h2&gt;&lt;hr&gt;
-&lt;p&gt;人生总是蛮奇怪的，会在某个节点想起一个人，进而回想起一些事情。然后这些事情对我们自身的成长有着很大的帮助，</summary>
-      
+    <summary type="html">近日的猛男碎碎念，反思自己的学=学习状态，时间是不会等待你的。</summary>
     
     
     
+    <category term="猛男碎碎念" scheme="https://riddlego.github.io/categories/%E7%8C%9B%E7%94%B7%E7%A2%8E%E7%A2%8E%E5%BF%B5/"/>
+    
+    
+    <category term="碎碎念" scheme="https://riddlego.github.io/tags/%E7%A2%8E%E7%A2%8E%E5%BF%B5/"/>
     
   </entry>
   
@@ -42,18 +74,19 @@
     <link href="https://riddlego.github.io/2021/12/11/%E4%B8%80%E7%82%B9%E5%90%8E%E6%82%94%E7%9A%84%E4%BA%8B%E6%83%85/"/>
     <id>https://riddlego.github.io/2021/12/11/%E4%B8%80%E7%82%B9%E5%90%8E%E6%82%94%E7%9A%84%E4%BA%8B%E6%83%85/</id>
     <published>2021-12-11T15:00:02.000Z</published>
-    <updated>2021-12-13T03:46:47.159Z</updated>
+    <updated>2021-12-13T04:22:29.995Z</updated>
     
     <content type="html"><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近是很多事情被夹杂着，当然这也不是理由，因为还没被事情塞不进去。出问题就来自于自己的没有提前的预知性，对于事情的关心，对重要的人的关心不够，不够对于重要的人的事情进行考虑。对于每个阶段的事情其实我都有所经历，又为什么没有在那个需要的时候好好地站出来给予意见，提前做好准备。又是如此的受到依赖，为什么会这样的事情，其实就是没有给予足够的上心与尊重，没有对潜在的问题基于讨论。</p><p>人总是会被各种事情所困扰，也会被各种事情所包裹，但是得学习在这个之中去找到平衡点，去解决问题，去关心，去了解，去思考。</p><p>我发现反思的时候我总是提出问题，反思自己的过错，但是没有提出行之有效的方法。<br>这是下一次需要补充的东西。</p><h2 id="what-you-wanna-do"><a href="#what-you-wanna-do" class="headerlink" title="what you wanna do?"></a>what you wanna do?</h2><p>关于最后一点，每次反思就必须加入这个环节。到底应该怎么做，后面的下一次再看看自己做到了吗？</p><p>关于前面的两点，其实我觉得是生活的节奏问题，你养成在每个时间点做固定的事情，这样的话就不会有遗漏我觉得是超级好，要开始养成，我知道习惯是个可怕的东西，但是现在养成习惯，就不会无所事事以及浪费时间。</p><p><strong>找到方法+养成习惯</strong></p>]]></content>
     
     
-      
-      
-    <summary type="html">&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;最近是很多事情被夹杂着，当然这也不是理由，因为还没被事情塞不进去。出问题就来自于自己的没有提前的预知性，对于事情的关心，对重要的人的关心不够</summary>
-      
+    <summary type="html">近日的猛男碎碎念，关于一点后悔的事情。</summary>
     
     
     
+    <category term="猛男碎碎念" scheme="https://riddlego.github.io/categories/%E7%8C%9B%E7%94%B7%E7%A2%8E%E7%A2%8E%E5%BF%B5/"/>
+    
+    
+    <category term="碎碎念" scheme="https://riddlego.github.io/tags/%E7%A2%8E%E7%A2%8E%E5%BF%B5/"/>
     
   </entry>
   
@@ -371,7 +404,7 @@
     <link href="https://riddlego.github.io/2021/09/11/Go-Module%E6%95%99%E7%A8%8B%E7%AC%AC5%E9%83%A8%E5%88%86%EF%BC%9AVendoring/"/>
     <id>https://riddlego.github.io/2021/09/11/Go-Module%E6%95%99%E7%A8%8B%E7%AC%AC5%E9%83%A8%E5%88%86%EF%BC%9AVendoring/</id>
     <published>2021-09-11T07:41:25.000Z</published>
-    <updated>2021-09-11T08:12:13.347Z</updated>
+    <updated>2021-12-13T04:14:11.085Z</updated>
     
     <content type="html"><![CDATA[<p><a href="https://mp.weixin.qq.com/s/tRdb44lOSETC0EaTHBG4sg">原文链接</a></p>]]></content>
     
@@ -384,9 +417,9 @@
     
     
     
-    <category term="golang-more" scheme="https://riddlego.github.io/categories/golang-more/"/>
+    <category term="golang-More" scheme="https://riddlego.github.io/categories/golang-More/"/>
     
-    <category term="Go-Modules" scheme="https://riddlego.github.io/categories/golang-more/Go-Modules/"/>
+    <category term="Go-Modules" scheme="https://riddlego.github.io/categories/golang-More/Go-Modules/"/>
     
     
   </entry>
@@ -425,54 +458,6 @@
     
     
     
-    
-  </entry>
-  
-  <entry>
-    <title>深度探索Go语言：同步</title>
-    <link href="https://riddlego.github.io/2021/09/11/%E6%B7%B1%E5%BA%A6%E6%8E%A2%E7%B4%A2Go%E8%AF%AD%E8%A8%80%EF%BC%9A%E5%90%8C%E6%AD%A5/"/>
-    <id>https://riddlego.github.io/2021/09/11/%E6%B7%B1%E5%BA%A6%E6%8E%A2%E7%B4%A2Go%E8%AF%AD%E8%A8%80%EF%BC%9A%E5%90%8C%E6%AD%A5/</id>
-    <published>2021-09-11T07:40:00.000Z</published>
-    <updated>2021-09-11T07:54:25.797Z</updated>
-    
-    <content type="html"><![CDATA[<p><a href="https://mp.weixin.qq.com/s/fkKmQ05idbTtBWcGATrWfQ">深度探索Go语言：同步（一）</a></p><p><a href="https://mp.weixin.qq.com/s/i7ruvOfPPXTtlh6utfMv0A">深度探索Go语言：同步（二）</a></p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;&lt;a href=&quot;https://mp.weixin.qq.com/s/fkKmQ05idbTtBWcGATrWfQ&quot;&gt;深度探索Go语言：同步（一）&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;&lt;a href=&quot;https://mp.weixin.qq.com/s/i7ruvOfPPXTtlh6</summary>
-      
-    
-    
-    
-    <category term="golang-More" scheme="https://riddlego.github.io/categories/golang-More/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>如何避免出现SQL注入漏洞</title>
-    <link href="https://riddlego.github.io/2021/09/11/%E5%A6%82%E4%BD%95%E9%81%BF%E5%85%8D%E5%87%BA%E7%8E%B0SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/"/>
-    <id>https://riddlego.github.io/2021/09/11/%E5%A6%82%E4%BD%95%E9%81%BF%E5%85%8D%E5%87%BA%E7%8E%B0SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E/</id>
-    <published>2021-09-11T07:39:37.000Z</published>
-    <updated>2021-09-11T07:51:37.078Z</updated>
-    
-    <content type="html"><![CDATA[<p><a href="https://mp.weixin.qq.com/s/KKx3hFZ_X6RaK0qrR2jRjw">原文链接点击进入</a></p><h1 id="如何避免出现-SQL-注入漏洞"><a href="#如何避免出现-SQL-注入漏洞" class="headerlink" title="如何避免出现 SQL 注入漏洞"></a>如何避免出现 SQL 注入漏洞</h1><h2 id="一-前言"><a href="#一-前言" class="headerlink" title="一 前言"></a>一 前言</h2><p>本文将针对开发过程中依旧经常出现的SQL编码缺陷，讲解其背后原理及形成原因。并以几个常见漏洞存在形式，提醒技术同学注意相关问题。最后会根据原理，提供解决或缓解方案。</p><h2 id="二-SQL-注入漏洞的原理、形成原因"><a href="#二-SQL-注入漏洞的原理、形成原因" class="headerlink" title="二 SQL 注入漏洞的原理、形成原因"></a>二 SQL 注入漏洞的原理、形成原因</h2><p>SQL注入漏洞，根本上讲，是由于错把外部输入当作SQL代码去执行。目前最佳的解决方案就是预编译的方式。</p><p>SQL语句在执行过程中，需要经过以下三大基本步骤：</p><ul><li>1.代码语义分析</li></ul><ul><li>2.制定执行计划</li></ul><ul><li>3.获得返回结果</li></ul><p>而一个SQL语句是由代码和数据两部分，如：</p><p>SELECT id, name, phone FROM userTable WHERE name = ‘xiaoming’;</p><p>SELECT id, name, phone FROM userTable WHERE name = 是代码，’xiaoming’是数据。</p><p>而预编译，以Mybatis为例，就是预先分析带有占位符的语义：</p><p>如SELECT id, name, phone FROM userTable WHERE id = #{name};</p><p>然后再将数据’xiaoming’，传入到占位符。这样一来，错开来代码语义分析阶段，也就不会被误认为是代码的一部分了。</p><p>在最早期，开发者显式使用JDBC来自己创建Connection，执行SQL语句。这种情况下，如果将外部可控数据拼接到SQL语句，且没有做充分过滤的话，就会产生漏洞。这种情况在正常的业务开发过程中已经很少了，按照公司规定，无特殊情况下，必须使用ORM框架来执行SQL。</p><p>但目前部分项目中，仍会使用JDBC来编写一些工具脚本，如DataMerge.java 、DatabaseClean.java，借用JDBC的灵活性，通过这些脚本来执行数据库批量操作。</p><p>此类代码不应该出现在线上版本中，以免因各种情况，被外部调用。</p><h2 id="三-直接使用-Mybatis"><a href="#三-直接使用-Mybatis" class="headerlink" title="三 直接使用 Mybatis"></a>三 直接使用 Mybatis</h2><h3 id="1-易错点"><a href="#1-易错点" class="headerlink" title="1 易错点"></a>1 易错点</h3><p>目前大部分的平台代码是基于Mybatis来处理持久层和数据库之间的交互的，Mybatis传入数据有两种占位符{}和#{}。{}和#{}。{}可以理解为语义分析前的字符串拼接，讲传入的参数，原封不动地传入。</p><p>比如说</p><p>SELECT id, name, phone FROM userTable WHERE name = ‘${name}’;<br>传入name=xiaoming后，相当于<br>SELECT id, name, phone FROM userTable WHERE name = ‘xiaoming’;</p><p>实际应用中</p><p>SELECT id, name, phone FROM userTable WHERE ${col} = ‘xiaoming’;<br>传入col = “name”，相当于<br>SELECT id, name, phone FROM userTable WHERE name = ‘xiaoming’;</p><p>就像预编译原理介绍里讲的一样，使用#{} 占位符就不存在注入问题了。但有些业务场景是不可以直接使用#{}的。</p><p>比如order by语法中</p><p>如果编写SELECT id, name, phone FROM userTable ORDER BY #{}; ，执行时是会报错的。因为order by后的内容，是一个列名，属于代码语义的一部分。如果在语义分析部分没有确定下来，就相当于执行SELECT id, name, phone FROM userTable ORDER BY 。肯定会有语法错误。</p><p>再比如like场景下</p><p>SELECT id, name, phone FROM userTable WHERE name like ‘%#{name}%’;<br>#{}不会被解析，从而导致报错。</p><p>in 语法和 between语法都是如此，那么如何解决这类问题呢？</p><h3 id="2-正确写法"><a href="#2-正确写法" class="headerlink" title="2 正确写法"></a>2 正确写法</h3><p>order by（group by）语句中使用${}</p><p>1.使用条件判断</p><p>2.使用全局过滤机制，限制order by后的变量内容只能是数字、字母、下划线。</p><p>如使用正则过滤：</p><p>这里需要注意，过滤需要使用白名单，不能使用黑名单，黑名单无法解决注入问题。</p><p>LIKE 语句</p><p>由于需要like中的关键词需要包裹在两个%符号中，因此可以使用CONCAT函数进行拼接。</p><p>注意不要用 CONCAT(‘%’,’${stuName}’,’%’) ，这样仍然存在漏洞。也就是说，使用$符号是不对的，使用#符号才安全。</p><p>IN 语句</p><p>类似于like语句，直接使用#{}会报错，常见的错误写法为：</p><h2 id="四-Mybatis-generator-使用安全"><a href="#四-Mybatis-generator-使用安全" class="headerlink" title="四 Mybatis-generator 使用安全"></a>四 Mybatis-generator 使用安全</h2><p>繁重的CRUD代码压力下，开发者慢慢开始通过Mybatis-generator、idea-mybatis-generator插件、通用Mapper、Mybatis-generator-plus来自动生成Mapper、POJO、Dao等文件。</p><p>这些工具可以自动的生成CRUD所需要的文件，但如果使用不当，就会自动产生SQL注入漏洞。我们以最常用的org.mybatis.generator为例，来讲解可能会出现的问题。</p><h3 id="1-动态语句支持"><a href="#1-动态语句支持" class="headerlink" title="1 动态语句支持"></a>1 动态语句支持</h3><p>Mybatis-generator提供来一些函数，帮助用户把SQL的各个条件连接起来，比如多个参数的like语法，多个参数的比较语法。为了保证使用的简洁性，需要使用将一些语义代码拼接到SQL语句中。而如果开发者使用不当，将外部输入也传入了{}占位符。就会产生漏洞。</p><h3 id="2-targetRuntime-参数配置"><a href="#2-targetRuntime-参数配置" class="headerlink" title="2 targetRuntime 参数配置"></a>2 targetRuntime 参数配置</h3><p>在配置generator时，配置文件generator-rds.xml中有一个targetRuntime属性，默认为MyBatis3。在这种情况下，会启动Mybatis的动态语句支持，启动enableSelectByExample、enableDeleteByExample、enableCountByExample 以及 enableUpdateByExample功能。</p><p>以enableSelectByExample为例，会在xml映射文件中代入以下动态模块：</p><h2 id="五-其它-ORM-框架"><a href="#五-其它-ORM-框架" class="headerlink" title="五 其它 ORM 框架"></a>五 其它 ORM 框架</h2><h3 id="1-Hibernate"><a href="#1-Hibernate" class="headerlink" title="1 Hibernate"></a>1 Hibernate</h3><p>ORM全称为对象关系映射(Object Relational Mapping)，简单地说，就是将数据库中的表映射为Java对象, 这种只有属性，没有业务逻辑的对象也叫做POJO（Plain Ordinary Java Object）对象。</p><p>Hibernate是第一个被广泛使用的ORM框架，它通过XML管理数据库连接，提供全表映射模型，封装程度很高。在配置映射文件和数据库链接文件后，Hibernate就可以通过Session对象进行数据库操作，开发者无需接触SQL语句，只需要写HQL语句即可。</p><p>Hibernate经常与Struts、Spring搭配使用，也就是Java世界的经典SSH框架。</p><p>HQL相较于SQL，多了很多语法限制：</p><p>1.不能查询未做映射的表，只有当模型之间的关系明确后，才可以使用UNION语法。</p><p>2.表名，列名大小写敏感。</p><p>3.没有*、#、– 。</p><p>4.没有延时函数。</p><p>所以HQL注入利用要比SQL注入苦难得多。从代码审计的角度和普通SQL注入是一致的：</p><p>拼接会导致注入漏洞：</p><p>图片</p><p>可以使用占位符和具名参数来防止SQL语句，其本质都是预编译。</p><p>图片</p><p>图片</p><p>Hibernate在使用过程中有很多不足：</p><p>1.全表映射不灵活，更新时需要发送所有字段，影响程序运行效率。</p><p>2.对复杂查询的支持很差。</p><p>3.对存储过程的支持很差。</p><p>4.HQL性能较差，无法根据SQL进行优化。</p><p>在审计Hibernate相关注入时，可以通过全局搜索createQuery来快速定位SQL操作的位置。</p><h3 id="2-JPA"><a href="#2-JPA" class="headerlink" title="2 JPA"></a>2 JPA</h3><p>JPA全称为Java Persistence API，是Java EE提供的一种数据持久化的规范，允许开发者通过XML或注解的方式，将某个对象，持久化到数据库中。</p><p>主要包括三方面内容：</p><p>1.ORM映射元数据，通过XML或注解，描述对象和数据表之间的对应关系。框架便可以自动将对象中的数据保存到数据库中。</p><p>常见的注解有：@Entity、@Table、@Column、@Transient</p><p>2.数据操作API，内置接口，方便对某个数据表执行CRUD操作，节省开发者编写SQL的时间。</p><p>常见的方法有：entityManager.merge(T t);</p><p>3.JPQL, 提供一种面向对象而不是面向数据库的查询语言，将程序和数据库、SQL解耦合。</p><p>JPA是一套规范，Hibernate实现了这一JPA规范。</p><h2 id="六-总结"><a href="#六-总结" class="headerlink" title="六 总结"></a>六 总结</h2><p>经过上面的介绍，尤其是围绕Mybatis易错点的讨论，我们可以得到以下结论：</p><p>1.持久层组件种类繁多。</p><p>2.开发者对工具使用的错误理解，是漏洞出现的主要原因。</p><p>3.由于自动生成插件的动态特性，自动化发现SQL漏洞不能简单地使用${}来寻找。必须要根据全局的持久层组件特性，来做详细的匹配规则。</p><p>参考链接：</p><figure class="highlight awk"><table><tr><td class="code"><pre><code class="hljs awk"><br>https:<span class="hljs-regexp">//</span>www.anquanke.com<span class="hljs-regexp">/post/i</span>d/<span class="hljs-number">190170</span><span class="hljs-comment">#h2-3</span><br><br><br><br>https:<span class="hljs-regexp">//</span>www.cnblogs.com<span class="hljs-regexp">/alka1d/</span>p/<span class="hljs-number">11582993</span>.html<br></code></pre></td></tr></table></figure>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;&lt;a href=&quot;https://mp.weixin.qq.com/s/KKx3hFZ_X6RaK0qrR2jRjw&quot;&gt;原文链接点击进入&lt;/a&gt;&lt;/p&gt;
-&lt;h1 id=&quot;如何避免出现-SQL-注入漏洞&quot;&gt;&lt;a href=&quot;#如何避免出现-SQL-注入漏洞&quot; class=&quot;h</summary>
-      
-    
-    
-    
-    <category term="数据库" scheme="https://riddlego.github.io/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
-    
-    
-    <category term="SQL" scheme="https://riddlego.github.io/tags/SQL/"/>
     
   </entry>
   
