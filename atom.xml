@@ -6,7 +6,7 @@
   <link href="https://riddlego.github.io/atom.xml" rel="self"/>
   
   <link href="https://riddlego.github.io/"/>
-  <updated>2021-12-13T04:11:57.483Z</updated>
+  <updated>2021-12-14T13:02:33.903Z</updated>
   <id>https://riddlego.github.io/</id>
   
   <author>
@@ -17,14 +17,47 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>项目资料学习整理（一）</title>
+    <link href="https://riddlego.github.io/2021/12/14/%E9%A1%B9%E7%9B%AE%E8%B5%84%E6%96%99%E5%AD%A6%E4%B9%A0%E6%95%B4%E7%90%86%EF%BC%88%E4%B8%80%EF%BC%89/"/>
+    <id>https://riddlego.github.io/2021/12/14/%E9%A1%B9%E7%9B%AE%E8%B5%84%E6%96%99%E5%AD%A6%E4%B9%A0%E6%95%B4%E7%90%86%EF%BC%88%E4%B8%80%EF%BC%89/</id>
+    <published>2021-12-14T13:01:19.000Z</published>
+    <updated>2021-12-14T13:02:33.903Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="（一）关于51的IO结构"><a href="#（一）关于51的IO结构" class="headerlink" title="（一）关于51的IO结构"></a><strong>（一）关于51的IO结构</strong></h2><p>51中有四组引脚，P0、P1、P2、P3</p><h3 id="P0"><a href="#P0" class="headerlink" title="P0"></a>P0</h3><p><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/Port0for51.jpg"></p><h3 id="P1"><a href="#P1" class="headerlink" title="P1"></a>P1</h3><p><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/Port1for51.jpg"></p><h3 id="P2"><a href="#P2" class="headerlink" title="P2"></a>P2</h3><p><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/Port2for51.jpg"></p><h3 id="P3"><a href="#P3" class="headerlink" title="P3"></a>P3</h3><p><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/Port3for51.jpg"></p><p>在看这部分的时候，你需要对mos管有一定的了解，然后有一定的数电模电基础。我是觉得因为数电其实就是建立在模电的基础上，将模拟电子元器件结合半导体材料进行整合到一起，然后实现了数字逻辑。在上层就涉及到了软件层面。</p><p>我是把这部分知识看了一遍，但是回过头来再看这些脑子里对于知识的一些细节还是记得不是很牢靠，我一直是文字的钟爱者，但是还是不得不说视频与图片让人们会产生更深的映像。在这里我们先大概看一下四个IO口的内部结构，然后结合具体的理论进行分析。</p><h2 id="上拉、下拉、三态的原理与对应结构"><a href="#上拉、下拉、三态的原理与对应结构" class="headerlink" title="上拉、下拉、三态的原理与对应结构"></a>上拉、下拉、三态的原理与对应结构</h2><p>为什么是这个样子，这是因为对于数字电路来说不是0就是1，但是对于复杂的电路可能需要一个线路传输不同的信号，这就产生了三态门，顾名思义就是结合高低电平以及一个高阻态，高阻态的顾名思义就是超级高的电阻，相当于断开。</p><p>上拉就是接到电源，通过一个电阻接到电源，那么这个电阻就叫上拉电阻。</p><p>下拉就是接地。</p><h2 id="推挽输出与开漏输出"><a href="#推挽输出与开漏输出" class="headerlink" title="推挽输出与开漏输出"></a>推挽输出与开漏输出</h2><h3 id="推挽输出"><a href="#推挽输出" class="headerlink" title="推挽输出"></a>推挽输出</h3><p>推挽输出的结构是由两个三极管或者MOS管受到互补信号的控制，两个管子始终保持一个截至一个导通的状态。</p><p><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/%E6%8E%A8%E6%8C%BD%E8%BE%93%E5%87%BA.jpg"></p><p>这样的结构的作用就是高低电平都具有驱动能力，同时也能正儿八经的输出高低电平。</p><h3 id="开漏输出"><a href="#开漏输出" class="headerlink" title="开漏输出"></a>开漏输出</h3><p>常常与推挽输出对应的就是开漏输出<br><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/%E5%BC%80%E6%BC%8F%E8%BE%93%E5%87%BA.jpg"></p><p><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/%E5%BC%80%E6%BC%8F%E8%BE%93%E5%87%BA02.jpg"></p><p>在大概了解了以上的基础概念的时候我们再回过头来分析一下，这些上拉、下拉、避免干扰、提高驱动能力、输出真正的高电平这些都是些什么鬼话呢。</p><p>其次是对于IO是很多都是双向通信的，就是指的你既可以输出信号，也可以输入信号。</p><p>双向开漏IO、准双向开漏IO、以及推挽输出作为双向IO</p><p>关于这部分推荐看一下前辈的<a href="https://blog.csdn.net/techexchangeischeap/article/details/72569999?spm=1001.2101.3001.6650.3&utm_medium=distribute.pc_relevant.none-task-blog-2~default~CTRLIST~default-3.nonecase&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~CTRLIST~default-3.nonecase">这篇文章</a></p><h2 id="分析结果"><a href="#分析结果" class="headerlink" title="分析结果"></a>分析结果</h2><p>回到我们的目的本身来说，cc2530本身是具有21个数字输入/输出引脚可配置为通用数字I / O或连接至ADC，定时器或USART外设的外设I / O。</p><figure class="highlight mathematica"><table><tr><td class="code"><pre><code class="hljs mathematica"><span class="hljs-built_in">I</span> <span class="hljs-operator">/</span> <span class="hljs-built_in">O</span>端口具有以下主要功能：<br><br><br>•  <span class="hljs-number">21</span>个数字通用输入<span class="hljs-operator">/</span>输出引脚<br><br>•  通用<span class="hljs-built_in">I</span> <span class="hljs-operator">/</span> <span class="hljs-built_in">O</span>或外设<span class="hljs-built_in">I</span> <span class="hljs-operator">/</span> <span class="hljs-built_in">O</span><br><br>•  输入上拉或下拉功能<br><br>•  外部中断功能<br><br></code></pre></td></tr></table></figure><p>对于IO我们可以进行设置，首先是端口功能选择，其次是输入方向选择，然后是输入模式上拉、下拉、三态。</p><p>我们是对电容进行充放电，所以就需要端口产生PWM波，然后这个波我是去对电容进行充放电，所以这个引脚的结构就需要我去搞清楚。</p><p>但是每个引脚都具有输入输出的功能，都具有各种设置的功能，那么不可能是像上述的结构一样单纯，于是我对比这想到了，CC2530的引脚功能是很丰富的，让我想起了STM32，于是我就找到了STM32引脚的内部结构图，一看恍然大悟。</p><p>这个资料来自于<a href="https://blog.csdn.net/youshijian99/article/details/80086273">这里哦</a>，感谢前辈。</p><p>STM32GPIO内部图<br><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/GPIO.jpg"></p><p>但是我查到关于STM32有四种输入模式，四种输出模式</p><figure class="highlight haml"><table><tr><td class="code"><pre><code class="hljs haml">输入模式<br>    -<span class="ruby">输入浮空（GPIO_Mode_IN_FLOATING）</span><br><span class="ruby">    -输入上拉(GPIO_Mode_IPU)</span><br><span class="ruby">    -输入下拉(GPIO_Mode_IPD)</span><br><span class="ruby">    -模拟输入(GPIO_Mode_AIN)</span><br><span class="ruby">输出模式</span><br><span class="ruby">    -开漏输出(GPIO_Mode_Out_OD)</span><br><span class="ruby">    -开漏复用功能(GPIO_Mode_AF_OD)</span><br><span class="ruby">    -推挽式输出(GPIO_Mode_Out_PP)</span><br><span class="ruby">    -推挽式复用功能(GPIO_Mode_AF_PP)</span><br></code></pre></td></tr></table></figure><p>而关于CC2530</p><figure class="highlight plain"><table><tr><td class="code"><pre><code class="hljs plain">输入：上拉、下拉、三态<br>输出：没有说可以设置<br></code></pre></td></tr></table></figure><p>所以对于此，我们可以知道这个CC2530内部是有上拉电阻和下拉电阻的，但是这个只是在输入的时候才有用。</p><p>但是我对于输入的状态是不关注的，只想知道这个输出是什么结构。于此同时我还看到了关于另外一种结构是有点不同的。<br><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/GPIOstm32%EF%BC%881%EF%BC%89.jpg"></p><p><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/GPIOstm32%EF%BC%882%EF%BC%89.jpg"></p><p>不同就在于这个上拉电阻的位置，所以有的回说这个是带上拉的开漏输出或者推挽输出。<br>资料来自于这里哦<a href="https://blog.csdn.net/as480133937/article/details/98063549">点击原文</a></p><p>在针对于上述的资料以后，我再结合我的实际数据，因为在我设置P1_0的输出PWM，然后没有接上拉电阻，但是可以实现高低电平的变化，这样的可能性就两个：</p><p>1—是推挽输出（这个的可能性很大）<br>2—是开漏输出，内部接了上拉电阻</p><p>所以这里就需要验证一下，怎么验证呢，我觉得是要根据开漏输出和推挽输出的特性来进行分析。</p><p>就不往上翻了，我们来这里学习复习一遍两者的特点。</p><h4 id="推挽输出-1"><a href="#推挽输出-1" class="headerlink" title="推挽输出"></a>推挽输出</h4><p>这个结构最大的特点就是能真正意义上的输出高电平和低电平，并且在两种电平下都具有驱动能力，但是推挽输出这样的结构不能实现“线与”的结构。“线与”结构是什么意思呢？线与指的是两个及其以上的输出端直接互联就可以实现“AND”的逻辑功能，那这个时候结合推挽输出的机构，我们可以发现，当两个推挽输出接在一起的时候，产生的通路电阻比较小，回发生短路，进而对端口造成损害。</p><h4 id="开漏输出-1"><a href="#开漏输出-1" class="headerlink" title="开漏输出"></a>开漏输出</h4><p>对比来看，开漏输出无法真正的输出高电平，输出的高电平没有真正的驱动能力，需要借助外部的上拉电阻完成对外驱动。</p><p>所以在这里结合我测量数据的现象来说，以及数据分析来说，为什么P1_0能有20mA的驱动能力，说明内部有两种可能推挽输出或者带上拉电阻。</p><p>现在为了测量分析内部结构我们进行数据的测量分析：</p><pre><code>第一组 P1_0：    1、假设P1_0内部结构输出时候自带上拉电阻    2、没有上拉电阻，加一个    3、测量P0_7带上拉电阻    4、测量P0_7带上拉电阻+MOS管第二组 P1_7:    1、带上拉电阻    2、带mos管+上拉电阻吧</code></pre><p>现在测量得电阻，发现P1_0，不外接mos管得时候，算出来得内阻值再40K附近，关于100nF-220nF这个范围内有点奇怪。不过在220nf-1uF得内阻都在40k附近，这样得话可以判断出为了提高P1_0\P1_1两个引脚得驱动能力，可能引脚内部加了上拉电阻，这样就区别去其他引脚的驱动能力，同时他不具备输入状态的变化，可能就是一个上拉电阻。<br>这当然是根据我自己的猜测得出来的。</p><p><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/cc2030GPIO%E5%81%87%E6%83%B3%E5%9B%BE.png"></p><p>大概是这么个意思，但是肯定细节方面还是差了蛮多的。</p><p>(PS:关于CC2530在作为普通IO输入时 ，P1INP可不设置；在进行ADC转换时，<br>必须将引脚设置成三态，否则电压采集不准。)</p><p><a href="https://blog.csdn.net/weixin_40877615/article/details/95043657">CMOS门与TTL门</a></p><h3 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h3><p>P1_0 GPIO引脚结构很可能就是开漏+上拉   也可能是推挽+上拉</p><p>下一步就是研究指数函数的拟合方法</p><h3 id="关于推挽和开漏的补充"><a href="#关于推挽和开漏的补充" class="headerlink" title="关于推挽和开漏的补充"></a>关于推挽和开漏的补充</h3><p>1、开漏可以利用外部驱动，减少IC内部驱动</p><p>2、只能输出低电平，外接上拉电阻才能具备输出高电平的功能(上拉电阻的选择也很重要，因为上拉电阻决定了电平的转换速度与功耗，电阻越小延时小但是功耗大，所以在一定程度上对延时有要求的可以使用下降沿输出出（这里有点迷惑）)，按道理我的电阻的选择应该还好，具体的这个电平延时个人觉得可以使用示波器进行分析观察。后续的误差精细的时候需要考虑。</p><p>3、开漏输出可以实现线与结构</p><p>4、开漏复用功能，这个意思就是当IO口被当做非通用IO口使用时，端口就必须是复用功能输出模式（可以是推挽或者是开漏）</p><p>5、推挽输出因为结构对称的三极管或者是MOSFET，导通功耗地，效率高。推拉式输出可以提高电路的负载能力，又提高开关速度。</p><h3 id="资料补充"><a href="#资料补充" class="headerlink" title="资料补充"></a>资料补充</h3><p>文章的讲解主要是自己用来分析梳理思路，图片都是来自于前辈的文章，我只摘取了极少部分，更多可以看资料</p><p><a href="https://blog.csdn.net/as480133937/article/details/98063549">STM32F4 GPIO八种模式及工作原理详解</a></p><p><a href="https://blog.csdn.net/baidu_37366055/article/details/80060962?spm=1001.2101.3001.6650.5&utm_medium=distribute.pc_relevant.none-task-blog-2~default~OPENSEARCH~default-5.highlightwordscore&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~OPENSEARCH~default-5.highlightwordscore">STM32的8种GPIO输入输出模式深入详解</a></p><p><a href="https://blog.csdn.net/zzz_xxj/article/details/79312565?spm=1001.2101.3001.6661.1&utm_medium=distribute.pc_relevant_t0.none-task-blog-2~default~CTRLIST~default-1.nonecase&depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-2~default~CTRLIST~default-1.nonecase">CC2530学习笔记（1）—— IO端口</a></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;（一）关于51的IO结构&quot;&gt;&lt;a href=&quot;#（一）关于51的IO结构&quot; class=&quot;headerlink&quot; title=&quot;（一）关于51的IO结构&quot;&gt;&lt;/a&gt;&lt;strong&gt;（一）关于51的IO结构&lt;/strong&gt;&lt;/h2&gt;&lt;p&gt;51中有四组引脚，P0、P</summary>
+      
+    
+    
+    
+    <category term="传感器测量" scheme="https://riddlego.github.io/categories/%E4%BC%A0%E6%84%9F%E5%99%A8%E6%B5%8B%E9%87%8F/"/>
+    
+    
+  </entry>
+  
+  <entry>
     <title>关于项目的梳理</title>
     <link href="https://riddlego.github.io/2021/12/13/%E5%85%B3%E4%BA%8E%E9%A1%B9%E7%9B%AE%E7%9A%84%E6%A2%B3%E7%90%86/"/>
     <id>https://riddlego.github.io/2021/12/13/%E5%85%B3%E4%BA%8E%E9%A1%B9%E7%9B%AE%E7%9A%84%E6%A2%B3%E7%90%86/</id>
     <published>2021-12-13T04:11:57.000Z</published>
-    <updated>2021-12-13T04:11:57.483Z</updated>
+    <updated>2021-12-14T13:00:08.225Z</updated>
+    
+    <content type="html"><![CDATA[<p>这个进展真的是让人心烦，甚至是毫无进展。</p><p>关于这个方案有两个点的难处，第一个是准确的采集出电容电压的值，第二个就是怎么样拟合，采用数据对其进行曲线拟合。算出RC的值进而计算出值，因为一直很多的事情再脑子里想，但是总是容易被遗忘掉，就在这里做一个记录。</p><p>但是对于这个我想关键的采集数据其实不算是关键，我现在讲整个项目分为两个part，一是采集数据，二是对数据进行拟合。</p><h3 id="采集电压曲线"><a href="#采集电压曲线" class="headerlink" title="采集电压曲线"></a>采集电压曲线</h3><p>这部分其实主要是引脚的问题，我觉得算是处在掌控之中。</p><p>需求：</p><ul><li>我需要产生一个矩形波对电容进行充放电。</li></ul><p>疑惑点：</p><ul><li><p>这个矩形波的产生可以来自CC2530的软件产生或者是硬件产生。因为CC2530支持硬件产生PWM，只需要配置相关的寄存器即可。</p></li><li><p>PWM的硬件产生又离不开定时器，对于cc2530有三个定时器，但是只有定时器1才有16位，定时器2是用于RF通信的，剩下的定时器3、4是八位的定时器。</p></li><li><p>这样讲来本来我还可以用的还是蛮多的，但是这个定时器的配置真的是很烦恼，因为CC2530的是基于51的内核，同时它吧还具有很多的外设功能，所以这就是产生一种情况，外设的功能是映射在IO口，但是IO口的结构我是有要求的，16位定时器1的IO结构是推挽的，这是满足不了我的，所以排除了映射到P0端口的我需要开漏输出的结构，这样才会让我可以进行数据的测量，但是关于P1_0的内部结构又是不太明朗的，因为按照51的IO结构来说，P0都是推挽结构。那么我们首先需要排除，定时器一可以映射到P1_0和P1_1，但是手册说这两个端口的输入是没有上拉下拉的区别，同时还具有20mA的驱动能力，我们都知道常见51的P1的口的结构是开漏输出的，但是除了P1_0和P1_1的口子以外，其他的IO都是只有4mA的驱动能力，所以从这点可以分析出来肯定是存在结构的差异。那么这个结构的差异在哪里就是个问题。</p></li><li><p>其次就是有一个矛盾点，因为除了 P1.0 、P1.1各具备20mA的输出驱动能力之外，所有的输出均具备4mA的驱动电流。那么要这样额驱动能力一样是不是结构就必须一样的，那这样是不是所有的结构都是推挽输出，或者是只有P1.0 、P1.1才是推挽输出的结构。</p></li><li><p>P1.0 、P1.1没有上拉下拉的功能，所以怎么样的结构才会没有这样的能力，具有这样三态的能力又应该是怎么样的结构。同时芯片手册还写到了上拉、下拉电阻的阻值是20K，那么就得搞清楚这个数据是针对P1.0 、P1.1还是针对除了P1.0 、P1.1所有的结构来说的。</p></li></ul><p>参考的资料：</p><ul><li>1、常见51的IO结构总结</li><li>2、上拉、下拉、三态的原理与对应结构</li><li>3、推挽输出、开漏输出的原理与结构</li><li>4、怎么样能提高驱动能力</li></ul><p>待解决的问题：</p><ul><li>1、确定出P1_1的内部结构</li><li>2、如果是能操作的那种就测量数据，算出电阻值</li><li>3、记录好数据与步骤</li></ul><p>Tips：</p><ul><li>1、第一步先整个文件夹，记录好做这个的目的，环境</li><li>2、程序、数据、资料创建好相应的文件夹，不要一股脑的偷懒于这点</li><li>3、别尼玛做一点啥子就去玩手机</li></ul>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;这个进展真的是让人心烦，甚至是毫无进展。&lt;/p&gt;
+&lt;p&gt;关于这个方案有两个点的难处，第一个是准确的采集出电容电压的值，第二个就是怎么样拟合，采用数据对其进行曲线拟合。算出RC的值进而计算出值，因为一直很多的事情再脑子里想，但是总是容易被遗忘掉，就在这里做一个记录。&lt;/p&gt;
+</summary>
+      
     
     
     
+    <category term="传感器测量" scheme="https://riddlego.github.io/categories/%E4%BC%A0%E6%84%9F%E5%99%A8%E6%B5%8B%E9%87%8F/"/>
     
     
   </entry>
@@ -445,19 +478,6 @@
     
     
     <category term="令牌桶" scheme="https://riddlego.github.io/tags/%E4%BB%A4%E7%89%8C%E6%A1%B6/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Go第三方库源码分析：juju/ratelimit</title>
-    <link href="https://riddlego.github.io/2021/09/11/Go%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%EF%BC%9Ajuju-ratelimit/"/>
-    <id>https://riddlego.github.io/2021/09/11/Go%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%EF%BC%9Ajuju-ratelimit/</id>
-    <published>2021-09-11T07:40:34.000Z</published>
-    <updated>2021-09-11T07:40:34.912Z</updated>
-    
-    
-    
-    
     
   </entry>
   
