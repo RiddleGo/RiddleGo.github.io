@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		
+<title>202202414—日记-Russshare</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="shortcut icon" type="image/x-icon" href="/image/favicon.ico">
+
+<meta name="keywords" content="golang,程序员,嵌入式">
+<meta name="description" content="">
+
+
+<script src="/js/jquery.min.js"></script>
+
+
+
+<!-- Baidu Analytics -->
+<script defer>
+    var _hmt = _hmt || [];
+    (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?4b5fe1472f22fa";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+	<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+</head>
+
+	<body>
+		
+<link rel="stylesheet" href="/css/page.css">
+
+
+<link rel="stylesheet" href="/css/page_cente.css">
+
+
+<link rel="stylesheet" href="/css/atom-one-dark.css">
+
+
+<link rel="stylesheet" href="/css/header.css">
+
+	<div class="header">
+		<div class="header-top">
+			<div class="h-left">
+				<a href="/">
+					<img src="/image/logo.png" alt="Quiet">
+				</a>
+			</div>
+			<div class="h-right">
+				<ul>
+					
+						
+								<li>
+									<a href="/">
+										HOME
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/archives">
+										ARCHIVE
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/categories">
+										CATEGORIES
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/tags">
+										TAGS
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/links">
+										LINKS
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/about">
+										ABOUT
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+				</ul>
+			</div>
+			<div class="h-right-close">
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+					<path fill="none" d="M0 0h24v24H0z" />
+					<path d="M3 4h18v2H3V4zm0 7h18v2H3v-2zm0 7h18v2H3v-2z" fill="rgba(68,68,68,1)" />
+				</svg>
+			</div>
+		</div>
+	</div>
+	<div class="sidebar">
+    <div class="topo">
+        <h2>Russshare</h2>
+    </div>
+    <ul>
+        
+        <li>
+            <a href="/">HOME</a>
+        </li>
+        
+        <li>
+            <a href="/archives">ARCHIVE</a>
+        </li>
+        
+        <li>
+            <a href="/categories">CATEGORIES</a>
+        </li>
+        
+        <li>
+            <a href="/tags">TAGS</a>
+        </li>
+        
+        <li>
+            <a href="/links">LINKS</a>
+        </li>
+        
+        <li>
+            <a href="/about">ABOUT</a>
+        </li>
+        
+    </ul>
+    <div class="my_foot">
+        
+        <a target="_blank" rel="noopener" href="https://github.com/RiddleGo">
+            <img src="https://cdn.jsdelivr.net/gh/duogongneng/MyBlogImg/imggithub.png" alt="Quiet主题">
+        </a>
+        
+    </div>
+</div>
+<div class='shelter'
+    style='cursor: pointer;display: none; position: fixed;left: 0;top: 0; right: 0;bottom: 0;background-color: #333;opacity:0.5;z-index: 108;'>
+</div>
+<style>
+    .sidebar {
+        width: 0;
+        height: 100%;
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        background: #fff;
+        z-index: 999;
+        text-align: center;
+        box-shadow: -6px 0 20px rgba(98, 94, 94, .815)
+    }
+
+    .topo {
+        width: 100%;
+        height: 200px;
+        background: url(https://api.ixiaowai.cn/gqapi/gqapi.php) no-repeat;
+        background-size: 100% 100%;
+        position: relative;
+        display: flex;
+        align-items: flex-end
+    }
+
+    .topo h2 {
+        color: #fff;
+        z-index: 1;
+        position: relative;
+        margin: 0 0 10px 10px;
+        font-size: 1.2em;
+        box-sizing: border-box
+    }
+
+    .topo:before {
+        content: '';
+        background-image: url(/image/pattern.png);
+        background-repeat: repeat;
+        height: 100%;
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 100%;
+        z-index: 1
+    }
+
+    .sidebar ul {
+        width: 100%;
+        margin-top: 50px
+    }
+
+    .sidebar ul li {
+        height: 50px;
+        list-style: none;
+        font-size: 1.2em;
+        text-align: right;
+        margin-right: 10px
+    }
+
+    .sidebar ul li a {
+        display: grid;
+        color: #5d606a;
+        text-overflow: ellipsis;
+        width: 100%;
+        text-decoration: none
+    }
+
+    .my_foot {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        position: absolute;
+        bottom: 0
+    }
+
+    .my_foot a {
+        text-decoration: none;
+        margin-right: 10px;
+        display: inline-block
+    }
+
+    .my_foot a img {
+        width: 30px;
+        height: 30px
+    }
+</style>
+
+<script>
+    $(function () { $('.h-right-close>svg').click(function () { $('.sidebar').animate({ width: "66%" }, 500); $('.shelter').fadeIn("slow") }); $('.shelter').click(function (e) { $('.sidebar').animate({ width: "0" }, 500); $('.shelter').fadeOut("slow") }) })
+</script>
+		<script>
+			$(function () { $(window).scroll(function () { if ($(document).scrollTop() > 100) { $(".header-top").removeClass("header-move2"); $('.header-top').addClass('header-move1') } else { $(".header-top").removeClass("header-move1"); $('.header-top').addClass('header-move2') } }) });
+		</script>
+<div class="header-bg ">
+    <div class="bg-content">
+        <ul class="tag">
+            
+        </ul>
+        <h1>202202414—日记</h1>
+        <div class="article-info">
+            <div class="article-author">
+                
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+                    <g>
+                        <path fill="#12183A"
+                            d="M6.187 15.265A6.47 6.47 0 0 0 10 16.5a6.47 6.47 0 0 0 3.813-1.235A4.99 4.99 0 0 0 10 13.5a4.99 4.99 0 0 0-3.813 1.765zM5.082 14.25A6.485 6.485 0 0 1 10 12c1.965 0 3.726.872 4.918 2.25a6.5 6.5 0 1 0-9.836 0zM10 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0-1.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z">
+                        </path>
+                    </g>
+                </svg>
+                
+                <span> <a href="">Russshare</a></span>
+                <p>2022-04-14 21:30:12</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="article-content">
+    <div id="article" class="content">
+        <h2 id="这点样子"><a href="#这点样子" class="headerlink" title="这点样子"></a>这点样子</h2><p>仿佛每次的开头都想老气横秋的写一句时间恍若隔世，形容一下时间过的很快。依然是四月中旬，这个点还是有蛮多的事情要去处理，老实讲真的好想偷懒。但是事情都是必须面对以及解决的，至少不想再拖沓给自己留下坑去填，不用遇到事情就会想着以后去做好了，那是不太好的样子哦。<br>最近有关于几点的想法</p>
+<hr>
+<h3 id="关于贫穷–怎么样去花钱"><a href="#关于贫穷–怎么样去花钱" class="headerlink" title="关于贫穷–怎么样去花钱"></a>关于贫穷–怎么样去花钱</h3><p>其实这是一个一直和我难以分割的事情，也一直在不同的程度上伴随着我的成长。当然我从来不应该抱怨，父母在能力范围内给予了所有，虽然也在各种时间的关键结点，站在马后炮的角度去看他们的目光短浅错过了很多的机会，但是能力不能和感情混为一谈。他们身上的很多品质和品德都有我很多去学习的地方。</p>
+<p>只是我想因为贫穷会给生活带来一种延迟感，别人小时候早就体验的东西或者经历的东西，我要在成年以后才会体验到。比如这次学车，其实很多人都是在高考完的暑假就学习了，或者在大学期间，而我不得已拖到了这个时候。一方面是因为自己出过车祸后的怯懦，一方面是因为这点几千块钱其实也算是一笔不太容易拿得出的支出。</p>
+<p>还有就是主要是我自己的目光短浅与无脑苍蝇般的前进，浪费了很多的资源和时间。我很难具体量化在过往的本科生活到底那样的经历给我带来了什么。做了的兼职一分钱也没有存下，挣了过万的钱一点用没有起到，发了就花了，吃饭，谈恋爱，买东西。这就是缺乏对于金钱的目标性造成的，我记得我小时候喜欢存钱的啊，哈哈哈想来还是有点遗憾和后悔。不过在高中那个时候每个月拿着几百块钱，然后脱离那个环境第一时间想的是怎么样挣钱，但是从来没有想过怎么样去花钱。父亲给 我说的理财理财，但是从小就是需要多少给多少，我算是金钱方面比较懂事，所以一般要钱只会往少要钱，这就造成了很多时候，手里的钱能把面临的处境给解决掉，让我可以掩饰一下自己的贫穷就万幸了，哪还有什么余款去让我学着怎么用钱。这点我想是极其缺乏的，所以我最近发现有人在一个关于贫穷的视频下面的评论还是蛮对的。贫穷给人带来的不只是贫穷，还有认知、生活习惯、见识等等多个维度的差异。</p>
+<p>这次开始学着去投资，虽然亏了一千多，哈哈哈，但是真的有学到一些东西。就当是学费了，好吧这段时间金钱前段时间比较匮乏的时候亏这么多，还是让我很是肉疼，毕竟一个月的生活费都没了。</p>
+<p>不过这个学习成本还是要控制一下，我发现像我这样的贫穷的人。一下子转变这么大，然后总是在做投资和购买的时候容易被情绪给控制，容易上头。反而是很多的有钱的人，因为心态习惯性的经历，就会在做这些事情多一些稳定的思考和独立的分析。 这次我的投资亏本的很大原因在于盲目的跟进赛道，而没有自己独立的分析，没有尝试自己去根据国际环境进行分析，看新闻去联想整个行业的发展。总是处于一种被灌输的状态。独立思考能力，不过这个部分又是建立在对于基础的知识以及行业认知具有一定的基础之上，所以啊多学习，但是是需要系统的学习，不是碎片化的吸取别人嚼碎的东西，所以下次要自己去思考一下对吗？为什么？别的呢？这个过程可是太复杂了，很难一言蔽之。</p>
+<h3 id="关于舒适圈"><a href="#关于舒适圈" class="headerlink" title="关于舒适圈"></a>关于舒适圈</h3><p>我发现人真的是需要不断地跳出舒适圈才能不断地取得进步，我也知道睡一大早很爽，我也知道应该好好的耍。我也知道人嘛或者就是要快乐，享受生活。但是我也要清楚的认识现在所拥有的的一切我曾经都梦寐以求，和那些时间相比起来，我这样的环境与条件真的是处在很是应该感恩的状态。</p>
+<p>所以要好好坚持看书，继续看下去，不断地重复，不断地思考，不断地跳出舒适圈。</p>
+<p>这样才可以进步，身边太多家庭条件、本科学历、个人技能比我好的人，这是别人在这成长的时间岁月里积攒出来的东西，而我自然是要认识到自己的不足，以及不要对此感到不服气或者是怎么样。应该关注别人的优点与长处，并不断的把这些客观存在的事实当做自己的动力。</p>
+<h3 id="没事散散步"><a href="#没事散散步" class="headerlink" title="没事散散步"></a>没事散散步</h3><p>一直是一个人的时候，很少时候慢慢的去散散步。上次有了这样的体验之后，真是让人上瘾。一个人散散步，不用看手机，慢慢悠悠的转转，想想事情，整理思路，规划自己，别像个无头的苍蝇。不断地思考与总结与反思，形成不断地正反馈。</p>
+<h3 id="和解吗"><a href="#和解吗" class="headerlink" title="和解吗"></a>和解吗</h3><p>前段时间和本科的一个朋友打电话，突然聊到了他自己，他说他已经开始接受自己，认识自己。现在相处的很快乐，我羡慕他脸上的释然，当然不是很羡慕他脸上的肉，他长胖了。我回想我也曾试着和我自己和解，但是那短暂的愉快不是愉快，让我感觉到自我的轻俗的满足，所以啊，我还是做个拧巴的人，我不好，我蛮差劲的在很多的方面，但是我真的也在大多数的时候有想去好好的做点什么。<br>那么暂时先不和解吧，我觉得这还不够。</p>
+<h3 id="戒烟"><a href="#戒烟" class="headerlink" title="戒烟"></a>戒烟</h3><p>这是戒烟了的第几个天了，戒烟以后自己的身体真的感觉好了很多。但是还是心里有点慌乱的感觉，自己真的已经开始依赖了。产生依赖是很可怕的，无论是人还是物品，可以重复的东西都会被别人观察成为弱点，依赖的感情事也会患得患失。</p>
+<p>换种方式去抒发情绪与不安，戒烟这次认真点。其实只要不和抽烟的人待在一起，真的就好很多诶，所以还是要刻意的避免圈子，合理的约束自己。烟酒是不可以的哦。</p>
+<h3 id="还是偶尔要有回溯，不然哪天连网站URL都忘了"><a href="#还是偶尔要有回溯，不然哪天连网站URL都忘了" class="headerlink" title="还是偶尔要有回溯，不然哪天连网站URL都忘了"></a>还是偶尔要有回溯，不然哪天连网站URL都忘了</h3>
+    </div>
+</div>
+<style>
+    #noneimg img {
+        display: none;
+        z-index: 109;
+        width: 600px !important;
+        border-radius: 0px;
+        position: fixed;
+        box-shadow: 0 0 0px #c3c3c300 !important;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto !important;
+    }
+
+    @media screen and (max-width:600px) {
+        #noneimg img {
+            width: 88%
+        }
+    }
+</style>
+<script>
+    $(function () { $('#article').click(function (e) { if (e.target.tagName == "IMG") { if ($('#nonediv').length == 0) { let MImg = `<div id='noneimg'><img src='${e.target.currentSrc}'></div>`; let MDiv = "<div id='nonediv' style='cursor: pointer;display: none; position: fixed;left: 0;top: 0; right: 0;bottom: 0;background-color: #333;opacity:0.5;z-index: 108;'></div>"; $('#article').append(MDiv); $('#article').append(MImg); $("#nonediv").fadeIn("slow"); $("#noneimg img").fadeIn("slow") } } else { if ($('#nonediv').length !== 0) { $("#noneimg ").fadeOut("slow"); $("#nonediv").fadeOut("slow"); setTimeout(function () { $('#nonediv').remove(); $('#noneimg').remove() }, 500) } } }); $('.article-content').addClass('content-move') });
+</script>
+<div class="Last-Next">
+    
+    <a href="/2022/04/14/%E8%AF%BB%E4%B9%A6%E8%AE%B0-%E5%B5%8C%E5%85%A5%E5%BC%8FC%E8%AF%AD%E8%A8%80%E8%87%AA%E6%88%91%E4%BF%AE%E5%85%BB-%E4%BB%8E%E8%8A%AF%E7%89%87%E3%80%81%E7%BC%96%E8%AF%91%E5%99%A8%E5%88%B0%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">
+        <div class="last">
+            <span>上一篇</span>
+            <p>读书记-嵌入式C语言自我修养:从芯片、编译器到操作系统</p>
+        </div>
+    </a>
+    
+
+    
+    <a href="/2022/03/09/%E5%85%B3%E4%BA%8E%E6%9C%80%E8%BF%91%E8%AF%BB%E4%B9%A6%E7%9A%84%E4%B8%80%E7%82%B9%E6%84%9F%E6%82%9F/">
+        <div class="next">
+            <span>下一篇</span>
+            <p>关于最近的一点反思</p>
+        </div>
+    </a>
+    
+</div>
+		
+<link rel="stylesheet" href="/css/food.css">
+
+<div class="footer">
+	<div class="Copyright">
+		©2022 By Russshare. 主题：<a
+			style="text-decoration: none;display: contents; color: #898F9F;"
+			target="_blank" rel="noopener" href="https://github.com/qiaobug/hexo-theme-quiet">Quiet</a>
+	</div>
+	<div class="contact">
+		
+		<a target="_blank" rel="noopener" href="https://github.com/RiddleGo">
+			<img src="https://cdn.jsdelivr.net/gh/duogongneng/MyBlogImg/imggithub.png" alt="Quiet主题">
+		</a>
+		
+	</div>
+</div>
+
+<script src="/js/jquery.min.js"></script>
+
+
+<script src="/js/gotop.js"></script>
+
+
+<style type="text/css">
+    @media screen and (min-width: 600px) {
+        .goTop>span {
+            display: block;
+            border-radius: 50%;
+            width: 66px;
+            height: 66px;
+            cursor: pointer;
+            opacity: 0.8;
+            background: rgba(18, 24, 58, 0.06);
+            text-align: center;
+            border: 1px solid rgba(18, 24, 58, 0.06);
+
+            transition: border .5s;
+            -moz-transition: border .5s;
+            /* Firefox 4 */
+            -webkit-transition: border .5s;
+            /* Safari 和 Chrome */
+            -o-transition: border .5s;
+            /* Opera */
+        }
+
+        .goTop>span:hover {
+            border: 1px solid #6680B3;
+        }
+
+
+        .goTop {
+            position: fixed;
+            right: 30px;
+            bottom: 80px;
+        }
+
+        .goTop>span>svg {
+            width: 30px;
+            height: 30px;
+            margin-top: 17.5px;
+            opacity: 0.7;
+        }
+
+    }
+
+    @media screen and (max-width: 600px) {
+        .goTop {
+            display: none;
+        }
+    }
+</style>
+<div class="goTop" id="js-go_top">
+    <span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <g>
+                <path d="M13 12v8h-2v-8H4l8-8 8 8z"></path>
+            </g>
+        </svg>
+    </span>
+</div>
+<script>
+    $('#js-go_top').gotoTop({ offset: 500, speed: 300, animationShow: { 'transform': 'translate(0,0)', 'transition': 'transform .5s ease-in-out' }, animationHide: { 'transform': 'translate(100px,0)', 'transition': 'transform .5s ease-in-out' } });
+</script>
+<script>
+	console.log('\n %c Hexo-Quiet 主题 %c https://github.com/QiaoBug/hexo-theme-quiet \n', 'color: #fadfa3; background: #030307; padding:5px 0;', 'background: #fadfa3; padding:5px 0;')
+</script>
+	</body>
+
+</html>
