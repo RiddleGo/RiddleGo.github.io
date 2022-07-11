@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		
+<title>Go-如何利用-Linux-内核的负载均衡能力-Russshare</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="shortcut icon" type="image/x-icon" href="/image/favicon.ico">
+
+
+<meta name="keywords" content="golang,Linux,">
+<meta name="description" content="">
+
+
+<script src="/js/jquery.min.js"></script>
+
+
+
+<!-- Baidu Analytics -->
+<script defer>
+    var _hmt = _hmt || [];
+    (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?4b5fe1472f22fa";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+	<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+</head>
+
+	<body>
+		
+<link rel="stylesheet" href="/css/page.css">
+
+
+<link rel="stylesheet" href="/css/page_cente.css">
+
+
+<link rel="stylesheet" href="/css/atom-one-dark.css">
+
+
+<link rel="stylesheet" href="/css/header.css">
+
+	<div class="header">
+		<div class="header-top">
+			<div class="h-left">
+				<a href="/">
+					<img src="/image/logo.png" alt="Quiet">
+				</a>
+			</div>
+			<div class="h-right">
+				<ul>
+					
+						
+								<li>
+									<a href="/">
+										HOME
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/archives">
+										ARCHIVE
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/categories">
+										CATEGORIES
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/tags">
+										TAGS
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/links">
+										LINKS
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/about">
+										ABOUT
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+				</ul>
+			</div>
+			<div class="h-right-close">
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+					<path fill="none" d="M0 0h24v24H0z" />
+					<path d="M3 4h18v2H3V4zm0 7h18v2H3v-2zm0 7h18v2H3v-2z" fill="rgba(68,68,68,1)" />
+				</svg>
+			</div>
+		</div>
+	</div>
+	<div class="sidebar">
+    <div class="topo">
+        <h2>Russshare</h2>
+    </div>
+    <ul>
+        
+        <li>
+            <a href="/">HOME</a>
+        </li>
+        
+        <li>
+            <a href="/archives">ARCHIVE</a>
+        </li>
+        
+        <li>
+            <a href="/categories">CATEGORIES</a>
+        </li>
+        
+        <li>
+            <a href="/tags">TAGS</a>
+        </li>
+        
+        <li>
+            <a href="/links">LINKS</a>
+        </li>
+        
+        <li>
+            <a href="/about">ABOUT</a>
+        </li>
+        
+    </ul>
+    <div class="my_foot">
+        
+        <a target="_blank" rel="noopener" href="https://github.com/RiddleGo">
+            <img src="https://cdn.jsdelivr.net/gh/duogongneng/MyBlogImg/imggithub.png" alt="Quiet主题">
+        </a>
+        
+    </div>
+</div>
+<div class='shelter'
+    style='cursor: pointer;display: none; position: fixed;left: 0;top: 0; right: 0;bottom: 0;background-color: #333;opacity:0.5;z-index: 108;'>
+</div>
+<style>
+    .sidebar {
+        width: 0;
+        height: 100%;
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        background: #fff;
+        z-index: 999;
+        text-align: center;
+        box-shadow: -6px 0 20px rgba(98, 94, 94, .815)
+    }
+
+    .topo {
+        width: 100%;
+        height: 200px;
+        background: url(https://api.ixiaowai.cn/gqapi/gqapi.php) no-repeat;
+        background-size: 100% 100%;
+        position: relative;
+        display: flex;
+        align-items: flex-end
+    }
+
+    .topo h2 {
+        color: #fff;
+        z-index: 1;
+        position: relative;
+        margin: 0 0 10px 10px;
+        font-size: 1.2em;
+        box-sizing: border-box
+    }
+
+    .topo:before {
+        content: '';
+        background-image: url(/image/pattern.png);
+        background-repeat: repeat;
+        height: 100%;
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 100%;
+        z-index: 1
+    }
+
+    .sidebar ul {
+        width: 100%;
+        margin-top: 50px
+    }
+
+    .sidebar ul li {
+        height: 50px;
+        list-style: none;
+        font-size: 1.2em;
+        text-align: right;
+        margin-right: 10px
+    }
+
+    .sidebar ul li a {
+        display: grid;
+        color: #5d606a;
+        text-overflow: ellipsis;
+        width: 100%;
+        text-decoration: none
+    }
+
+    .my_foot {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        position: absolute;
+        bottom: 0
+    }
+
+    .my_foot a {
+        text-decoration: none;
+        margin-right: 10px;
+        display: inline-block
+    }
+
+    .my_foot a img {
+        width: 30px;
+        height: 30px
+    }
+</style>
+
+<script>
+    $(function () { $('.h-right-close>svg').click(function () { $('.sidebar').animate({ width: "66%" }, 500); $('.shelter').fadeIn("slow") }); $('.shelter').click(function (e) { $('.sidebar').animate({ width: "0" }, 500); $('.shelter').fadeOut("slow") }) })
+</script>
+		<script>
+			$(function () { $(window).scroll(function () { if ($(document).scrollTop() > 100) { $(".header-top").removeClass("header-move2"); $('.header-top').addClass('header-move1') } else { $(".header-top").removeClass("header-move1"); $('.header-top').addClass('header-move2') } }) });
+		</script>
+<div class="header-bg ">
+    <div class="bg-content">
+        <ul class="tag">
+            
+            
+            <li><a href="/tags/golang">golang</a></li>
+            
+            <li><a href="/tags/Linux">Linux</a></li>
+            
+            
+        </ul>
+        <h1>Go-如何利用-Linux-内核的负载均衡能力</h1>
+        <div class="article-info">
+            <div class="article-author">
+                
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+                    <g>
+                        <path fill="#12183A"
+                            d="M6.187 15.265A6.47 6.47 0 0 0 10 16.5a6.47 6.47 0 0 0 3.813-1.235A4.99 4.99 0 0 0 10 13.5a4.99 4.99 0 0 0-3.813 1.765zM5.082 14.25A6.485 6.485 0 0 1 10 12c1.965 0 3.726.872 4.918 2.25a6.5 6.5 0 1 0-9.836 0zM10 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0-1.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z">
+                        </path>
+                    </g>
+                </svg>
+                
+                <span> <a href="">Russshare</a></span>
+                <p>2021-08-31 21:44:41</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="article-content">
+    <div id="article" class="content">
+        <p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/lnOTaraGKINxaqbrMHPP5Q">点击这里进入前辈原文</a></p>
+<p>在测试 HTTP 服务时，如果该进程我们忘记关闭，而重新尝试启动一个新的服务进程，那么将会遇到类似以下的错误信息：</p>
+<figure class="highlight perl"><table><tr><td class="code"><pre><code class="hljs perl">$ go run main.go<br><span class="hljs-keyword">listen</span> tcp :<span class="hljs-number">8000</span>: <span class="hljs-keyword">bind</span>: address already in <span class="hljs-keyword">use</span><br></code></pre></td></tr></table></figure>
+
+<p>这是由于默认情况下，操作系统不允许我们打开具有相同源地址和端口的套接字 socket。但如果我们想开启多个服务进程去监听同一个端口，这可以吗？如果可以，这又能给我们带来什么？</p>
+<h2 id="socket-五元组"><a href="#socket-五元组" class="headerlink" title="socket 五元组"></a>socket 五元组</h2><p>socket 编程是每位程序员都应该掌握的基础知识。因此，大家应该知道，socket 连接通过五元组唯一标识。任意两条连接，它的五元组不能完全相同。</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><code class="hljs xml">&#123;<span class="hljs-tag">&lt;<span class="hljs-name">protocol</span>&gt;</span>, <span class="hljs-tag">&lt;<span class="hljs-name">src</span> <span class="hljs-attr">addr</span>&gt;</span>, <span class="hljs-tag">&lt;<span class="hljs-name">src</span> <span class="hljs-attr">port</span>&gt;</span>, <span class="hljs-tag">&lt;<span class="hljs-name">dest</span> <span class="hljs-attr">addr</span>&gt;</span>, <span class="hljs-tag">&lt;<span class="hljs-name">dest</span> <span class="hljs-attr">port</span>&gt;</span>&#125;<br></code></pre></td></tr></table></figure>
+
+
+<p>protocol 指的是传输层 TCP/UDP 协议，它在 socket 被创建时就已经确定。src addr/port 与 dest addr/port  分别标识着请求方与服务方的地址信息。</p>
+<p>因此，只要请求方的 dest addr/port 信息不相同，那么服务方即使是同样的 src addr/port ，它仍然可以标识唯一的 socket 连接。</p>
+<p>基于这个理论基础，那实际上，我们可以在同一个网络主机复用相同的 IP 地址和端口号。</p>
+<h2 id="Linux-SO-REUSEPORT"><a href="#Linux-SO-REUSEPORT" class="headerlink" title="Linux SO_REUSEPORT"></a>Linux SO_REUSEPORT</h2><p>为了满足复用端口的需求，Linux 3.9 内核引入了 SO_REUSEPORT选项（实际在此之前有一个类似的选项 SO_REUSEADDR，但它没有做到真正的端口复用，详细可见参考链接1）。</p>
+<p>SO_REUSEPORT 支持多个进程或者线程绑定到同一端口，用于提高服务器程序的性能。它的特性包含以下几点：</p>
+<ul>
+<li><p>允许多个套接字 bind 同一个TCP/UDP 端口<br>每一个线程拥有自己的服务器套接字</p>
+<p>在服务器套接字上没有了锁的竞争</p>
+</li>
+<li><p>内核层面实现负载均衡</p>
+</li>
+<li><p>安全层面，监听同一个端口的套接字只能位于同一个用户下（same effective UID）</p>
+</li>
+</ul>
+<p>有了 SO_RESUEPORT 后，每个进程可以 bind 相同的地址和端口，各自是独立平等的。</p>
+<p>让多进程监听同一个端口，各个进程中 accept socket fd 不一样，有新连接建立时，内核只会调度一个进程来 accept，并且保证调度的均衡性。</p>
+<p>其工作示意图如下<br><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/process/go-linux.png"></p>
+<p>有了 SO_REUSEADDR 的支持，我们不仅可以创建多个具有相同 IP:PORT 的套接字能力，而且我们还得到了一种内核模式下的负载均衡能力。</p>
+<h2 id="Go-如何设置-SO-REUSEPORT"><a href="#Go-如何设置-SO-REUSEPORT" class="headerlink" title="Go 如何设置 SO_REUSEPORT"></a>Go 如何设置 SO_REUSEPORT</h2><p>Linux 经典的设计哲学：一切皆文件。当然，socket 也不例外，它也是一种文件。</p>
+<p>如果我们想在 Go 程序中，利用上 linux 的 SO_REUSEPORT 选项，那就需要有修改内核 socket 连接选项的接口，而这可以依赖于 golang.org/x/sys/unix 库来实现，具体就在以下这个方法。</p>
+<figure class="highlight reasonml"><table><tr><td class="code"><pre><code class="hljs reasonml">import “<span class="hljs-string">&quot;golang.org/x/sys/unix&quot;</span>”<br>...<br>unix.<span class="hljs-constructor">SetsockoptInt(<span class="hljs-params">int</span>(<span class="hljs-params">fd</span>)</span>, unix.SOL_SOCKET, unix.SO_REUSEPORT, <span class="hljs-number">1</span>)<br></code></pre></td></tr></table></figure>
+<p>因此，一个持有 SO_REUSEPORT 特性的完整 Go 服务代码如下</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><br><span class="hljs-keyword">import</span> (<br> <span class="hljs-string">&quot;context&quot;</span><br> <span class="hljs-string">&quot;fmt&quot;</span><br> <span class="hljs-string">&quot;net&quot;</span><br> <span class="hljs-string">&quot;net/http&quot;</span><br> <span class="hljs-string">&quot;os&quot;</span><br> <span class="hljs-string">&quot;syscall&quot;</span><br><br> <span class="hljs-string">&quot;golang.org/x/sys/unix&quot;</span><br>)<br><br><span class="hljs-keyword">var</span> lc = net.ListenConfig&#123;<br> Control: <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(network, address <span class="hljs-keyword">string</span>, c syscall.RawConn)</span> <span class="hljs-title">error</span></span> &#123;<br>  <span class="hljs-keyword">var</span> opErr error<br>  <span class="hljs-keyword">if</span> err := c.Control(<span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(fd <span class="hljs-keyword">uintptr</span>)</span></span> &#123;<br>   opErr = unix.SetsockoptInt(<span class="hljs-keyword">int</span>(fd), unix.SOL_SOCKET, unix.SO_REUSEPORT, <span class="hljs-number">1</span>)<br>  &#125;); err != <span class="hljs-literal">nil</span> &#123;<br>   <span class="hljs-keyword">return</span> err<br>  &#125;<br>  <span class="hljs-keyword">return</span> opErr<br> &#125;,<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br> pid := os.Getpid()<br> l, err := lc.Listen(context.Background(), <span class="hljs-string">&quot;tcp&quot;</span>, <span class="hljs-string">&quot;127.0.0.1:8000&quot;</span>)<br> <span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>  <span class="hljs-built_in">panic</span>(err)<br> &#125;<br> server := &amp;http.Server&#123;&#125;<br> http.HandleFunc(<span class="hljs-string">&quot;/&quot;</span>, <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(w http.ResponseWriter, r *http.Request)</span></span> &#123;<br>  w.WriteHeader(http.StatusOK)<br>  fmt.Fprintf(w, <span class="hljs-string">&quot;Client [%s] Received msg from Server PID: [%d] \n&quot;</span>, r.RemoteAddr, pid)<br> &#125;)<br> fmt.Printf(<span class="hljs-string">&quot;Server with PID: [%d] is running \n&quot;</span>, pid)<br> _ = server.Serve(l)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>我们将其编译为 linux 可执行文件 main</p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><code class="hljs routeros">$ <span class="hljs-attribute">CGO_ENABLED</span>=0 <span class="hljs-attribute">GOOS</span>=linux <span class="hljs-attribute">GOARCH</span>=amd64 go build main.go<br></code></pre></td></tr></table></figure>
+
+<p>在 linux 主机上开启三个同时监听 8000 端口的进程，我们可以看到三个服务进程的 PID 分别是 32687 、32691 和 32697。</p>
+<figure class="highlight applescript"><table><tr><td class="code"><pre><code class="hljs applescript">~ $ ./main<br>Server <span class="hljs-keyword">with</span> PID: [<span class="hljs-number">32687</span>] <span class="hljs-keyword">is</span> <span class="hljs-built_in">running</span><br>~ $ ./main<br>Server <span class="hljs-keyword">with</span> PID: [<span class="hljs-number">32691</span>] <span class="hljs-keyword">is</span> <span class="hljs-built_in">running</span><br>~ $ ./main<br>Server <span class="hljs-keyword">with</span> PID: [<span class="hljs-number">32697</span>] <span class="hljs-keyword">is</span> <span class="hljs-built_in">running</span><br></code></pre></td></tr></table></figure>
+<p>最后，通过 curl 命令，模拟多次 http 客户端请求</p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><code class="hljs routeros">~ $ <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> &#123;1<span class="hljs-built_in">..</span>20&#125;; <span class="hljs-keyword">do</span> curl localhost:8000; done<br>Client [127.0.0.1:56876] Received msg <span class="hljs-keyword">from</span><span class="hljs-built_in"> Server </span>PID: [32697]<br>Client [127.0.0.1:56880] Received msg <span class="hljs-keyword">from</span><span class="hljs-built_in"> Server </span>PID: [32687]<br>Client [127.0.0.1:56884] Received msg <span class="hljs-keyword">from</span><span class="hljs-built_in"> Server </span>PID: [32687]<br>Client [127.0.0.1:56888] Received msg <span class="hljs-keyword">from</span><span class="hljs-built_in"> Server </span>PID: [32687]<br>Client [127.0.0.1:56892] Received msg <span class="hljs-keyword">from</span><span class="hljs-built_in"> Server </span>PID: [32691]<br>Client [127.0.0.1:56896] Received msg <span class="hljs-keyword">from</span><span class="hljs-built_in"> Server </span>PID: [32697]<br>Client [127.0.0.1:56900] Received msg <span class="hljs-keyword">from</span><span class="hljs-built_in"> Server </span>PID: [32691]<br>Client [127.0.0.1:56904] Received msg <span class="hljs-keyword">from</span><span class="hljs-built_in"> Server </span>PID: [32691]<br>Client [127.0.0.1:56908] Received msg <span class="hljs-keyword">from</span><span class="hljs-built_in"> Server </span>PID: [32697]<br>Client [127.0.0.1:56912] Received msg <span class="hljs-keyword">from</span><span class="hljs-built_in"> Server </span>PID: [32697]<br>Client [127.0.0.1:56916] Received msg <span class="hljs-keyword">from</span><span class="hljs-built_in"> Server </span>PID: [32687]<br>Client [127.0.0.1:56920] Received msg <span class="hljs-keyword">from</span><span class="hljs-built_in"> Server </span>PID: [32691]<br>Client [127.0.0.1:56924] Received msg <span class="hljs-keyword">from</span><span class="hljs-built_in"> Server </span>PID: [32697]<br>Client [127.0.0.1:56928] Received msg <span class="hljs-keyword">from</span><span class="hljs-built_in"> Server </span>PID: [32697]<br>Client [127.0.0.1:56932] Received msg <span class="hljs-keyword">from</span><span class="hljs-built_in"> Server </span>PID: [32691]<br>Client [127.0.0.1:56936] Received msg <span class="hljs-keyword">from</span><span class="hljs-built_in"> Server </span>PID: [32697]<br>Client [127.0.0.1:56940] Received msg <span class="hljs-keyword">from</span><span class="hljs-built_in"> Server </span>PID: [32687]<br>Client [127.0.0.1:56944] Received msg <span class="hljs-keyword">from</span><span class="hljs-built_in"> Server </span>PID: [32691]<br>Client [127.0.0.1:56948] Received msg <span class="hljs-keyword">from</span><span class="hljs-built_in"> Server </span>PID: [32687]<br>Client [127.0.0.1:56952] Received msg <span class="hljs-keyword">from</span><span class="hljs-built_in"> Server </span>PID: [32697]<br><br></code></pre></td></tr></table></figure>
+<p>可以看到，20 个客户端请求被均衡地打到了三个服务进程上。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>linux 内核自 3.9 提供的 SO_REUSEPORT 选项，可以让多进程监听同一个端口。</p>
+<p>这种机制带来了什么：</p>
+<ul>
+<li><p>提高服务器程序的吞吐性能：我们可以运行多个应用程序实例，充分利用多核 CPU 资源，避免出现单核在处理数据包，其他核却闲着的问题。</p>
+</li>
+<li><p>内核级负载均衡：我们不需要在多个实例前面添加一层服务代理，因为内核已经提供了简单的负载均衡。</p>
+</li>
+<li><p>不停服更新：当我们需要更新服务时，可以启动新的服务实例来接受请求，再优雅地关闭掉旧服务实例。</p>
+</li>
+</ul>
+<p>如果你们的 Go 项目，一到高峰期就有请求堆积问题，这个时候就可以考虑采用 SO_REUSEPORT 选项。</p>
+<h2 id="参考链接："><a href="#参考链接：" class="headerlink" title="参考链接："></a>参考链接：</h2><p>【1. How do SO_REUSEADDR and SO_REUSEPORT differ?】<a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/14388706/how-do-so-reuseaddr-and-so-reuseport-differ">https://stackoverflow.com/questions/14388706/how-do-so-reuseaddr-and-so-reuseport-differ</a></p>
+<p>【2. SO_REUSEPORT 性能测试】 <a target="_blank" rel="noopener" href="http://www.blogjava.net/yongboy/archive/2015/02/12/422893.html">http://www.blogjava.net/yongboy/archive/2015/02/12/422893.html</a></p>
+<p>【3. linux socket man-page】<a target="_blank" rel="noopener" href="https://man7.org/linux/man-pages/man7/socket.7.html">https://man7.org/linux/man-pages/man7/socket.7.html</a></p>
+
+    </div>
+</div>
+<style>
+    #noneimg img {
+        display: none;
+        z-index: 109;
+        width: 600px !important;
+        border-radius: 0px;
+        position: fixed;
+        box-shadow: 0 0 0px #c3c3c300 !important;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto !important;
+    }
+
+    @media screen and (max-width:600px) {
+        #noneimg img {
+            width: 88%
+        }
+    }
+</style>
+<script>
+    $(function () { $('#article').click(function (e) { if (e.target.tagName == "IMG") { if ($('#nonediv').length == 0) { let MImg = `<div id='noneimg'><img src='${e.target.currentSrc}'></div>`; let MDiv = "<div id='nonediv' style='cursor: pointer;display: none; position: fixed;left: 0;top: 0; right: 0;bottom: 0;background-color: #333;opacity:0.5;z-index: 108;'></div>"; $('#article').append(MDiv); $('#article').append(MImg); $("#nonediv").fadeIn("slow"); $("#noneimg img").fadeIn("slow") } } else { if ($('#nonediv').length !== 0) { $("#noneimg ").fadeOut("slow"); $("#nonediv").fadeOut("slow"); setTimeout(function () { $('#nonediv').remove(); $('#noneimg').remove() }, 500) } } }); $('.article-content').addClass('content-move') });
+</script>
+<div class="Last-Next">
+    
+    <a href="/2021/08/31/%E7%BC%96%E5%86%99%E4%B8%8E%E4%BC%98%E5%8C%96Go%E4%BB%A3%E7%A0%81-I/">
+        <div class="last">
+            <span>上一篇</span>
+            <p>编写与优化Go代码---I</p>
+        </div>
+    </a>
+    
+
+    
+    <a href="/2021/08/29/%E5%9C%A8Go%E4%B8%AD%E4%BD%BF%E7%94%A8%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84%E7%9A%84%E5%A5%BD%E5%A4%84/">
+        <div class="next">
+            <span>下一篇</span>
+            <p>在Go中使用微服务架构的好处</p>
+        </div>
+    </a>
+    
+</div>
+		
+<link rel="stylesheet" href="/css/food.css">
+
+<div class="footer">
+	<div class="Copyright">
+		©2022 By Russshare. 主题：<a
+			style="text-decoration: none;display: contents; color: #898F9F;"
+			target="_blank" rel="noopener" href="https://github.com/qiaobug/hexo-theme-quiet">Quiet</a>
+	</div>
+	<div class="contact">
+		
+		<a target="_blank" rel="noopener" href="https://github.com/RiddleGo">
+			<img src="https://cdn.jsdelivr.net/gh/duogongneng/MyBlogImg/imggithub.png" alt="Quiet主题">
+		</a>
+		
+	</div>
+</div>
+
+<script src="/js/jquery.min.js"></script>
+
+
+<script src="/js/gotop.js"></script>
+
+
+<style type="text/css">
+    @media screen and (min-width: 600px) {
+        .goTop>span {
+            display: block;
+            border-radius: 50%;
+            width: 66px;
+            height: 66px;
+            cursor: pointer;
+            opacity: 0.8;
+            background: rgba(18, 24, 58, 0.06);
+            text-align: center;
+            border: 1px solid rgba(18, 24, 58, 0.06);
+
+            transition: border .5s;
+            -moz-transition: border .5s;
+            /* Firefox 4 */
+            -webkit-transition: border .5s;
+            /* Safari 和 Chrome */
+            -o-transition: border .5s;
+            /* Opera */
+        }
+
+        .goTop>span:hover {
+            border: 1px solid #6680B3;
+        }
+
+
+        .goTop {
+            position: fixed;
+            right: 30px;
+            bottom: 80px;
+        }
+
+        .goTop>span>svg {
+            width: 30px;
+            height: 30px;
+            margin-top: 17.5px;
+            opacity: 0.7;
+        }
+
+    }
+
+    @media screen and (max-width: 600px) {
+        .goTop {
+            display: none;
+        }
+    }
+</style>
+<div class="goTop" id="js-go_top">
+    <span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <g>
+                <path d="M13 12v8h-2v-8H4l8-8 8 8z"></path>
+            </g>
+        </svg>
+    </span>
+</div>
+<script>
+    $('#js-go_top').gotoTop({ offset: 500, speed: 300, animationShow: { 'transform': 'translate(0,0)', 'transition': 'transform .5s ease-in-out' }, animationHide: { 'transform': 'translate(100px,0)', 'transition': 'transform .5s ease-in-out' } });
+</script>
+<script>
+	console.log('\n %c Hexo-Quiet 主题 %c https://github.com/QiaoBug/hexo-theme-quiet \n', 'color: #fadfa3; background: #030307; padding:5px 0;', 'background: #fadfa3; padding:5px 0;')
+</script>
+	</body>
+
+</html>

@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		
+<title>Go语言微服务框架-2.实现加载静态配置文件-Russshare</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="shortcut icon" type="image/x-icon" href="/image/favicon.ico">
+
+
+<meta name="keywords" content="微服务,viper,">
+<meta name="description" content="">
+
+
+<script src="/js/jquery.min.js"></script>
+
+
+
+<!-- Baidu Analytics -->
+<script defer>
+    var _hmt = _hmt || [];
+    (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?4b5fe1472f22fa";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+	<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+</head>
+
+	<body>
+		
+<link rel="stylesheet" href="/css/page.css">
+
+
+<link rel="stylesheet" href="/css/page_cente.css">
+
+
+<link rel="stylesheet" href="/css/atom-one-dark.css">
+
+
+<link rel="stylesheet" href="/css/header.css">
+
+	<div class="header">
+		<div class="header-top">
+			<div class="h-left">
+				<a href="/">
+					<img src="/image/logo.png" alt="Quiet">
+				</a>
+			</div>
+			<div class="h-right">
+				<ul>
+					
+						
+								<li>
+									<a href="/">
+										HOME
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/archives">
+										ARCHIVE
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/categories">
+										CATEGORIES
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/tags">
+										TAGS
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/links">
+										LINKS
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/about">
+										ABOUT
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+				</ul>
+			</div>
+			<div class="h-right-close">
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+					<path fill="none" d="M0 0h24v24H0z" />
+					<path d="M3 4h18v2H3V4zm0 7h18v2H3v-2zm0 7h18v2H3v-2z" fill="rgba(68,68,68,1)" />
+				</svg>
+			</div>
+		</div>
+	</div>
+	<div class="sidebar">
+    <div class="topo">
+        <h2>Russshare</h2>
+    </div>
+    <ul>
+        
+        <li>
+            <a href="/">HOME</a>
+        </li>
+        
+        <li>
+            <a href="/archives">ARCHIVE</a>
+        </li>
+        
+        <li>
+            <a href="/categories">CATEGORIES</a>
+        </li>
+        
+        <li>
+            <a href="/tags">TAGS</a>
+        </li>
+        
+        <li>
+            <a href="/links">LINKS</a>
+        </li>
+        
+        <li>
+            <a href="/about">ABOUT</a>
+        </li>
+        
+    </ul>
+    <div class="my_foot">
+        
+        <a target="_blank" rel="noopener" href="https://github.com/RiddleGo">
+            <img src="https://cdn.jsdelivr.net/gh/duogongneng/MyBlogImg/imggithub.png" alt="Quiet主题">
+        </a>
+        
+    </div>
+</div>
+<div class='shelter'
+    style='cursor: pointer;display: none; position: fixed;left: 0;top: 0; right: 0;bottom: 0;background-color: #333;opacity:0.5;z-index: 108;'>
+</div>
+<style>
+    .sidebar {
+        width: 0;
+        height: 100%;
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        background: #fff;
+        z-index: 999;
+        text-align: center;
+        box-shadow: -6px 0 20px rgba(98, 94, 94, .815)
+    }
+
+    .topo {
+        width: 100%;
+        height: 200px;
+        background: url(https://api.ixiaowai.cn/gqapi/gqapi.php) no-repeat;
+        background-size: 100% 100%;
+        position: relative;
+        display: flex;
+        align-items: flex-end
+    }
+
+    .topo h2 {
+        color: #fff;
+        z-index: 1;
+        position: relative;
+        margin: 0 0 10px 10px;
+        font-size: 1.2em;
+        box-sizing: border-box
+    }
+
+    .topo:before {
+        content: '';
+        background-image: url(/image/pattern.png);
+        background-repeat: repeat;
+        height: 100%;
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 100%;
+        z-index: 1
+    }
+
+    .sidebar ul {
+        width: 100%;
+        margin-top: 50px
+    }
+
+    .sidebar ul li {
+        height: 50px;
+        list-style: none;
+        font-size: 1.2em;
+        text-align: right;
+        margin-right: 10px
+    }
+
+    .sidebar ul li a {
+        display: grid;
+        color: #5d606a;
+        text-overflow: ellipsis;
+        width: 100%;
+        text-decoration: none
+    }
+
+    .my_foot {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        position: absolute;
+        bottom: 0
+    }
+
+    .my_foot a {
+        text-decoration: none;
+        margin-right: 10px;
+        display: inline-block
+    }
+
+    .my_foot a img {
+        width: 30px;
+        height: 30px
+    }
+</style>
+
+<script>
+    $(function () { $('.h-right-close>svg').click(function () { $('.sidebar').animate({ width: "66%" }, 500); $('.shelter').fadeIn("slow") }); $('.shelter').click(function (e) { $('.sidebar').animate({ width: "0" }, 500); $('.shelter').fadeOut("slow") }) })
+</script>
+		<script>
+			$(function () { $(window).scroll(function () { if ($(document).scrollTop() > 100) { $(".header-top").removeClass("header-move2"); $('.header-top').addClass('header-move1') } else { $(".header-top").removeClass("header-move1"); $('.header-top').addClass('header-move2') } }) });
+		</script>
+<div class="header-bg ">
+    <div class="bg-content">
+        <ul class="tag">
+            
+            
+            <li><a href="/tags/微服务">微服务</a></li>
+            
+            <li><a href="/tags/viper">viper</a></li>
+            
+            
+        </ul>
+        <h1>Go语言微服务框架-2.实现加载静态配置文件</h1>
+        <div class="article-info">
+            <div class="article-author">
+                
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+                    <g>
+                        <path fill="#12183A"
+                            d="M6.187 15.265A6.47 6.47 0 0 0 10 16.5a6.47 6.47 0 0 0 3.813-1.235A4.99 4.99 0 0 0 10 13.5a4.99 4.99 0 0 0-3.813 1.765zM5.082 14.25A6.485 6.485 0 0 1 10 12c1.965 0 3.726.872 4.918 2.25a6.5 6.5 0 1 0-9.836 0zM10 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0-1.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z">
+                        </path>
+                    </g>
+                </svg>
+                
+                <span> <a href="">Russshare</a></span>
+                <p>2021-08-25 21:02:42</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="article-content">
+    <div id="article" class="content">
+        <p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/D6bilg6DTZ6ZwTndihDCRQ">前辈的原文链接–点击这里进入原文阅读体验更加</a></p>
+<p>(前辈的文章站在一个工程师高度输出了很多有意义的考量，太值得好好阅读，我是在bilibili上追到blog，推荐大家关注哦！)</p>
+<p>我们的基础RPC服务已经正常运行，我们再来看下一个特性：配置文件的加载。</p>
+<p>首先，我们要正确地认识到配置文件的重要性：<strong>在程序交付后，变更代码的成本很大；相对而言，变更配置文件的成本就比较小。****但有的同学又走了另一个极端，也就是将大量的逻辑放入到配置文件中，导致配置文件膨胀，本质上就是将部分本应在代码中维护的内容转移到了配置文件，导致配置文件也很难维护。</strong></p>
+<p>今天，我们先将重点放到加载配置文件库的技术选型，顺便分享一些常见的问题。</p>
+<h2 id="一个基础的加载配置文件示例"><a href="#一个基础的加载配置文件示例" class="headerlink" title="一个基础的加载配置文件示例"></a>一个基础的加载配置文件示例</h2><p>在Go语言中，用官方库就能快速实现配置文件的加载，下面就是一个简单的代码实现：</p>
+<figure class="highlight stata"><table><tr><td class="code"><pre><code class="hljs stata">b, <span class="hljs-keyword">err</span> := ioutil.ReadFile(<span class="hljs-string">&quot;config.json&quot;</span>)<br><span class="hljs-keyword">if</span> <span class="hljs-keyword">err</span> != nil &#123;<br>  panic(<span class="hljs-keyword">err</span>)<br>&#125;<br><span class="hljs-keyword">var</span> config MyConfig<br><span class="hljs-keyword">err</span> = json.Unmarshal(b, &amp;config)<br><span class="hljs-keyword">if</span> <span class="hljs-keyword">err</span> != nil &#123;<br>  panic(<span class="hljs-keyword">err</span>)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这里MyConfig结构应该是对应json文件设置的结构体(<strong>猜的</strong>)</p>
+<p>关键的实现分为两块：</p>
+<ul>
+<li><p>读取文件中的数据</p>
+</li>
+<li><p><strong>将数据解析到Go程序的对象中</strong>，作为可识别的数据结构，这里指定了数据类型为json</p>
+</li>
+</ul>
+<h2 id="v0-2-0：实现加载静态配置文件"><a href="#v0-2-0：实现加载静态配置文件" class="headerlink" title="v0.2.0：实现加载静态配置文件"></a>v0.2.0：实现加载静态配置文件</h2><p>项目链接 <a target="_blank" rel="noopener" href="https://github.com/Junedayday/micro_web_service/tree/v0.2.0">https://github.com/Junedayday/micro_web_service/tree/v0.2.0</a></p>
+<h3 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h3><p>从配置文件中解析数据到程序中，并具备更高的可读性和扩展性。</p>
+<h3 id="关键技术点"><a href="#关键技术点" class="headerlink" title="关键技术点"></a>关键技术点</h3><ul>
+<li><p>命令行参数与配置文件的差异</p>
+</li>
+<li><p>github.com/spf13/viper的介绍</p>
+</li>
+<li><p>使用viper库的推荐方式</p>
+</li>
+</ul>
+<h3 id="目录构造"><a href="#目录构造" class="headerlink" title="目录构造"></a>目录构造</h3><p><strong>github.com/spf13/viper</strong>中存在一个全局变量**var v *Viper**（点击查看），如果我们调用默认的viper包，其实就是将参数解析到这个全局变量中。</p>
+<p>在具体的项目中，更推荐的方式是将这个变量保存到内部项目中，作为一个项目中的全局变量，所以我们会新建一个viper.New()。配置参数会被全局调用，<strong>为了保证不会发生循环依赖，我们就需要一个专门的package来保存这个全局变量，这里对应项目中的internal/config/viper.go。</strong></p>
+<figure class="highlight coq"><table><tr><td class="code"><pre><code class="hljs coq">--- micro_web_service            项目目录<br> |<span class="hljs-type">-- gen</span>                            从idl文件夹中生成的文件，不可手动修改<br>    |<span class="hljs-type">-- idl</span>                             对应idl文件夹<br>       |<span class="hljs-type">-- demo</span>                             对应idl/demo服务<br>          |<span class="hljs-type">-- demo</span>.pb.go                        demo.proto的基础结构<br>          |<span class="hljs-type">-- demo</span>.pb.gw.go                     demo.proto的HTTP接口，对应gRPC-Gateway<br>          |<span class="hljs-type">-- demo_grpc</span>.pb.go                   demo.proto的gRPC接口代码<br> |<span class="hljs-type">-- idl</span>                            原始的idl定义<br>    |<span class="hljs-type">-- demo</span>                            业务package定义<br>       |<span class="hljs-type">-- demo</span>.proto                       protobuffer的原始定义<br> |<span class="hljs-type">-- internal</span>                       项目的内部代码，不对外暴露<br>    |<span class="hljs-type">-- server</span>                          服务器的实现<br>       |<span class="hljs-type">-- demo</span>.go                          server中对demo这个服务的接口实现<br>       |<span class="hljs-type">-- server</span>.go                        server的定义，须实现对应服务的方法<br>    |<span class="hljs-type">-- config</span>                          新增：配置相关的文件夹<br>       |<span class="hljs-type">-- viper</span>.go                         新增：viper的相关加载逻辑<br> |<span class="hljs-type">-- buf</span>.gen.yaml                   buf生成代码的定义<br> |<span class="hljs-type">-- buf</span>.yaml                       buf工具安装所需的工具<br> |<span class="hljs-type">-- gen</span>.sh                         buf生成的shell脚本<br> |<span class="hljs-type">-- go</span>.<span class="hljs-keyword">mod</span>                         Go <span class="hljs-keyword">Module</span>文件<br> |<span class="hljs-type">-- main</span>.go                        项目启动的main函数<br></code></pre></td></tr></table></figure>
+
+<h3 id="1-命令行参数与配置文件的差异"><a href="#1-命令行参数与配置文件的差异" class="headerlink" title="1.命令行参数与配置文件的差异"></a>1.命令行参数与配置文件的差异</h3><p>命令行参数类似于   ./demo –config=a.yaml –http_port=8080 –grpc_port=8081   ，Go语言中自带flag包可供解析，开源的有pflag和相关的扩展工具，如cobra。</p>
+<p>而配置文件则是<strong>将参数从文件解析到内存中</strong>，一般用读取文件+反序列化工具来使用。</p>
+<p>同样是解析参数到程序里，我们该选择哪种方案呢？我们从可读性和可维护性来对比下：</p>
+<ul>
+<li><p>可读性：命令行参数是扁平化的，可读性远不如格式化后的配置文件</p>
+</li>
+<li><p>可维护性：配置文件增加了一个维护项，但成本不高</p>
+</li>
+</ul>
+<p>所以，我个人倾向于的方案是：</p>
+<ul>
+<li><p>命令行参数：用于维护极少量关键性的参数，如配置文件的路径</p>
+</li>
+<li><p>配置文件：维护绝大多数的参数</p>
+</li>
+</ul>
+<p>在某些极端的场景中，比如提供一个纯二进制文件作为工具，那不得不把所有配置参数都放入到命令行参数中。这并不是我们微服务框架要讨论的场景。所以，接下来我们重点讨论配置文件的加载。</p>
+<p>···<br>关于pflag相关的内容，在后续程序复杂到一定阶段后会引入。<br>···</p>
+<h3 id="2-github-com-spf13-viper的介绍"><a href="#2-github-com-spf13-viper的介绍" class="headerlink" title="2.github.com/spf13/viper的介绍"></a>2.github.com/spf13/viper的介绍</h3><p>对比上面的方案，我们来看一个业内使用最广的Go语言配置加载库github.com/spf13/viper的实现，对应的代码如下：</p>
+<figure class="highlight lua"><table><tr><td class="code"><pre><code class="hljs lua">viper.SetConfigName(<span class="hljs-string">&quot;config&quot;</span>)        // <span class="hljs-built_in">config</span> file name without file <span class="hljs-built_in">type</span><br>viper.SetConfigType(<span class="hljs-string">&quot;yaml&quot;</span>)          // <span class="hljs-built_in">config</span> file <span class="hljs-built_in">type</span><br>viper.AddConfigPath(<span class="hljs-string">&quot;./&quot;</span>)            // <span class="hljs-built_in">config</span> file <span class="hljs-built_in">path</span><br><span class="hljs-keyword">if</span> err := viper.ReadInConfig(); err != <span class="hljs-literal">nil</span> &#123;<br>  panic(err)<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>而在获取配置文件时，又采用key-value形式的语法：</p>
+<figure class="highlight vbscript"><table><tr><td class="code"><pre><code class="hljs vbscript">viper.<span class="hljs-keyword">Get</span><span class="hljs-built_in">Int</span>(<span class="hljs-string">&quot;server.grpc.port&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+<p>详细的特性我会在Go语言技巧系列里说明，今天我们聚焦于工程侧的宏观特性，来聊聊这个库的优劣势：</p>
+<h3 id="可选的参数序列化"><a href="#可选的参数序列化" class="headerlink" title="可选的参数序列化"></a>可选的参数序列化</h3><p>从viper库的源码中(点击跳转)，我们可以看到它支持多种本地文件类型与远程k-v数据库：</p>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><code class="hljs csharp"><span class="hljs-comment">// SupportedExts are universally supported extensions.</span><br><span class="hljs-keyword">var</span> SupportedExts = []<span class="hljs-built_in">string</span>&#123;<span class="hljs-string">&quot;json&quot;</span>, <span class="hljs-string">&quot;toml&quot;</span>, <span class="hljs-string">&quot;yaml&quot;</span>, <span class="hljs-string">&quot;yml&quot;</span>, <span class="hljs-string">&quot;properties&quot;</span>, <span class="hljs-string">&quot;props&quot;</span>, <span class="hljs-string">&quot;prop&quot;</span>, <span class="hljs-string">&quot;hcl&quot;</span>, <span class="hljs-string">&quot;dotenv&quot;</span>, <span class="hljs-string">&quot;env&quot;</span>, <span class="hljs-string">&quot;ini&quot;</span>&#125;<br><br><span class="hljs-comment">// SupportedRemoteProviders are universally supported remote providers.</span><br><span class="hljs-keyword">var</span> SupportedRemoteProviders = []<span class="hljs-built_in">string</span>&#123;<span class="hljs-string">&quot;etcd&quot;</span>, <span class="hljs-string">&quot;consul&quot;</span>, <span class="hljs-string">&quot;firestore&quot;</span>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>我们先忽略远程的存储，先看一下最常用的几个序列化的库：</p>
+<p>JSON: 官方自带的encoding/json</p>
+<p>TOML: 开源的github.com/pelletier/go-toml</p>
+<p>YAML: 官方推荐的gopkg.in/yaml.v2</p>
+<p>INI：官方推荐的gopkg.in/ini.v1</p>
+<p>在这四种技术选型时，我个人倾向于选择JSON和YAML。进一步斟酌时，<strong>虽然JSON的适用范围最广，但当配置文件复杂到一定程度时，JSON格式的配置文件很难通过换行来约束，当存在大量的嵌套时，可读性很差。</strong>所以，我个人比较推荐<strong>使用YAML格式的配置文件，一方面通过强制的换行约束，可读性很棒；另一方面云原生相关技术大量使用了YAML作为配置文件，尤其是Kubernetes中各种定义。</strong></p>
+<p>例如，我们将服务的端口改造到配置文件里，就成了：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">server:</span><br>  <span class="hljs-attr">http:</span><br>    <span class="hljs-attr">port:</span> <span class="hljs-number">8081</span><br>  <span class="hljs-attr">grpc:</span><br>    <span class="hljs-attr">port:</span> <span class="hljs-number">8082</span><br></code></pre></td></tr></table></figure>
+<p>对应的Go语言代码为：</p>
+<figure class="highlight vbscript"><table><tr><td class="code"><pre><code class="hljs vbscript">viper.<span class="hljs-keyword">Get</span><span class="hljs-built_in">Int</span>(<span class="hljs-string">&quot;server.http.port&quot;</span>)<br>viper.<span class="hljs-keyword">Get</span><span class="hljs-built_in">Int</span>(<span class="hljs-string">&quot;server.grpc.port&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+<h3 id="可扩展的获取参数方法"><a href="#可扩展的获取参数方法" class="headerlink" title="可扩展的获取参数方法"></a>可扩展的获取参数方法</h3><p>viper库提供的获取参数方式为**viper.Get{type}(“{level1}.{level2}.{level3}…”)**的格式。随着配置文件的扩大，也只需新增Get方法即可。</p>
+<p>从获取参数的方法来看，它的设计分为3种：</p>
+<ul>
+<li><p>基本类型，直接提供Get{具体类型}的方法，如GetInt，GetString；</p>
+</li>
+<li><p>任意类型，提供Get(key string) interface{}，自行转化</p>
+</li>
+<li><p>复杂类型的反序列化，提供UnmarshalKey等方法，更方便地获取复杂结构</p>
+</li>
+</ul>
+<p>我个人建议各位只使用第一类的方法，将配置文件这个模块做到最简化。<strong>毕竟，配置文件的复杂化很容易引入各种问题，占用大量的排查故障的时间。</strong>如果你的系统必须引入一套非常复杂的配置，那么我更建议将它独立成一个专门的服务，用来维护这套配置。</p>
+<h3 id="3-使用viper库的推荐方式"><a href="#3-使用viper库的推荐方式" class="headerlink" title="3.使用viper库的推荐方式"></a>3.使用viper库的推荐方式</h3><p>如果你仔细地阅读viper相关的代码，你会发现它有很多超酷的特性。但今天，我想告诉各位：<strong>请克制地使用进阶的特性，最棒的特性往往是简洁的。</strong></p>
+<p>我们对照着官方的README文件中介绍的特性进行讲解。</p>
+<h4 id="尽量避免手动设置的参数值"><a href="#尽量避免手动设置的参数值" class="headerlink" title="尽量避免手动设置的参数值"></a>尽量避免手动设置的参数值</h4><p>原文链接</p>
+<p>用viper.SetDefault函数可以给某些参数设置默认值，如果只是少数的几个参数还是很容易维护的。但如果设置的值过多了，就会给阅读代码的人带来困扰：这个参数是来自配置文件，还是在代码某处手动设置的？也就是存在二义性，增加了排查问题的复杂度。</p>
+<h4 id="明确配置文件的来源"><a href="#明确配置文件的来源" class="headerlink" title="明确配置文件的来源"></a>明确配置文件的来源</h4><p>原文链接</p>
+<figure class="highlight less"><table><tr><td class="code"><pre><code class="hljs less"><span class="hljs-selector-tag">viper</span><span class="hljs-selector-class">.AddConfigPath</span>(<span class="hljs-string">&quot;/etc/appname/&quot;</span>)   <span class="hljs-comment">// path to look for the config file in</span><br><span class="hljs-selector-tag">viper</span><span class="hljs-selector-class">.AddConfigPath</span>(<span class="hljs-string">&quot;$HOME/.appname&quot;</span>)  <span class="hljs-comment">// call multiple times to add many search paths</span><br><span class="hljs-selector-tag">viper</span><span class="hljs-selector-class">.AddConfigPath</span>(<span class="hljs-string">&quot;.&quot;</span>)               <span class="hljs-comment">// optionally look for config in the working directory</span><br></code></pre></td></tr></table></figure>
+
+<p>viper支持多个配置文件的路径，这虽然带来了便利性，但如果多个文件路径中都存在配置文件，那究竟以哪个为准？这也是一个二义性的问题，所以我个人更建议只设置一个，而这个路径由flag传入。</p>
+<h4 id="静态配置与动态配置的分离"><a href="#静态配置与动态配置的分离" class="headerlink" title="静态配置与动态配置的分离"></a>静态配置与动态配置的分离</h4><p>原文链接</p>
+<p>viper提供了接口viper.WatchConfig()，可以监听文件的变化，然后做相应的调整。这个特性很酷，我们可以用它<strong>实现热加载</strong>。<strong>但这个特性很容易让人产生混淆：例如发生了某个BUG，如何确定当时的配置文件情况？</strong>其实，这就需要引入一定的版本管理机制。</p>
+<p>我更建议采用<strong>静态配置和动态配置分离的方案</strong>，也就是配置文件负责静态的、固定的配置，一旦启动后只加载一次；而动态的配置放在带版本管理的配置中心里，具备热加载的特性。</p>
+<p>所以，我不太建议在配置文件这里引入监听文件变化的特性。</p>
+<h4 id="核心代码示例"><a href="#核心代码示例" class="headerlink" title="核心代码示例"></a>核心代码示例</h4><p><strong>main.go</strong><br>从flag中解析出配置文件路径，传到config包中用于解析。</p>
+<figure class="highlight stata"><table><tr><td class="code"><pre><code class="hljs stata"><span class="hljs-keyword">var</span> configFilePath = flag.<span class="hljs-built_in">String</span>(<span class="hljs-string">&quot;c&quot;</span>, <span class="hljs-string">&quot;./&quot;</span>, <span class="hljs-string">&quot;config file path&quot;</span>)<br>flag.<span class="hljs-keyword">Parse</span>()<br><br><span class="hljs-keyword">if</span> <span class="hljs-keyword">err</span> := config.Load(*configFilePath); <span class="hljs-keyword">err</span> != nil &#123;<br>  panic(<span class="hljs-keyword">err</span>)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>internal/config/viper.go</strong><br>加载的代码并不多，尽量保证配置信息的简洁易懂。</p>
+<figure class="highlight reasonml"><table><tr><td class="code"><pre><code class="hljs reasonml"><span class="hljs-comment">// 全局Viper变量</span><br>var Viper = viper.<span class="hljs-constructor">New()</span><br><br>func <span class="hljs-constructor">Load(<span class="hljs-params">configFilePath</span> <span class="hljs-params">string</span>)</span> error &#123;<br> Viper.<span class="hljs-constructor">SetConfigName(<span class="hljs-string">&quot;config&quot;</span>)</span>       <span class="hljs-comment">// config file name without file type</span><br> Viper.<span class="hljs-constructor">SetConfigType(<span class="hljs-string">&quot;yaml&quot;</span>)</span>         <span class="hljs-comment">// config file type</span><br> Viper.<span class="hljs-constructor">AddConfigPath(<span class="hljs-params">configFilePath</span>)</span> <span class="hljs-comment">// config file path</span><br> return Viper.<span class="hljs-constructor">ReadInConfig()</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="配置使用方"><a href="#配置使用方" class="headerlink" title="配置使用方"></a>配置使用方</h4><figure class="highlight stylus"><table><tr><td class="code"><pre><code class="hljs stylus">config<span class="hljs-selector-class">.Viper</span><span class="hljs-selector-class">.GetInt</span>(<span class="hljs-string">&quot;server.grpc.port&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+<h3 id="使用viper库的注意事项"><a href="#使用viper库的注意事项" class="headerlink" title="使用viper库的注意事项"></a>使用viper库的注意事项</h3><p>在使用viper获取配置时，我们需要手动组装key，也就是   “{level1}.{level2}.{level3}…”    这种形式。这时，我们只能对照着原始配置文件逐个填充字段，一不小心填错、就会发生奇怪的问题。</p>
+<p><strong>而如果采用的是将配置文件解析到结构体的方法，就能很容易地避免这个问题。</strong></p>
+<p><strong>考虑到扩展性，官方库推荐的是手动组装key的方式，所以需要大家在认真查看这个key是否有效。</strong></p>
+<p>（因为当需要新的配置的时候，你还得修改对应的结构体，这可能也是考虑的一方面。）</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>加载静态配置文件是一个很常见的功能，viper提供了一套完整方案，兼具简洁和扩展性；</p>
+<p>与此同时，我们要学会克制，不要看到了viper中提供的各种特性、就想着应用到实际项目中，也就是常说的：<strong>手里拿了个锤子，看啥都是钉子。</strong></p>
+<figure class="highlight awk"><table><tr><td class="code"><pre><code class="hljs awk">Github: https:<span class="hljs-regexp">//gi</span>thub.com<span class="hljs-regexp">/Junedayday/</span>code_reading<br><br>Blog: http:<span class="hljs-regexp">//</span>junes.tech/<br><br>Bilibili: https:<span class="hljs-regexp">//</span>space.bilibili.com/<span class="hljs-number">293775192</span><br><br>公众号: golangcoding<br></code></pre></td></tr></table></figure>
+    </div>
+</div>
+<style>
+    #noneimg img {
+        display: none;
+        z-index: 109;
+        width: 600px !important;
+        border-radius: 0px;
+        position: fixed;
+        box-shadow: 0 0 0px #c3c3c300 !important;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto !important;
+    }
+
+    @media screen and (max-width:600px) {
+        #noneimg img {
+            width: 88%
+        }
+    }
+</style>
+<script>
+    $(function () { $('#article').click(function (e) { if (e.target.tagName == "IMG") { if ($('#nonediv').length == 0) { let MImg = `<div id='noneimg'><img src='${e.target.currentSrc}'></div>`; let MDiv = "<div id='nonediv' style='cursor: pointer;display: none; position: fixed;left: 0;top: 0; right: 0;bottom: 0;background-color: #333;opacity:0.5;z-index: 108;'></div>"; $('#article').append(MDiv); $('#article').append(MImg); $("#nonediv").fadeIn("slow"); $("#noneimg img").fadeIn("slow") } } else { if ($('#nonediv').length !== 0) { $("#noneimg ").fadeOut("slow"); $("#nonediv").fadeOut("slow"); setTimeout(function () { $('#nonediv').remove(); $('#noneimg').remove() }, 500) } } }); $('.article-content').addClass('content-move') });
+</script>
+<div class="Last-Next">
+    
+    <a href="/2021/08/25/Go%E8%AF%AD%E8%A8%80%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6-3-%E6%97%A5%E5%BF%97%E5%BA%93%E7%9A%84%E9%80%89%E5%9E%8B%E4%B8%8E%E5%BC%95%E5%85%A5/">
+        <div class="last">
+            <span>上一篇</span>
+            <p>Go语言微服务框架-3.日志库的选型与引入</p>
+        </div>
+    </a>
+    
+
+    
+    <a href="/2021/08/23/%E5%A4%A7%E7%96%86%E9%9D%A2%E8%AF%95%E6%B5%8B%E8%AF%95%EF%BC%88%E4%BA%8C%EF%BC%89/">
+        <div class="next">
+            <span>下一篇</span>
+            <p>大疆面试测试（二）</p>
+        </div>
+    </a>
+    
+</div>
+		
+<link rel="stylesheet" href="/css/food.css">
+
+<div class="footer">
+	<div class="Copyright">
+		©2022 By Russshare. 主题：<a
+			style="text-decoration: none;display: contents; color: #898F9F;"
+			target="_blank" rel="noopener" href="https://github.com/qiaobug/hexo-theme-quiet">Quiet</a>
+	</div>
+	<div class="contact">
+		
+		<a target="_blank" rel="noopener" href="https://github.com/RiddleGo">
+			<img src="https://cdn.jsdelivr.net/gh/duogongneng/MyBlogImg/imggithub.png" alt="Quiet主题">
+		</a>
+		
+	</div>
+</div>
+
+<script src="/js/jquery.min.js"></script>
+
+
+<script src="/js/gotop.js"></script>
+
+
+<style type="text/css">
+    @media screen and (min-width: 600px) {
+        .goTop>span {
+            display: block;
+            border-radius: 50%;
+            width: 66px;
+            height: 66px;
+            cursor: pointer;
+            opacity: 0.8;
+            background: rgba(18, 24, 58, 0.06);
+            text-align: center;
+            border: 1px solid rgba(18, 24, 58, 0.06);
+
+            transition: border .5s;
+            -moz-transition: border .5s;
+            /* Firefox 4 */
+            -webkit-transition: border .5s;
+            /* Safari 和 Chrome */
+            -o-transition: border .5s;
+            /* Opera */
+        }
+
+        .goTop>span:hover {
+            border: 1px solid #6680B3;
+        }
+
+
+        .goTop {
+            position: fixed;
+            right: 30px;
+            bottom: 80px;
+        }
+
+        .goTop>span>svg {
+            width: 30px;
+            height: 30px;
+            margin-top: 17.5px;
+            opacity: 0.7;
+        }
+
+    }
+
+    @media screen and (max-width: 600px) {
+        .goTop {
+            display: none;
+        }
+    }
+</style>
+<div class="goTop" id="js-go_top">
+    <span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <g>
+                <path d="M13 12v8h-2v-8H4l8-8 8 8z"></path>
+            </g>
+        </svg>
+    </span>
+</div>
+<script>
+    $('#js-go_top').gotoTop({ offset: 500, speed: 300, animationShow: { 'transform': 'translate(0,0)', 'transition': 'transform .5s ease-in-out' }, animationHide: { 'transform': 'translate(100px,0)', 'transition': 'transform .5s ease-in-out' } });
+</script>
+<script>
+	console.log('\n %c Hexo-Quiet 主题 %c https://github.com/QiaoBug/hexo-theme-quiet \n', 'color: #fadfa3; background: #030307; padding:5px 0;', 'background: #fadfa3; padding:5px 0;')
+</script>
+	</body>
+
+</html>

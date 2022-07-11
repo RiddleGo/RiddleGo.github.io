@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		
+<title>golang的调试测试（八）-Russshare</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="shortcut icon" type="image/x-icon" href="/image/favicon.ico">
+
+<meta name="keywords" content="golang,程序员,嵌入式">
+<meta name="description" content="">
+
+
+<script src="/js/jquery.min.js"></script>
+
+
+
+<!-- Baidu Analytics -->
+<script defer>
+    var _hmt = _hmt || [];
+    (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?4b5fe1472f22fa";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+	<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+</head>
+
+	<body>
+		
+<link rel="stylesheet" href="/css/page.css">
+
+
+<link rel="stylesheet" href="/css/page_cente.css">
+
+
+<link rel="stylesheet" href="/css/atom-one-dark.css">
+
+
+<link rel="stylesheet" href="/css/header.css">
+
+	<div class="header">
+		<div class="header-top">
+			<div class="h-left">
+				<a href="/">
+					<img src="/image/logo.png" alt="Quiet">
+				</a>
+			</div>
+			<div class="h-right">
+				<ul>
+					
+						
+								<li>
+									<a href="/">
+										HOME
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/archives">
+										ARCHIVE
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/categories">
+										CATEGORIES
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/tags">
+										TAGS
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/links">
+										LINKS
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/about">
+										ABOUT
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+				</ul>
+			</div>
+			<div class="h-right-close">
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+					<path fill="none" d="M0 0h24v24H0z" />
+					<path d="M3 4h18v2H3V4zm0 7h18v2H3v-2zm0 7h18v2H3v-2z" fill="rgba(68,68,68,1)" />
+				</svg>
+			</div>
+		</div>
+	</div>
+	<div class="sidebar">
+    <div class="topo">
+        <h2>Russshare</h2>
+    </div>
+    <ul>
+        
+        <li>
+            <a href="/">HOME</a>
+        </li>
+        
+        <li>
+            <a href="/archives">ARCHIVE</a>
+        </li>
+        
+        <li>
+            <a href="/categories">CATEGORIES</a>
+        </li>
+        
+        <li>
+            <a href="/tags">TAGS</a>
+        </li>
+        
+        <li>
+            <a href="/links">LINKS</a>
+        </li>
+        
+        <li>
+            <a href="/about">ABOUT</a>
+        </li>
+        
+    </ul>
+    <div class="my_foot">
+        
+        <a target="_blank" rel="noopener" href="https://github.com/RiddleGo">
+            <img src="https://cdn.jsdelivr.net/gh/duogongneng/MyBlogImg/imggithub.png" alt="Quiet主题">
+        </a>
+        
+    </div>
+</div>
+<div class='shelter'
+    style='cursor: pointer;display: none; position: fixed;left: 0;top: 0; right: 0;bottom: 0;background-color: #333;opacity:0.5;z-index: 108;'>
+</div>
+<style>
+    .sidebar {
+        width: 0;
+        height: 100%;
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        background: #fff;
+        z-index: 999;
+        text-align: center;
+        box-shadow: -6px 0 20px rgba(98, 94, 94, .815)
+    }
+
+    .topo {
+        width: 100%;
+        height: 200px;
+        background: url(https://api.ixiaowai.cn/gqapi/gqapi.php) no-repeat;
+        background-size: 100% 100%;
+        position: relative;
+        display: flex;
+        align-items: flex-end
+    }
+
+    .topo h2 {
+        color: #fff;
+        z-index: 1;
+        position: relative;
+        margin: 0 0 10px 10px;
+        font-size: 1.2em;
+        box-sizing: border-box
+    }
+
+    .topo:before {
+        content: '';
+        background-image: url(/image/pattern.png);
+        background-repeat: repeat;
+        height: 100%;
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 100%;
+        z-index: 1
+    }
+
+    .sidebar ul {
+        width: 100%;
+        margin-top: 50px
+    }
+
+    .sidebar ul li {
+        height: 50px;
+        list-style: none;
+        font-size: 1.2em;
+        text-align: right;
+        margin-right: 10px
+    }
+
+    .sidebar ul li a {
+        display: grid;
+        color: #5d606a;
+        text-overflow: ellipsis;
+        width: 100%;
+        text-decoration: none
+    }
+
+    .my_foot {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        position: absolute;
+        bottom: 0
+    }
+
+    .my_foot a {
+        text-decoration: none;
+        margin-right: 10px;
+        display: inline-block
+    }
+
+    .my_foot a img {
+        width: 30px;
+        height: 30px
+    }
+</style>
+
+<script>
+    $(function () { $('.h-right-close>svg').click(function () { $('.sidebar').animate({ width: "66%" }, 500); $('.shelter').fadeIn("slow") }); $('.shelter').click(function (e) { $('.sidebar').animate({ width: "0" }, 500); $('.shelter').fadeOut("slow") }) })
+</script>
+		<script>
+			$(function () { $(window).scroll(function () { if ($(document).scrollTop() > 100) { $(".header-top").removeClass("header-move2"); $('.header-top').addClass('header-move1') } else { $(".header-top").removeClass("header-move1"); $('.header-top').addClass('header-move2') } }) });
+		</script>
+<div class="header-bg ">
+    <div class="bg-content">
+        <ul class="tag">
+            
+        </ul>
+        <h1>golang的调试测试（八）</h1>
+        <div class="article-info">
+            <div class="article-author">
+                
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+                    <g>
+                        <path fill="#12183A"
+                            d="M6.187 15.265A6.47 6.47 0 0 0 10 16.5a6.47 6.47 0 0 0 3.813-1.235A4.99 4.99 0 0 0 10 13.5a4.99 4.99 0 0 0-3.813 1.765zM5.082 14.25A6.485 6.485 0 0 1 10 12c1.965 0 3.726.872 4.918 2.25a6.5 6.5 0 1 0-9.836 0zM10 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0-1.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z">
+                        </path>
+                    </g>
+                </svg>
+                
+                <span> <a href="">Russshare</a></span>
+                <p>2021-07-13 19:22:50</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="article-content">
+    <div id="article" class="content">
+        <hr>
+<p>title: golang的调试测试（八）<br>auther: Russshare<br>toc: true<br>date: 2021-07-13 19:22:50<br>tags:<br>categories:</p>
+<hr>
+<h3 id="前言：文章转自李文周的blog"><a href="#前言：文章转自李文周的blog" class="headerlink" title="前言：文章转自李文周的blog"></a>前言：文章转自李文周的blog</h3><p>这位前辈的blog的干货太多了，真的大家一定要好好去研读一下blog<a target="_blank" rel="noopener" href="https://www.liwenzhou.com/posts/Go/deploy_go_app/">文章</a><br>(本文没有图片，原文有图片，只是相当于记笔记一样，边复制边实践，边阅读。)<br>(为了最好的阅读体验，移步<a target="_blank" rel="noopener" href="https://www.liwenzhou.com/posts/Go/deploy_go_app/">原文</a>)<br>(为了最好的阅读体验，移步<a target="_blank" rel="noopener" href="https://www.liwenzhou.com/posts/Go/deploy_go_app/">原文</a>)<br>(为了最好的阅读体验，移步<a target="_blank" rel="noopener" href="https://www.liwenzhou.com/posts/Go/deploy_go_app/">原文</a>)</p>
+<h2 id="Go性能调优"><a href="#Go性能调优" class="headerlink" title="Go性能调优"></a>Go性能调优</h2><p>在计算机性能调试领域里，profiling 是指对应用程序的画像，画像就是应用程序使用 CPU 和内存的情况。 </p>
+<p>Go语言是一个对性能特别看重的语言，因此语言中自带了 profiling 的库，这篇文章就要讲解怎么在 golang 中做 profiling。</p>
+<h3 id="Go性能优化"><a href="#Go性能优化" class="headerlink" title="Go性能优化"></a>Go性能优化</h3><p>Go语言项目中的性能优化主要有以下几个方面：</p>
+<p><strong>CPU profile：</strong><br>报告程序的 CPU 使用情况，按照一定频率去采集应用程序在 CPU 和寄存器上面的数据</p>
+<p><strong>Memory Profile（Heap Profile）：</strong><br>报告程序的内存使用情况</p>
+<p><strong>Block Profiling：</strong><br>报告 goroutines 不在运行状态的情况，可以用来分析和查找死锁等性能瓶颈</p>
+<p><strong>Goroutine Profiling：</strong>报告 goroutines 的使用情况，有哪些 goroutine，它们的调用关系是怎样的 </p>
+<h3 id="采集性能数据"><a href="#采集性能数据" class="headerlink" title="采集性能数据"></a>采集性能数据</h3><p>Go语言内置了获取程序的运行数据的工具，包括以下两个标准库：</p>
+<p><strong>runtime/pprof：采集工具型应用运行数据进行分析</strong></p>
+<p><strong>net/http/pprof：采集服务型应用运行时数据进行分析</strong></p>
+<p>pprof开启后，每隔一段时间（10ms）就会收集下当前的堆栈信息，获取各个函数占用的CPU以及内存资源；最后通过对这些采样数据进行分析，形成一个性能分析报告。</p>
+<p><strong>注意，我们只应该在性能测试的时候才在代码中引入pprof。</strong></p>
+<h3 id="工具型应用"><a href="#工具型应用" class="headerlink" title="工具型应用"></a>工具型应用</h3><p>如果你的应用程序是运行一段时间就结束退出类型。那么最好的办法是在应用退出的时候把 profiling 的报告保存到文件中，进行分析。对于这种情况，可以使用runtime/pprof库。 首先在代码中导入runtime/pprof工具：</p>
+<figure class="highlight arduino"><table><tr><td class="code"><pre><code class="hljs arduino"><span class="hljs-keyword">import</span> <span class="hljs-string">&quot;runtime/pprof&quot;</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="CPU性能分析"><a href="#CPU性能分析" class="headerlink" title="CPU性能分析"></a>CPU性能分析</h4><p>开启CPU性能分析：</p>
+<figure class="highlight reasonml"><table><tr><td class="code"><pre><code class="hljs reasonml">pprof.<span class="hljs-constructor">StartCPUProfile(<span class="hljs-params">w</span> <span class="hljs-params">io</span>.Writer)</span><br></code></pre></td></tr></table></figure>
+
+<p>停止CPU性能分析：</p>
+<figure class="highlight gcode"><table><tr><td class="code"><pre><code class="hljs gcode">pprof.StopCPUProfile<span class="hljs-comment">()</span><br></code></pre></td></tr></table></figure>
+<p>应用执行结束后，就会生成一个文件，保存了我们的 CPU profiling 数据。得到采样数据之后，使用go tool pprof工具进行CPU性能分析。</p>
+<h4 id="内存性能优化"><a href="#内存性能优化" class="headerlink" title="内存性能优化"></a>内存性能优化</h4><p>记录程序的堆栈信息</p>
+<figure class="highlight reasonml"><table><tr><td class="code"><pre><code class="hljs reasonml">pprof.<span class="hljs-constructor">WriteHeapProfile(<span class="hljs-params">w</span> <span class="hljs-params">io</span>.Writer)</span><br></code></pre></td></tr></table></figure>
+<p>得到采样数据之后，使用go tool pprof工具进行内存性能分析。</p>
+<p>go tool pprof默认是使用-inuse_space进行统计，还可以使用-inuse-objects查看分配对象的数量。</p>
+<h3 id="服务型应用"><a href="#服务型应用" class="headerlink" title="服务型应用"></a>服务型应用</h3><p>如果你的应用程序是一直运行的，比如 web 应用，那么可以使用net/http/pprof库，它能够在提供 HTTP 服务进行分析。</p>
+<p>如果使用了默认的http.DefaultServeMux（通常是代码直接使用 http.ListenAndServe(“0.0.0.0:8000”, nil)），只需要在你的web server端代码中按如下方式导入net/http/pprof</p>
+<figure class="highlight haxe"><table><tr><td class="code"><pre><code class="hljs haxe"><span class="hljs-keyword">import</span> <span class="hljs-literal">_</span> <span class="hljs-string">&quot;net/http/pprof&quot;</span><br></code></pre></td></tr></table></figure>
+<p>如果你使用自定义的 Mux，则需要手动注册一些路由规则：</p>
+<figure class="highlight reasonml"><table><tr><td class="code"><pre><code class="hljs reasonml">r.<span class="hljs-constructor">HandleFunc(<span class="hljs-string">&quot;/debug/pprof/&quot;</span>, <span class="hljs-params">pprof</span>.Index)</span><br>r.<span class="hljs-constructor">HandleFunc(<span class="hljs-string">&quot;/debug/pprof/cmdline&quot;</span>, <span class="hljs-params">pprof</span>.Cmdline)</span><br>r.<span class="hljs-constructor">HandleFunc(<span class="hljs-string">&quot;/debug/pprof/profile&quot;</span>, <span class="hljs-params">pprof</span>.Profile)</span><br>r.<span class="hljs-constructor">HandleFunc(<span class="hljs-string">&quot;/debug/pprof/symbol&quot;</span>, <span class="hljs-params">pprof</span>.Symbol)</span><br>r.<span class="hljs-constructor">HandleFunc(<span class="hljs-string">&quot;/debug/pprof/trace&quot;</span>, <span class="hljs-params">pprof</span>.Trace)</span><br></code></pre></td></tr></table></figure>
+<p>如果你使用的是gin框架，那么推荐使用github.com/gin-contrib/pprof，在代码中通过以下命令注册pprof相关路由。</p>
+<figure class="highlight reasonml"><table><tr><td class="code"><pre><code class="hljs reasonml">pprof.<span class="hljs-constructor">Register(<span class="hljs-params">router</span>)</span><br></code></pre></td></tr></table></figure>
+<p>不管哪种方式，你的 HTTP 服务都会多出/debug/pprof endpoint，访问它会得到类似下面的内容：debug/pprof这个路径下还有几个子页面：</p>
+<figure class="highlight awk"><table><tr><td class="code"><pre><code class="hljs awk"><span class="hljs-regexp">/debug/</span>pprof/profile：访问这个链接会自动进行 CPU profiling，持续 <span class="hljs-number">30</span>s，并生成一个文件供下载<br><br><span class="hljs-regexp">/debug/</span>pprof/heap： Memory Profiling 的路径，访问这个链接会得到一个内存 Profiling 结果的文件<br><br><span class="hljs-regexp">/debug/</span>pprof/block：block Profiling 的路径<br><br><span class="hljs-regexp">/debug/</span>pprof/goroutines：运行的 goroutines 列表，以及调用关系<br><br>go tool pprof命令<br></code></pre></td></tr></table></figure>
+<p>不管是工具型应用还是服务型应用，我们使用相应的pprof库获取数据之后，下一步的都要对这些数据进行分析，我们可以使用go tool pprof命令行工具。</p>
+<h3 id="go-tool-pprof最简单的使用方式为"><a href="#go-tool-pprof最简单的使用方式为" class="headerlink" title="go tool pprof最简单的使用方式为:"></a>go tool pprof最简单的使用方式为:</h3><figure class="highlight css"><table><tr><td class="code"><pre><code class="hljs css">go tool pprof <span class="hljs-selector-attr">[binary]</span> <span class="hljs-selector-attr">[source]</span><br></code></pre></td></tr></table></figure>
+<p>其中：</p>
+<figure class="highlight tcl"><table><tr><td class="code"><pre><code class="hljs tcl"><span class="hljs-keyword">binary</span> 是应用的二进制文件，用来解析各种符号；<br><br><span class="hljs-keyword">source</span> 表示 profile 数据的来源，可以是本地的文件，也可以是 <span class="hljs-keyword">http</span> 地址。<br></code></pre></td></tr></table></figure>
+<p>注意事项： 获取的 Profiling 数据是动态的，要想获得有效的数据，请保证应用处于较大的负载（比如正在生成中运行的服务，<strong>或者通过其他工具模拟访问压力</strong>）。否则如果应用处于空闲状态，得到的结果可能没有任何意义。</p>
+<h3 id="具体示例"><a href="#具体示例" class="headerlink" title="具体示例"></a>具体示例</h3><p>首先我们来写一段有问题的代码：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><code class="hljs go"><span class="hljs-comment">// runtime_pprof/main.go</span><br><span class="hljs-keyword">package</span> main<br><br><span class="hljs-keyword">import</span> (<br>	<span class="hljs-string">&quot;flag&quot;</span><br>	<span class="hljs-string">&quot;fmt&quot;</span><br>	<span class="hljs-string">&quot;os&quot;</span><br>	<span class="hljs-string">&quot;runtime/pprof&quot;</span><br>	<span class="hljs-string">&quot;time&quot;</span><br>)<br><br><span class="hljs-comment">// 一段有问题的代码</span><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">logicCode</span><span class="hljs-params">()</span></span> &#123;<br>	<span class="hljs-keyword">var</span> c <span class="hljs-keyword">chan</span> <span class="hljs-keyword">int</span><br>	<span class="hljs-keyword">for</span> &#123;<br>		<span class="hljs-keyword">select</span> &#123;<br>		<span class="hljs-keyword">case</span> v := &lt;-c:<br>			fmt.Printf(<span class="hljs-string">&quot;recv from chan, value:%v\n&quot;</span>, v)<br>		<span class="hljs-keyword">default</span>:<br><br>		&#125;<br>	&#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	<span class="hljs-keyword">var</span> isCPUPprof <span class="hljs-keyword">bool</span><br>	<span class="hljs-keyword">var</span> isMemPprof <span class="hljs-keyword">bool</span><br><br>	flag.BoolVar(&amp;isCPUPprof, <span class="hljs-string">&quot;cpu&quot;</span>, <span class="hljs-literal">false</span>, <span class="hljs-string">&quot;turn cpu pprof on&quot;</span>)<br>	flag.BoolVar(&amp;isMemPprof, <span class="hljs-string">&quot;mem&quot;</span>, <span class="hljs-literal">false</span>, <span class="hljs-string">&quot;turn mem pprof on&quot;</span>)<br>	flag.Parse()<br><br>	<span class="hljs-keyword">if</span> isCPUPprof &#123;<br>		file, err := os.Create(<span class="hljs-string">&quot;./cpu.pprof&quot;</span>)<br>		<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>			fmt.Printf(<span class="hljs-string">&quot;create cpu pprof failed, err:%v\n&quot;</span>, err)<br>			<span class="hljs-keyword">return</span><br>		&#125;<br>		pprof.StartCPUProfile(file)<br>		<span class="hljs-keyword">defer</span> pprof.StopCPUProfile()<br>	&#125;<br>	<span class="hljs-keyword">for</span> i := <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">8</span>; i++ &#123;<br>		<span class="hljs-keyword">go</span> logicCode()<br>	&#125;<br>	time.Sleep(<span class="hljs-number">20</span> * time.Second)<br>	<span class="hljs-keyword">if</span> isMemPprof &#123;<br>		file, err := os.Create(<span class="hljs-string">&quot;./mem.pprof&quot;</span>)<br>		<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>			fmt.Printf(<span class="hljs-string">&quot;create mem pprof failed, err:%v\n&quot;</span>, err)<br>			<span class="hljs-keyword">return</span><br>		&#125;<br>		pprof.WriteHeapProfile(file)<br>		file.Close()<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p><strong>通过flag我们可以在命令行控制是否开启CPU和Mem的性能分析</strong>。 将上面的代码保存并编译成runtime_pprof可执行文件，执行时加上-cpu命令行参数如下：</p>
+<figure class="highlight jboss-cli"><table><tr><td class="code"><pre><code class="hljs jboss-cli"><span class="hljs-string">./runtime_pprof</span> -cpu<br></code></pre></td></tr></table></figure>
+<p>等待30秒后会在当前目录下生成一个cpu.pprof文件。</p>
+<h4 id="命令行交互界面"><a href="#命令行交互界面" class="headerlink" title="命令行交互界面"></a>命令行交互界面</h4><p>我们使用go工具链里的pprof来分析一下。</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">go</span> tool pprof cpu.pprof<br></code></pre></td></tr></table></figure>
+
+<p>执行上面的代码会进入交互界面如下：</p>
+<figure class="highlight subunit"><table><tr><td class="code"><pre><code class="hljs subunit">runtime_pprof $ go tool pprof cpu.pprof<br>Type: cpu<br><span class="hljs-keyword">Time:</span> Jun 28, 2019 at 11:28am (CST)<br>Duration: 20.13s, Total samples = 1.91mins (568.60%)<br>Entering interactive mode (type &quot;help&quot; for commands, &quot;o&quot; for options)<br>(pprof)  <br></code></pre></td></tr></table></figure>
+<p>我们可以在交互界面输入top3来查看程序中占用CPU前3位的函数：</p>
+<figure class="highlight r"><table><tr><td class="code"><pre><code class="hljs r">(pprof) top3<br>Showing nodes accounting <span class="hljs-keyword">for</span> <span class="hljs-number">100.37</span>s, <span class="hljs-number">87.68</span>% of 114.47s total<br>Dropped 17 nodes (cum &lt;= 0.57s)<br>Showing top 3 nodes out of 4<br>      flat  flat%   <span class="hljs-built_in">sum</span>%        cum   cum%<br>    <span class="hljs-number">42.52</span>s <span class="hljs-number">37.15</span>% 37.15%     <span class="hljs-number">91.73</span>s <span class="hljs-number">80.13</span>%  runtime.selectnbrecv<br>    35.21s 30.76% <span class="hljs-number">67.90</span>%     39.49s 34.50%  runtime.chanrecv<br>    <span class="hljs-number">22.64</span>s <span class="hljs-number">19.78</span>% 87.68%    <span class="hljs-number">114.37</span>s <span class="hljs-number">99.91</span>%  main.logicCode<br></code></pre></td></tr></table></figure>
+<p>其中：</p>
+<figure class="highlight x86asm"><table><tr><td class="code"><pre><code class="hljs x86asm">flat：当前函数占用<span class="hljs-meta">CPU</span>的耗时<br>flat%：:当前函数占用<span class="hljs-meta">CPU</span>的耗时百分比<br>sun%：函数占用<span class="hljs-meta">CPU</span>的耗时累计百分比<br>cum：当前函数加上调用当前函数的函数占用<span class="hljs-meta">CPU</span>的总耗时<br>cum%：当前函数加上调用当前函数的函数占用<span class="hljs-meta">CPU</span>的总耗时百分比<br>最后一列：函数名称<br></code></pre></td></tr></table></figure>
+
+<p>在大多数的情况下，我们可以通过分析这五列得出一个应用程序的运行情况，并对程序进行优化。</p>
+<p>我们还可以使用list 函数名命令查看具体的函数分析，例如执行list logicCode查看我们编写的函数的详细分析。</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><code class="hljs go">(pprof) list logicCode<br>Total: <span class="hljs-number">1.91</span>mins<br>ROUTINE ================ main.logicCode in .../runtime_pprof/main.<span class="hljs-keyword">go</span><br>    <span class="hljs-number">22.64</span>s   <span class="hljs-number">1.91</span>mins (flat, cum) <span class="hljs-number">99.91</span>% of Total<br>         .          .     <span class="hljs-number">12</span>:<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">logicCode</span><span class="hljs-params">()</span></span> &#123;<br>         .          .     <span class="hljs-number">13</span>:   <span class="hljs-keyword">var</span> c <span class="hljs-keyword">chan</span> <span class="hljs-keyword">int</span><br>         .          .     <span class="hljs-number">14</span>:   <span class="hljs-keyword">for</span> &#123;<br>         .          .     <span class="hljs-number">15</span>:           <span class="hljs-keyword">select</span> &#123;<br>         .          .     <span class="hljs-number">16</span>:           <span class="hljs-keyword">case</span> v := &lt;-c:<br>    <span class="hljs-number">22.64</span>s   <span class="hljs-number">1.91</span>mins     <span class="hljs-number">17</span>:                   fmt.Printf(<span class="hljs-string">&quot;recv from chan, value:%v\n&quot;</span>, v)<br>         .          .     <span class="hljs-number">18</span>:           <span class="hljs-keyword">default</span>:<br>         .          .     <span class="hljs-number">19</span>:<br>         .          .     <span class="hljs-number">20</span>:           &#125;<br>         .          .     <span class="hljs-number">21</span>:   &#125;<br>         .          .     <span class="hljs-number">22</span>:&#125;<br></code></pre></td></tr></table></figure>
+<p>通过分析发现大部分CPU资源被17行占用，我们分析出select语句中的default没有内容会导致上面的case v:=&lt;-c:一直执行。我们在default分支添加一行time.Sleep(time.Second)即可。</p>
+<h3 id="图形化"><a href="#图形化" class="headerlink" title="图形化"></a>图形化</h3><p>或者可以直接输入web，通过svg图的方式查看程序中详细的CPU占用情况。 想要查看图形化的界面首先需要安装graphviz图形化工具。</p>
+<p>Mac：</p>
+<figure class="highlight mipsasm"><table><tr><td class="code"><pre><code class="hljs mipsasm"><span class="hljs-keyword">brew </span><span class="hljs-keyword">install </span>graphviz<br><br></code></pre></td></tr></table></figure>
+<p>Windows: </p>
+<figure class="highlight pgsql"><table><tr><td class="code"><pre><code class="hljs pgsql">下载graphviz 将graphviz安装目录下的bin文件夹添加到<span class="hljs-type">Path</span>环境变量中。 在终端输入dot -<span class="hljs-keyword">version</span>查看是否安装成功。<br></code></pre></td></tr></table></figure>
+
+<p><strong>CPU占比图关于图形的说明</strong>： </p>
+<p>每个框代表一个函数，理论上框的越大表示占用的CPU资源越多。 </p>
+<p>方框之间的线条代表函数之间的调用关系。 </p>
+<p>线条上的数字表示函数调用的次数。 </p>
+<p>方框中的第一行数字表示当前函数占用CPU的百分比，第二行数字表示当前函数累计占用CPU的百分比。</p>
+<p>除了分析CPU性能数据，pprof也支持分析内存性能数据。比如，使用下面的命令分析http服务的heap性能数据，查看当前程序的内存占用以及热点内存对象使用的情况。</p>
+<figure class="highlight awk"><table><tr><td class="code"><pre><code class="hljs awk"><span class="hljs-comment"># 查看内存占用数据</span><br>go tool pprof -inuse_space http:<span class="hljs-regexp">//</span><span class="hljs-number">127.0</span>.<span class="hljs-number">0.1</span>:<span class="hljs-number">8080</span><span class="hljs-regexp">/debug/</span>pprof/heap<br>go tool pprof -inuse_objects http:<span class="hljs-regexp">//</span><span class="hljs-number">127.0</span>.<span class="hljs-number">0.1</span>:<span class="hljs-number">8080</span><span class="hljs-regexp">/debug/</span>pprof/heap<br><span class="hljs-comment"># 查看临时内存分配数据</span><br>go tool pprof -alloc_space http:<span class="hljs-regexp">//</span><span class="hljs-number">127.0</span>.<span class="hljs-number">0.1</span>:<span class="hljs-number">8080</span><span class="hljs-regexp">/debug/</span>pprof/heap<br>go tool pprof -alloc_objects http:<span class="hljs-regexp">//</span><span class="hljs-number">127.0</span>.<span class="hljs-number">0.1</span>:<span class="hljs-number">8080</span><span class="hljs-regexp">/debug/</span>pprof/heap<br></code></pre></td></tr></table></figure>
+
+<h3 id="go-torch和火焰图"><a href="#go-torch和火焰图" class="headerlink" title="go-torch和火焰图"></a>go-torch和火焰图</h3><p>火焰图（Flame Graph）是 Bredan Gregg 创建的一种性能分析图表，因为它的样子近似 🔥而得名。</p>
+<p>上面的 profiling 结果也转换成火焰图，如果对火焰图比较了解可以手动来操作，不过这里我们要介绍一个工具：<strong>go-torch</strong>。这是 uber 开源的一个工具，可以直接读取 golang profiling 数据，并生成一个火焰图的 svg 文件。</p>
+<h4 id="安装go-torch"><a href="#安装go-torch" class="headerlink" title="安装go-torch"></a>安装go-torch</h4><figure class="highlight vim"><table><tr><td class="code"><pre><code class="hljs vim"><span class="hljs-keyword">go</span> <span class="hljs-built_in">get</span> -v github.<span class="hljs-keyword">com</span>/uber/<span class="hljs-keyword">go</span>-torch<br></code></pre></td></tr></table></figure>
+<p>火焰图 svg 文件可以通过浏览器打开，它对于调用图的最优点是它是动态的：可以通过点击每个方块来 zoom in 分析它上面的内容。</p>
+<p>火焰图的调用顺序从下到上，</p>
+<p>每个方块代表一个函数，</p>
+<p>它上面一层表示这个函数会调用哪些函数，</p>
+<p>方块的大小代表了占用 CPU 使用的长短。</p>
+<p>火焰图的配色并没有特殊的意义，默认的红、黄配色是为了更像火焰而已。</p>
+<p>go-torch 工具的使用非常简单，没有任何参数的话，它会尝试从<a target="_blank" rel="noopener" href="http://localhost:8080/debug/pprof/profile%E8%8E%B7%E5%8F%96">http://localhost:8080/debug/pprof/profile获取</a> profiling 数据。它有三个常用的参数可以调整：</p>
+<figure class="highlight pf"><table><tr><td class="code"><pre><code class="hljs pf">-u –url：要访问的 URL，这里只是主机和端口部分<br><br>-s –suffix：pprof <span class="hljs-keyword">profile</span> 的路径，默认为 /<span class="hljs-keyword">debug</span>/pprof/<span class="hljs-keyword">profile</span><br><br>–seconds：要执行 profiling 的时间长度，默认为 <span class="hljs-number">30</span>s<br></code></pre></td></tr></table></figure>
+<h4 id="安装-FlameGraph"><a href="#安装-FlameGraph" class="headerlink" title="安装 FlameGraph"></a>安装 FlameGraph</h4><p>要生成火焰图，需要事先安装 FlameGraph工具，这个工具的安装很简单（需要perl环境支持），只要把对应的可执行文件加入到环境变量中即可。</p>
+<figure class="highlight vim"><table><tr><td class="code"><pre><code class="hljs vim">下载安装<span class="hljs-keyword">perl</span>：http<span class="hljs-variable">s:</span>//www.<span class="hljs-keyword">perl</span>.org/<span class="hljs-built_in">get</span>.html<br><br>下载FlameGraph：git clone http<span class="hljs-variable">s:</span>//github.<span class="hljs-keyword">com</span>/brendangregg/FlameGraph.git<br><br>将FlameGraph目录加入到操作系统的环境变量中。<br><br>Windows平台的同学，需要把<span class="hljs-keyword">go</span>-torch/render/flamegraph.<span class="hljs-keyword">go</span>文件中的GenerateFlameGraph按如下方式修改，然后在<span class="hljs-keyword">go</span>-torch目录下执行<span class="hljs-keyword">go</span> install即可。<br></code></pre></td></tr></table></figure>
+<figure class="highlight vim"><table><tr><td class="code"><pre><code class="hljs vim">// GenerateFlameGraph runs the flamegraph script <span class="hljs-keyword">to</span> generate <span class="hljs-keyword">a</span> flame graph SVG. func GenerateFlameGraph(graphInput []byte, <span class="hljs-keyword">args</span> ...<span class="hljs-built_in">string</span>) ([]byte, error) &#123;<br>flameGraph := findInPath(flameGraphScripts)<br><span class="hljs-keyword">if</span> flameGraph == <span class="hljs-string">&quot;&quot;</span> &#123;<br>	<span class="hljs-keyword">return</span> nil, errNoPerlScript<br>&#125;<br><span class="hljs-keyword">if</span> <span class="hljs-keyword">runtime</span>.GOOS == <span class="hljs-string">&quot;windows&quot;</span> &#123;<br>	<span class="hljs-keyword">return</span> runScript(<span class="hljs-string">&quot;perl&quot;</span>, <span class="hljs-keyword">append</span>([]<span class="hljs-built_in">string</span>&#123;flameGraph&#125;, <span class="hljs-keyword">args</span>...), graphInput)<br>&#125;<br>  <span class="hljs-keyword">return</span> runScript(flameGraph, <span class="hljs-keyword">args</span>, graphInput)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="压测工具wrk"><a href="#压测工具wrk" class="headerlink" title="压测工具wrk"></a>压测工具wrk</h3><p>推荐使用<a target="_blank" rel="noopener" href="https://github.com/wg/wrk">https://github.com/wg/wrk</a> 或 <a target="_blank" rel="noopener" href="https://github.com/adjust/go-wrk">https://github.com/adjust/go-wrk</a></p>
+<h3 id="使用go-torch"><a href="#使用go-torch" class="headerlink" title="使用go-torch"></a>使用go-torch</h3><p>使用wrk进行压测:</p>
+<figure class="highlight awk"><table><tr><td class="code"><pre><code class="hljs awk">go-wrk -n <span class="hljs-number">50000</span> http:<span class="hljs-regexp">//</span><span class="hljs-number">127.0</span>.<span class="hljs-number">0.1</span>:<span class="hljs-number">8080</span><span class="hljs-regexp">/book/</span>list<br></code></pre></td></tr></table></figure>
+
+<p>在上面压测进行的同时，打开另一个终端执行:</p>
+<figure class="highlight apache"><table><tr><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">go</span>-torch -u http://<span class="hljs-number">127.0.0.1:8080</span> -t <span class="hljs-number">30</span><br></code></pre></td></tr></table></figure>
+
+<p>30秒之后终端会初夏如下提示：Writing svg to torch.svg</p>
+<p>然后我们使用浏览器打开torch.svg就能看到如下火焰图了。</p>
+<p>火焰图火焰图的y轴表示cpu调用方法的先后</p>
+<p>x轴表示在每个采样调用时间内，方法所占的时间百分比，越宽代表占据cpu时间越多。</p>
+<p>通过火焰图我们就可以更清楚的找出耗时长的函数调用，然后不断的修正代码，重新采样，不断优化。</p>
+<p>此外还可以借助火焰图分析内存性能数据：</p>
+<figure class="highlight awk"><table><tr><td class="code"><pre><code class="hljs awk">go-torch -inuse_space http:<span class="hljs-regexp">//</span><span class="hljs-number">127.0</span>.<span class="hljs-number">0.1</span>:<span class="hljs-number">8080</span><span class="hljs-regexp">/debug/</span>pprof/heap<br><br>go-torch -inuse_objects http:<span class="hljs-regexp">//</span><span class="hljs-number">127.0</span>.<span class="hljs-number">0.1</span>:<span class="hljs-number">8080</span><span class="hljs-regexp">/debug/</span>pprof/heap<br><br>go-torch -alloc_space http:<span class="hljs-regexp">//</span><span class="hljs-number">127.0</span>.<span class="hljs-number">0.1</span>:<span class="hljs-number">8080</span><span class="hljs-regexp">/debug/</span>pprof/heap<br><br>go-torch -alloc_objects http:<span class="hljs-regexp">//</span><span class="hljs-number">127.0</span>.<span class="hljs-number">0.1</span>:<span class="hljs-number">8080</span><span class="hljs-regexp">/debug/</span>pprof/heap<br></code></pre></td></tr></table></figure>
+<h3 id="pprof与性能测试结合"><a href="#pprof与性能测试结合" class="headerlink" title="pprof与性能测试结合"></a>pprof与性能测试结合</h3><p>go test命令有两个参数和 pprof 相关，它们分别指定生成的 CPU 和 Memory profiling 保存的文件：</p>
+<figure class="highlight diff"><table><tr><td class="code"><pre><code class="hljs diff"><span class="hljs-deletion">-cpuprofile：cpu profiling 数据要保存的文件地址</span><br><br><span class="hljs-deletion">-memprofile：memory profiling 数据要报文的文件地址</span><br></code></pre></td></tr></table></figure>
+<p>我们还可以选择将pprof与性能测试相结合，比如：</p>
+<p>比如下面执行测试的同时，也会执行 CPU profiling，并把结果保存在 cpu.prof 文件中：</p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><code class="hljs routeros">go test -bench . <span class="hljs-attribute">-cpuprofile</span>=cpu.prof<br></code></pre></td></tr></table></figure>
+
+<p>比如下面执行测试的同时，也会执行 Mem profiling，并把结果保存在 cpu.prof 文件中：</p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><code class="hljs routeros">go test -bench . <span class="hljs-attribute">-memprofile</span>=./mem.prof<br></code></pre></td></tr></table></figure>
+
+<p>需要注意的是，Profiling 一般和性能测试一起使用，这个原因在前文也提到过，只有应用在负载高的情况下 Profiling 才有意义。</p>
+<h3 id="常用的HTTP服务压测工具介绍"><a href="#常用的HTTP服务压测工具介绍" class="headerlink" title="常用的HTTP服务压测工具介绍"></a>常用的HTTP服务压测工具介绍</h3><p>在项目正式上线之前，我们通常需要通过压测来评估当前系统能够支撑的请求量、排查可能存在的隐藏bug，同时了解了程序的实际处理能力能够帮我们更好的匹配项目的实际需求，节约资源成本。</p>
+<h3 id="HTTP服务压力测试工具"><a href="#HTTP服务压力测试工具" class="headerlink" title="HTTP服务压力测试工具"></a>HTTP服务压力测试工具</h3><p>在项目正式上线之前，我们通常需要通过压测来评估当前系统能够支撑的请求量、排查可能存在的隐藏bug，同时了解了程序的实际处理能力能够帮我们更好的匹配项目的实际需求，节约资源成本。</p>
+<h4 id="压测相关术语"><a href="#压测相关术语" class="headerlink" title="压测相关术语"></a>压测相关术语</h4><p>响应时间(RT) ：指系统对请求作出响应的时间.</p>
+<p>吞吐量(Throughput) ：指系统在单位时间内处理请求的数量</p>
+<p>QPS每秒查询率(Query Per Second) ：“每秒查询率”，是一台服务器每秒能够响应的查询次数，是对一个特定的查询服务器在规定时间内所处理流量多少的衡量标准。</p>
+<p>TPS(TransactionPerSecond)：每秒钟系统能够处理的交易或事务的数量</p>
+<p>并发连接数：某个时刻服务器所接受的请求总数</p>
+<h4 id="压力测试工具"><a href="#压力测试工具" class="headerlink" title="压力测试工具"></a>压力测试工具</h4><h5 id="ab"><a href="#ab" class="headerlink" title="ab"></a>ab</h5><p>ab全称Apache Bench，是Apache自带的性能测试工具。使用这个工具，只须指定同时连接数、请求数以及URL，即可测试网站或网站程序的性能。</p>
+<p>通过ab发送请求模拟多个访问者同时对某一URL地址进行访问,可以得到每秒传送字节数、每秒处理请求数、每请求处理时间等统计数据。</p>
+<p>命令格式：</p>
+<figure class="highlight asciidoc"><table><tr><td class="code"><pre><code class="hljs asciidoc">ab [options] [<span class="hljs-link">http://]hostname</span>[<span class="hljs-string">:port</span>]/path<br></code></pre></td></tr></table></figure>
+
+<p>常用参数如下：</p>
+<figure class="highlight diff"><table><tr><td class="code"><pre><code class="hljs diff"><span class="hljs-deletion">-n requests 总请求数</span><br><span class="hljs-deletion">-c concurrency 一次产生的请求数，可以理解为并发数</span><br><span class="hljs-deletion">-t timelimit 测试所进行的最大秒数, 可以当做请求的超时时间</span><br><span class="hljs-deletion">-p postfile 包含了需要POST的数据的文件</span><br><span class="hljs-deletion">-T content-type POST数据所使用的Content-type头信息</span><br></code></pre></td></tr></table></figure>
+
+<p>更多参数请查看<a target="_blank" rel="noopener" href="http://httpd.apache.org/docs/2.2/programs/ab.html">官方文档</a>。</p>
+<p>例如测试某个GET请求接口：</p>
+<figure class="highlight apache"><table><tr><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">ab</span> -n <span class="hljs-number">10000</span> -c <span class="hljs-number">100</span> -t <span class="hljs-number">10</span> <span class="hljs-string">&quot;http://127.0.0.1:8080/api/v1/posts?size=10&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p>测试POST请求接口：</p>
+<figure class="highlight apache"><table><tr><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">ab</span> -n <span class="hljs-number">10000</span> -c <span class="hljs-number">100</span> -t <span class="hljs-number">10</span> -p post.json -T <span class="hljs-string">&quot;application/json&quot;</span> <span class="hljs-string">&quot;http://127.0.0.1:8080/api/v1/post&quot;</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="wrk"><a href="#wrk" class="headerlink" title="wrk"></a>wrk</h3><p>wrk是一款开源的HTTP性能测试工具，它和上面提到的ab同属于HTTP性能测试工具，它比ab功能更加强大，可以通过编写lua脚本来支持更加复杂的测试场景。</p>
+<p>Mac下安装：</p>
+<figure class="highlight mipsasm"><table><tr><td class="code"><pre><code class="hljs mipsasm"><span class="hljs-keyword">brew </span><span class="hljs-keyword">install </span>wrk<br></code></pre></td></tr></table></figure>
+<p>常用命令参数：</p>
+<figure class="highlight ada"><table><tr><td class="code"><pre><code class="hljs ada">-c <span class="hljs-comment">--conections：保持的连接数</span><br>-d <span class="hljs-comment">--duration：压测持续时间(s)</span><br>-t <span class="hljs-comment">--threads：使用的线程总数</span><br>-s <span class="hljs-comment">--script：加载lua脚本</span><br>-H <span class="hljs-comment">--header：在请求头部添加一些参数</span><br><span class="hljs-comment">--latency 打印详细的延迟统计信息</span><br><span class="hljs-comment">--timeout 请求的最大超时时间(s)</span><br></code></pre></td></tr></table></figure>
+
+<p>使用示例：</p>
+<figure class="highlight apache"><table><tr><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">wrk</span> -t<span class="hljs-number">8</span> -c<span class="hljs-number">100</span> -d<span class="hljs-number">30</span>s --latency http://<span class="hljs-number">127.0.0.1:8080</span>/api/v<span class="hljs-number">1</span>/posts?size=<span class="hljs-number">10</span><br></code></pre></td></tr></table></figure>
+<p>输出结果：</p>
+<figure class="highlight apache"><table><tr><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">Running</span> <span class="hljs-number">30</span>s test @ http://<span class="hljs-number">127.0.0.1:8080</span>/api/v<span class="hljs-number">1</span>/posts?size=<span class="hljs-number">10</span><br>  <span class="hljs-attribute">8</span> threads and <span class="hljs-number">100</span> connections<br>  <span class="hljs-attribute">Thread</span> Stats   Avg      Stdev     Max   +/- Stdev<br>    <span class="hljs-attribute">Latency</span>    <span class="hljs-number">14</span>.<span class="hljs-number">55</span>ms    <span class="hljs-number">2</span>.<span class="hljs-number">02</span>ms  <span class="hljs-number">31</span>.<span class="hljs-number">59</span>ms   <span class="hljs-number">76</span>.<span class="hljs-number">70</span>%<br>    <span class="hljs-attribute">Req</span>/Sec   <span class="hljs-number">828</span>.<span class="hljs-number">16</span>     <span class="hljs-number">85</span>.<span class="hljs-number">69</span>     <span class="hljs-number">0</span>.<span class="hljs-number">97</span>k    <span class="hljs-number">60</span>.<span class="hljs-number">46</span>%<br>  <span class="hljs-attribute">Latency</span> Distribution<br>     <span class="hljs-attribute">50</span>%   <span class="hljs-number">14</span>.<span class="hljs-number">44</span>ms<br>     <span class="hljs-attribute">75</span>%   <span class="hljs-number">15</span>.<span class="hljs-number">76</span>ms<br>     <span class="hljs-attribute">90</span>%   <span class="hljs-number">16</span>.<span class="hljs-number">63</span>ms<br>     <span class="hljs-attribute">99</span>%   <span class="hljs-number">21</span>.<span class="hljs-number">07</span>ms<br>  <span class="hljs-attribute">198091</span> requests in <span class="hljs-number">30</span>.<span class="hljs-number">05</span>s, <span class="hljs-number">29</span>.<span class="hljs-number">66</span>MB read<br><span class="hljs-attribute">Requests</span>/sec:   <span class="hljs-number">6592</span>.<span class="hljs-number">29</span><br><span class="hljs-attribute">Transfer</span>/sec:      <span class="hljs-number">0</span>.<span class="hljs-number">99</span>MB<br></code></pre></td></tr></table></figure>
+
+<h4 id="go-wrk"><a href="#go-wrk" class="headerlink" title="go-wrk"></a>go-wrk</h4><p>go-wrk是Go语言版本的wrk，Windows同学可以使用它来测试，使用如下命令来安装go-wrk：</p>
+<figure class="highlight vim"><table><tr><td class="code"><pre><code class="hljs vim"><span class="hljs-keyword">go</span> <span class="hljs-built_in">get</span> github.<span class="hljs-keyword">com</span>/adeven/<span class="hljs-keyword">go</span>-wrk<br></code></pre></td></tr></table></figure>
+
+<p>使用方法同wrk类似，基本格式如下：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><code class="hljs css">go-wrk <span class="hljs-selector-attr">[flags]</span> url<br></code></pre></td></tr></table></figure>
+
+<p>常用的参数：</p>
+<figure class="highlight ini"><table><tr><td class="code"><pre><code class="hljs ini"><span class="hljs-attr">-H</span>=<span class="hljs-string">&quot;User-Agent: go-wrk 0.1 bechmark\nContent-Type: text/html;&quot;</span>: 由<span class="hljs-string">&#x27;\n&#x27;</span>分隔的请求头<br><span class="hljs-attr">-c</span>=<span class="hljs-number">100</span>: 使用的最大连接数<br><span class="hljs-attr">-k</span>=<span class="hljs-literal">true</span>: 是否禁用keep-alives<br><span class="hljs-attr">-i</span>=<span class="hljs-literal">false</span>: if TLS security checks are disabled<br><span class="hljs-attr">-m</span>=<span class="hljs-string">&quot;GET&quot;</span>: HTTP请求方法<br><span class="hljs-attr">-n</span>=<span class="hljs-number">1000</span>: 请求总数<br><span class="hljs-attr">-t</span>=<span class="hljs-number">1</span>: 使用的线程数<br><span class="hljs-attr">-b</span>=<span class="hljs-string">&quot;&quot;</span> HTTP请求体<br><span class="hljs-attr">-s</span>=<span class="hljs-string">&quot;&quot;</span> 如果指定，它将计算响应中包含搜索到的字符串s的频率<br></code></pre></td></tr></table></figure>
+
+<p>执行测试：</p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><code class="hljs routeros">go-wrk <span class="hljs-attribute">-t</span>=8 <span class="hljs-attribute">-c</span>=100 <span class="hljs-attribute">-n</span>=10000 <span class="hljs-string">&quot;http://127.0.0.1:8080/api/v1/posts?size=10&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p>输出结果：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><code class="hljs yaml"><span class="hljs-string">==========================BENCHMARK==========================</span><br><span class="hljs-attr">URL:</span>                            <span class="hljs-string">http://127.0.0.1:8080/api/v1/posts?size=10</span><br><br><span class="hljs-attr">Used Connections:</span>               <span class="hljs-number">100</span><br><span class="hljs-attr">Used Threads:</span>                   <span class="hljs-number">8</span><br><span class="hljs-attr">Total number of calls:</span>          <span class="hljs-number">10000</span><br><br><span class="hljs-string">===========================TIMINGS===========================</span><br><span class="hljs-attr">Total time passed:</span>              <span class="hljs-number">2.</span><span class="hljs-string">74s</span><br><span class="hljs-attr">Avg time per request:</span>           <span class="hljs-number">27.</span><span class="hljs-string">11ms</span><br><span class="hljs-attr">Requests per second:</span>            <span class="hljs-number">3644.53</span><br><span class="hljs-attr">Median time per request:</span>        <span class="hljs-number">26.</span><span class="hljs-string">88ms</span><br><span class="hljs-attr">99th percentile time:</span>           <span class="hljs-number">39.</span><span class="hljs-string">16ms</span><br><span class="hljs-attr">Slowest time for request:</span>       <span class="hljs-number">45.</span><span class="hljs-string">00ms</span><br><br><span class="hljs-string">=============================DATA=============================</span><br><span class="hljs-attr">Total response body sizes:</span>              <span class="hljs-number">340000</span><br><span class="hljs-attr">Avg response body per request:</span>          <span class="hljs-number">34.00</span> <span class="hljs-string">Byte</span><br><span class="hljs-attr">Transfer rate per second:</span>               <span class="hljs-number">123914.11</span> <span class="hljs-string">Byte/s</span> <span class="hljs-string">(0.12</span> <span class="hljs-string">MByte/s)</span><br><span class="hljs-string">==========================RESPONSES==========================</span><br><span class="hljs-attr">20X Responses:</span>          <span class="hljs-number">10000</span>   <span class="hljs-string">(100.00%)</span><br><span class="hljs-attr">30X Responses:</span>          <span class="hljs-number">0</span>       <span class="hljs-string">(0.00%)</span><br><span class="hljs-attr">40X Responses:</span>          <span class="hljs-number">0</span>       <span class="hljs-string">(0.00%)</span><br><span class="hljs-attr">50X Responses:</span>          <span class="hljs-number">0</span>       <span class="hljs-string">(0.00%)</span><br><span class="hljs-attr">Errors:</span>                 <span class="hljs-number">0</span>       <span class="hljs-string">(0.00%)</span><br></code></pre></td></tr></table></figure>
+    </div>
+</div>
+<style>
+    #noneimg img {
+        display: none;
+        z-index: 109;
+        width: 600px !important;
+        border-radius: 0px;
+        position: fixed;
+        box-shadow: 0 0 0px #c3c3c300 !important;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto !important;
+    }
+
+    @media screen and (max-width:600px) {
+        #noneimg img {
+            width: 88%
+        }
+    }
+</style>
+<script>
+    $(function () { $('#article').click(function (e) { if (e.target.tagName == "IMG") { if ($('#nonediv').length == 0) { let MImg = `<div id='noneimg'><img src='${e.target.currentSrc}'></div>`; let MDiv = "<div id='nonediv' style='cursor: pointer;display: none; position: fixed;left: 0;top: 0; right: 0;bottom: 0;background-color: #333;opacity:0.5;z-index: 108;'></div>"; $('#article').append(MDiv); $('#article').append(MImg); $("#nonediv").fadeIn("slow"); $("#noneimg img").fadeIn("slow") } } else { if ($('#nonediv').length !== 0) { $("#noneimg ").fadeOut("slow"); $("#nonediv").fadeOut("slow"); setTimeout(function () { $('#nonediv').remove(); $('#noneimg').remove() }, 500) } } }); $('.article-content').addClass('content-move') });
+</script>
+<div class="Last-Next">
+    
+    <a href="/2021/07/13/golang%E7%9A%84%E5%B7%A5%E7%A8%8B%E9%83%A8%E7%BD%B2%EF%BC%88%E4%B9%9D%EF%BC%89/">
+        <div class="last">
+            <span>上一篇</span>
+            <p>golang的工程部署（九）</p>
+        </div>
+    </a>
+    
+
+    
+    <a href="/2021/07/13/golang%E7%9A%84GPM%E8%B0%83%E5%BA%A6%E6%A8%A1%E5%9E%8B%EF%BC%88%E4%B8%83%EF%BC%89/">
+        <div class="next">
+            <span>下一篇</span>
+            <p>golang的GPM调度模型（七）</p>
+        </div>
+    </a>
+    
+</div>
+		
+<link rel="stylesheet" href="/css/food.css">
+
+<div class="footer">
+	<div class="Copyright">
+		©2022 By Russshare. 主题：<a
+			style="text-decoration: none;display: contents; color: #898F9F;"
+			target="_blank" rel="noopener" href="https://github.com/qiaobug/hexo-theme-quiet">Quiet</a>
+	</div>
+	<div class="contact">
+		
+		<a target="_blank" rel="noopener" href="https://github.com/RiddleGo">
+			<img src="https://cdn.jsdelivr.net/gh/duogongneng/MyBlogImg/imggithub.png" alt="Quiet主题">
+		</a>
+		
+	</div>
+</div>
+
+<script src="/js/jquery.min.js"></script>
+
+
+<script src="/js/gotop.js"></script>
+
+
+<style type="text/css">
+    @media screen and (min-width: 600px) {
+        .goTop>span {
+            display: block;
+            border-radius: 50%;
+            width: 66px;
+            height: 66px;
+            cursor: pointer;
+            opacity: 0.8;
+            background: rgba(18, 24, 58, 0.06);
+            text-align: center;
+            border: 1px solid rgba(18, 24, 58, 0.06);
+
+            transition: border .5s;
+            -moz-transition: border .5s;
+            /* Firefox 4 */
+            -webkit-transition: border .5s;
+            /* Safari 和 Chrome */
+            -o-transition: border .5s;
+            /* Opera */
+        }
+
+        .goTop>span:hover {
+            border: 1px solid #6680B3;
+        }
+
+
+        .goTop {
+            position: fixed;
+            right: 30px;
+            bottom: 80px;
+        }
+
+        .goTop>span>svg {
+            width: 30px;
+            height: 30px;
+            margin-top: 17.5px;
+            opacity: 0.7;
+        }
+
+    }
+
+    @media screen and (max-width: 600px) {
+        .goTop {
+            display: none;
+        }
+    }
+</style>
+<div class="goTop" id="js-go_top">
+    <span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <g>
+                <path d="M13 12v8h-2v-8H4l8-8 8 8z"></path>
+            </g>
+        </svg>
+    </span>
+</div>
+<script>
+    $('#js-go_top').gotoTop({ offset: 500, speed: 300, animationShow: { 'transform': 'translate(0,0)', 'transition': 'transform .5s ease-in-out' }, animationHide: { 'transform': 'translate(100px,0)', 'transition': 'transform .5s ease-in-out' } });
+</script>
+<script>
+	console.log('\n %c Hexo-Quiet 主题 %c https://github.com/QiaoBug/hexo-theme-quiet \n', 'color: #fadfa3; background: #030307; padding:5px 0;', 'background: #fadfa3; padding:5px 0;')
+</script>
+	</body>
+
+</html>

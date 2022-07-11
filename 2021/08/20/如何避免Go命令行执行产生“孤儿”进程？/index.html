@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		
+<title>如何避免Go命令行执行产生“孤儿”进程？-Russshare</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="shortcut icon" type="image/x-icon" href="/image/favicon.ico">
+
+
+<meta name="keywords" content="进程,">
+<meta name="description" content="">
+
+
+<script src="/js/jquery.min.js"></script>
+
+
+
+<!-- Baidu Analytics -->
+<script defer>
+    var _hmt = _hmt || [];
+    (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?4b5fe1472f22fa";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+	<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+</head>
+
+	<body>
+		
+<link rel="stylesheet" href="/css/page.css">
+
+
+<link rel="stylesheet" href="/css/page_cente.css">
+
+
+<link rel="stylesheet" href="/css/atom-one-dark.css">
+
+
+<link rel="stylesheet" href="/css/header.css">
+
+	<div class="header">
+		<div class="header-top">
+			<div class="h-left">
+				<a href="/">
+					<img src="/image/logo.png" alt="Quiet">
+				</a>
+			</div>
+			<div class="h-right">
+				<ul>
+					
+						
+								<li>
+									<a href="/">
+										HOME
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/archives">
+										ARCHIVE
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/categories">
+										CATEGORIES
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/tags">
+										TAGS
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/links">
+										LINKS
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/about">
+										ABOUT
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+				</ul>
+			</div>
+			<div class="h-right-close">
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+					<path fill="none" d="M0 0h24v24H0z" />
+					<path d="M3 4h18v2H3V4zm0 7h18v2H3v-2zm0 7h18v2H3v-2z" fill="rgba(68,68,68,1)" />
+				</svg>
+			</div>
+		</div>
+	</div>
+	<div class="sidebar">
+    <div class="topo">
+        <h2>Russshare</h2>
+    </div>
+    <ul>
+        
+        <li>
+            <a href="/">HOME</a>
+        </li>
+        
+        <li>
+            <a href="/archives">ARCHIVE</a>
+        </li>
+        
+        <li>
+            <a href="/categories">CATEGORIES</a>
+        </li>
+        
+        <li>
+            <a href="/tags">TAGS</a>
+        </li>
+        
+        <li>
+            <a href="/links">LINKS</a>
+        </li>
+        
+        <li>
+            <a href="/about">ABOUT</a>
+        </li>
+        
+    </ul>
+    <div class="my_foot">
+        
+        <a target="_blank" rel="noopener" href="https://github.com/RiddleGo">
+            <img src="https://cdn.jsdelivr.net/gh/duogongneng/MyBlogImg/imggithub.png" alt="Quiet主题">
+        </a>
+        
+    </div>
+</div>
+<div class='shelter'
+    style='cursor: pointer;display: none; position: fixed;left: 0;top: 0; right: 0;bottom: 0;background-color: #333;opacity:0.5;z-index: 108;'>
+</div>
+<style>
+    .sidebar {
+        width: 0;
+        height: 100%;
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        background: #fff;
+        z-index: 999;
+        text-align: center;
+        box-shadow: -6px 0 20px rgba(98, 94, 94, .815)
+    }
+
+    .topo {
+        width: 100%;
+        height: 200px;
+        background: url(https://api.ixiaowai.cn/gqapi/gqapi.php) no-repeat;
+        background-size: 100% 100%;
+        position: relative;
+        display: flex;
+        align-items: flex-end
+    }
+
+    .topo h2 {
+        color: #fff;
+        z-index: 1;
+        position: relative;
+        margin: 0 0 10px 10px;
+        font-size: 1.2em;
+        box-sizing: border-box
+    }
+
+    .topo:before {
+        content: '';
+        background-image: url(/image/pattern.png);
+        background-repeat: repeat;
+        height: 100%;
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 100%;
+        z-index: 1
+    }
+
+    .sidebar ul {
+        width: 100%;
+        margin-top: 50px
+    }
+
+    .sidebar ul li {
+        height: 50px;
+        list-style: none;
+        font-size: 1.2em;
+        text-align: right;
+        margin-right: 10px
+    }
+
+    .sidebar ul li a {
+        display: grid;
+        color: #5d606a;
+        text-overflow: ellipsis;
+        width: 100%;
+        text-decoration: none
+    }
+
+    .my_foot {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        position: absolute;
+        bottom: 0
+    }
+
+    .my_foot a {
+        text-decoration: none;
+        margin-right: 10px;
+        display: inline-block
+    }
+
+    .my_foot a img {
+        width: 30px;
+        height: 30px
+    }
+</style>
+
+<script>
+    $(function () { $('.h-right-close>svg').click(function () { $('.sidebar').animate({ width: "66%" }, 500); $('.shelter').fadeIn("slow") }); $('.shelter').click(function (e) { $('.sidebar').animate({ width: "0" }, 500); $('.shelter').fadeOut("slow") }) })
+</script>
+		<script>
+			$(function () { $(window).scroll(function () { if ($(document).scrollTop() > 100) { $(".header-top").removeClass("header-move2"); $('.header-top').addClass('header-move1') } else { $(".header-top").removeClass("header-move1"); $('.header-top').addClass('header-move2') } }) });
+		</script>
+<div class="header-bg ">
+    <div class="bg-content">
+        <ul class="tag">
+            
+            
+            <li><a href="/tags/进程">进程</a></li>
+            
+            
+        </ul>
+        <h1>如何避免Go命令行执行产生“孤儿”进程？</h1>
+        <div class="article-info">
+            <div class="article-author">
+                
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+                    <g>
+                        <path fill="#12183A"
+                            d="M6.187 15.265A6.47 6.47 0 0 0 10 16.5a6.47 6.47 0 0 0 3.813-1.235A4.99 4.99 0 0 0 10 13.5a4.99 4.99 0 0 0-3.813 1.765zM5.082 14.25A6.485 6.485 0 0 1 10 12c1.965 0 3.726.872 4.918 2.25a6.5 6.5 0 1 0-9.836 0zM10 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0-1.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z">
+                        </path>
+                    </g>
+                </svg>
+                
+                <span> <a href="">Russshare</a></span>
+                <p>2021-08-20 22:51:46</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="article-content">
+    <div id="article" class="content">
+        <h2 id="如何避免-Go-命令行执行产生“孤儿”进程？"><a href="#如何避免-Go-命令行执行产生“孤儿”进程？" class="headerlink" title="如何避免 Go 命令行执行产生“孤儿”进程？"></a>如何避免 Go 命令行执行产生“孤儿”进程？</h2><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/Uvqv6HUj_7o3qMIbwcNOpw">原文链接哦</a></p>
+<p>在 Go 程序当中，如果我们要执行命令时，通常会使用 exec.Command ，也比较好用，通常状况下，可以达到我们的目的，如果我们逻辑当中，需要终止这个进程，则可以快速使用 cmd.Process.Kill() 方法来结束进程。但当我们要执行的命令会启动其他子进程来操作的时候，会发生什么情况？</p>
+<h3 id="一-孤儿进程的产生"><a href="#一-孤儿进程的产生" class="headerlink" title="一 孤儿进程的产生"></a>一 孤儿进程的产生</h3><p><strong>测试小程序</strong>：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><code class="hljs swift"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">kill</span>(cmd <span class="hljs-operator">*</span>exec.<span class="hljs-type">Cmd</span>)</span> <span class="hljs-function"><span class="hljs-keyword">func</span>()</span> &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">func</span>()</span> &#123;<br>    <span class="hljs-keyword">if</span> cmd <span class="hljs-operator">!=</span> <span class="hljs-literal">nil</span> &#123;<br>    cmd.<span class="hljs-type">Process</span>.<span class="hljs-type">Kill</span>()<br>    &#125;<br>    &#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span>()</span> &#123;<br>    cmd :<span class="hljs-operator">=</span> exec.<span class="hljs-type">Command</span>(<span class="hljs-string">&quot;/bin/bash&quot;</span>, <span class="hljs-string">&quot;-c&quot;</span>, <span class="hljs-string">&quot;watch top &gt;top.log&quot;</span>)<br>    time.<span class="hljs-type">AfterFunc</span>(<span class="hljs-number">1</span><span class="hljs-operator">*</span>time.<span class="hljs-type">Second</span>, kill(cmd))<br>    err :<span class="hljs-operator">=</span> cmd.<span class="hljs-type">Run</span>()<br>    fmt.<span class="hljs-type">Printf</span>(<span class="hljs-string">&quot;pid=%d err=%s<span class="hljs-subst">\n</span>&quot;</span>, cmd.<span class="hljs-type">Process</span>.<span class="hljs-type">Pid</span>, err)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+<p><strong>执行小程序</strong>：</p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><code class="hljs routeros">go <span class="hljs-builtin-name">run</span> main.go<br><br><span class="hljs-attribute">pid</span>=27326 <span class="hljs-attribute">err</span>=signal: killed<br></code></pre></td></tr></table></figure>
+
+
+<p><strong>查看进程信息</strong>：</p>
+<figure class="highlight apache"><table><tr><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">ps</span> -j<br><br><span class="hljs-attribute">USER</span>    PID  PPID  PGID   SESS JOBC STAT   TT       TIME COMMAND<br><span class="hljs-attribute">king</span>  <span class="hljs-number">24324</span>     <span class="hljs-number">1</span> <span class="hljs-number">24303</span>      <span class="hljs-number">0</span>    <span class="hljs-number">0</span> S    s<span class="hljs-number">012</span>    <span class="hljs-number">0</span>:<span class="hljs-number">00</span>.<span class="hljs-number">01</span> watch top<br></code></pre></td></tr></table></figure>
+
+
+<p>可以看到这个 “watch top” 的 PPID 为 1，说明这个进程已经变成了 “孤儿” 进程。</p>
+<p>那为什么会这样，这并不符合我们预期，那么可以从 Go 的文档中找到答案：</p>
+<p><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/process/01.jpg"></p>
+<h3 id="二-通过进程组来解决掉所有子进程"><a href="#二-通过进程组来解决掉所有子进程" class="headerlink" title="二 通过进程组来解决掉所有子进程"></a>二 通过进程组来解决掉所有子进程</h3><p>在 linux 当中，是有会话、进程组和进程组的概念，并且 Go 也是使用 linux 的 kill(2) 方法来发送信号的，那么是否可以通过 kill 来将要结束进程的子进程都结束掉？</p>
+<p>linux 的 kill(2) 的定义如下：</p>
+<p><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/process/02.jpg"></p>
+<p>并在方法的描述中，可以看到如下内容：</p>
+<p><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/process/03.png"></p>
+<p>如果 pid 为正数的时候，会给指定的 pid 发送 sig 信号，如果 pid 为负数的时候，会给这个进程组发送 sig 信号，那么我们可以通过进程组来将所有子进程退出掉？改一下 Go 程序中 kill 方法：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><code class="hljs swift"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">kill</span>(cmd <span class="hljs-operator">*</span>exec.<span class="hljs-type">Cmd</span>)</span> <span class="hljs-function"><span class="hljs-keyword">func</span>()</span> &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">func</span>()</span> &#123;<br>    <span class="hljs-keyword">if</span> cmd <span class="hljs-operator">!=</span> <span class="hljs-literal">nil</span> &#123;<br>    <span class="hljs-comment">// cmd.Process.Kill()</span><br>    syscall.<span class="hljs-type">Kill</span>(<span class="hljs-operator">-</span>cmd.<span class="hljs-type">Process</span>.<span class="hljs-type">Pid</span>, syscall.<span class="hljs-type">SIGKILL</span>)<br>    &#125;<br>    &#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span>()</span> &#123;<br>    cmd :<span class="hljs-operator">=</span> exec.<span class="hljs-type">Command</span>(<span class="hljs-string">&quot;/bin/bash&quot;</span>, <span class="hljs-string">&quot;-c&quot;</span>, <span class="hljs-string">&quot;watch top &gt;top.log&quot;</span>)<br>    time.<span class="hljs-type">AfterFunc</span>(<span class="hljs-number">1</span><span class="hljs-operator">*</span>time.<span class="hljs-type">Second</span>, kill(cmd))<br>    err :<span class="hljs-operator">=</span> cmd.<span class="hljs-type">Run</span>()<br>    fmt.<span class="hljs-type">Printf</span>(<span class="hljs-string">&quot;pid=%d err=%s<span class="hljs-subst">\n</span>&quot;</span>, cmd.<span class="hljs-type">Process</span>.<span class="hljs-type">Pid</span>, err)<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<p>再次执行：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><code class="hljs go"><br><span class="hljs-keyword">go</span> run main.<span class="hljs-keyword">go</span><br><br></code></pre></td></tr></table></figure>
+
+<p>会发现程序卡住了，我们来看一下当前执行的进程：</p>
+<figure class="highlight apache"><table><tr><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">ps</span> -j<br><br><span class="hljs-attribute">USER</span>    PID  PPID  PGID   SESS JOBC STAT   TT       TIME COMMAND<br><span class="hljs-attribute">king</span> <span class="hljs-number">27655</span> <span class="hljs-number">91597</span> <span class="hljs-number">27655</span>      <span class="hljs-number">0</span>    <span class="hljs-number">1</span> S+   s<span class="hljs-number">012</span>    <span class="hljs-number">0</span>:<span class="hljs-number">01</span>.<span class="hljs-number">10</span> go run main.go<br><span class="hljs-attribute">king</span> <span class="hljs-number">27672</span> <span class="hljs-number">27655</span> <span class="hljs-number">27655</span>      <span class="hljs-number">0</span>    <span class="hljs-number">1</span> S+   s<span class="hljs-number">012</span>    <span class="hljs-number">0</span>:<span class="hljs-number">00</span>.<span class="hljs-number">03</span> ..../exe/main<br><span class="hljs-attribute">king</span> <span class="hljs-number">27673</span> <span class="hljs-number">27672</span> <span class="hljs-number">27655</span>      <span class="hljs-number">0</span>    <span class="hljs-number">1</span> S+   s<span class="hljs-number">012</span>    <span class="hljs-number">0</span>:<span class="hljs-number">00</span>.<span class="hljs-number">00</span> /bin/bash -c watch top &gt;top.log<br><span class="hljs-attribute">king</span> <span class="hljs-number">27674</span> <span class="hljs-number">27673</span> <span class="hljs-number">27655</span>      <span class="hljs-number">0</span>    <span class="hljs-number">1</span> S+   s<span class="hljs-number">012</span>    <span class="hljs-number">0</span>:<span class="hljs-number">00</span>.<span class="hljs-number">01</span> watch top<br></code></pre></td></tr></table></figure>
+
+
+<p>可以看到我们 go run 产生了一个子进程 27672（command 那里是 go 执行的临时目录，比较长，因此添加了省略号），27672 产生了 27673（watch top &gt;top.log）进程，27673 产生了 27674（watch top）进程。那为什么没有将这些子进程都关闭掉呢？</p>
+<p>其实之类犯了一个低级错误，从上图中，我们可以看到他们的进程组 ID 为 27655，但是我们传递的是 cmd 的 id 即 27673，这个并不是进程组的 ID，因此程序并没有 kill，导致 cmd.Run() 一直在执行。</p>
+<p>在 Linux 中，进程组中的第一个进程，被称为进程组 Leader，同时这个进程组的 ID 就是这个进程的 ID，从这个进程中创建的其他进程，都会继承这个进程的进程组和会话信息；从上面可以看出 go run main.go 程序 PID 和 PGID 同为 27655，那么这个进程就是进程组 Leader，我们不能 kill 这个进程组，除非想“自杀”，哈哈哈。</p>
+<p>那么我们给要执行的进程，新建一个进程组，在 Kill 不就可以了嘛。在 linux 当中，通过 setpgid 方法来设置进程组 ID，定义如下：</p>
+<p><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/process/04.png"></p>
+<p>如果将 pid 和 pgid 同时设置成 0，也就是 setpgid(0,0)，则会使用当前进程为进程组 leader 并创建新的进程组。</p>
+<p>那么在 Go 程序中，可以通过 cmd.SysProcAttr 来设置创建新的进程组，修改后的代码如下：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><code class="hljs swift"><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">kill</span>(cmd <span class="hljs-operator">*</span>exec.<span class="hljs-type">Cmd</span>)</span> <span class="hljs-function"><span class="hljs-keyword">func</span>()</span> &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">func</span>()</span> &#123;<br>    <span class="hljs-keyword">if</span> cmd <span class="hljs-operator">!=</span> <span class="hljs-literal">nil</span> &#123;<br>    <span class="hljs-comment">// cmd.Process.Kill()</span><br>    syscall.<span class="hljs-type">Kill</span>(<span class="hljs-operator">-</span>cmd.<span class="hljs-type">Process</span>.<span class="hljs-type">Pid</span>, syscall.<span class="hljs-type">SIGKILL</span>)<br>    &#125;<br>    &#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span>()</span> &#123;<br>    cmd :<span class="hljs-operator">=</span> exec.<span class="hljs-type">Command</span>(<span class="hljs-string">&quot;/bin/bash&quot;</span>, <span class="hljs-string">&quot;-c&quot;</span>, <span class="hljs-string">&quot;watch top &gt;top.log&quot;</span>)<br>  cmd.<span class="hljs-type">SysProcAttr</span> <span class="hljs-operator">=</span> <span class="hljs-operator">&amp;</span>syscall.<span class="hljs-type">SysProcAttr</span>&#123;<br>    <span class="hljs-type">Setpgid</span>: <span class="hljs-literal">true</span>,<br>    &#125;<br><br>    time.<span class="hljs-type">AfterFunc</span>(<span class="hljs-number">1</span><span class="hljs-operator">*</span>time.<span class="hljs-type">Second</span>, kill(cmd))<br>    err :<span class="hljs-operator">=</span> cmd.<span class="hljs-type">Run</span>()<br>    fmt.<span class="hljs-type">Printf</span>(<span class="hljs-string">&quot;pid=%d err=%s<span class="hljs-subst">\n</span>&quot;</span>, cmd.<span class="hljs-type">Process</span>.<span class="hljs-type">Pid</span>, err)<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<p>再次执行：</p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><code class="hljs routeros">go <span class="hljs-builtin-name">run</span> main.go<br><br><span class="hljs-attribute">pid</span>=29397 <span class="hljs-attribute">err</span>=signal: killed<br></code></pre></td></tr></table></figure>
+
+
+<p>再次查看进程：</p>
+<figure class="highlight crmsh"><table><tr><td class="code"><pre><code class="hljs crmsh">ps -j<br><br><span class="hljs-keyword">USER</span>    <span class="hljs-title">PID</span>  PPID  PGID   SESS JOBC STAT   TT       TIME COMMAND<br><br></code></pre></td></tr></table></figure>
+
+<p>发现 watch 的进程都不存在了，那我们在看看是否还会有孤儿进程：</p>
+<figure class="highlight apache"><table><tr><td class="code"><pre><code class="hljs apache"><span class="hljs-comment"># 由于我测试的环境是mac，因此这个脚本只能在mac执行</span><br><br><span class="hljs-attribute">ps</span> -j | head -<span class="hljs-number">1</span>;ps -j | awk &#x27;&#123;if ($<span class="hljs-number">3</span> ==<span class="hljs-number">1</span> &amp;&amp; $<span class="hljs-number">1</span> !=<span class="hljs-string">&quot;root&quot;</span>)&#123;print $<span class="hljs-number">0</span>&#125;&#125;&#x27; | head<br><br><span class="hljs-attribute">USER</span>    PID  PPID  PGID   SESS JOBC STAT   TT       TIME COMMAND<br><br></code></pre></td></tr></table></figure>
+
+<p>已经没有孤儿进程了，问题至此已经完全解决。</p>
+<h3 id="三-子进程监听父进程是否退出-只能在-linux-下执行"><a href="#三-子进程监听父进程是否退出-只能在-linux-下执行" class="headerlink" title="三 子进程监听父进程是否退出(只能在 linux 下执行)"></a>三 子进程监听父进程是否退出(只能在 linux 下执行)</h3><p>假设要调用的程序也是我们自己写的其他应用程序，那么可以使用 Linux 的 prctl 方法来处理， prctl 方法的定义如下：</p>
+<p><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/process/05.jpg"></p>
+<p>这个方法有一个重要的 option：PR_SET_PDEATHSIG，通过这个来接收父进程的退出。</p>
+<p>让我们来再次构造一个有问题的程序。</p>
+<p>有两个文件，分别为 main.go 和 child.go 文件，main.go 会调用 child.go 文件。</p>
+<p>main.go 文件：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><code class="hljs go"><br><span class="hljs-keyword">package</span> main<br><br><span class="hljs-keyword">import</span> (<br>        <span class="hljs-string">&quot;os/exec&quot;</span><br>)<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>        cmd := exec.Command(<span class="hljs-string">&quot;./child&quot;</span>)<br>        cmd.Run()<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+<p>child.go 文件：</p>
+<figure class="highlight less"><table><tr><td class="code"><pre><code class="hljs less"><br><span class="hljs-selector-tag">package</span> <span class="hljs-selector-tag">main</span><br><br><span class="hljs-selector-tag">import</span> (<br>    <span class="hljs-string">&quot;fmt&quot;</span><br>    <span class="hljs-string">&quot;time&quot;</span><br>)<br><br><span class="hljs-selector-tag">func</span> <span class="hljs-selector-tag">main</span>() &#123;<br>    <span class="hljs-selector-tag">for</span> &#123;<br>    <span class="hljs-selector-tag">time</span><span class="hljs-selector-class">.Sleep</span>(<span class="hljs-number">200</span> * time.Millisecond)<br>    <span class="hljs-selector-tag">fmt</span><span class="hljs-selector-class">.Println</span>(time.Now())<br>    &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<p>在 Linux 环境中分别编译这两个文件：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><code class="hljs go"><br><span class="hljs-comment">// 编译 main.go 生成 main 二进制文件</span><br><span class="hljs-keyword">go</span> build -o main main.<span class="hljs-keyword">go</span><br><br><span class="hljs-comment">// 编译 child.go 生成 child 二进制文件</span><br><span class="hljs-keyword">go</span> build -o child child.<span class="hljs-keyword">go</span><br></code></pre></td></tr></table></figure>
+
+
+<p>执行 main 二进制文件：</p>
+<figure class="highlight 1c"><table><tr><td class="code"><pre><code class="hljs 1c"><br>./main <span class="hljs-meta">&amp;</span><br><br></code></pre></td></tr></table></figure>
+
+<p>查看他们的进程：</p>
+<figure class="highlight apache"><table><tr><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">ps</span> -ef<br><br><span class="hljs-attribute">UID</span>        PID  PPID  C STIME TTY          TIME CMD<br><span class="hljs-attribute">root</span>         <span class="hljs-number">1</span>     <span class="hljs-number">0</span>  <span class="hljs-number">0</span> <span class="hljs-number">06</span>:<span class="hljs-number">05</span> pts/<span class="hljs-number">0</span>    <span class="hljs-number">00</span>:<span class="hljs-number">00</span>:<span class="hljs-number">00</span> /bin/bash<br><span class="hljs-attribute">root</span>     <span class="hljs-number">11514</span>     <span class="hljs-number">1</span>  <span class="hljs-number">0</span> <span class="hljs-number">12</span>:<span class="hljs-number">12</span> pts/<span class="hljs-number">0</span>    <span class="hljs-number">00</span>:<span class="hljs-number">00</span>:<span class="hljs-number">00</span> ./main<br><span class="hljs-attribute">root</span>     <span class="hljs-number">11520</span> <span class="hljs-number">11514</span>  <span class="hljs-number">0</span> <span class="hljs-number">12</span>:<span class="hljs-number">12</span> pts/<span class="hljs-number">0</span>    <span class="hljs-number">00</span>:<span class="hljs-number">00</span>:<span class="hljs-number">00</span> ./child<br><br></code></pre></td></tr></table></figure>
+
+<p>可以看到 main 和 child 的进程，child 是 main 的子进程，我们将 main 进程 kill 掉，在查看进程状态：</p>
+<figure class="highlight apache"><table><tr><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">kill</span> -<span class="hljs-number">9</span> <span class="hljs-number">11514</span><br><br><span class="hljs-attribute">ps</span> -ef<br><br><span class="hljs-attribute">UID</span>        PID  PPID  C STIME TTY          TIME CMD<br><span class="hljs-attribute">root</span>         <span class="hljs-number">1</span>     <span class="hljs-number">0</span>  <span class="hljs-number">0</span> <span class="hljs-number">06</span>:<span class="hljs-number">05</span> pts/<span class="hljs-number">0</span>    <span class="hljs-number">00</span>:<span class="hljs-number">00</span>:<span class="hljs-number">00</span> /bin/bash<br><span class="hljs-attribute">root</span>     <span class="hljs-number">11520</span>     <span class="hljs-number">1</span>  <span class="hljs-number">0</span> <span class="hljs-number">12</span>:<span class="hljs-number">12</span> pts/<span class="hljs-number">0</span>    <span class="hljs-number">00</span>:<span class="hljs-number">00</span>:<span class="hljs-number">00</span> ./child<br><br></code></pre></td></tr></table></figure>
+
+<p>我们可以看到 child 的进程，他的 PPID 已经变成了 1，说明这个进程已经变成了孤儿进程。</p>
+<p>那接下来我们可以使用 PR_SET_PDEATHSIG 来保证父进程退出，子进程也退出，大致方式有两种：使用 CGO 调用和使用 syscall.RawSyscall 来调用。</p>
+<h3 id="使用-CGO"><a href="#使用-CGO" class="headerlink" title="使用 CGO"></a>使用 CGO</h3><p>将 child 修改成如下内容：</p>
+<p><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/process/06.png"></p>
+<p>程序中，使用 CGO，为了简单的展示，在 Go 文件中编写了 C 的 killTest 方法，并调用了 prctl 方法，然后在 Go 程序中调用 killTest 方法，让我们重新编译执行一下，再看看进程：</p>
+<figure class="highlight tap"><table><tr><td class="code"><pre><code class="hljs tap"><br>go build -o child child.go<br>./main &amp; <br>ps -ef <br><br>UID        PID  PPID  C STIME TTY          TIME CMD<br>root        <span class="hljs-number"> 1 </span>   <span class="hljs-number"> 0 </span><span class="hljs-number"> 0 </span>06:05 pts/0    00:00:00 /bin/bash<br>root    <span class="hljs-number"> 11663 </span>   <span class="hljs-number"> 1 </span><span class="hljs-number"> 0 </span>12:28 pts/0    00:00:00 ./main<br>root    <span class="hljs-number"> 11669 </span>11663 <span class="hljs-number"> 0 </span>12:28 pts/0    00:00:00 ./child<br><br></code></pre></td></tr></table></figure>
+
+<p>再次 kill 掉 main，并查看进程：</p>
+<figure class="highlight apache"><table><tr><td class="code"><pre><code class="hljs apache"><br><span class="hljs-attribute">kill</span> -<span class="hljs-number">9</span> <span class="hljs-number">11663</span><br><span class="hljs-attribute">ps</span> -ef<br><br><span class="hljs-attribute">UID</span>        PID  PPID  C STIME TTY          TIME CMD<br><span class="hljs-attribute">root</span>         <span class="hljs-number">1</span>     <span class="hljs-number">0</span>  <span class="hljs-number">0</span> <span class="hljs-number">06</span>:<span class="hljs-number">05</span> pts/<span class="hljs-number">0</span>    <span class="hljs-number">00</span>:<span class="hljs-number">00</span>:<span class="hljs-number">00</span> /bin/bash<br><br></code></pre></td></tr></table></figure>
+
+<p>可以看到 child 的进程也已经退出了，说明 CGO 调用的 prctl 生效了。</p>
+<h3 id="2-syscall-RawSyscall-方法"><a href="#2-syscall-RawSyscall-方法" class="headerlink" title="2 syscall.RawSyscall 方法"></a>2 syscall.RawSyscall 方法</h3><p>也可以采用 Go 中提供的 syscall.RawSyscall 方法来替代调用 CGO，在 Go 的文档中，可以查看到 syscall 包中定义的常量（查看 linux，如果是本地 godoc，需要指定 GOOS=linux），可以看到我们要用的几个常量以及他们对应的数值：</p>
+<figure class="highlight lasso"><table><tr><td class="code"><pre><code class="hljs lasso"><span class="hljs-comment">// 其他内容省略掉了</span><br>const(<br>    <span class="hljs-params">...</span>.<br>    PR_SET_PDEATHSIG                 = <span class="hljs-number">0x1</span><br>    <span class="hljs-params">...</span>.<br>)<br><br>const(     <br>    <span class="hljs-params">...</span>..<br>    SYS_PRCTL                  = <span class="hljs-number">157</span><br>    <span class="hljs-params">...</span>..<br>)<br><br></code></pre></td></tr></table></figure>
+
+<p>其中 PR_SET_PDEATHSIG 操作的值为 1，SYS_PRCTL 的值为 157，那么将 child.go 修改成如下内容：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><code class="hljs css">package <span class="hljs-selector-tag">main</span><br><br>import (<br>    &quot;fmt&quot;<br>    &quot;os&quot;<br>    &quot;syscall&quot;<br>    &quot;<span class="hljs-selector-tag">time</span>&quot;<br>)<br><br>func <span class="hljs-selector-tag">main</span>() &#123;<br>    _, _, errno := syscall.<span class="hljs-built_in">RawSyscall</span>(<span class="hljs-built_in">uintptr</span>(syscall.SYS_PRCTL), <span class="hljs-built_in">uintptr</span>(syscall.PR_SET_PDEATHSIG), <span class="hljs-built_in">uintptr</span>(syscall.SIGKILL), <span class="hljs-number">0</span>)<br>    if errno != <span class="hljs-number">0</span> &#123;<br>    os.<span class="hljs-built_in">Exit</span>(<span class="hljs-built_in">int</span>(errno))<br>    &#125;<br><br>    for &#123;<br>    <span class="hljs-selector-tag">time</span><span class="hljs-selector-class">.Sleep</span>(<span class="hljs-number">200</span> * <span class="hljs-selector-tag">time</span><span class="hljs-selector-class">.Millisecond</span>)<br>    fmt<span class="hljs-selector-class">.Println</span>(<span class="hljs-selector-tag">time</span><span class="hljs-selector-class">.Now</span>())<br>    &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<p>再次编译并执行：</p>
+<figure class="highlight tap"><table><tr><td class="code"><pre><code class="hljs tap"><br>go build -o child child.go<br>./main &amp; <br>ps -ef<br><br>UID        PID  PPID  C STIME TTY          TIME CMD<br>root        <span class="hljs-number"> 1 </span>   <span class="hljs-number"> 0 </span><span class="hljs-number"> 0 </span>06:05 pts/0    00:00:00 /bin/bash<br>root    <span class="hljs-number"> 12208 </span>   <span class="hljs-number"> 1 </span><span class="hljs-number"> 0 </span>12:46 pts/0    00:00:00 ./main<br>root    <span class="hljs-number"> 12214 </span>12208 <span class="hljs-number"> 0 </span>12:46 pts/0    00:00:00 ./child<br><br></code></pre></td></tr></table></figure>
+
+<p>将 main 进程结束掉：</p>
+<figure class="highlight apache"><table><tr><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">kill</span> -<span class="hljs-number">9</span> <span class="hljs-number">12208</span><br><span class="hljs-attribute">ps</span> -ef<br><br><span class="hljs-attribute">UID</span>        PID  PPID  C STIME TTY          TIME CMD<br><span class="hljs-attribute">root</span>         <span class="hljs-number">1</span>     <span class="hljs-number">0</span>  <span class="hljs-number">0</span> <span class="hljs-number">06</span>:<span class="hljs-number">05</span> pts/<span class="hljs-number">0</span>    <span class="hljs-number">00</span>:<span class="hljs-number">00</span>:<span class="hljs-number">00</span> /bin/bash<br></code></pre></td></tr></table></figure>
+
+
+<p>child 进程已经退出了，也达成了最终效果。</p>
+<h3 id="四-总结"><a href="#四-总结" class="headerlink" title="四 总结"></a>四 总结</h3><p>当我们使用 Go 程序执行其他程序的时候，如果其他程序也开启了其他进程，那么在 kill 的时候可能会把这些进程变成孤儿进程，一直执行并滞留在内存中。当然，如果我们程序非法退出，或者被 kill 调用，也会导致我们执行的进程变成孤儿进程，那么为了解决这个问题，从两个思路来解决：</p>
+<ul>
+<li><p>给要执行的程序创建新的进程组，并调用 syscall.Kill，传递负值 pid 来关闭这个进程组中所有的进程（比较完美的解决方法）。</p>
+</li>
+<li><p>如果要调用的程序也是我们自己编写的，那么可以使用 PR_SET_PDEATHSIG 来感知父进程退出，那么这种方式需要调用 Linxu 的 prctrl，可以使用 CGO 的方式，也可以使用 syscall.RawSyscall 的方式。</p>
+</li>
+</ul>
+<p>但不管使用哪种方式，都只是提供了一种思路，在我们编写服务端服务程序的时候，需要特殊关注，防止孤儿进程消耗服务器资源。</p>
+
+    </div>
+</div>
+<style>
+    #noneimg img {
+        display: none;
+        z-index: 109;
+        width: 600px !important;
+        border-radius: 0px;
+        position: fixed;
+        box-shadow: 0 0 0px #c3c3c300 !important;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto !important;
+    }
+
+    @media screen and (max-width:600px) {
+        #noneimg img {
+            width: 88%
+        }
+    }
+</style>
+<script>
+    $(function () { $('#article').click(function (e) { if (e.target.tagName == "IMG") { if ($('#nonediv').length == 0) { let MImg = `<div id='noneimg'><img src='${e.target.currentSrc}'></div>`; let MDiv = "<div id='nonediv' style='cursor: pointer;display: none; position: fixed;left: 0;top: 0; right: 0;bottom: 0;background-color: #333;opacity:0.5;z-index: 108;'></div>"; $('#article').append(MDiv); $('#article').append(MImg); $("#nonediv").fadeIn("slow"); $("#noneimg img").fadeIn("slow") } } else { if ($('#nonediv').length !== 0) { $("#noneimg ").fadeOut("slow"); $("#nonediv").fadeOut("slow"); setTimeout(function () { $('#nonediv').remove(); $('#noneimg').remove() }, 500) } } }); $('.article-content').addClass('content-move') });
+</script>
+<div class="Last-Next">
+    
+    <a href="/2021/08/21/2021-8-21%E7%9A%84%E7%A2%8E%E7%A2%8E%E5%BF%B5/">
+        <div class="last">
+            <span>上一篇</span>
+            <p>2021-8-21的碎碎念</p>
+        </div>
+    </a>
+    
+
+    
+    <a href="/2021/08/15/%E9%9D%A2%E8%AF%95%EF%BC%9Agolang-II/">
+        <div class="next">
+            <span>下一篇</span>
+            <p>面试：golang-II</p>
+        </div>
+    </a>
+    
+</div>
+		
+<link rel="stylesheet" href="/css/food.css">
+
+<div class="footer">
+	<div class="Copyright">
+		©2022 By Russshare. 主题：<a
+			style="text-decoration: none;display: contents; color: #898F9F;"
+			target="_blank" rel="noopener" href="https://github.com/qiaobug/hexo-theme-quiet">Quiet</a>
+	</div>
+	<div class="contact">
+		
+		<a target="_blank" rel="noopener" href="https://github.com/RiddleGo">
+			<img src="https://cdn.jsdelivr.net/gh/duogongneng/MyBlogImg/imggithub.png" alt="Quiet主题">
+		</a>
+		
+	</div>
+</div>
+
+<script src="/js/jquery.min.js"></script>
+
+
+<script src="/js/gotop.js"></script>
+
+
+<style type="text/css">
+    @media screen and (min-width: 600px) {
+        .goTop>span {
+            display: block;
+            border-radius: 50%;
+            width: 66px;
+            height: 66px;
+            cursor: pointer;
+            opacity: 0.8;
+            background: rgba(18, 24, 58, 0.06);
+            text-align: center;
+            border: 1px solid rgba(18, 24, 58, 0.06);
+
+            transition: border .5s;
+            -moz-transition: border .5s;
+            /* Firefox 4 */
+            -webkit-transition: border .5s;
+            /* Safari 和 Chrome */
+            -o-transition: border .5s;
+            /* Opera */
+        }
+
+        .goTop>span:hover {
+            border: 1px solid #6680B3;
+        }
+
+
+        .goTop {
+            position: fixed;
+            right: 30px;
+            bottom: 80px;
+        }
+
+        .goTop>span>svg {
+            width: 30px;
+            height: 30px;
+            margin-top: 17.5px;
+            opacity: 0.7;
+        }
+
+    }
+
+    @media screen and (max-width: 600px) {
+        .goTop {
+            display: none;
+        }
+    }
+</style>
+<div class="goTop" id="js-go_top">
+    <span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <g>
+                <path d="M13 12v8h-2v-8H4l8-8 8 8z"></path>
+            </g>
+        </svg>
+    </span>
+</div>
+<script>
+    $('#js-go_top').gotoTop({ offset: 500, speed: 300, animationShow: { 'transform': 'translate(0,0)', 'transition': 'transform .5s ease-in-out' }, animationHide: { 'transform': 'translate(100px,0)', 'transition': 'transform .5s ease-in-out' } });
+</script>
+<script>
+	console.log('\n %c Hexo-Quiet 主题 %c https://github.com/QiaoBug/hexo-theme-quiet \n', 'color: #fadfa3; background: #030307; padding:5px 0;', 'background: #fadfa3; padding:5px 0;')
+</script>
+	</body>
+
+</html>

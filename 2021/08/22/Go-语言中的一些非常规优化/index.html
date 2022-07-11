@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		
+<title>Go-语言中的一些非常规优化-Russshare</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="shortcut icon" type="image/x-icon" href="/image/favicon.ico">
+
+
+<meta name="keywords" content="golang优化,">
+<meta name="description" content="">
+
+
+<script src="/js/jquery.min.js"></script>
+
+
+
+<!-- Baidu Analytics -->
+<script defer>
+    var _hmt = _hmt || [];
+    (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?4b5fe1472f22fa";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+	<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+</head>
+
+	<body>
+		
+<link rel="stylesheet" href="/css/page.css">
+
+
+<link rel="stylesheet" href="/css/page_cente.css">
+
+
+<link rel="stylesheet" href="/css/atom-one-dark.css">
+
+
+<link rel="stylesheet" href="/css/header.css">
+
+	<div class="header">
+		<div class="header-top">
+			<div class="h-left">
+				<a href="/">
+					<img src="/image/logo.png" alt="Quiet">
+				</a>
+			</div>
+			<div class="h-right">
+				<ul>
+					
+						
+								<li>
+									<a href="/">
+										HOME
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/archives">
+										ARCHIVE
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/categories">
+										CATEGORIES
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/tags">
+										TAGS
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/links">
+										LINKS
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/about">
+										ABOUT
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+				</ul>
+			</div>
+			<div class="h-right-close">
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+					<path fill="none" d="M0 0h24v24H0z" />
+					<path d="M3 4h18v2H3V4zm0 7h18v2H3v-2zm0 7h18v2H3v-2z" fill="rgba(68,68,68,1)" />
+				</svg>
+			</div>
+		</div>
+	</div>
+	<div class="sidebar">
+    <div class="topo">
+        <h2>Russshare</h2>
+    </div>
+    <ul>
+        
+        <li>
+            <a href="/">HOME</a>
+        </li>
+        
+        <li>
+            <a href="/archives">ARCHIVE</a>
+        </li>
+        
+        <li>
+            <a href="/categories">CATEGORIES</a>
+        </li>
+        
+        <li>
+            <a href="/tags">TAGS</a>
+        </li>
+        
+        <li>
+            <a href="/links">LINKS</a>
+        </li>
+        
+        <li>
+            <a href="/about">ABOUT</a>
+        </li>
+        
+    </ul>
+    <div class="my_foot">
+        
+        <a target="_blank" rel="noopener" href="https://github.com/RiddleGo">
+            <img src="https://cdn.jsdelivr.net/gh/duogongneng/MyBlogImg/imggithub.png" alt="Quiet主题">
+        </a>
+        
+    </div>
+</div>
+<div class='shelter'
+    style='cursor: pointer;display: none; position: fixed;left: 0;top: 0; right: 0;bottom: 0;background-color: #333;opacity:0.5;z-index: 108;'>
+</div>
+<style>
+    .sidebar {
+        width: 0;
+        height: 100%;
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        background: #fff;
+        z-index: 999;
+        text-align: center;
+        box-shadow: -6px 0 20px rgba(98, 94, 94, .815)
+    }
+
+    .topo {
+        width: 100%;
+        height: 200px;
+        background: url(https://api.ixiaowai.cn/gqapi/gqapi.php) no-repeat;
+        background-size: 100% 100%;
+        position: relative;
+        display: flex;
+        align-items: flex-end
+    }
+
+    .topo h2 {
+        color: #fff;
+        z-index: 1;
+        position: relative;
+        margin: 0 0 10px 10px;
+        font-size: 1.2em;
+        box-sizing: border-box
+    }
+
+    .topo:before {
+        content: '';
+        background-image: url(/image/pattern.png);
+        background-repeat: repeat;
+        height: 100%;
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 100%;
+        z-index: 1
+    }
+
+    .sidebar ul {
+        width: 100%;
+        margin-top: 50px
+    }
+
+    .sidebar ul li {
+        height: 50px;
+        list-style: none;
+        font-size: 1.2em;
+        text-align: right;
+        margin-right: 10px
+    }
+
+    .sidebar ul li a {
+        display: grid;
+        color: #5d606a;
+        text-overflow: ellipsis;
+        width: 100%;
+        text-decoration: none
+    }
+
+    .my_foot {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        position: absolute;
+        bottom: 0
+    }
+
+    .my_foot a {
+        text-decoration: none;
+        margin-right: 10px;
+        display: inline-block
+    }
+
+    .my_foot a img {
+        width: 30px;
+        height: 30px
+    }
+</style>
+
+<script>
+    $(function () { $('.h-right-close>svg').click(function () { $('.sidebar').animate({ width: "66%" }, 500); $('.shelter').fadeIn("slow") }); $('.shelter').click(function (e) { $('.sidebar').animate({ width: "0" }, 500); $('.shelter').fadeOut("slow") }) })
+</script>
+		<script>
+			$(function () { $(window).scroll(function () { if ($(document).scrollTop() > 100) { $(".header-top").removeClass("header-move2"); $('.header-top').addClass('header-move1') } else { $(".header-top").removeClass("header-move1"); $('.header-top').addClass('header-move2') } }) });
+		</script>
+<div class="header-bg ">
+    <div class="bg-content">
+        <ul class="tag">
+            
+            
+            <li><a href="/tags/golang优化">golang优化</a></li>
+            
+            
+        </ul>
+        <h1>Go-语言中的一些非常规优化</h1>
+        <div class="article-info">
+            <div class="article-author">
+                
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+                    <g>
+                        <path fill="#12183A"
+                            d="M6.187 15.265A6.47 6.47 0 0 0 10 16.5a6.47 6.47 0 0 0 3.813-1.235A4.99 4.99 0 0 0 10 13.5a4.99 4.99 0 0 0-3.813 1.765zM5.082 14.25A6.485 6.485 0 0 1 10 12c1.965 0 3.726.872 4.918 2.25a6.5 6.5 0 1 0-9.836 0zM10 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0-1.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z">
+                        </path>
+                    </g>
+                </svg>
+                
+                <span> <a href="">Russshare</a></span>
+                <p>2021-08-22 10:57:42</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="article-content">
+    <div id="article" class="content">
+        <p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/X7OU9JjSThB5IZF_KVT1Jg">全文来自曹大微信公众号–点击进入原文</a></p>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>这次去 Gopher China 和不少老朋友见了个面，还有不少在微信上认识已久，一直没见过面的网友。同时也和各个公司的一线开发们聊了聊，互相交流了彼此使用 Go 时的一些心得和痛点。</p>
+<p>综合近期了解的一些相关分享，我把到目前为止见到的，不那么常见的，各方对 Go 的优化和 hack 集中在这篇文章里。因为考虑到一些公司情况比较特殊，所以本文中列出的点就不标记是哪个公司做的了。未来他们觉得时机成熟应该也会自己出来做一些分享。</p>
+<h2 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h2><h3 id="网络方面"><a href="#网络方面" class="headerlink" title="网络方面"></a>网络方面</h3><p>当前 Go 的网络抽象在效率上有些低，每一个连接至少要有一个 goroutine 来维护，有些协议实现可能有两个。因此 goroutine 总数 = 连接数 * 1 or 连接数 * 2。当连接数超过 10w 时，goroutine 栈本身带来的内存消耗就有几个 GB。</p>
+<p>大量的 goroutine 也会给调度和 GC 均带来很大压力。Go 底层的网络库和加密库效率也不是很高，所以在同类应用上和 C++ 等语言有较大性能差距(内存、吞吐量)。</p>
+<p>社区有不少使用裸调 Epoll 实现优化的库，就不给他们打广告了。由于用户的 syscall.EpollWait 是运行在一个没有任何优先级的 goroutine 中，当 CPU idle 较低时，系统整体的延迟不可控，比标准库的延迟还要高很多。之前个人做过相关的测试，核心数的增加也会使系统相应的延迟大幅上升。</p>
+<p>接下来不同的公司的优化思路就走向了两个方向：</p>
+<ul>
+<li><p>修改 runtime，在 runtime 增加用户 Epoll 函数的回调。类似 runtime 自己实现的 netpoll 那样。这种方式会导致 Go 本身难以升级，必须跟着有 hack 的版本走。当遇到 Go 的 bug 时会比较尴尬。</p>
+</li>
+<li><p>把 c 实现的网络库当作基础组件，把 Go 实现的业务逻辑作为业务嫁接在 c 库之上。</p>
+</li>
+</ul>
+<p>Go 语言的强项就是在网络编程上，现在却逼得大家为了优化都需要去做对 runtime 的 hack，甚至嫁接其它语言，这不能不说有点悲哀。还是希望未来官方能够有更好的底层基础工具来支持这种超高连接数的场景。</p>
+<h3 id="cgo"><a href="#cgo" class="headerlink" title="cgo"></a>cgo</h3><p>因为 c 历史悠久，所以对 cgo 的使用是难以避免的，个人见到比较多的，比如做国际化需求必须要用到的 icu 库，只能用 cgo 来调。或者做 cv 的 opencv，也只能用 cgo。或者国密场景，也只能用 cgo。</p>
+<p><strong>但从 go 调用到 c，有一次栈切换，成本有些高，所以有公司实现了从 go 切换到 c 不需要切换栈的神奇调用方式，同时在栈上打标记，让 GC 只扫描 Go 的栈而不扫描 c 的栈。</strong></p>
+<h3 id="go-plugin"><a href="#go-plugin" class="headerlink" title="go-plugin"></a>go-plugin</h3><p>官方提供的 go plugin 还是比较难用的，比如要求编译版本必须统一；加载后无法卸载等。</p>
+<p>现在有公司基于 .got 表，实现了比官方的 plugin 更灵活的热加载，热卸载的动态库。</p>
+<p>（这条我不太懂，所以只是听说，有问题欢迎指出</p>
+<h3 id="汇编优化"><a href="#汇编优化" class="headerlink" title="汇编优化"></a>汇编优化</h3><p>Go 语言的编译后端都是 Go 自己实现的，没有借助以往的平台，如 LLVM。</p>
+<p>有人将 C 语言编写的等价代码用较高的优化级别，如 clang -o3，编译为高度优化的汇编，再翻译为 plan9 汇编，整合成函数供 Go 应用调用，这样相当于在 Go 里享受了 llvm 平台的后端优化成果。</p>
+<h3 id="runtime-修改"><a href="#runtime-修改" class="headerlink" title="runtime 修改"></a>runtime 修改</h3><p>除了前面提到的网络编程时，epollwait 需要高优先级的 goroutine，在其它一些涉及到任务分发，任务处理的应用程序中也需要类似的高优先级 goroutine。</p>
+<p>所以有公司直接在 runtime 提供了接口，让用户可以通过接口来创建特殊优先级的 goroutine。</p>
+<p>除了暴露接口外，对 runtime 的实现代码也是要做不少修改的。</p>
+<h3 id="通过-SSA-进行的静态检查"><a href="#通过-SSA-进行的静态检查" class="headerlink" title="通过 SSA 进行的静态检查"></a>通过 SSA 进行的静态检查</h3><p>我们知道，当前社区的 golangci-lint 大多是用 Go 内置的编译前端来完成的，在编译后的 ast 上做一些逻辑，来提示用户代码中可能存在的问题。</p>
+<p>在一些较底层的编程场景，希望能够消灭所有的堆分配，所以他们通过检查生成的 SSA 中是否有 newobject 的调用来辅助进行代码的优化。</p>
+<h3 id="垃圾回收"><a href="#垃圾回收" class="headerlink" title="垃圾回收"></a>垃圾回收</h3><p>Go 语言的垃圾回收没有分代，分代会涉及到不同代际之间的对象移动，从 Go 官方历史上的分享来看，Go 的开发者们对 non-moving 比较执著。因为如果堆上对象会 move 的话，需要在读对象时开启 read barrier，几乎所有场景都是读多写少的场景，这样会极大影响程序性能，所以官方现在在分代的研发上处于停滞状态。</p>
+<p>国内某公司在之前官方分代 GC CL 的基础上实现了分代垃圾回收，不过因为看不到代码，不太清楚他们最终在生产环境是否能够达到较好的性能改善。</p>
+
+    </div>
+</div>
+<style>
+    #noneimg img {
+        display: none;
+        z-index: 109;
+        width: 600px !important;
+        border-radius: 0px;
+        position: fixed;
+        box-shadow: 0 0 0px #c3c3c300 !important;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto !important;
+    }
+
+    @media screen and (max-width:600px) {
+        #noneimg img {
+            width: 88%
+        }
+    }
+</style>
+<script>
+    $(function () { $('#article').click(function (e) { if (e.target.tagName == "IMG") { if ($('#nonediv').length == 0) { let MImg = `<div id='noneimg'><img src='${e.target.currentSrc}'></div>`; let MDiv = "<div id='nonediv' style='cursor: pointer;display: none; position: fixed;left: 0;top: 0; right: 0;bottom: 0;background-color: #333;opacity:0.5;z-index: 108;'></div>"; $('#article').append(MDiv); $('#article').append(MImg); $("#nonediv").fadeIn("slow"); $("#noneimg img").fadeIn("slow") } } else { if ($('#nonediv').length !== 0) { $("#noneimg ").fadeOut("slow"); $("#nonediv").fadeOut("slow"); setTimeout(function () { $('#nonediv').remove(); $('#noneimg').remove() }, 500) } } }); $('.article-content').addClass('content-move') });
+</script>
+<div class="Last-Next">
+    
+    <a href="/2021/08/22/Golang-%E5%AE%98%E6%96%B9%E6%8E%A8%E8%8D%90%E4%BD%BF%E7%94%A8%E7%9A%84-Redis-%E5%AE%A2%E6%88%B7%E7%AB%AF-redigo/">
+        <div class="last">
+            <span>上一篇</span>
+            <p>Golang-官方推荐使用的-Redis-客户端-redigo</p>
+        </div>
+    </a>
+    
+
+    
+    <a href="/2021/08/22/Go-interface-%E5%8E%9F%E7%90%86%E5%89%96%E6%9E%90-%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2/">
+        <div class="next">
+            <span>下一篇</span>
+            <p>Go-interface-原理剖析--类型转换</p>
+        </div>
+    </a>
+    
+</div>
+		
+<link rel="stylesheet" href="/css/food.css">
+
+<div class="footer">
+	<div class="Copyright">
+		©2022 By Russshare. 主题：<a
+			style="text-decoration: none;display: contents; color: #898F9F;"
+			target="_blank" rel="noopener" href="https://github.com/qiaobug/hexo-theme-quiet">Quiet</a>
+	</div>
+	<div class="contact">
+		
+		<a target="_blank" rel="noopener" href="https://github.com/RiddleGo">
+			<img src="https://cdn.jsdelivr.net/gh/duogongneng/MyBlogImg/imggithub.png" alt="Quiet主题">
+		</a>
+		
+	</div>
+</div>
+
+<script src="/js/jquery.min.js"></script>
+
+
+<script src="/js/gotop.js"></script>
+
+
+<style type="text/css">
+    @media screen and (min-width: 600px) {
+        .goTop>span {
+            display: block;
+            border-radius: 50%;
+            width: 66px;
+            height: 66px;
+            cursor: pointer;
+            opacity: 0.8;
+            background: rgba(18, 24, 58, 0.06);
+            text-align: center;
+            border: 1px solid rgba(18, 24, 58, 0.06);
+
+            transition: border .5s;
+            -moz-transition: border .5s;
+            /* Firefox 4 */
+            -webkit-transition: border .5s;
+            /* Safari 和 Chrome */
+            -o-transition: border .5s;
+            /* Opera */
+        }
+
+        .goTop>span:hover {
+            border: 1px solid #6680B3;
+        }
+
+
+        .goTop {
+            position: fixed;
+            right: 30px;
+            bottom: 80px;
+        }
+
+        .goTop>span>svg {
+            width: 30px;
+            height: 30px;
+            margin-top: 17.5px;
+            opacity: 0.7;
+        }
+
+    }
+
+    @media screen and (max-width: 600px) {
+        .goTop {
+            display: none;
+        }
+    }
+</style>
+<div class="goTop" id="js-go_top">
+    <span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <g>
+                <path d="M13 12v8h-2v-8H4l8-8 8 8z"></path>
+            </g>
+        </svg>
+    </span>
+</div>
+<script>
+    $('#js-go_top').gotoTop({ offset: 500, speed: 300, animationShow: { 'transform': 'translate(0,0)', 'transition': 'transform .5s ease-in-out' }, animationHide: { 'transform': 'translate(100px,0)', 'transition': 'transform .5s ease-in-out' } });
+</script>
+<script>
+	console.log('\n %c Hexo-Quiet 主题 %c https://github.com/QiaoBug/hexo-theme-quiet \n', 'color: #fadfa3; background: #030307; padding:5px 0;', 'background: #fadfa3; padding:5px 0;')
+</script>
+	</body>
+
+</html>

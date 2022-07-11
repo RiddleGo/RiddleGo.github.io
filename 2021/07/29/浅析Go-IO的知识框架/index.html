@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		
+<title>浅析Go-IO的知识框架-Russshare</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="shortcut icon" type="image/x-icon" href="/image/favicon.ico">
+
+
+<meta name="keywords" content="IO,">
+<meta name="description" content="">
+
+
+<script src="/js/jquery.min.js"></script>
+
+
+
+<!-- Baidu Analytics -->
+<script defer>
+    var _hmt = _hmt || [];
+    (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?4b5fe1472f22fa";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+	<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+</head>
+
+	<body>
+		
+<link rel="stylesheet" href="/css/page.css">
+
+
+<link rel="stylesheet" href="/css/page_cente.css">
+
+
+<link rel="stylesheet" href="/css/atom-one-dark.css">
+
+
+<link rel="stylesheet" href="/css/header.css">
+
+	<div class="header">
+		<div class="header-top">
+			<div class="h-left">
+				<a href="/">
+					<img src="/image/logo.png" alt="Quiet">
+				</a>
+			</div>
+			<div class="h-right">
+				<ul>
+					
+						
+								<li>
+									<a href="/">
+										HOME
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/archives">
+										ARCHIVE
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/categories">
+										CATEGORIES
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/tags">
+										TAGS
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/links">
+										LINKS
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/about">
+										ABOUT
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+				</ul>
+			</div>
+			<div class="h-right-close">
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+					<path fill="none" d="M0 0h24v24H0z" />
+					<path d="M3 4h18v2H3V4zm0 7h18v2H3v-2zm0 7h18v2H3v-2z" fill="rgba(68,68,68,1)" />
+				</svg>
+			</div>
+		</div>
+	</div>
+	<div class="sidebar">
+    <div class="topo">
+        <h2>Russshare</h2>
+    </div>
+    <ul>
+        
+        <li>
+            <a href="/">HOME</a>
+        </li>
+        
+        <li>
+            <a href="/archives">ARCHIVE</a>
+        </li>
+        
+        <li>
+            <a href="/categories">CATEGORIES</a>
+        </li>
+        
+        <li>
+            <a href="/tags">TAGS</a>
+        </li>
+        
+        <li>
+            <a href="/links">LINKS</a>
+        </li>
+        
+        <li>
+            <a href="/about">ABOUT</a>
+        </li>
+        
+    </ul>
+    <div class="my_foot">
+        
+        <a target="_blank" rel="noopener" href="https://github.com/RiddleGo">
+            <img src="https://cdn.jsdelivr.net/gh/duogongneng/MyBlogImg/imggithub.png" alt="Quiet主题">
+        </a>
+        
+    </div>
+</div>
+<div class='shelter'
+    style='cursor: pointer;display: none; position: fixed;left: 0;top: 0; right: 0;bottom: 0;background-color: #333;opacity:0.5;z-index: 108;'>
+</div>
+<style>
+    .sidebar {
+        width: 0;
+        height: 100%;
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        background: #fff;
+        z-index: 999;
+        text-align: center;
+        box-shadow: -6px 0 20px rgba(98, 94, 94, .815)
+    }
+
+    .topo {
+        width: 100%;
+        height: 200px;
+        background: url(https://api.ixiaowai.cn/gqapi/gqapi.php) no-repeat;
+        background-size: 100% 100%;
+        position: relative;
+        display: flex;
+        align-items: flex-end
+    }
+
+    .topo h2 {
+        color: #fff;
+        z-index: 1;
+        position: relative;
+        margin: 0 0 10px 10px;
+        font-size: 1.2em;
+        box-sizing: border-box
+    }
+
+    .topo:before {
+        content: '';
+        background-image: url(/image/pattern.png);
+        background-repeat: repeat;
+        height: 100%;
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 100%;
+        z-index: 1
+    }
+
+    .sidebar ul {
+        width: 100%;
+        margin-top: 50px
+    }
+
+    .sidebar ul li {
+        height: 50px;
+        list-style: none;
+        font-size: 1.2em;
+        text-align: right;
+        margin-right: 10px
+    }
+
+    .sidebar ul li a {
+        display: grid;
+        color: #5d606a;
+        text-overflow: ellipsis;
+        width: 100%;
+        text-decoration: none
+    }
+
+    .my_foot {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        position: absolute;
+        bottom: 0
+    }
+
+    .my_foot a {
+        text-decoration: none;
+        margin-right: 10px;
+        display: inline-block
+    }
+
+    .my_foot a img {
+        width: 30px;
+        height: 30px
+    }
+</style>
+
+<script>
+    $(function () { $('.h-right-close>svg').click(function () { $('.sidebar').animate({ width: "66%" }, 500); $('.shelter').fadeIn("slow") }); $('.shelter').click(function (e) { $('.sidebar').animate({ width: "0" }, 500); $('.shelter').fadeOut("slow") }) })
+</script>
+		<script>
+			$(function () { $(window).scroll(function () { if ($(document).scrollTop() > 100) { $(".header-top").removeClass("header-move2"); $('.header-top').addClass('header-move1') } else { $(".header-top").removeClass("header-move1"); $('.header-top').addClass('header-move2') } }) });
+		</script>
+<div class="header-bg ">
+    <div class="bg-content">
+        <ul class="tag">
+            
+            
+            <li><a href="/tags/IO">IO</a></li>
+            
+            
+        </ul>
+        <h1>浅析Go-IO的知识框架</h1>
+        <div class="article-info">
+            <div class="article-author">
+                
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+                    <g>
+                        <path fill="#12183A"
+                            d="M6.187 15.265A6.47 6.47 0 0 0 10 16.5a6.47 6.47 0 0 0 3.813-1.235A4.99 4.99 0 0 0 10 13.5a4.99 4.99 0 0 0-3.813 1.765zM5.082 14.25A6.485 6.485 0 0 1 10 12c1.965 0 3.726.872 4.918 2.25a6.5 6.5 0 1 0-9.836 0zM10 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0-1.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z">
+                        </path>
+                    </g>
+                </svg>
+                
+                <span> <a href="">Russshare</a></span>
+                <p>2021-07-29 15:19:47</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="article-content">
+    <div id="article" class="content">
+        <p>本文来自CSDN微信公众号–以下文章来源于奇伢云存储 ，作者奇伢<br><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/644%20(1).png"></p>
+<h3 id="Go-和-IO-的不解之缘？"><a href="#Go-和-IO-的不解之缘？" class="headerlink" title="Go 和 IO 的不解之缘？"></a>Go 和 IO 的不解之缘？</h3><p>Go 是一种高性能的编译性语言，天然支持高并发，语言级别封装协程，号称可以支持成千上万，十万，甚至百万的协程并发。这个量级远不是线程可比的。</p>
+<p><strong>前置小知识点：并行和并发的区别？</strong></p>
+<p>并行看的是时刻，并发看的是时间段。</p>
+<figure class="highlight apache"><table><tr><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">2021</span>/<span class="hljs-number">1</span>/<span class="hljs-number">1</span> <span class="hljs-number">12</span>:<span class="hljs-number">00</span>:<span class="hljs-number">00</span> 这个时刻有两个请求在同时被执行，这说的是并行；<br><br><span class="hljs-attribute">2021</span>/<span class="hljs-number">1</span>/<span class="hljs-number">1</span> <span class="hljs-number">12</span>:<span class="hljs-number">00</span>:<span class="hljs-number">00</span> - <span class="hljs-number">2021</span>/<span class="hljs-number">1</span>/<span class="hljs-number">1</span> <span class="hljs-number">12</span>:<span class="hljs-number">00</span>:<span class="hljs-number">01</span> 这 <span class="hljs-number">1</span> 秒的时间，完成了 <span class="hljs-number">1000</span> 个请求，qps 为 <span class="hljs-number">1000</span>，这种说的是并发；<br></code></pre></td></tr></table></figure>
+<p>好，先回归主题，Go 除了 Goroutine 足够轻量之外，支持如此高并发的这其中的秘诀在哪里？</p>
+<p><strong>执行体调度得当</strong>。CPU 不停的在不同的执行体（ Goroutine ）之间反复横跳！CPU 一直在装填和运行不同执行体的指令，G1（Goroutine 1 的缩写） 不行就搞 G2 ，一刻不能停，这样才能使得大量的执行体（ Goroutine ）齐头并进，系统才能完成如此高并发的吞吐（注意关键字：并发哦）。</p>
+<p>思考一个问题，程序可分为 CPU 密集型的程序和 IO 密集型的程序两种，Go 适合哪种？</p>
+<p><strong>IO 密集型。</strong></p>
+<p>这里的理由其实很有意思，先说为什么不合适 CPU 密集型呢？</p>
+<p>理由其实很简单，CPU 密集型就意味着每个执行体都是急需 CPU 的，G1 吃 CPU 都不够，还切到 G2 去干嘛？所以 CPU 密集型的程序最好的情况就是不调度！绑核都来不及呢。想要提高这种程序的性能，就是加钱，买核，买 CPU，买 GPU，把 CPU 核并行起来。</p>
+<p><strong>为什么 IO 密集型就好了？</strong></p>
+<p><strong>划重点：IO 设备和 CPU 可是不同的独立设备呀。这两者之间的处理可是并行运行的。</strong></p>
+<p>Go 程序的协程调度则可以很好的利用这个关系，让 CPU 执行程序指令，只负责发送 IO ，一旦 IO 被 IO 设备接收，不等待完成，就可以处理其他人的指令，IO 的完成以异步事件的形式触发。这样 IO 设备的处理过程就和 CPU 的执行并行了起来。</p>
+<p><strong>任何 IO 都适配 Go 吗？</strong></p>
+<p>不是的。IO 也分为网络 IO 和文件 IO 。<strong>其实适合 Go 的程序类型准确的来讲是：网络 IO 密集型的程序。</strong></p>
+<p>其中差异就在于：</p>
+<p>网络 fd 可以用 epoll 池来管理事件，实现异步 IO；</p>
+<p>文件 fd 不能用 epoll 池来管理事件，只能同步 IO；</p>
+<p>题外话：文件要实现异步 IO 当前在 Linux 下有两种方式：</p>
+<p>Linux 系统提供的 AIO ：但 Go 没封装实现，因为这个有不少坑；</p>
+<p>Linux 系统提供的 io_uring ：但内核版本要求高，线上没普及；</p>
+<p>一句话，Go 语言级别把网络 IO 做了异步化，但是文件 IO 还是同步的调用。</p>
+<p>异步 IO 咱们就不展开了，以后单独讲。笔者铺开了这么多，只想说明一个事情：Go 和 IO 天然就存在不解之缘，IO 操作是 Go 的最核心之一。</p>
+<p>今天就是为了简单讲讲 Go 的 IO 使用有哪些姿势。</p>
+<h3 id="Go-的-IO-长什么样子？"><a href="#Go-的-IO-长什么样子？" class="headerlink" title="Go 的 IO 长什么样子？"></a>Go 的 IO 长什么样子？</h3><h4 id="1-IO-接口描述（语义）"><a href="#1-IO-接口描述（语义）" class="headerlink" title="1   IO 接口描述（语义）"></a>1   IO 接口描述（语义）</h4><p>IO 无非就是读写。Go 的语义接口用 interface 来表述，定义在 io 这个 package 中，代码位置：io/io.go 。</p>
+<p>读操作该是什么样？该传什么参数？返回什么值？</p>
+<figure class="highlight reasonml"><table><tr><td class="code"><pre><code class="hljs reasonml"><span class="hljs-keyword">type</span> Reader interface &#123;<br> <span class="hljs-constructor">Read(<span class="hljs-params">p</span> []<span class="hljs-params">byte</span>)</span> (n <span class="hljs-built_in">int</span>, err error)<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>写操作是什么样的？该传什么参数？返回什么值？</p>
+<figure class="highlight reasonml"><table><tr><td class="code"><pre><code class="hljs reasonml"><span class="hljs-keyword">type</span> Writer interface &#123;<br> <span class="hljs-constructor">Write(<span class="hljs-params">p</span> []<span class="hljs-params">byte</span>)</span> (n <span class="hljs-built_in">int</span>, err error)<br>&#125;<br>**io 是 Go 里面最最核心的 IO 相关的库。为什么怎么说呢？**<br></code></pre></td></tr></table></figure>
+<p>因为 IO 的 interface 定义在这个地方。该库不涉及具体的 IO 实现，定义的是最本源的 IO 接口语义。</p>
+<p>什么是 Reader、Writer、ReaderAt、WriterAt ，在这个库里说的明明白白。</p>
+<p><strong>划重点：这个库不涉及具体的 io 实现，描述的是最核心的 IO 接口语义。</strong></p>
+<p>io 库的内容，如果按照接口的定义维度大致可以分为 3 大类：</p>
+<h5 id="基础类型："><a href="#基础类型：" class="headerlink" title="基础类型："></a>基础类型：</h5><p>比如：Reader、Writer、Closer、ReaderAt、WriterAt、Seeker、ByteReader、ByteWrieter、RuneReader、StringWriter  等；</p>
+<p>这些接口是最基本的接口，描述了最原始的 Go 的 IO 的样子，这个非常非常非常重要。重要的说三遍。</p>
+<p>如果你写 Go 代码的时候，要实现这些接口，千万要注意在标准库里的注释。<br><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/644%20(2).png"></p>
+<p>如果大意疏忽了这些接口的语义，可能会造成不可挽回损失。笔者在 Go Reader，ReaderAt 的区别 一文中分享过一个经验案例。</p>
+<h5 id="组合类型："><a href="#组合类型：" class="headerlink" title="组合类型："></a>组合类型：</h5><p>第二大类就是组合类型，往往是把最基本的接口组合起来，使用的语法糖则是 Go 的匿名字段的用法，比如：ReaderCloser、WriteCloser、WriteSeeker 等；</p>
+<figure class="highlight elm"><table><tr><td class="code"><pre><code class="hljs elm"><span class="hljs-keyword">type</span> <span class="hljs-type">ReadWriter</span> interface &#123;<br> <span class="hljs-type">Reader</span><br> <span class="hljs-type">Writer</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h5 id="进阶类型："><a href="#进阶类型：" class="headerlink" title="进阶类型："></a>进阶类型：</h5><p>这个类型比较有意思，一般是基于基础接口之上，加了一些有趣的实现，比如：</p>
+<p>TeeReader、LimitReader、SectionReader、MultiReader、MultiWriter、PipeReader、PipeWriter 等；</p>
+<p>比如：</p>
+<p>TeeReader 这是一个分流器的实现，如果把数据比作一个水流，那么通过 TeeReader 之后，将会分叉出一个新的数据流。</p>
+<p>LimitReader 则是给 Reader 加了一个边界期限。</p>
+<p>MultiReader 则是把多个数据流合成一股。</p>
+<p>这个和 Linux 的 tee 命令异曲同工，细品。</p>
+<h4 id="2-IO-通用的函数"><a href="#2-IO-通用的函数" class="headerlink" title="2 IO 通用的函数"></a>2 IO 通用的函数</h4><p>io 库还有一些基于这些接口的函数，比如：</p>
+<ul>
+<li><p>Copy ：把一个 Reader 读出来，写到 Writer  里去，直到其中一方出错为止（ 比如最常见的，读端出现 EOF ）；</p>
+</li>
+<li><p>CopyN ：这个和 Copy 一样，读 Reader，写 Writer，直到出错为止。但是 CopyN 比 Copy 多了一个结束条件：数据的拷贝绝对不会超过 N 个；</p>
+</li>
+<li><p>CopyBuffer：这个也是个拷贝实现，和 Copy，CopyN 本质无差异。这个能让用户指定使用多大的 Buffer 内存，这个可以让用户能根据实际情况优化性能，比如大文件拷贝的话，可以考虑使用大一点的 buffer，提高效率（ 1G 的文件拷贝，它也是分了无数次的读写完成的，比如用 1M 的内存 buffer，不停的搬运，搬运 1024 次，才算完）。</p>
+</li>
+</ul>
+<h4 id="3-io-ioutil-工具库"><a href="#3-io-ioutil-工具库" class="headerlink" title="3 io/ioutil 工具库"></a>3 io/ioutil 工具库</h4><p>这个库位于 src/io 目录之下，目录路径为 src/io/ioutil。顾名思义，这是一个工具类型的库，util 嘛，你们都懂的，啥都有，是一些方便的函数实现。他的核心是：怎么方便怎么来。</p>
+<p>ReadFile：给一个路径，把文件一把读到内存（不需要 open，close，read，write 啥的，统统封装起来）方便不？</p>
+<p>WriterFile：给一个路径，把内存一把写入文件，方便不？</p>
+<p>ReadDir：给一个目录路径，把这个路径下的文件列表一把读上来，方便不？</p>
+<p>ReadAll：给一个 Reader 流，一把读完，全部读到内存，方便不？</p>
+<p>这就是个工具库，就是应付一些简单的场景的 IO 方便而已。注意了，场景一定要简单，举个栗子：</p>
+<p>使用 ReadAll 这个函数，是把 Reader 流全部读到内存，所以这里内存要装得下才行，如果你这个 Reader 是从一个 2 T 的文件来的，那就 (⊙o⊙)… 尴尬了。</p>
+<h3 id="io-的姿势多种多样？"><a href="#io-的姿势多种多样？" class="headerlink" title="io 的姿势多种多样？"></a>io 的姿势多种多样？</h3><p>io 库定义了 io的该有的样子。现在可以想象具体的问题了，Reader，Writer 可能是哪些？</p>
+<ul>
+<li>字节数组可以是 Reader / Writer ？</li>
+<li>内存结构体可以是 Reader 吗？</li>
+<li>文件可以是 Reader / Writer 吗？</li>
+<li>字符串可以是 Reader ？</li>
+<li>IO 能聚合来提高效率吗？</li>
+</ul>
+<p>都可以！Go 帮你做好了这一切。</p>
+<h4 id="1-io-库的拓扑"><a href="#1-io-库的拓扑" class="headerlink" title="1  io 库的拓扑"></a>1  io 库的拓扑</h4><p>IO 行为都是以 io 库为中心发散的。<br><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/644%20(3).png"></p>
+<p>围绕着 IO 库，io 的姿势丰富多彩，io 的主体随意定制。</p>
+<h3 id="丰富多彩的-io-姿势"><a href="#丰富多彩的-io-姿势" class="headerlink" title="丰富多彩的 io 姿势"></a>丰富多彩的 io 姿势</h3><h4 id="1-io-和字节的故事：bytes-库"><a href="#1-io-和字节的故事：bytes-库" class="headerlink" title="1   io 和字节的故事：bytes 库"></a>1   io 和字节的故事：bytes 库</h4><p><strong>Reader/Writer 可以是内存字节数组。</strong></p>
+<p>处理字节数组的库，bytes.Reader 可以把 []byte 转换成 Reader，bytes.Buffer 可以把 []byte 转化成 Reader、Writer ，换句话讲，内存块可以作为读写的数据流了。</p>
+<p>举个栗子：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><code class="hljs go">buffer := <span class="hljs-built_in">make</span>([]<span class="hljs-keyword">byte</span>, <span class="hljs-number">1024</span>)<br>readerFromBytes := bytes.NewReader(buffer)<br>n, err := io.Copy(ioutil.Discard, readerFromBytes)<br><span class="hljs-comment">// n == 1024, err == nil</span><br>fmt.Printf(<span class="hljs-string">&quot;n=%v,err=%v\n&quot;</span>,n, err)<br></code></pre></td></tr></table></figure>
+<h4 id="2-io-和字符串的故事：strings-库"><a href="#2-io-和字符串的故事：strings-库" class="headerlink" title="2   io 和字符串的故事：strings 库"></a>2   io 和字符串的故事：strings 库</h4><p>字符串可以是 Reader。</p>
+<p>strings.Reader 能够把字符串转换成 Reader ，这个也挺有意思的，直接能把字符串作为读源。</p>
+<figure class="highlight stata"><table><tr><td class="code"><pre><code class="hljs stata">data := <span class="hljs-string">&quot;hello world&quot;</span><br>readerFromBytes := strings.NewReader(data)<br><span class="hljs-keyword">n</span>, <span class="hljs-keyword">err</span> := io.<span class="hljs-keyword">Copy</span>(ioutil.<span class="hljs-keyword">Discard</span>, readerFromBytes)<br>fmt.Printf(<span class="hljs-string">&quot;n=%v,err=%v\n&quot;</span>,<span class="hljs-keyword">n</span>, <span class="hljs-keyword">err</span>)<br></code></pre></td></tr></table></figure>
+<h4 id="3-io-和网络的故事：net-库"><a href="#3-io-和网络的故事：net-库" class="headerlink" title="3   io 和网络的故事：net 库"></a>3   io 和网络的故事：net 库</h4><p>网络可以作为读写源，抽象成了 Reader、Writer 的形式。这个是以 net.Conn  封装出来的。</p>
+<p>举个栗子：演示一个 C/S 通信。</p>
+<p>服务端：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">handleConn</span><span class="hljs-params">(conn net.Conn)</span></span> &#123;<br> <span class="hljs-keyword">defer</span> conn.Close()<br> buf := <span class="hljs-built_in">make</span>([]<span class="hljs-keyword">byte</span>, <span class="hljs-number">4096</span>)<br> conn.Read(buf)<br> conn.Write([]<span class="hljs-keyword">byte</span>(<span class="hljs-string">&quot;pong: &quot;</span>))<br> conn.Write(buf)<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br> server, err := net.Listen(<span class="hljs-string">&quot;tcp&quot;</span>, <span class="hljs-string">&quot;:9999&quot;</span>)<br> <span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>  log.Fatalf(<span class="hljs-string">&quot;err:%v&quot;</span>, err)<br> &#125;<br> <span class="hljs-keyword">for</span> &#123;<br>  c, err := server.Accept()<br>  <span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>   log.Fatalf(<span class="hljs-string">&quot;err:%v&quot;</span>, err)<br>  &#125;<br>  <span class="hljs-keyword">go</span> handleConn(c)<br> &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>关键点：</p>
+<p>net.Listen 创建一个监听套接字，在 Go 里封装成了 net.Listener 类型；</p>
+<p>Accept 函数返回一个 net.Conn ，代表一条网络连接，net.Conn  既是 Reader，又是 Writer ，拿到之后各自处理即可；</p>
+<p>客户端：</p>
+<p>通过 net.Dail  一个 net.Conn 出来。</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>    conn, err := net.Dial(<span class="hljs-string">&quot;tcp&quot;</span>, <span class="hljs-string">&quot;:9999&quot;</span>)<br>    <span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>        <span class="hljs-built_in">panic</span>(err)<br>    &#125;<br>    conn.Write([]<span class="hljs-keyword">byte</span>(<span class="hljs-string">&quot;hello world\n&quot;</span>))<br>    io.Copy(os.Stdout, conn)<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>关键点：</p>
+<p>net.Dail 传入服务端地址和网络协议类型，即可返回一条和服务端通信的网络连接，返回的结构为 net.Conn；</p>
+<p>net.Conn 即可作为读端（ Reader ），也是写端（ Writer ）；</p>
+<p>以上无论是 net.Listener ，还是 net.Conn  都是基于系统调用 socket 之上的一层封装。底下使用的是类似的系统调用：</p>
+<figure class="highlight x86asm"><table><tr><td class="code"><pre><code class="hljs x86asm"><span class="hljs-keyword">syscall</span><span class="hljs-number">.</span>Socket<br><span class="hljs-keyword">syscall</span><span class="hljs-number">.</span>Connect<br><span class="hljs-keyword">syscall</span><span class="hljs-number">.</span>Listen<br><span class="hljs-keyword">syscall</span><span class="hljs-number">.</span>GetsockoptInt<br></code></pre></td></tr></table></figure>
+<p>Go 针对网络 fd 会做哪些封装呢？</p>
+<p>创建还是用 socket 的调用创建的 fd，创建出来就会立马设置 nonblock 模式（因为 Go 的网络 fd 天然要使用 IO 多路复用的方式来走 IO ），还有其他配置；</p>
+<p>把 socket fd 丢到 epoll 池里 （ 通过 poll.runtime_pollOpen  把 socket 套接字加到 epoll 池里，底层调用的还是 epollctl  ），监听事件；</p>
+<p>封装好读写事件到来的函数回调；</p>
+<h4 id="4-io-和文件的故事：os-库"><a href="#4-io-和文件的故事：os-库" class="headerlink" title="4   io 和文件的故事：os 库"></a>4   io 和文件的故事：os 库</h4><p>文件 IO，这个就是我们最常见的文件 IO 啦，文件可以作为读端，也可以作为写端。</p>
+<p>File<br>io 的读写端可以是文件。这个太容易理解了，也是我们最常见的读写端，毕竟文件就是存储数据的一种形态。在 Go 里面，我们用 os.OpenFile  这个调用，就可以获取到 Go 帮你封装的文件操作句柄 File ，File 这个结构体对外实现了 Read，Write，ReadAt，WriteAt  等接口，所以自然就可以作为 Reader 和 Writer 来使用。。</p>
+<p>举个栗子：</p>
+<figure class="highlight stata"><table><tr><td class="code"><pre><code class="hljs stata"><span class="hljs-comment">// 如下，把 test.data 的数据读出来丢到垃圾桶</span><br>fd, <span class="hljs-keyword">err</span> := os.OpenFile(<span class="hljs-string">&quot;test.data&quot;</span>, os.O_RDWR, 0)<br><span class="hljs-keyword">if</span> <span class="hljs-keyword">err</span> != nil &#123;<br>    panic(<span class="hljs-keyword">err</span>)<br>&#125;<br>io.<span class="hljs-keyword">Copy</span>(ioutil.<span class="hljs-keyword">Discard</span>, fd)<br></code></pre></td></tr></table></figure>
+<p>这里返回了一个 File 类型，不难想象这个是基于文件 fd 的一层封装。这个里面大概做了什么？</p>
+<p>调用系统调用 syscall.Open 拿到文件 fd ，顺便设置了下垃圾回收时候的析构函数，其他的好像没了。远比网络 fd 要简单；</p>
+<p>Stdin、Stdout、Stderr<br>Go 这个把标准输入、标准输出、标准错误输出 抽象成了读写源，对应了 os.Stdin，os.Stdout，os.Stderr  这三个变量。这三个变量其实就是 File 类型的变量，定义在 Go 的源码库 src/os/file.go 里：</p>
+<figure class="highlight reasonml"><table><tr><td class="code"><pre><code class="hljs reasonml">var (<br> Stdin  = <span class="hljs-constructor">NewFile(<span class="hljs-params">uintptr</span>(<span class="hljs-params">syscall</span>.Stdin)</span>, <span class="hljs-string">&quot;/dev/stdin&quot;</span>)<br> Stdout = <span class="hljs-constructor">NewFile(<span class="hljs-params">uintptr</span>(<span class="hljs-params">syscall</span>.Stdout)</span>, <span class="hljs-string">&quot;/dev/stdout&quot;</span>)<br> Stderr = <span class="hljs-constructor">NewFile(<span class="hljs-params">uintptr</span>(<span class="hljs-params">syscall</span>.Stderr)</span>, <span class="hljs-string">&quot;/dev/stderr&quot;</span>)<br>)<br></code></pre></td></tr></table></figure>
+<p>划重点：这个就是我们常用的 0，1，2 句柄哦。</p>
+<p>标准输入就可以和方便的作为读端（ Reader ），标准输出可以作为写端（ Writer ）啦。</p>
+<p>举个栗子：用一行代码实现一个最简单的 echo 回显的程序。</p>
+<figure class="highlight less"><table><tr><td class="code"><pre><code class="hljs less"><span class="hljs-selector-tag">func</span> <span class="hljs-selector-tag">main</span>() &#123;<br>    <span class="hljs-comment">// 一行代码实现回显</span><br>    <span class="hljs-selector-tag">io</span><span class="hljs-selector-class">.Copy</span>(os.Stdout, os.Stdin)<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>把标准输入作为读端，标准输出作为写端。编译出来运行吧，在终端随便输入一个字符串，敲下回车看下效果吧。</p>
+<h4 id="5-缓存-io-的故事：bufio-库"><a href="#5-缓存-io-的故事：bufio-库" class="headerlink" title="5   缓存 io 的故事：bufio 库"></a>5   缓存 io 的故事：bufio 库</h4><p>Reader/Writer 可以是缓冲 IO 的数据流。</p>
+<p>在 c 语言，有人肯定用过 fopen  打开的文件（所谓的标准IO）：</p>
+<p>FILE * fopen ( const char * filename, const char * mode );<br>这个函数 open 出的是一个 FILE 结构体，而非之前常说的整数 fd 句柄。通过这个文件句柄的 IO 就是标准库帮你实现的缓冲 IO。c 语言的缓冲 IO 有三种模式：</p>
+<p>全缓冲：数据填满 buffer，才会真正的调用底层 IO；</p>
+<p>行缓冲：不用等填满 buffer，遇到换行符，就会把 IO 下发下去；</p>
+<p>不缓冲：bypass 的模式，每次都是直通底层 IO；</p>
+<p>Go 的缓冲 IO 则是由 bufio 这个库提供。先讨论下缓冲 IO 究竟是什么吧。</p>
+<p><strong>缓冲 IO 是在底层 IO 之上实现的一层 buffer ，什么意思？</strong></p>
+<p>假设有个用户，每次写数据都只写 1 个字节，顺序的，写 512 次。之前我们在磁盘 IO 为啥要对齐中提过，非对齐的 IO 性能损失很大。以普通的机械硬盘来说，写 1 个字节，其实要先读一个扇区出来，然后再写下去。所以这里 IO 实际的 IO 次数为 1024 次，实际的 IO 数据量为：读 512<em>512 Byte，写了 512</em>512 Byte。</p>
+<p><strong>能怎么优化呢？</strong></p>
+<p>搞一个内存 512 字节的 buffer ，用户写 1 个字节我就先暂存在 buffer 里面，直到写满 512 字节，buffer 满了，然后一次性把 512 字节的 buffer 数据写到底层。你会发现，这里实际的 IO 只有一次，实际的数据量只有 512 字节。这就是 buffer io ，能极大的减少底层真实的 IO 次数。</p>
+<p><strong>所以，缓冲 IO 的优势是什么？</strong></p>
+<p>一目了然，写的时候能聚合 IO，极大减少 IO 次数。读的时候还能实现预读的效果，同样也减少 IO 次数。</p>
+<p><strong>缺点是啥？</strong></p>
+<p>这个也很容易理解，buffer io 相当于缓存数据了，一份数据多份存储了，这里给数据的一致性管理带来了复杂性，预读还有可能读到脏数据等等混乱情况。</p>
+<p>bufio 这个库我们先理解名字，buffer io 的缩写。那顾名思义，核心是实现了缓存 IO 的库。对一个 Reader/Writer 携带一个内存 buffer 做了一层封装，达到聚合 io 的目的。</p>
+<p><img src="https://gitee.com/psycho1900/miss-reddle/raw/master/644%20(4).png"></p>
+<p>bufio 的使用接口：</p>
+<figure class="highlight awk"><table><tr><td class="code"><pre><code class="hljs awk"><span class="hljs-regexp">//</span> 创建一个带 buffer 的 writer，使用默认 buffer size <span class="hljs-number">4096</span><br>bufio.NewWriter<br><br><span class="hljs-regexp">//</span> 创建一个带 buffer 的 writer 可以手动指定 buffer size<br>bufio.NewWriterSize<br><br></code></pre></td></tr></table></figure>
+
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>1、CPU 和 IO 设备是不同的设备，能并行运行。合理调度程序，充分利用硬件，就能跑出很好的性能；</p>
+<p>2、Go 的 IO 最最核心的是 io 库，如果要实现其中的 interface  ，千万要仔细阅读语义；</p>
+<p>3、io 库除了定义 interface ，还实现了通用的函数，比如 Copy 之类的；</p>
+<p>4、io/ioutil 里面实现的挺杂的，但真香；</p>
+<p>5、内存字节数组可以作为 Reader ，Writer ，实现在 bytes 库中，bytes.NewReader，bytes.NewBuffer （换句话说，内存结构体和可以作为 Reader，因为结构体可以强转成字节数组）；</p>
+<p>6、字符串可以作为 Reader，实现在 strings 库中，strings.NewReader  ；</p>
+<p>7、网络句柄可以作为 Reader ，Writer ，实现在 net 库中，net.Conn；</p>
+<p>8、文件句柄可以作为 Reader ，Writer ，实现在 os 库中，os.File ；</p>
+<p>本文意在构建一个 Go IO 知识框架，讲了 Go 标准库的 io 知识，以及实现的丰富多彩的 io 主体。得益于 Go 提供的 interface 机制，我们也可以定制各种各样的 Reader，Writer，你实现过什么样奇葩的 io 呢？</p>
+
+    </div>
+</div>
+<style>
+    #noneimg img {
+        display: none;
+        z-index: 109;
+        width: 600px !important;
+        border-radius: 0px;
+        position: fixed;
+        box-shadow: 0 0 0px #c3c3c300 !important;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto !important;
+    }
+
+    @media screen and (max-width:600px) {
+        #noneimg img {
+            width: 88%
+        }
+    }
+</style>
+<script>
+    $(function () { $('#article').click(function (e) { if (e.target.tagName == "IMG") { if ($('#nonediv').length == 0) { let MImg = `<div id='noneimg'><img src='${e.target.currentSrc}'></div>`; let MDiv = "<div id='nonediv' style='cursor: pointer;display: none; position: fixed;left: 0;top: 0; right: 0;bottom: 0;background-color: #333;opacity:0.5;z-index: 108;'></div>"; $('#article').append(MDiv); $('#article').append(MImg); $("#nonediv").fadeIn("slow"); $("#noneimg img").fadeIn("slow") } } else { if ($('#nonediv').length !== 0) { $("#noneimg ").fadeOut("slow"); $("#nonediv").fadeOut("slow"); setTimeout(function () { $('#nonediv').remove(); $('#noneimg').remove() }, 500) } } }); $('.article-content').addClass('content-move') });
+</script>
+<div class="Last-Next">
+    
+    <a href="/2021/07/29/Golang%E7%A8%8B%E5%BA%8F%E5%91%98%E5%BA%94%E8%AF%A5%E6%80%8E%E4%B9%88%E7%90%86%E8%A7%A3%E4%BA%91%E5%8E%9F%E7%94%9F%EF%BC%9F/">
+        <div class="last">
+            <span>上一篇</span>
+            <p>Golang程序员应该怎么理解云原生？</p>
+        </div>
+    </a>
+    
+
+    
+    <a href="/2021/07/29/%E8%B5%B7%E9%A3%9E%E7%9A%84WiFi6%EF%BC%8C%E8%BF%9B%E5%87%BB%E7%9A%84%E9%AB%98%E9%80%9A%E5%92%8C%E5%B0%8F%E7%B1%B3/">
+        <div class="next">
+            <span>下一篇</span>
+            <p>起飞的WiFi6，进击的高通和小米</p>
+        </div>
+    </a>
+    
+</div>
+		
+<link rel="stylesheet" href="/css/food.css">
+
+<div class="footer">
+	<div class="Copyright">
+		©2022 By Russshare. 主题：<a
+			style="text-decoration: none;display: contents; color: #898F9F;"
+			target="_blank" rel="noopener" href="https://github.com/qiaobug/hexo-theme-quiet">Quiet</a>
+	</div>
+	<div class="contact">
+		
+		<a target="_blank" rel="noopener" href="https://github.com/RiddleGo">
+			<img src="https://cdn.jsdelivr.net/gh/duogongneng/MyBlogImg/imggithub.png" alt="Quiet主题">
+		</a>
+		
+	</div>
+</div>
+
+<script src="/js/jquery.min.js"></script>
+
+
+<script src="/js/gotop.js"></script>
+
+
+<style type="text/css">
+    @media screen and (min-width: 600px) {
+        .goTop>span {
+            display: block;
+            border-radius: 50%;
+            width: 66px;
+            height: 66px;
+            cursor: pointer;
+            opacity: 0.8;
+            background: rgba(18, 24, 58, 0.06);
+            text-align: center;
+            border: 1px solid rgba(18, 24, 58, 0.06);
+
+            transition: border .5s;
+            -moz-transition: border .5s;
+            /* Firefox 4 */
+            -webkit-transition: border .5s;
+            /* Safari 和 Chrome */
+            -o-transition: border .5s;
+            /* Opera */
+        }
+
+        .goTop>span:hover {
+            border: 1px solid #6680B3;
+        }
+
+
+        .goTop {
+            position: fixed;
+            right: 30px;
+            bottom: 80px;
+        }
+
+        .goTop>span>svg {
+            width: 30px;
+            height: 30px;
+            margin-top: 17.5px;
+            opacity: 0.7;
+        }
+
+    }
+
+    @media screen and (max-width: 600px) {
+        .goTop {
+            display: none;
+        }
+    }
+</style>
+<div class="goTop" id="js-go_top">
+    <span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <g>
+                <path d="M13 12v8h-2v-8H4l8-8 8 8z"></path>
+            </g>
+        </svg>
+    </span>
+</div>
+<script>
+    $('#js-go_top').gotoTop({ offset: 500, speed: 300, animationShow: { 'transform': 'translate(0,0)', 'transition': 'transform .5s ease-in-out' }, animationHide: { 'transform': 'translate(100px,0)', 'transition': 'transform .5s ease-in-out' } });
+</script>
+<script>
+	console.log('\n %c Hexo-Quiet 主题 %c https://github.com/QiaoBug/hexo-theme-quiet \n', 'color: #fadfa3; background: #030307; padding:5px 0;', 'background: #fadfa3; padding:5px 0;')
+</script>
+	</body>
+
+</html>

@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		
+<title>在Go中使用微服务架构的好处-Russshare</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="shortcut icon" type="image/x-icon" href="/image/favicon.ico">
+
+
+<meta name="keywords" content="微服务,">
+<meta name="description" content="">
+
+
+<script src="/js/jquery.min.js"></script>
+
+
+
+<!-- Baidu Analytics -->
+<script defer>
+    var _hmt = _hmt || [];
+    (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?4b5fe1472f22fa";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+	<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="RiddleGo" type="application/atom+xml">
+</head>
+
+	<body>
+		
+<link rel="stylesheet" href="/css/page.css">
+
+
+<link rel="stylesheet" href="/css/page_cente.css">
+
+
+<link rel="stylesheet" href="/css/atom-one-dark.css">
+
+
+<link rel="stylesheet" href="/css/header.css">
+
+	<div class="header">
+		<div class="header-top">
+			<div class="h-left">
+				<a href="/">
+					<img src="/image/logo.png" alt="Quiet">
+				</a>
+			</div>
+			<div class="h-right">
+				<ul>
+					
+						
+								<li>
+									<a href="/">
+										HOME
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/archives">
+										ARCHIVE
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/categories">
+										CATEGORIES
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/tags">
+										TAGS
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/links">
+										LINKS
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+						
+								<li>
+									<a href="/about">
+										ABOUT
+									</a>
+									<span class="dot"></span>
+								</li>
+								
+									
+				</ul>
+			</div>
+			<div class="h-right-close">
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+					<path fill="none" d="M0 0h24v24H0z" />
+					<path d="M3 4h18v2H3V4zm0 7h18v2H3v-2zm0 7h18v2H3v-2z" fill="rgba(68,68,68,1)" />
+				</svg>
+			</div>
+		</div>
+	</div>
+	<div class="sidebar">
+    <div class="topo">
+        <h2>Russshare</h2>
+    </div>
+    <ul>
+        
+        <li>
+            <a href="/">HOME</a>
+        </li>
+        
+        <li>
+            <a href="/archives">ARCHIVE</a>
+        </li>
+        
+        <li>
+            <a href="/categories">CATEGORIES</a>
+        </li>
+        
+        <li>
+            <a href="/tags">TAGS</a>
+        </li>
+        
+        <li>
+            <a href="/links">LINKS</a>
+        </li>
+        
+        <li>
+            <a href="/about">ABOUT</a>
+        </li>
+        
+    </ul>
+    <div class="my_foot">
+        
+        <a target="_blank" rel="noopener" href="https://github.com/RiddleGo">
+            <img src="https://cdn.jsdelivr.net/gh/duogongneng/MyBlogImg/imggithub.png" alt="Quiet主题">
+        </a>
+        
+    </div>
+</div>
+<div class='shelter'
+    style='cursor: pointer;display: none; position: fixed;left: 0;top: 0; right: 0;bottom: 0;background-color: #333;opacity:0.5;z-index: 108;'>
+</div>
+<style>
+    .sidebar {
+        width: 0;
+        height: 100%;
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        background: #fff;
+        z-index: 999;
+        text-align: center;
+        box-shadow: -6px 0 20px rgba(98, 94, 94, .815)
+    }
+
+    .topo {
+        width: 100%;
+        height: 200px;
+        background: url(https://api.ixiaowai.cn/gqapi/gqapi.php) no-repeat;
+        background-size: 100% 100%;
+        position: relative;
+        display: flex;
+        align-items: flex-end
+    }
+
+    .topo h2 {
+        color: #fff;
+        z-index: 1;
+        position: relative;
+        margin: 0 0 10px 10px;
+        font-size: 1.2em;
+        box-sizing: border-box
+    }
+
+    .topo:before {
+        content: '';
+        background-image: url(/image/pattern.png);
+        background-repeat: repeat;
+        height: 100%;
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 100%;
+        z-index: 1
+    }
+
+    .sidebar ul {
+        width: 100%;
+        margin-top: 50px
+    }
+
+    .sidebar ul li {
+        height: 50px;
+        list-style: none;
+        font-size: 1.2em;
+        text-align: right;
+        margin-right: 10px
+    }
+
+    .sidebar ul li a {
+        display: grid;
+        color: #5d606a;
+        text-overflow: ellipsis;
+        width: 100%;
+        text-decoration: none
+    }
+
+    .my_foot {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        position: absolute;
+        bottom: 0
+    }
+
+    .my_foot a {
+        text-decoration: none;
+        margin-right: 10px;
+        display: inline-block
+    }
+
+    .my_foot a img {
+        width: 30px;
+        height: 30px
+    }
+</style>
+
+<script>
+    $(function () { $('.h-right-close>svg').click(function () { $('.sidebar').animate({ width: "66%" }, 500); $('.shelter').fadeIn("slow") }); $('.shelter').click(function (e) { $('.sidebar').animate({ width: "0" }, 500); $('.shelter').fadeOut("slow") }) })
+</script>
+		<script>
+			$(function () { $(window).scroll(function () { if ($(document).scrollTop() > 100) { $(".header-top").removeClass("header-move2"); $('.header-top').addClass('header-move1') } else { $(".header-top").removeClass("header-move1"); $('.header-top').addClass('header-move2') } }) });
+		</script>
+<div class="header-bg ">
+    <div class="bg-content">
+        <ul class="tag">
+            
+            
+            <li><a href="/tags/微服务">微服务</a></li>
+            
+            
+        </ul>
+        <h1>在Go中使用微服务架构的好处</h1>
+        <div class="article-info">
+            <div class="article-author">
+                
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+                    <g>
+                        <path fill="#12183A"
+                            d="M6.187 15.265A6.47 6.47 0 0 0 10 16.5a6.47 6.47 0 0 0 3.813-1.235A4.99 4.99 0 0 0 10 13.5a4.99 4.99 0 0 0-3.813 1.765zM5.082 14.25A6.485 6.485 0 0 1 10 12c1.965 0 3.726.872 4.918 2.25a6.5 6.5 0 1 0-9.836 0zM10 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0-1.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z">
+                        </path>
+                    </g>
+                </svg>
+                
+                <span> <a href="">Russshare</a></span>
+                <p>2021-08-29 16:03:44</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="article-content">
+    <div id="article" class="content">
+        <p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/GLbh68cZ-jItcixcmKOmpA">点击原文链接，本文纯粹自己复制粘贴学习笔记无图</a></p>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>我们已经讨论“微服务架构”很长一段时间了。它是软件架构中最新的热门话题。那么什么是微服务呢？我们为什么要使用它？为什么要在 Golang 中使用微服务架构?它有哪些优点？</p>
+<p>本文中，我将会探讨一些相关的问题。废话不多说，让我们开始吧。</p>
+<p>本文是 Go语言中文网组织的 GCTT 翻译，发布在 Go语言中文网公众号，转载请联系我们授权。</p>
+<h2 id="什么是微服务？"><a href="#什么是微服务？" class="headerlink" title="什么是微服务？"></a>什么是微服务？</h2><p>微服务是一种软件开发技术，属于 SOA（面向服务的架构）的一种形式。它的作用是，<strong>将应用程序构建为许多松耦合的服务的集合</strong>。在这种架构中，服务的编码通常是细粒度的，服务的协议更轻量。目前还没有对微服务的准确定义，但它有一些显著的特征：<strong>自动化部署、业务功能、去中心化的数据管理和智能端点</strong>。（译者注：对于这个定义有兴趣的同学，不妨去看看 Martin 大神关于微服务的文章[1]</p>
+<h2 id="我们为什么使用微服务？"><a href="#我们为什么使用微服务？" class="headerlink" title="我们为什么使用微服务？"></a>我们为什么使用微服务？</h2><p><strong>这种架构有助于我们用各部分、小型模块描绘整个应用程序，使其更容易理解、开发和测试；有助于我们将各个服务视为独立且又清晰指明其用途的服务</strong>。更进一步地，它有助于保持项目架构的一致性(最初设计的架构和实际开发完成的架构差别不大)。它还可以通过建立不同的独立团队来进行服务的部署和扩展，<strong>从而各团队能够并行地开发</strong>。在这个架构中重构代码更容易。<strong>它也支持连续交付和部署流程</strong>（CI/CD)。</p>
+<h2 id="为什么使用-Go-构建微服务？"><a href="#为什么使用-Go-构建微服务？" class="headerlink" title="为什么使用 Go 构建微服务？"></a>为什么使用 Go 构建微服务？</h2><p>在深入研究这个问题之前。首先，我说一下 Golang 的优势。虽然 Golang 是一门新的语言，但是与其他语言相比，它有很多优势。用 Golang <strong>编写的程序更加健壮</strong>。<strong>它们能够承受程序使用运行的服务构建的繁重负载</strong>。<strong>Golang 更适合多处理器系统和 Web 应用程序</strong>。此外，它容易地与 GitHub 集成，管理非集中的代码包。<strong>微服务架构的用处大部分体现在当程序需要伸缩</strong>（scalable)时。如果有一种语言可以完全符合标准,那么它就是 Golang。原因是它继承自 C-family 编程语言，用 Golang 编写的组件更容易与同一家族中其他语言编写的组件相结合。</p>
+<p>尽管 Go 出身于 C-family，但它比 C / C ++ 更高效。它语法更简单，有点像 Python。<strong>它稳定语法, 自第一次公开发布以来，它没有太大变化，也就是说它是后向兼容的。</strong>与其他语言相比，这让 Golang 占了上风。除此之外，Golang 的性能比 python 和 java 高出不少。锦上添花的是，它又像 C/C++ 简单的同时又易于阅读和理解，使它成为开发微服务应用的绝佳选择。</p>
+<h2 id="Golang-中的微服务架构框架"><a href="#Golang-中的微服务架构框架" class="headerlink" title="Golang 中的微服务架构框架"></a>Golang 中的微服务架构框架</h2><p>下面，我们讨论一下可以用于微服务架构的框架。有以下些框架:</p>
+<h3 id="Go-Micro"><a href="#Go-Micro" class="headerlink" title="Go Micro"></a><strong>Go Micro</strong></h3><p>Go Micro 是目前为止我遇到的最流行的 RPC 框架。它是一个可插拔的 RPC 框架。Go Micro 为我们提供了以下功能:</p>
+<ul>
+<li><p>服务发现: 程序自动注册到服务发现系统</p>
+</li>
+<li><p>负载均衡: 它提供了客户端负载均衡，这有助于平衡服务实例之间的请求</p>
+</li>
+<li><p>同步通信: 提供 Request/Response 传输层</p>
+</li>
+<li><p>异步通信: 具有内置的发布和订阅功能</p>
+</li>
+<li><p>消息编码: 可以利用 header 中 Content-Type 进行编码和解码</p>
+</li>
+<li><p>RPC 客户端/服务器端: 利用上述功能并提供构建微服务需要的接口</p>
+</li>
+</ul>
+<p>Go Micro 架构由三层组成。第一层抽象为服务层。第二层为 client-server 模型层。serrver 用于编写服务的块组成，而 client 为我们提供接口，其唯一目的是向 server model 中编写的服务发出请求。</p>
+<p>第三层有以下类型的插件:</p>
+<ul>
+<li><p>Broker: 在异步通信中为 message broker(消息代理）提供接口</p>
+</li>
+<li><p>Codec: 用于加密或解密消息</p>
+</li>
+<li><p>Registry: 提供服务搜索功能</p>
+</li>
+<li><p>Selector: 在 register 上构建了负载均衡</p>
+</li>
+<li><p>Transport: Transport 是服务与服务之间同步请求/响应的通信接口</p>
+</li>
+</ul>
+<p>它还提供了一个名为 Sidecar 的功能。Sidecar 使您能够集成以 Go 以外的语言编写的服务。它还为我们提供了 gRPC 编码/解码、服务注册和 HTTP 请求处理</p>
+<h3 id="Go-Kit"><a href="#Go-Kit" class="headerlink" title="Go Kit"></a>Go Kit</h3><p>Go Kit 是一个用于构建微服务的编程工具包。与 Go Micro 不同，它是一个可以以二进制包导入的库。Go Kit 规则很简单。如下:</p>
+<ul>
+<li>没有全局变量</li>
+<li>声明式组合</li>
+<li>显式依赖</li>
+<li>Interface as Contracts (接口合约)</li>
+<li>领域驱动设计（DDD)</li>
+</ul>
+<p>Go Kit 提供以下代码包:</p>
+<ul>
+<li>Authentication 鉴权: BasicAuth 和 JWT</li>
+<li>Transport 协议: HTTP, gRPC 等</li>
+<li>Logging 日志: 服务中的结构化日志接口</li>
+<li>Metrics 度量: CloudWatch,Statsd, Graphite 等</li>
+<li>Tracing 分布式追踪: Zipkin and Opentracing</li>
+<li>Service discovery 服务发现: Consul, Etcd, Eureka 等</li>
+<li>Circuitbreaker 限流熔断: Hystrix 在 Go 语言的实现</li>
+</ul>
+<h2 id="Gizmo"><a href="#Gizmo" class="headerlink" title="Gizmo"></a>Gizmo</h2><p>Gizmo 是来自《纽约时报》的一个微服务工具包。它提供了将服务器守护进程和 pubsub 守护进程放在一起的包。它公开了以下包:</p>
+<p>Server: 提供两个服务器实现: SimpleServer(HTTP)和 RPCServer(gRPC)</p>
+<p>Server/kit: 基于 Go Kit 的实验代码包</p>
+<p>Config 配置: 包含来自 JSON 文件、Consul k/v 中的 JSON blob 或环境变量的配置功能</p>
+<p>Pubsub: 提供用于从队列中发布和使用数据的通用接口</p>
+<p>Pubsub/pubsubtest: 包含发布者和订阅者接口的测试实现</p>
+<p>Web: 用于从请求查询和有效负载解析类型的外部函数</p>
+<p><strong>Pubsub</strong> 包提供了处理以下队列的接口:</p>
+<p>pubsub/aws: 用于 Amazon SNS/SQS</p>
+<p>pubsub/gcp: 用于 Google Pubsub</p>
+<p>pubsub/kafka: 用于 Kafka topics</p>
+<p>pubsub/http: 用户 HTTP 推送</p>
+<p>所以，在我看来，Gizmo 介于 Go Micro 和 Go Kit 之间。它不像 Go Micro 那样是一个完全的黑盒。同时，它也不像 Go Kit 那么原始。它提供了更高级别的构建组件，比如配置和 pubsub 包</p>
+<h2 id="Kite"><a href="#Kite" class="headerlink" title="Kite"></a>Kite</h2><p>Kite 是一个在 Go 中开发微服务的框架。它公开 RPC client 和 Server 端代码包。创建的服务将自动注册到服务发现系统 Kontrol。Kontrol 是用 Kite 编写的，它本身就是一个 Kite service。这意味着 Kite 微服务在自身的环境中运行良好。如果需要将 Kite 微服务连接到另一个服务发现系统，则需要定制。这是我从列表中选择 Kite 并决定不介绍这个框架的重要原因之一</p>
+<p>因此，如果您觉得这个博客很有用，并且想知道如何在 Golang 中创建多功能的微服务，那么请从我们这里雇佣 Golang 开发者[2]，并学习利用顶级的专业知识。</p>
+<p>via: <a target="_blank" rel="noopener" href="https://medium.com/datadriveninvestor/benefits-of-using-microservice-architecture-in-go-4440e4fcd9c9">https://medium.com/datadriveninvestor/benefits-of-using-microservice-architecture-in-go-4440e4fcd9c9</a></p>
+<p>作者：Katy Slemon[3]译者：Alex1996a[4]校对：dingdingzhou[5]</p>
+<p>本文由 GCTT[6] 原创编译，Go 中文网[7] 荣誉推出，发布在 Go语言中文网公众号，转载请联系我们授权。</p>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzAxMTA4Njc0OQ==&mid=2651449186&idx=2&sn=7e1fd1c84cc7274ece05aee39664f256&chksm=80bb3990b7ccb0862b4b0bb002d7df2e840217207aef85a4c4f9df6b0057093756232fdb9702&scene=21#wechat_redirect">推荐阅读—图解 Go 微服务熔断器</a></p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p>[1]<br>关于微服务的文章: <a target="_blank" rel="noopener" href="https://martinfowler.com/articles/microservices.html">https://martinfowler.com/articles/microservices.html</a></p>
+<p>[2]<br>雇佣 Golang 开发者: <a target="_blank" rel="noopener" href="https://www.bacancytechnology.com/hire-golang-developer">https://www.bacancytechnology.com/hire-golang-developer</a></p>
+<p>[3]<br>Katy Slemon: <a target="_blank" rel="noopener" href="https://medium.com/@katyslemon">https://medium.com/@katyslemon</a></p>
+<p>[4]<br>Alex1996a: <a target="_blank" rel="noopener" href="https://github.com/Alex1996a">https://github.com/Alex1996a</a></p>
+<p>[5]<br>dingdingzhou: <a target="_blank" rel="noopener" href="https://github.com/zhoudingding">https://github.com/zhoudingding</a></p>
+<p>[6]<br>GCTT: <a target="_blank" rel="noopener" href="https://github.com/studygolang/GCTT">https://github.com/studygolang/GCTT</a></p>
+<p>[7]<br>Go 中文网: <a target="_blank" rel="noopener" href="https://studygolang.com/">https://studygolang.com/</a></p>
+
+    </div>
+</div>
+<style>
+    #noneimg img {
+        display: none;
+        z-index: 109;
+        width: 600px !important;
+        border-radius: 0px;
+        position: fixed;
+        box-shadow: 0 0 0px #c3c3c300 !important;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto !important;
+    }
+
+    @media screen and (max-width:600px) {
+        #noneimg img {
+            width: 88%
+        }
+    }
+</style>
+<script>
+    $(function () { $('#article').click(function (e) { if (e.target.tagName == "IMG") { if ($('#nonediv').length == 0) { let MImg = `<div id='noneimg'><img src='${e.target.currentSrc}'></div>`; let MDiv = "<div id='nonediv' style='cursor: pointer;display: none; position: fixed;left: 0;top: 0; right: 0;bottom: 0;background-color: #333;opacity:0.5;z-index: 108;'></div>"; $('#article').append(MDiv); $('#article').append(MImg); $("#nonediv").fadeIn("slow"); $("#noneimg img").fadeIn("slow") } } else { if ($('#nonediv').length !== 0) { $("#noneimg ").fadeOut("slow"); $("#nonediv").fadeOut("slow"); setTimeout(function () { $('#nonediv').remove(); $('#noneimg').remove() }, 500) } } }); $('.article-content').addClass('content-move') });
+</script>
+<div class="Last-Next">
+    
+    <a href="/2021/08/31/Go-%E5%A6%82%E4%BD%95%E5%88%A9%E7%94%A8-Linux-%E5%86%85%E6%A0%B8%E7%9A%84%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E8%83%BD%E5%8A%9B/">
+        <div class="last">
+            <span>上一篇</span>
+            <p>Go-如何利用-Linux-内核的负载均衡能力</p>
+        </div>
+    </a>
+    
+
+    
+    <a href="/2021/08/29/Go%E8%B0%83%E7%94%A8Java-%E6%96%B9%E6%A1%88%E5%92%8C%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E5%88%86%E4%BA%AB/">
+        <div class="next">
+            <span>下一篇</span>
+            <p>Go调用Java-方案和性能优化分享</p>
+        </div>
+    </a>
+    
+</div>
+		
+<link rel="stylesheet" href="/css/food.css">
+
+<div class="footer">
+	<div class="Copyright">
+		©2022 By Russshare. 主题：<a
+			style="text-decoration: none;display: contents; color: #898F9F;"
+			target="_blank" rel="noopener" href="https://github.com/qiaobug/hexo-theme-quiet">Quiet</a>
+	</div>
+	<div class="contact">
+		
+		<a target="_blank" rel="noopener" href="https://github.com/RiddleGo">
+			<img src="https://cdn.jsdelivr.net/gh/duogongneng/MyBlogImg/imggithub.png" alt="Quiet主题">
+		</a>
+		
+	</div>
+</div>
+
+<script src="/js/jquery.min.js"></script>
+
+
+<script src="/js/gotop.js"></script>
+
+
+<style type="text/css">
+    @media screen and (min-width: 600px) {
+        .goTop>span {
+            display: block;
+            border-radius: 50%;
+            width: 66px;
+            height: 66px;
+            cursor: pointer;
+            opacity: 0.8;
+            background: rgba(18, 24, 58, 0.06);
+            text-align: center;
+            border: 1px solid rgba(18, 24, 58, 0.06);
+
+            transition: border .5s;
+            -moz-transition: border .5s;
+            /* Firefox 4 */
+            -webkit-transition: border .5s;
+            /* Safari 和 Chrome */
+            -o-transition: border .5s;
+            /* Opera */
+        }
+
+        .goTop>span:hover {
+            border: 1px solid #6680B3;
+        }
+
+
+        .goTop {
+            position: fixed;
+            right: 30px;
+            bottom: 80px;
+        }
+
+        .goTop>span>svg {
+            width: 30px;
+            height: 30px;
+            margin-top: 17.5px;
+            opacity: 0.7;
+        }
+
+    }
+
+    @media screen and (max-width: 600px) {
+        .goTop {
+            display: none;
+        }
+    }
+</style>
+<div class="goTop" id="js-go_top">
+    <span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <g>
+                <path d="M13 12v8h-2v-8H4l8-8 8 8z"></path>
+            </g>
+        </svg>
+    </span>
+</div>
+<script>
+    $('#js-go_top').gotoTop({ offset: 500, speed: 300, animationShow: { 'transform': 'translate(0,0)', 'transition': 'transform .5s ease-in-out' }, animationHide: { 'transform': 'translate(100px,0)', 'transition': 'transform .5s ease-in-out' } });
+</script>
+<script>
+	console.log('\n %c Hexo-Quiet 主题 %c https://github.com/QiaoBug/hexo-theme-quiet \n', 'color: #fadfa3; background: #030307; padding:5px 0;', 'background: #fadfa3; padding:5px 0;')
+</script>
+	</body>
+
+</html>
